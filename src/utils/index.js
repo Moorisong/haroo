@@ -1,5 +1,5 @@
 import { api_get } from 'src/services/axios';
-import { METHOD_TYPE } from 'src/const';
+import { METHOD_TYPE } from 'src/constants';
 
 export const fetchData = async (url, method) => {
   let data;
