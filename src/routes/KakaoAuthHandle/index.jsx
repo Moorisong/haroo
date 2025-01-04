@@ -8,7 +8,7 @@ export default function KakaoAuthHandle() {
   const code = searchParams.get('code');
 
   useEffect(() => {
-    if (code) navigate('/');
+    if (code) navigate('/main');
   }, []);
 
   return;
