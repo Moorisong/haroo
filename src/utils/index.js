@@ -12,3 +12,12 @@ export const fetchData = async (url, method) => {
   }
   return data;
 };
+
+export const kakaoTextShare = (data) => {
+  window.Kakao.Share.sendDefault({
+    objectType: 'text',
+    text: data.text,
+    link: { webUrl: process.env.REACT_APP_LOCAL_URL },
+    buttonTitle: `${data.user} 님이 보낸 메시지☺️`,
+  });
+};
