@@ -1,9 +1,12 @@
 export const kakaoTextShare = (data) => {
+  const sender = data[0].text;
+  const content = data[1].text;
+
   window.Kakao.Share.sendDefault({
     objectType: 'text',
-    text: data.text,
+    text: content,
     link: { webUrl: process.env.REACT_APP_LOCAL_URL },
-    buttonTitle: `${data.user} 님이 보낸 메시지☺️`,
+    buttonTitle: `${sender} 님이 보낸 메시지☺️`,
   });
 };
 
