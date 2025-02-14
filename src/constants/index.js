@@ -5,4 +5,5 @@ export const METHOD_TYPE = {
 export const DATA_TYPE = {
   SENDER: 'sender',
   CONTENT: 'content',
+  YOUTUBE: 'youtube',
 };
