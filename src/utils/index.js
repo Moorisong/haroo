@@ -10,6 +10,25 @@ export const kakaoTextShare = (data) => {
   });
 };
 
+export function getYoutubeId(url) {
+  // 유튜브 URL 형식에 맞는 정규식 패턴 (youtu.be, youtube.com/watch, embed, v, shorts 지원)
+  const pattern = /(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|v\/|shorts\/))([^#&?]{11})/;
+  const match = url.match(pattern);
+  const youtubeID = match === null ? false : match['1'];
+  return youtubeID;
+}
+
+export function getYoutubeImageUrl(id) {
+  const youtubeImageUrl = `https://img.youtube.com/vi/${id}/0.jpg`;
+  if (id) return youtubeImageUrl;
+  return null;
+}
+
+export function validateYoutubeUrl(id) {
+  if (id) return true;
+  return false;
+}
+
 // ksh -- 날씨 api 사용을 위한 함수
 
 // import { api_get } from 'src/services/axios';
