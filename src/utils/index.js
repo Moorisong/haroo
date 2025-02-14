@@ -1,12 +1,23 @@
-export const kakaoTextShare = (data) => {
-  const sender = data[0].text;
-  const content = data[1].text;
+export const kakaoListShare = (data, youtubeId) => {
+  const condition = data[0].text;
+  const youtubeUrl = data[1].text;
+  const youtubeImageUrl = getYoutubeImageUrl(youtubeId);
 
   window.Kakao.Share.sendDefault({
-    objectType: 'text',
-    text: content,
-    link: { webUrl: process.env.REACT_APP_LOCAL_URL },
-    buttonTitle: `${sender} 님이 보낸 메시지☺️`,
+    objectType: 'feed',
+    content: {
+      title: `${condition} 확률`,
+      imageUrl: youtubeImageUrl,
+      link: {
+        webUrl: youtubeUrl,
+        mobileWebUrl: youtubeUrl,
+      },
+      description: '99%의 확률로 이루어집니다. 응원이 담긴 영상을 확인하세요 :) ',
+    },
+    itemContent: {
+      profileText: '오늘의 확률 운세 🌟',
+    },
+    buttonTitle: '상대방 운세 뽑아주기',
   });
 };
 
