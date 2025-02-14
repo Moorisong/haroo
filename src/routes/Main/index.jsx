@@ -7,6 +7,7 @@ export default function Main() {
   const defalutData = [
     { title: '보내는 사람', text: '' },
     { title: '내용', text: '' },
+    { title: '유튜브', text: '' },
   ];
   const [data, setData] = useState(defalutData);
 
@@ -17,21 +18,23 @@ export default function Main() {
   };
 
   const onChangeText = (event) => {
-    const dataType = event.target.id === '0' ? DATA_TYPE.SENDER : DATA_TYPE.CONTENT;
+    const dataType =
+      event.target.id === '0' ? DATA_TYPE.SENDER : event.target.id === '1' ? DATA_TYPE.CONTENT : DATA_TYPE.YOUTUBE;
 
     setData((prevData) => {
       let newData = [...prevData];
-      // 배열 얕은 복사 -> 새로운 참조 주소 값 가짐 / 중첩 객체의 참조 주소는 변하지 않음
 
       switch (dataType) {
         case DATA_TYPE.SENDER:
           newData[0] = { ...newData[0], text: event.target.value };
-          // 중첩 객체 얕은 복사 -> 새로운 참조 주소 값 가짐
           break;
 
         case DATA_TYPE.CONTENT:
           newData[1] = { ...newData[1], text: event.target.value };
-          // 중첩 객체 얕은 복사 -> 새로운 참조 주소 값 가짐
+          break;
+
+        case DATA_TYPE.YOUTUBE:
+          newData[2] = { ...newData[2], text: event.target.value };
           break;
 
         default:
