@@ -20,7 +20,15 @@ export const kakaoListShare = (data, youtubeId) => {
     itemContent: {
       profileText: KAKAO_FEED_TEXT.PROFILE_TEXT,
     },
-    buttonTitle: KAKAO_FEED_TEXT.BUTTON_TITLE_TEXT,
+    buttons: [
+      {
+        title: KAKAO_FEED_TEXT.BUTTON_TITLE_TEXT,
+        link: {
+          webUrl: '',
+          mobileWebUrl: '',
+        },
+      },
+    ],
   });
 };
 
