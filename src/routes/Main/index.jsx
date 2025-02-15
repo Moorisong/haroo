@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { getYoutubeId, validateYoutubeUrl, kakaoListShare } from 'src/utils';
+import { getYoutubeId, validateYoutubeUrl, kakaoListShare, validateTextLimit } from 'src/utils';
 import { TextBoxDefault } from 'src/components/TextBox';
 import { DATA_TYPE } from 'src/constants';
 
@@ -14,12 +14,15 @@ export default function Main() {
     if (!window.Kakao.isInitialized()) window.Kakao.init(process.env.REACT_APP_KAKAO_APP_KEY);
     const youtubeId = getYoutubeId(data[1].text);
     const isValidYoutubeUrl = validateYoutubeUrl(youtubeId);
+    const isTextLengthValid = validateTextLimit(data[0].text, 35);
 
-    if (isValidYoutubeUrl) {
-      kakaoListShare(data, youtubeId);
-      return setData(defalutData);
+    if (!isValidYoutubeUrl || !isTextLengthValid) {
+      if (!isTextLengthValid) return alert(ALERT_CONTENT.TEXT_LIMIT);
+      if (!isValidYoutubeUrl) return alert(ALERT_CONTENT.INVALID_URL);
     }
-    return alert('유튜브 동영상 주소를 정확하게 입력해주세요.');
+
+    kakaoListShare(data, youtubeId);
+    return setData(defalutData);
   };
 
   const onChangeText = (event) => {

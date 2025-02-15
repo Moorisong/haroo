@@ -40,6 +40,11 @@ export function validateYoutubeUrl(id) {
   return false;
 }
 
+export function validateTextLimit(string, number) {
+  if (string.length <= number) return true;
+  return false;
+}
+
 // ksh -- 날씨 api 사용을 위한 함수
 
 // import { api_get } from 'src/services/axios';
