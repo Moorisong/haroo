@@ -24,8 +24,8 @@ export const kakaoListShare = (data, youtubeId) => {
       {
         title: KAKAO_FEED_TEXT.BUTTON_TITLE_TEXT,
         link: {
-          webUrl: '',
-          mobileWebUrl: '',
+          webUrl: process.env.REACT_APP_PROD_URL,
+          mobileWebUrl: process.env.REACT_APP_PROD_URL,
         },
       },
     ],
