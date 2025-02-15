@@ -50,10 +50,10 @@ export default function Main() {
   return (
     <div>
       {data.map((e, i) => (
-        <TextBoxDefault id={i} onChange={onChangeText} key={e.title + i} title={e.title} message={e.text} />
+        <TextBoxDefault id={i} onChange={onChangeText} key={e.title + i} title={e.title} text={e.text} />
       ))}
 
-      <div onClick={onClickShare}>{DATA_TYPE.SHARE}</div>
+      <div onClick={onClickShare}>{DATA_TYPE.TEXT.BUTTON_SHARE}</div>
     </div>
   );
 }
