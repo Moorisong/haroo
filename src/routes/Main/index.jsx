@@ -14,10 +14,10 @@ export default function Main() {
     if (!window.Kakao.isInitialized()) window.Kakao.init(process.env.REACT_APP_KAKAO_APP_KEY);
     const youtubeId = getYoutubeId(data[1].text);
     const isValidYoutubeUrl = validateYoutubeUrl(youtubeId);
-    const isTextLengthValid = validateTextLimit(data[0].text, 35);
+    const isValidTextLength = validateTextLimit(data[0].text, 35);
 
-    if (!isValidYoutubeUrl || !isTextLengthValid) {
-      if (!isTextLengthValid) return alert(ALERT_CONTENT.TEXT_LIMIT);
+    if (!isValidYoutubeUrl || !isValidTextLength) {
+      if (!isValidTextLength) return alert(ALERT_CONTENT.TEXT_LIMIT);
       if (!isValidYoutubeUrl) return alert(ALERT_CONTENT.INVALID_URL);
     }
 
