@@ -12,7 +12,7 @@ export const kakaoListShare = (data, youtubeId) => {
         webUrl: youtubeUrl,
         mobileWebUrl: youtubeUrl,
       },
-      description: '99%의 확률로 이루어집니다. 응원이 담긴 영상을 확인하세요 :) ',
+      description: '99%의 확률로 이루어집니다.\n응원이 담긴 영상을 확인하세요 :) ',
     },
     itemContent: {
       profileText: '오늘의 확률 운세 🌟',
