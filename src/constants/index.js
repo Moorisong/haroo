@@ -17,7 +17,7 @@ export const ALERT_CONTENT = {
 };
 
 export const KAKAO_FEED_TEXT = {
-  DESCRIPTION: '99%의 확률로 이루어집니다.\n응원이 담긴 영상을 확인하세요 :)',
+  DESCRIPTION: '%의 확률로 이루어집니다.\n응원이 담긴 영상을 확인하세요 :)',
   PROFILE_TEXT: '오늘의 확률 시뮬레이터 ✨',
   BUTTON_TITLE_TEXT: '운세 직접 뽑아주기 👉',
 };

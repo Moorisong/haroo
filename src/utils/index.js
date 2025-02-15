@@ -4,6 +4,7 @@ export const kakaoListShare = (data, youtubeId) => {
   const condition = data[0].text;
   const youtubeUrl = data[1].text;
   const youtubeImageUrl = getYoutubeImageUrl(youtubeId);
+  const percentValue = getRandomNumber();
 
   window.Kakao.Share.sendDefault({
     objectType: 'feed',
@@ -14,7 +15,7 @@ export const kakaoListShare = (data, youtubeId) => {
         webUrl: youtubeUrl,
         mobileWebUrl: youtubeUrl,
       },
-      description: KAKAO_FEED_TEXT.DESCRIPTION,
+      description: percentValue + KAKAO_FEED_TEXT.DESCRIPTION,
     },
     itemContent: {
       profileText: KAKAO_FEED_TEXT.PROFILE_TEXT,
@@ -45,6 +46,10 @@ export function validateYoutubeUrl(id) {
 export function validateTextLimit(string, number) {
   if (string.length <= number) return true;
   return false;
+}
+
+export function getRandomNumber() {
+  return Math.floor(Math.random() * 100) + 1;
 }
 
 // ksh -- 날씨 api 사용을 위한 함수
