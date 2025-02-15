@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { getYoutubeId, validateYoutubeUrl, kakaoListShare, validateTextLimit } from 'src/utils';
 import { TextBoxDefault } from 'src/components/TextBox';
-import { DATA_TYPE } from 'src/constants';
+import { ALERT_CONTENT, DATA_TYPE } from 'src/constants';
 
 export default function Main() {
   const defalutData = [
-    { title: '전제', text: '' },
-    { title: '유튜브', text: '' },
+    { title: DATA_TYPE.CONDITION, text: '' },
+    { title: DATA_TYPE.YOUTUBE, text: '' },
   ];
   const [data, setData] = useState(defalutData);
 
@@ -53,7 +53,7 @@ export default function Main() {
         <TextBoxDefault id={i} onChange={onChangeText} key={e.title + i} title={e.title} message={e.text} />
       ))}
 
-      <div onClick={onClickShare}>공유하기</div>
+      <div onClick={onClickShare}>{DATA_TYPE.SHARE}</div>
     </div>
   );
 }
