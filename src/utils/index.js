@@ -1,3 +1,5 @@
+import { KAKAO_FEED_TEXT, YOUTUBE_IMAGE_URL } from 'src/constants';
+
 export const kakaoListShare = (data, youtubeId) => {
   const condition = data[0].text;
   const youtubeUrl = data[1].text;
@@ -12,12 +14,12 @@ export const kakaoListShare = (data, youtubeId) => {
         webUrl: youtubeUrl,
         mobileWebUrl: youtubeUrl,
       },
-      description: '99%의 확률로 이루어집니다.\n응원이 담긴 영상을 확인하세요 :) ',
+      description: KAKAO_FEED_TEXT.DESCRIPTION,
     },
     itemContent: {
-      profileText: '오늘의 확률 운세 🌟',
+      profileText: KAKAO_FEED_TEXT.PROFILE_TEXT,
     },
-    buttonTitle: '상대방 운세 뽑아주기',
+    buttonTitle: KAKAO_FEED_TEXT.BUTTON_TITLE_TEXT,
   });
 };
 
@@ -30,7 +32,7 @@ export function getYoutubeId(url) {
 }
 
 export function getYoutubeImageUrl(id) {
-  const youtubeImageUrl = `https://img.youtube.com/vi/${id}/0.jpg`;
+  const youtubeImageUrl = YOUTUBE_IMAGE_URL(id);
   if (id) return youtubeImageUrl;
   return null;
 }
