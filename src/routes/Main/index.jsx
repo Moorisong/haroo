@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { getYoutubeId, validateYoutubeUrl, kakaoListShare, validateTextLimit } from 'src/utils';
 import { TextBoxDefault } from 'src/components/TextBox';
 import { ALERT_CONTENT, DATA_TYPE } from 'src/constants';
@@ -9,6 +10,12 @@ export default function Main() {
     { title: DATA_TYPE.YOUTUBE, text: '' },
   ];
   const [data, setData] = useState(defalutData);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = window.sessionStorage.getItem('harooToken');
+    if (!token) return navigate('/');
+  }, []);
 
   const onClickShare = () => {
     if (!window.Kakao.isInitialized()) window.Kakao.init(process.env.REACT_APP_KAKAO_APP_KEY);
