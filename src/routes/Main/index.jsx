@@ -1,19 +1,20 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getYoutubeId, validateYoutubeUrl, kakaoListShare, validateTextLimit } from 'src/utils';
+import { getYoutubeId, validateYoutubeUrl, kakaoListShare, validateTextLimit, kakaoLogout } from 'src/utils';
 import { TextBoxDefault } from 'src/components/TextBox';
-import { ALERT_CONTENT, DATA_TYPE } from 'src/constants';
+import { ALERT_CONTENT, DATA_TYPE, TOKEN_NAME } from 'src/constants';
+
+const defaultData = [
+  { title: DATA_TYPE.CONDITION, text: '' },
+  { title: DATA_TYPE.YOUTUBE, text: '' },
+];
 
 export default function Main() {
-  const defalutData = [
-    { title: DATA_TYPE.CONDITION, text: '' },
-    { title: DATA_TYPE.YOUTUBE, text: '' },
-  ];
-  const [data, setData] = useState(defalutData);
+  const [data, setData] = useState(defaultData);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const token = window.sessionStorage.getItem('harooToken');
+    const token = window.sessionStorage.getItem(TOKEN_NAME);
     if (!token) return navigate('/');
   }, []);
 
@@ -29,7 +30,12 @@ export default function Main() {
     }
 
     kakaoListShare(data, youtubeId);
-    return setData(defalutData);
+    return setData(defaultData);
+  };
+
+  const onClickLogout = () => {
+    kakaoLogout();
+    return navigate('/');
   };
 
   const onChangeText = (event) => {
@@ -61,6 +67,7 @@ export default function Main() {
       ))}
 
       <div onClick={onClickShare}>{DATA_TYPE.TEXT.BUTTON_SHARE}</div>
+      <div onClick={onClickLogout}>{DATA_TYPE.TEXT.BUTTON_LOGOUT}</div>
     </div>
   );
 }
