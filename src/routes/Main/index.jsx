@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getYoutubeId, validateYoutubeUrl, kakaoListShare, validateTextLimit, kakaoLogout } from 'src/utils';
+import { getYoutubeId, validateYoutubeUrl, kakaoListShare, kakaoLogout } from 'src/utils';
 import { TextBoxDefault } from 'src/components/TextBox';
 import { ALERT_CONTENT, DATA_TYPE, TOKEN_NAME } from 'src/constants';
 
@@ -22,10 +22,10 @@ export default function Main() {
     if (!window.Kakao.isInitialized()) window.Kakao.init(process.env.REACT_APP_KAKAO_APP_KEY);
     const youtubeId = getYoutubeId(data[1].text);
     const isValidYoutubeUrl = validateYoutubeUrl(youtubeId);
-    const isValidTextLength = validateTextLimit(data[0].text, 35);
+    const isTextEmpty = data[0].text.length === 0;
 
-    if (!isValidYoutubeUrl || !isValidTextLength) {
-      if (!isValidTextLength) return alert(ALERT_CONTENT.TEXT_LIMIT);
+    if (!isValidYoutubeUrl || isTextEmpty) {
+      if (isTextEmpty) return alert(ALERT_CONTENT.EMPTY_TEXT);
       if (!isValidYoutubeUrl) return alert(ALERT_CONTENT.INVALID_URL);
     }
 

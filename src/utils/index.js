@@ -51,11 +51,6 @@ export function validateYoutubeUrl(id) {
   return false;
 }
 
-export function validateTextLimit(string, number) {
-  if (string.length <= number) return true;
-  return false;
-}
-
 export function getRandomNumber() {
   return Math.floor(Math.random() * 100) + 1;
 }
