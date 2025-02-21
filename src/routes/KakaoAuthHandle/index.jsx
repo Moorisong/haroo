@@ -1,6 +1,6 @@
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useEffect } from 'react';
-import { ALERT_CONTENT } from 'src/constants';
+import { ALERT_CONTENT, TOKEN_NAME } from 'src/constants';
 
 export default function KakaoAuthHandle() {
   const navigate = useNavigate();
@@ -11,7 +11,7 @@ export default function KakaoAuthHandle() {
   useEffect(() => {
     if (code) {
       const token = code.slice(-3) + new Date().getTime();
-      window.sessionStorage.setItem('harooToken', token);
+      window.sessionStorage.setItem(TOKEN_NAME, token);
       return navigate('/main');
     }
     alert(ALERT_CONTENT.LOGIN_ERROR);

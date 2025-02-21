@@ -1,4 +1,4 @@
-import { KAKAO_FEED_TEXT, YOUTUBE_IMAGE_URL } from 'src/constants';
+import { KAKAO_FEED_TEXT, TOKEN_NAME, YOUTUBE_IMAGE_URL } from 'src/constants';
 
 export const kakaoListShare = (data, youtubeId) => {
   const condition = data[0].text;
@@ -58,4 +58,12 @@ export function validateTextLimit(string, number) {
 
 export function getRandomNumber() {
   return Math.floor(Math.random() * 100) + 1;
+}
+
+export function kakaoLogin(url) {
+  window.location.href = url;
+}
+
+export function kakaoLogout() {
+  window.sessionStorage.removeItem(TOKEN_NAME);
 }
