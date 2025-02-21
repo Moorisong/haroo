@@ -9,7 +9,7 @@ export const TextBoxDefault = (props) => {
       <p>{props.title}</p>
       {isConditionBox && <p>{`${textLengh}/${DATA_TYPE.TEXT.MAX_LENGTH}`}</p>}
 
-      <input value={props.text} onChange={props.onChange} id={props.id} />
+      <input value={props.text} onChange={props.onChange} id={props.id} maxLength={isConditionBox && 35} />
     </div>
   );
 };
