@@ -14,6 +14,7 @@ export const DATA_TYPE = {
 export const ALERT_CONTENT = {
   TEXT_LIMIT: '메시지는 최대 35자까지 작성 가능합니다.',
   INVALID_URL: '유튜브 동영상 주소를 정확하게 입력해주세요.',
+  LOGIN_ERROR: '로그인 중 오류가 발생했습니다.',
 };
 
 export const KAKAO_FEED_TEXT = {
