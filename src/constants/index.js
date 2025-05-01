@@ -1,3 +1,14 @@
+export const TITLE_TEXT = {
+  KOREAN: '[하루] 오늘의 확률 시뮬레이터',
+  ENGLISH: "Today's Luck Simulator",
+};
+
+export const FONT = {
+  BIG_BLACK: 'text-2xl font-bold',
+  MEDIUM_BLUE: 'font-medium text-[#008EED]',
+  SMALL_GRAY: 'text-xs text-gray-300',
+};
+
 export const DATA_TYPE = {
   CONDITION: '전제',
   YOUTUBE: '유튜브 링크',
