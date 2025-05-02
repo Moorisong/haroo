@@ -43,10 +43,14 @@ export default function Main() {
 
   const onChangeText = (event) => {
     const index = Number(event.target.id);
+    const value = event.target.value;
 
     setData((prevData) => {
       const newData = [...prevData];
-      newData[index] = { ...newData[index], text: event.target.value };
+      newData[index] = {
+        ...newData[index],
+        text: index === 0 ? (value.length < 36 ? value : prevData[0].text) : value,
+      };
       return newData;
     });
   };
