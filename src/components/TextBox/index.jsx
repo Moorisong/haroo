@@ -12,7 +12,7 @@ export const TextBoxDefault = (props) => {
 
       <div className="relative w-full">
         <input
-          className="w-full h-[2rem] border border-gray-300 pr-[3.5rem] text-sm"
+          className="w-full h-[2rem] border border-gray-300 rounded-sm pr-[3.5rem] text-sm"
           value={props.text}
           onChange={props.onChange}
           id={props.id}
