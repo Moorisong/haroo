@@ -10,8 +10,9 @@ export const FONT = {
 };
 
 export const DATA_TYPE = {
-  CONDITION: '전제',
-  YOUTUBE: '유튜브 링크',
+  CONDITION: '어떤 확률을 구하고 싶나요?',
+  YOUTUBE: '유튜브 영상 주소를 아래에 넣어주세요.',
+  YOUTUBE_ADDITIONAL: '상대방에게 함께 전송됩니다.',
   TEXT: {
     BUTTON_SHARE: '공유하기',
     BUTTON_LOGOUT: '로그아웃',
