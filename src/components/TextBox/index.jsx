@@ -12,14 +12,16 @@ export const TextBoxDefault = (props) => {
 
       <div className="relative w-full">
         <input
-          className="w-full h-[2rem] border border-gray-300 rounded-sm pr-[3.5rem] text-sm"
+          className="w-full p-3 h-[2rem] border border-gray-300 rounded-sm pr-[3.5rem] text-sm focus:outline-none"
           value={props.text}
           onChange={props.onChange}
           id={props.id}
           maxLength={isConditionBox && 35}
         />
         {isConditionBox && (
-          <span className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 text-xs pointer-events-none">
+          <span
+            className={`absolute right-2 top-1/2 -translate-y-1/2 ${textLengh >= 35 ? 'text-red-500 font-semibold' : 'text-gray-400'} text-xs pointer-events-none`}
+          >
             {`${textLengh}/${DATA_TYPE.TEXT.MAX_LENGTH}`}
           </span>
         )}
