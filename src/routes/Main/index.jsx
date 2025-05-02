@@ -10,7 +10,7 @@ const defaultData = [
   { title: DATA_TYPE.YOUTUBE, text: '' },
 ];
 
-const buttonStyle = 'cursor-pointer flex-1 h-[2.5rem] font-bold';
+const buttonStyle = 'cursor-pointer flex-1 h-[2.5rem] font-bold rounded-sm';
 
 export default function Main() {
   const [data, setData] = useState(defaultData);
