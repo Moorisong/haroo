@@ -40,23 +40,11 @@ export default function Main() {
   };
 
   const onChangeText = (event) => {
-    const dataType = event.target.id === '0' ? DATA_TYPE.CONDITION : DATA_TYPE.YOUTUBE;
+    const index = Number(event.target.id);
 
     setData((prevData) => {
-      let newData = [...prevData];
-
-      switch (dataType) {
-        case DATA_TYPE.CONDITION:
-          newData[0] = { ...newData[0], text: event.target.value };
-          break;
-
-        case DATA_TYPE.YOUTUBE:
-          newData[1] = { ...newData[1], text: event.target.value };
-          break;
-
-        default:
-          return prevData;
-      }
+      const newData = [...prevData];
+      newData[index] = { ...newData[index], text: event.target.value };
       return newData;
     });
   };
