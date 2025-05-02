@@ -72,8 +72,12 @@ export default function Main() {
       ))}
 
       <div className="flex flex-row gap-3">
-        <div onClick={onClickShare}>{DATA_TYPE.TEXT.BUTTON_SHARE}</div>
-        <div onClick={onClickLogout}>{DATA_TYPE.TEXT.BUTTON_LOGOUT}</div>
+        <button className="cursor-pointer" onClick={onClickShare}>
+          {DATA_TYPE.TEXT.BUTTON_SHARE}
+        </button>
+        <button className="cursor-pointer" onClick={onClickLogout}>
+          {DATA_TYPE.TEXT.BUTTON_LOGOUT}
+        </button>
       </div>
     </div>
   );
