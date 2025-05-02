@@ -62,16 +62,19 @@ export default function Main() {
   };
 
   return (
-    <div>
-      <div className="mt-40 flex flex-col items-center gap-4">
+    <div className="flex flex-col items-center gap-10">
+      <div className="flex flex-col items-center mt-20 mb-5 gap-4">
         <BrandHeader scale={'w-[5rem] h-[5rem]'} />
       </div>
+
       {data.map((e, i) => (
         <TextBoxDefault id={i} onChange={onChangeText} key={e.title + i} title={e.title} text={e.text} />
       ))}
 
-      <div onClick={onClickShare}>{DATA_TYPE.TEXT.BUTTON_SHARE}</div>
-      <div onClick={onClickLogout}>{DATA_TYPE.TEXT.BUTTON_LOGOUT}</div>
+      <div className="flex flex-row gap-3">
+        <div onClick={onClickShare}>{DATA_TYPE.TEXT.BUTTON_SHARE}</div>
+        <div onClick={onClickLogout}>{DATA_TYPE.TEXT.BUTTON_LOGOUT}</div>
+      </div>
     </div>
   );
 }
