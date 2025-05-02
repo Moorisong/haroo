@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { getYoutubeId, validateYoutubeUrl, kakaoListShare, kakaoLogout } from 'src/utils';
 import { TextBoxDefault } from 'src/components/TextBox';
 import { ALERT_CONTENT, DATA_TYPE, TOKEN_NAME } from 'src/constants';
+import BrandHeader from 'src/components/BrandHeader';
 
 const defaultData = [
   { title: DATA_TYPE.CONDITION, text: '' },
@@ -62,6 +63,9 @@ export default function Main() {
 
   return (
     <div>
+      <div className="mt-40 flex flex-col items-center gap-4">
+        <BrandHeader scale={'w-[5rem] h-[5rem]'} />
+      </div>
       {data.map((e, i) => (
         <TextBoxDefault id={i} onChange={onChangeText} key={e.title + i} title={e.title} text={e.text} />
       ))}
