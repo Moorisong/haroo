@@ -9,7 +9,7 @@ export const kakaoListShare = (data, youtubeId) => {
   window.Kakao.Share.sendDefault({
     objectType: 'feed',
     content: {
-      title: `${condition} 확률`,
+      title: `${condition}`,
       imageUrl: youtubeImageUrl,
       link: {
         webUrl: youtubeUrl,
