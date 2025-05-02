@@ -1,4 +1,4 @@
-import { DATA_TYPE } from 'src/constants';
+import { DATA_TYPE, SCALE } from 'src/constants';
 
 export const TextBoxDefault = (props) => {
   const isConditionBox = props.id === 0;
@@ -6,7 +6,7 @@ export const TextBoxDefault = (props) => {
   const textLengh = props.text.length;
 
   return (
-    <div className="flex flex-col gap-2 w-[18rem]">
+    <div className={`flex flex-col gap-2 ${SCALE.WEB_WIDTH}`}>
       <p className="whitespace-pre-line text-base font-bold">{props.title}</p>
       {isYoutubeBox && <p className="whitespace-pre-line text-xs -mt-2">{DATA_TYPE.YOUTUBE_ADDITIONAL}</p>}
 

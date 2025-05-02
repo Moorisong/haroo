@@ -205,6 +205,9 @@
   .flex {
     display: flex;
   }
+  .h-\[2\.5rem\] {
+    height: 2.5rem;
+  }
   .h-\[2rem\] {
     height: 2rem;
   }
@@ -219,6 +222,9 @@
   }
   .w-full {
     width: 100%;
+  }
+  .flex-1 {
+    flex: 1;
   }
   .-translate-y-1\/2 {
     --tw-translate-y: calc(calc(1/2 * 100%) * -1);
@@ -264,6 +270,12 @@
   .border-gray-300 {
     border-color: var(--color-gray-300);
   }
+  .bg-\[\#E5F2FF\] {
+    background-color: #E5F2FF;
+  }
+  .bg-\[\#FEE500\] {
+    background-color: #FEE500;
+  }
   .pr-\[3\.5rem\] {
     padding-right: 3.5rem;
   }
@@ -296,6 +308,9 @@
   }
   .text-\[\#008EED\] {
     color: #008EED;
+  }
+  .text-\[\#0051C1\] {
+    color: #0051C1;
   }
   .text-gray-300 {
     color: var(--color-gray-300);

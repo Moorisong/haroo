@@ -3,6 +3,10 @@ export const TITLE_TEXT = {
   ENGLISH: "Today's Luck Simulator",
 };
 
+export const SCALE = {
+  WEB_WIDTH: 'w-[18rem]',
+};
+
 export const FONT = {
   BIG_BLACK: 'text-2xl font-bold',
   MEDIUM_BLUE: 'font-medium text-[#008EED]',

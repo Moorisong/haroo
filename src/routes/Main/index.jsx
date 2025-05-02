@@ -2,13 +2,15 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getYoutubeId, validateYoutubeUrl, kakaoListShare, kakaoLogout } from 'src/utils';
 import { TextBoxDefault } from 'src/components/TextBox';
-import { ALERT_CONTENT, DATA_TYPE, TOKEN_NAME } from 'src/constants';
+import { ALERT_CONTENT, DATA_TYPE, SCALE, TOKEN_NAME } from 'src/constants';
 import BrandHeader from 'src/components/BrandHeader';
 
 const defaultData = [
   { title: DATA_TYPE.CONDITION, text: '' },
   { title: DATA_TYPE.YOUTUBE, text: '' },
 ];
+
+const buttonStyle = 'cursor-pointer flex-1 h-[2.5rem] font-bold';
 
 export default function Main() {
   const [data, setData] = useState(defaultData);
@@ -59,11 +61,11 @@ export default function Main() {
         <TextBoxDefault id={i} onChange={onChangeText} key={e.title + i} title={e.title} text={e.text} />
       ))}
 
-      <div className="flex flex-row gap-3">
-        <button className="cursor-pointer" onClick={onClickShare}>
+      <div className={`flex flex-row gap-3 ${SCALE.WEB_WIDTH}`}>
+        <button className={`${buttonStyle} bg-[#FEE500]`} onClick={onClickShare}>
           {DATA_TYPE.TEXT.BUTTON_SHARE}
         </button>
-        <button className="cursor-pointer" onClick={onClickLogout}>
+        <button className={`${buttonStyle} bg-[#E5F2FF] text-[#0051C1]`} onClick={onClickLogout}>
           {DATA_TYPE.TEXT.BUTTON_LOGOUT}
         </button>
       </div>
