@@ -43,7 +43,7 @@ export const TOKEN_NAME = 'harooToken';
 
 export const PATH = {
   LOGO_SVG: '/logo.svg',
-  LOGO_PNG: '/logo.png',
+  LOGO_KAKAO_SHARE: '/logo_kakao_share.jpg', // 카카오 공유하기 템플릿용 이미지
   DOMAIN: 'https://haroo.vercel.app',
 };
 
