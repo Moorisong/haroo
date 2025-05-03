@@ -38,7 +38,7 @@ export const kakaoListShare = (data, youtubeId, withoutYoutube) => {
 
 export function getYoutubeId(url) {
   // 유튜브 URL 형식에 맞는 정규식 패턴 (youtu.be, youtube.com/watch, embed, v, shorts 지원)
-  const pattern = /(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|v\/|shorts\/))([^#&?]{11})/;
+  const pattern = /(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|v\/|shorts\/|live\/))([^#&?]{11})/;
   const match = url.match(pattern);
   const youtubeID = match === null ? false : match['1'];
   return youtubeID;
