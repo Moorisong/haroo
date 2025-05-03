@@ -1,6 +1,6 @@
 import { DATA_TYPE, SCALE } from 'src/constants';
 
-export const TextBoxDefault = (props) => {
+export const TextBox = (props) => {
   const isConditionBox = props.id === 0;
   const isYoutubeBox = props.id === 1;
   const textLengh = props.text.length;
