@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getYoutubeId, validateYoutubeUrl, kakaoListShare, kakaoLogout } from 'src/utils';
-import { TextBoxDefault } from 'src/components/TextBox';
+import { TextBox } from 'src/components/TextBox';
 import { ALERT_CONTENT, DATA_TYPE, SCALE, TOKEN_NAME } from 'src/constants';
 import BrandHeader from 'src/components/BrandHeader';
 
@@ -62,7 +62,7 @@ export default function Main() {
       </div>
 
       {data.map((e, i) => (
-        <TextBoxDefault id={i} onChange={onChangeText} key={e.title + i} title={e.title} text={e.text} />
+        <TextBox id={i} onChange={onChangeText} key={e.title + i} title={e.title} text={e.text} />
       ))}
 
       <div className={`flex flex-row gap-3 ${SCALE.WEB_WIDTH}`}>
