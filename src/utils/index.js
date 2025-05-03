@@ -4,14 +4,14 @@ import { PATH } from 'src/constants';
 export const kakaoListShare = (data, youtubeId, withoutYoutube) => {
   const condition = data[0].text;
   const youtubeUrl = data[1].text;
-  const youtubeImageUrl = getYoutubeImageUrl(youtubeId);
+  const youtubeImageUrl = withoutYoutube ? PATH.DOMAIN + PATH.LOGO_PNG : getYoutubeImageUrl(youtubeId);
   const percentValue = getRandomNumber();
 
   window.Kakao.Share.sendDefault({
     objectType: 'feed',
     content: {
       title: `${condition}`,
-      imageUrl: withoutYoutube ? PATH.LOGO : youtubeImageUrl,
+      imageUrl: youtubeImageUrl,
       link: {
         webUrl: youtubeUrl,
         mobileWebUrl: youtubeUrl,
