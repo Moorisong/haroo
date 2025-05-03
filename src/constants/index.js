@@ -42,7 +42,9 @@ export const KAKAO_FEED_TEXT = {
 export const TOKEN_NAME = 'harooToken';
 
 export const PATH = {
-  LOGO: '/logo.svg',
+  LOGO_SVG: '/logo.svg',
+  LOGO_PNG: '/logo.png',
+  DOMAIN: 'https://haroo.vercel.app',
 };
 
 export const YOUTUBE_IMAGE_URL = (id) => `https://img.youtube.com/vi/${id}/0.jpg`;
