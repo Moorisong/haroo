@@ -6,6 +6,9 @@ export const kakaoListShare = (data, youtubeId, withoutYoutube) => {
   const youtubeUrl = data[1].text;
   const youtubeImageUrl = withoutYoutube ? PATH.DOMAIN + PATH.LOGO_PNG : getYoutubeImageUrl(youtubeId);
   const percentValue = getRandomNumber();
+  const DescriptionText = withoutYoutube
+    ? `${percentValue}${KAKAO_FEED_TEXT.DESCRIPTION_WITHOUT_YOUTUBE}`
+    : `${percentValue}${KAKAO_FEED_TEXT.DESCRIPTION_WITH_YOUTUBE}`;
 
   window.Kakao.Share.sendDefault({
     objectType: 'feed',
@@ -16,10 +19,7 @@ export const kakaoListShare = (data, youtubeId, withoutYoutube) => {
         webUrl: youtubeUrl,
         mobileWebUrl: youtubeUrl,
       },
-      description:
-        percentValue + withoutYoutube
-          ? KAKAO_FEED_TEXT.DESCRIPTION_WITHOUT_YOUTUBE
-          : KAKAO_FEED_TEXT.DESCRIPTION_WITH_YOUTUBE,
+      description: DescriptionText,
     },
     itemContent: {
       profileText: KAKAO_FEED_TEXT.PROFILE_TEXT,
