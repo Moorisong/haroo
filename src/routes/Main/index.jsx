@@ -14,6 +14,7 @@ const buttonStyle = 'cursor-pointer flex-1 h-[2.5rem] font-bold rounded-sm';
 
 export default function Main() {
   const [data, setData] = useState(defaultData);
+  const [withoutYoutube, setWithoutYoutube] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -29,10 +30,10 @@ export default function Main() {
 
     if (!isValidYoutubeUrl || isTextEmpty) {
       if (isTextEmpty) return alert(ALERT_CONTENT.EMPTY_TEXT);
-      if (!isValidYoutubeUrl) return alert(ALERT_CONTENT.INVALID_URL);
+      if (!withoutYoutube && !isValidYoutubeUrl) return alert(ALERT_CONTENT.INVALID_URL);
     }
 
-    kakaoListShare(data, youtubeId);
+    kakaoListShare(data, youtubeId, withoutYoutube);
     return setData(defaultData);
   };
 
@@ -55,6 +56,10 @@ export default function Main() {
     });
   };
 
+  const handleToggleYoutube = () => {
+    setWithoutYoutube((prev) => !prev);
+  };
+
   return (
     <div className="flex flex-col items-center gap-10">
       <div className="flex flex-col items-center mt-20 mb-5 gap-4">
@@ -62,7 +67,14 @@ export default function Main() {
       </div>
 
       {data.map((e, i) => (
-        <TextBox id={i} onChange={onChangeText} key={e.title + i} title={e.title} text={e.text} />
+        <TextBox
+          id={i}
+          onChange={onChangeText}
+          youtubeOption={{ withoutYoutube, onToggle: handleToggleYoutube }}
+          key={e.title + i}
+          title={e.title}
+          text={e.text}
+        />
       ))}
 
       <div className={`flex flex-row gap-3 ${SCALE.WEB_WIDTH}`}>

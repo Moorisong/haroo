@@ -1,6 +1,7 @@
 import { KAKAO_FEED_TEXT, TOKEN_NAME, YOUTUBE_IMAGE_URL } from 'src/constants';
+import { PATH } from 'src/constants';
 
-export const kakaoListShare = (data, youtubeId) => {
+export const kakaoListShare = (data, youtubeId, withoutYoutube) => {
   const condition = data[0].text;
   const youtubeUrl = data[1].text;
   const youtubeImageUrl = getYoutubeImageUrl(youtubeId);
@@ -10,12 +11,15 @@ export const kakaoListShare = (data, youtubeId) => {
     objectType: 'feed',
     content: {
       title: `${condition}`,
-      imageUrl: youtubeImageUrl,
+      imageUrl: withoutYoutube ? PATH.LOGO : youtubeImageUrl,
       link: {
         webUrl: youtubeUrl,
         mobileWebUrl: youtubeUrl,
       },
-      description: percentValue + KAKAO_FEED_TEXT.DESCRIPTION,
+      description:
+        percentValue + withoutYoutube
+          ? KAKAO_FEED_TEXT.DESCRIPTION_WITHOUT_YOUTUBE
+          : KAKAO_FEED_TEXT.DESCRIPTION_WITH_YOUTUBE,
     },
     itemContent: {
       profileText: KAKAO_FEED_TEXT.PROFILE_TEXT,
