@@ -33,12 +33,12 @@ export const TextBox = (props) => {
         )}
 
         {isYoutubeBox && (
-          <div className="flex gap-1 mt-1">
+          <div className="mt-1">
             <label className="inline-flex items-center cursor-pointer">
               <input type="checkbox" className="sr-only peer" onChange={props.youtubeOption.onToggle} />
               <div className={`${roundGrayBorderStyle} w-3.5 h-3.5 peer-checked:bg-blue-500`} />
+              <span className="text-xs ml-1">{DATA_TYPE.WITHOUT_YOUTUBE}</span>
             </label>
-            <span className="text-xs">{DATA_TYPE.WITHOUT_YOUTUBE}</span>
           </div>
         )}
       </div>
