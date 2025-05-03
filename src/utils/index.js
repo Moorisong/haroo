@@ -4,7 +4,7 @@ import { PATH } from 'src/constants';
 export const kakaoListShare = (data, youtubeId, withoutYoutube) => {
   const condition = data[0].text;
   const youtubeUrl = data[1].text;
-  const youtubeImageUrl = withoutYoutube ? PATH.DOMAIN + PATH.LOGO_PNG : getYoutubeImageUrl(youtubeId);
+  const youtubeImageUrl = withoutYoutube ? PATH.DOMAIN + PATH.LOGO_KAKAO_SHARE : getYoutubeImageUrl(youtubeId);
   const percentValue = getRandomNumber();
   const DescriptionText = withoutYoutube
     ? `${percentValue}${KAKAO_FEED_TEXT.DESCRIPTION_WITHOUT_YOUTUBE}`
