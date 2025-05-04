@@ -3,41 +3,50 @@ import { DATA_TYPE, SCALE } from 'src/constants';
 const roundGrayBorderStyle = 'border border-gray-300 rounded-sm';
 
 export const TextBox = (props) => {
-  const isConditionBox = props.id === 0;
-  const isYoutubeBox = props.id === 1;
-  const isCheckedWithoutYoutube = isYoutubeBox && props.youtubeOption.withoutYoutube;
-  const textLength = props.text.length;
+  const { id, title, subTitle, text, onChange, youtubeOption } = props;
+
+  const isConditionBox = id === 0;
+  const isYoutubeBox = id === 1;
+  const isYoutubeLinkSkipped = isYoutubeBox && youtubeOption.withoutYoutube;
+  const showInputArea = !isYoutubeLinkSkipped;
+  const textLength = text.length;
 
   return (
-    <div className={`flex flex-col gap-2 ${SCALE.WEB_WIDTH}`}>
-      {!isCheckedWithoutYoutube && <p className="whitespace-pre-line text-base font-bold">{props.title}</p>}
-      {isYoutubeBox && !isCheckedWithoutYoutube && (
-        <p className="whitespace-pre-line text-xs -mt-2">{DATA_TYPE.YOUTUBE_ADDITIONAL}</p>
+    <div className={`flex flex-col gap-3 ${SCALE.WEB_WIDTH}`}>
+      {showInputArea && (
+        <>
+          <p className="whitespace-pre-line text-base font-bold">{title}</p>
+          <p className="whitespace-pre-line -mt-2 text-xs text-gray-400">{subTitle}</p>
+        </>
       )}
 
       <div className="relative w-full">
-        {!isCheckedWithoutYoutube && (
+        {showInputArea && (
           <input
             className={`${roundGrayBorderStyle} w-full p-3 h-[2rem] pr-[3.5rem] text-sm focus:outline-none`}
-            value={props.text}
-            onChange={props.onChange}
-            id={props.id}
+            value={text}
+            onChange={onChange}
+            id={id}
             maxLength={isConditionBox ? 35 : undefined}
           />
         )}
 
+        {/* 글자수 표기*/}
         {isConditionBox && (
           <span
-            className={`absolute right-2 top-1/2 -translate-y-1/2 ${textLength >= 35 ? 'text-red-500 font-semibold' : 'text-gray-400'} text-xs pointer-events-none`}
+            className={`absolute right-2 top-1/2 -translate-y-1/2 ${
+              textLength >= 35 ? 'text-red-500 font-semibold' : 'text-gray-400'
+            } text-xs pointer-events-none`}
           >
             {`${textLength}/${DATA_TYPE.TEXT.MAX_LENGTH}`}
           </span>
         )}
 
+        {/* 유튜브 링크 스킵 체크 영역 */}
         {isYoutubeBox && (
           <div className="mt-1">
             <label className="inline-flex items-center cursor-pointer">
-              <input type="checkbox" className="sr-only peer" onChange={props.youtubeOption.onToggle} />
+              <input type="checkbox" className="sr-only peer" onChange={youtubeOption.onToggle} />
               <div className={`${roundGrayBorderStyle} w-3.5 h-3.5 peer-checked:bg-blue-500`} />
               <span className="text-xs ml-1">{DATA_TYPE.WITHOUT_YOUTUBE}</span>
             </label>
