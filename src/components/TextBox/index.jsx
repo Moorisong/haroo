@@ -11,7 +11,9 @@ export const TextBox = (props) => {
   return (
     <div className={`flex flex-col gap-2 ${SCALE.WEB_WIDTH}`}>
       {!isCheckedWithoutYoutube && <p className="whitespace-pre-line text-base font-bold">{props.title}</p>}
-      {!isCheckedWithoutYoutube && <p className="whitespace-pre-line text-xs -mt-2">{DATA_TYPE.YOUTUBE_ADDITIONAL}</p>}
+      {isYoutubeBox && !isCheckedWithoutYoutube && (
+        <p className="whitespace-pre-line text-xs -mt-2">{DATA_TYPE.YOUTUBE_ADDITIONAL}</p>
+      )}
 
       <div className="relative w-full">
         {!isCheckedWithoutYoutube && (
