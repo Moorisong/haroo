@@ -14,9 +14,10 @@ export const FONT = {
 };
 
 export const DATA_TYPE = {
-  CONDITION: '어떤 확률을 구하고 싶나요?',
-  YOUTUBE: '유튜브 영상 주소를 아래에 넣어주세요.',
-  YOUTUBE_ADDITIONAL: '상대방에게 함께 전송됩니다.',
+  CONDITION: '무슨 확률이 궁금한가요?',
+  CONDITION_ADDITIONAL: '예시 : 오늘 고백하면 성공할 확률',
+  YOUTUBE: '응원 영상이 있나요?',
+  YOUTUBE_ADDITIONAL: ' 유튜브 링크를 넣으면 함께 전송돼요!',
   WITHOUT_YOUTUBE: '유튜브 영상 없이 공유할래요.',
   TEXT: {
     BUTTON_SHARE: '공유하기',
