@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { getYoutubeId, validateYoutubeUrl, kakaoListShare, kakaoLogout } from 'src/utils';
 import { TextBox } from 'src/components/TextBox';
 import { ALERT_CONTENT, DATA_TYPE, SCALE, TOKEN_NAME } from 'src/constants';
-import BrandHeader from 'src/components/BrandHeader';
+import Layout from 'src/components/Layout';
 
 const defaultData = [
   { title: DATA_TYPE.CONDITION, subTitle: DATA_TYPE.CONDITION_ADDITIONAL, text: '' },
@@ -61,11 +61,7 @@ export default function Main() {
   };
 
   return (
-    <div className="flex flex-col items-center gap-6">
-      <div className="flex flex-col items-center mt-20 mb-5 gap-4">
-        <BrandHeader scale={'w-[5rem] h-[5rem]'} />
-      </div>
-
+    <Layout>
       {data.map((e, i) => (
         <TextBox
           id={i}
@@ -86,6 +82,6 @@ export default function Main() {
           {DATA_TYPE.TEXT.BUTTON_LOGOUT}
         </button>
       </div>
-    </div>
+    </Layout>
   );
 }
