@@ -1,11 +1,13 @@
+import { FONT } from 'src/constants';
+
 export default function Footer() {
   return (
-    <div className="flex space-x-4 text-sm text-gray-500">
-      <a href="/terms" target="_blank" className="hover:text-gray-700 underline-offset-2 hover:underline">
+    <div className={`flex space-x-2 mt-5 ${FONT.SMALL_DARTGRAY}`}>
+      <a href="/terms" target="_blank" className={FONT.HOVER_UNDERLINE_TO_GRAY}>
         이용약관
       </a>
-      <span>|</span>
-      <a href="/privacy" target="_blank" className="hover:text-gray-700 underline-offset-2 hover:underline">
+      <span>·</span>
+      <a href="/privacy" target="_blank" className={FONT.HOVER_UNDERLINE_TO_GRAY}>
         개인정보처리방침
       </a>
     </div>
