@@ -7,12 +7,17 @@ export const SCALE = {
   WEB_WIDTH: 'w-[18rem]',
 };
 
+export const COLOR = {
+  SKY_BLUE: 'text-[#008EED]',
+};
+
 export const FONT = {
   BIG_BLACK: 'text-2xl font-bold',
-  MEDIUM_BLUE: 'font-medium text-[#008EED]',
+  MEDIUM_BLUE: `font-medium ${COLOR.SKYBLUE}`,
   SMALL_GRAY: 'text-xs text-gray-300',
   SMALL_DARTGRAY: 'text-xs text-gray-400',
-  HOVER_UNDERLINE: 'hover:text-gray-700 underline-offset-2 hover:underline',
+  HOVER_UNDERLINE: 'underline-offset-2 hover:underline',
+  HOVER_UNDERLINE_TO_GRAY: 'hover:text-gray-700 underline-offset-2 hover:underline',
 };
 
 export const DATA_TYPE = {
@@ -20,8 +25,8 @@ export const DATA_TYPE = {
   CONDITION_ADDITIONAL: '예시 : 오늘 고백하면 성공할 확률',
   YOUTUBE: '응원 영상이 있나요?',
   YOUTUBE_ADDITIONAL: ' 유튜브 링크를 넣으면 함께 전송돼요!',
-  WITHOUT_YOUTUBE: '👉 유튜브 영상 없이 공유할래요.',
-  WITH_YOUTUBE: ' 👉 유튜브 영상을 함께 보낼게요.',
+  WITHOUT_YOUTUBE: '유튜브 영상 없이 공유할래요.',
+  WITH_YOUTUBE: '유튜브 영상을 함께 보낼게요.',
   TEXT: {
     BUTTON_SHARE: '공유하기',
     BUTTON_LOGOUT: '로그아웃',

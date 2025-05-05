@@ -1,4 +1,4 @@
-import { DATA_TYPE, FONT, SCALE } from 'src/constants';
+import { COLOR, DATA_TYPE, FONT, SCALE } from 'src/constants';
 
 const roundGrayBorderStyle = 'border border-gray-300 rounded-sm';
 
@@ -11,6 +11,7 @@ export const TextBox = (props) => {
   const showInputArea = !isYoutubeLinkSkipped;
   const textLength = text.length;
   const underlineMessage = youtubeOption.withoutYoutube ? DATA_TYPE.WITH_YOUTUBE : DATA_TYPE.WITHOUT_YOUTUBE;
+  const icon = youtubeOption.withoutYoutube ? '👉' : '🖐️';
 
   return (
     <div className={`flex flex-col gap-3 ${SCALE.WEB_WIDTH} mt-5`}>
@@ -45,8 +46,9 @@ export const TextBox = (props) => {
 
         {/* 유튜브 링크 스킵 옵션 영역 */}
         {isYoutubeBox && (
-          <div className="mt-1">
-            <span className={`text-xs ml-1 ${FONT.HOVER_UNDERLINE}`} onClick={youtubeOption.onToggle}>
+          <div className={isYoutubeLinkSkipped ? '-mt-2' : 'mt-4'}>
+            <span className="text-lg">{icon}</span>
+            <span className={`text-xs font-semibold ml-1 ${FONT.HOVER_UNDERLINE}`} onClick={youtubeOption.onToggle}>
               {underlineMessage}
             </span>
           </div>
