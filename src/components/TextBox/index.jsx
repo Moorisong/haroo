@@ -12,11 +12,11 @@ export const TextBox = (props) => {
   const textLength = text.length;
 
   return (
-    <div className={`flex flex-col gap-3 ${SCALE.WEB_WIDTH}`}>
+    <div className={`flex flex-col gap-3 ${SCALE.WEB_WIDTH} mt-5`}>
       {showInputArea && (
         <>
           <p className="whitespace-pre-line text-base font-bold">{title}</p>
-          <p className="whitespace-pre-line -mt-2 text-xs text-gray-400">{subTitle}</p>
+          <p className="whitespace-pre-line -mt-3 text-xs text-gray-400">{subTitle}</p>
         </>
       )}
 
