@@ -7,7 +7,7 @@ export default function Footer() {
         이용약관
       </a>
       <span>·</span>
-      <a href="/privacy" target="_blank" className={FONT.HOVER_UNDERLINE_TO_GRAY}>
+      <a href="/policy" target="_blank" className={FONT.HOVER_UNDERLINE_TO_GRAY}>
         개인정보처리방침
       </a>
     </div>
