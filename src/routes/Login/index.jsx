@@ -16,7 +16,7 @@ export default function Login() {
         <span>SH Kim</span>
       </span>
       <button
-        className="cursor-pointer"
+        className="cursor-pointer w-20"
         onClick={() => {
           kakaoLogin(url);
         }}
