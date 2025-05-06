@@ -552,9 +552,9 @@
       outline-style: none;
     }
   }
-  .sm\:grid-cols-3 {
+  .sm\:grid-cols-4 {
     @media (width >= 40rem) {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-columns: repeat(4, minmax(0, 1fr));
     }
   }
 }
