@@ -12,7 +12,7 @@ const defaultData = [
   { title: DATA_TYPE.LUCK_SIMULATOR.YOUTUBE, subTitle: DATA_TYPE.LUCK_SIMULATOR.YOUTUBE_ADDITIONAL, text: '' },
 ];
 
-export default function Main() {
+export default function Luck() {
   const [data, setData] = useState(defaultData);
   const [withoutYoutube, setWithoutYoutube] = useState(false);
   const navigate = useNavigate();
