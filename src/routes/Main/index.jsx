@@ -16,7 +16,7 @@ export default function Main() {
           onClick={onClickLuckSimulaterButton}
           className="bg-blue-100 hover:bg-blue-200 text-blue-700 font-semibold text-sm px-4 py-2 rounded shadow transition-all"
         >
-          🎲 오늘의 운세, 하루의 운명은?!
+          🎲 오늘의 운세, 당신의 운명은?!
         </button>
 
         <HarooIntro introString={greetString} />
