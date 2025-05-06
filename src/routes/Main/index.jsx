@@ -1,6 +1,7 @@
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { stats, greetString, vote } from 'src/data';
-import { DATA_TYPE, SCALE } from 'src/constants';
+import { DATA_TYPE, SCALE, TOKEN_NAME } from 'src/constants';
 import { kakaoLogout } from 'src/utils';
 import HarooIntro from 'src/components/HarooIntro';
 import Layout from 'src/components/Layout';
@@ -12,8 +13,12 @@ import Ad_thin from 'src/components/Ads/Ad_thin';
 export default function Main() {
   const navigate = useNavigate();
 
-  const onClickLuckSimulaterButton = () => navigate('/luck');
+  useEffect(() => {
+    const token = window.sessionStorage.getItem(TOKEN_NAME);
+    if (!token) return navigate('/');
+  }, []);
 
+  const onClickLuckSimulaterButton = () => navigate('/luck');
   const onClickLogout = () => {
     kakaoLogout();
     return navigate('/');
