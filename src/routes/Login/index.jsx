@@ -4,8 +4,8 @@ import BrandHeader from 'src/components/BrandHeader';
 import Ad_thin from 'src/components/Ads/Ad_thin';
 
 export default function Login() {
-  // const url = `https://kauth.kakao.com/oauth/authorize?client_id=${process.env.REACT_APP_KAKAO_APP_KEY}&redirect_uri=${process.env.REACT_APP_LOCAL_URL}/auth&response_type=code`;
-  const url = `https://kauth.kakao.com/oauth/authorize?client_id=${process.env.REACT_APP_KAKAO_APP_KEY}&redirect_uri=${process.env.REACT_APP_PROD_URL}/auth&response_type=code`;
+  const url = `https://kauth.kakao.com/oauth/authorize?client_id=${process.env.REACT_APP_KAKAO_APP_KEY}&redirect_uri=${process.env.REACT_APP_LOCAL_URL}/auth&response_type=code`;
+  // const url = `https://kauth.kakao.com/oauth/authorize?client_id=${process.env.REACT_APP_KAKAO_APP_KEY}&redirect_uri=${process.env.REACT_APP_PROD_URL}/auth&response_type=code`;
 
   return (
     <div className="mt-40 flex flex-col items-center gap-8">
