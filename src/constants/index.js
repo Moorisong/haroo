@@ -13,7 +13,7 @@ export const COLOR = {
 
 export const FONT = {
   BIG_BLACK: 'text-2xl font-bold',
-  MEDIUM_BLUE: `font-medium ${COLOR.SKYBLUE}`,
+  MEDIUM_BLUE: `font-medium ${COLOR.SKY_BLUE}`,
   SMALL_GRAY: 'text-xs text-gray-300',
   SMALL_DARTGRAY: 'text-xs text-gray-400',
   HOVER_UNDERLINE: 'underline-offset-2 hover:underline',
