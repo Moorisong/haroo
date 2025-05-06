@@ -29,6 +29,9 @@ export const FONT = {
   HOVER_UNDERLINE_TO_GRAY: 'hover:text-gray-700 underline-offset-2 hover:underline',
 };
 
+export const BUTTON_STYLE = {
+  LOGOUT: 'cursor-pointer flex-1 h-[2.5rem] font-bold rounded-sm',
+};
 export const DATA_TYPE = {
   LUCK_SIMULATOR: {
     CONDITION: '무슨 확률이 궁금한가요?',
