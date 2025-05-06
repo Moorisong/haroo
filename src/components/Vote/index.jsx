@@ -13,7 +13,7 @@ export default function Vote(props) {
     <>
       <div className="bg-white rounded-lg shadow p-4 space-y-4">
         <h2 className="text-xl font-bold">{props.data.topic}</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
           {props.data.option.map((e) => (
             <button className="bg-indigo-100 hover:bg-indigo-200 px-4 py-2 rounded font-medium" key={e + 1}>
               {e}
