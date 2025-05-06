@@ -4,6 +4,7 @@ import { getYoutubeId, validateYoutubeUrl, kakaoListShare, kakaoLogout } from 's
 import { TextBox } from 'src/components/TextBox';
 import { ALERT_CONTENT, DATA_TYPE, SCALE, TOKEN_NAME } from 'src/constants';
 import Layout from 'src/components/Layout';
+import Ad_thin from 'src/components/Ads/Ad_thin';
 
 const defaultData = [
   { title: DATA_TYPE.CONDITION, subTitle: DATA_TYPE.CONDITION_ADDITIONAL, text: '' },
@@ -61,27 +62,31 @@ export default function Main() {
   };
 
   return (
-    <Layout>
-      {data.map((e, i) => (
-        <TextBox
-          id={i}
-          onChange={onChangeText}
-          youtubeOption={{ withoutYoutube, onToggle: handleToggleYoutube }}
-          key={e.title + i}
-          title={e.title}
-          subTitle={e.subTitle}
-          text={e.text}
-        />
-      ))}
+    <>
+      <Layout>
+        {data.map((e, i) => (
+          <TextBox
+            id={i}
+            onChange={onChangeText}
+            youtubeOption={{ withoutYoutube, onToggle: handleToggleYoutube }}
+            key={e.title + i}
+            title={e.title}
+            subTitle={e.subTitle}
+            text={e.text}
+          />
+        ))}
 
-      <div className={`flex flex-row gap-3 mt-5 ${SCALE.WEB_WIDTH}`}>
-        <button className={`${buttonStyle} bg-[#FEE500]`} onClick={onClickShare}>
-          {DATA_TYPE.TEXT.BUTTON_SHARE}
-        </button>
-        <button className={`${buttonStyle} bg-[#E5F2FF] text-[#0051C1]`} onClick={onClickLogout}>
-          {DATA_TYPE.TEXT.BUTTON_LOGOUT}
-        </button>
-      </div>
-    </Layout>
+        <div className={`flex flex-row gap-3 mt-5 ${SCALE.WEB_WIDTH}`}>
+          <button className={`${buttonStyle} bg-[#FEE500]`} onClick={onClickShare}>
+            {DATA_TYPE.TEXT.BUTTON_SHARE}
+          </button>
+          <button className={`${buttonStyle} bg-[#E5F2FF] text-[#0051C1]`} onClick={onClickLogout}>
+            {DATA_TYPE.TEXT.BUTTON_LOGOUT}
+          </button>
+        </div>
+      </Layout>
+
+      <Ad_thin />
+    </>
   );
 }
