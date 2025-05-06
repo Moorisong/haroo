@@ -46,6 +46,11 @@ export const DATA_TYPE = {
       MAX_LENGTH: '35',
     },
   },
+  MAIN_PAGE: {
+    LUCK_BUTTON_TEXT: ' 🎲 오늘의 행운지수 보러가기!',
+  },
+  ERROR_MESSAGE: '에러가 발생했습니다.',
+  API_ERROR_MESSAGE: 'API 호출 오류: ',
 };
 
 export const ALERT_CONTENT = {
