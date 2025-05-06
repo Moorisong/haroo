@@ -1,6 +1,7 @@
 import { kakaoLogin } from 'src/utils';
 import { FONT } from 'src/constants';
 import BrandHeader from 'src/components/BrandHeader';
+import Ad_thin from 'src/components/Ads/Ad_thin';
 
 export default function Login() {
   // const url = `https://kauth.kakao.com/oauth/authorize?client_id=${process.env.REACT_APP_KAKAO_APP_KEY}&redirect_uri=${process.env.REACT_APP_LOCAL_URL}/auth&response_type=code`;
@@ -22,6 +23,8 @@ export default function Login() {
       >
         <img src="/images/kakaoLogin.png" alt="Kakao Login Butoon" />
       </button>
+
+      <Ad_thin />
     </div>
   );
 }
