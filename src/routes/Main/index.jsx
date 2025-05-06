@@ -35,6 +35,10 @@ export default function Main() {
       });
   }, []);
 
+  useEffect(() => {
+    console.log('data::: ', data);
+  }, [data]);
+
   const onClickLuckSimulaterButton = () => navigate('/luck');
   const onClickLogout = () => {
     kakaoLogout();
