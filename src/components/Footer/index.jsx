@@ -10,6 +10,10 @@ export default function Footer() {
       <a href="/policy" target="_blank" className={FONT.HOVER_UNDERLINE_TO_GRAY}>
         개인정보처리방침
       </a>
+      <span>·</span>
+      <a href="/about" target="_blank" className={FONT.HOVER_UNDERLINE_TO_GRAY}>
+        About
+      </a>
     </div>
   );
 }

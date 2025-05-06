@@ -12,6 +12,7 @@ export const TITLE_TEXT = {
 
 export const SCALE = {
   WEB_WIDTH: 'w-[18rem]',
+  WIDTH_20: 'w-[20rem]',
 };
 
 export const COLOR = {

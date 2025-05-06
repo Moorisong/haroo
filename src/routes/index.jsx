@@ -5,6 +5,7 @@ import KakaoAuthHandle from 'src/routes/KakaoAuthHandle';
 import Policy from 'src/routes/Policy';
 import Terms from 'src/routes/Terms';
 import Luck from 'src/routes/Luck';
+import About from 'src/components/About';
 
 function Router() {
   return (
@@ -15,6 +16,7 @@ function Router() {
       <Route path="/auth" element={<KakaoAuthHandle />} />
       <Route path="/policy" element={<Policy />} />
       <Route path="/terms" element={<Terms />} />
+      <Route path="/about" element={<About />} />
     </Routes>
   );
 }
