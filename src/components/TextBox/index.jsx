@@ -1,29 +1,57 @@
-import { DATA_TYPE, SCALE } from 'src/constants';
+import { COLOR, DATA_TYPE, FONT, SCALE } from 'src/constants';
 
-export const TextBoxDefault = (props) => {
-  const isConditionBox = props.id === 0;
-  const isYoutubeBox = props.id === 1;
-  const textLengh = props.text.length;
+const roundGrayBorderStyle = 'border border-gray-300 rounded-sm';
+
+export const TextBox = (props) => {
+  const { id, title, subTitle, text, onChange, youtubeOption } = props;
+
+  const isConditionBox = id === 0;
+  const isYoutubeBox = id === 1;
+  const isYoutubeLinkSkipped = isYoutubeBox && youtubeOption.withoutYoutube;
+  const showInputArea = !isYoutubeLinkSkipped;
+  const textLength = text.length;
+  const underlineMessage = youtubeOption.withoutYoutube ? DATA_TYPE.WITH_YOUTUBE : DATA_TYPE.WITHOUT_YOUTUBE;
+  const icon = youtubeOption.withoutYoutube ? '👉' : '🖐️';
 
   return (
-    <div className={`flex flex-col gap-2 ${SCALE.WEB_WIDTH}`}>
-      <p className="whitespace-pre-line text-base font-bold">{props.title}</p>
-      {isYoutubeBox && <p className="whitespace-pre-line text-xs -mt-2">{DATA_TYPE.YOUTUBE_ADDITIONAL}</p>}
+    <div className={`flex flex-col gap-3 ${SCALE.WEB_WIDTH} mt-5`}>
+      {showInputArea && (
+        <>
+          <p className="whitespace-pre-line text-base font-bold">{title}</p>
+          <p className={`whitespace-pre-line -mt-3 ${FONT.SMALL_DARTGRAY}`}>{subTitle}</p>
+        </>
+      )}
 
       <div className="relative w-full">
-        <input
-          className="w-full p-3 h-[2rem] border border-gray-300 rounded-sm pr-[3.5rem] text-sm focus:outline-none"
-          value={props.text}
-          onChange={props.onChange}
-          id={props.id}
-          maxLength={isConditionBox && 35}
-        />
+        {showInputArea && (
+          <input
+            className={`${roundGrayBorderStyle} w-full p-3 h-[2rem] pr-[3.5rem] text-sm focus:outline-none`}
+            value={text}
+            onChange={onChange}
+            id={id}
+            maxLength={isConditionBox ? 35 : undefined}
+          />
+        )}
+
+        {/* 글자수 표기*/}
         {isConditionBox && (
           <span
-            className={`absolute right-2 top-1/2 -translate-y-1/2 ${textLengh >= 35 ? 'text-red-500 font-semibold' : 'text-gray-400'} text-xs pointer-events-none`}
+            className={`absolute right-2 top-1/2 -translate-y-1/2 ${
+              textLength >= 35 ? 'text-red-500 font-semibold' : FONT.SMALL_DARTGRAY
+            } text-xs pointer-events-none`}
           >
-            {`${textLengh}/${DATA_TYPE.TEXT.MAX_LENGTH}`}
+            {`${textLength}/${DATA_TYPE.TEXT.MAX_LENGTH}`}
           </span>
+        )}
+
+        {/* 유튜브 링크 스킵 옵션 영역 */}
+        {isYoutubeBox && (
+          <div className={isYoutubeLinkSkipped ? '-mt-2' : 'mt-4'}>
+            <span className="text-lg">{icon}</span>
+            <span className={`text-xs font-semibold ml-1 ${FONT.HOVER_UNDERLINE}`} onClick={youtubeOption.onToggle}>
+              {underlineMessage}
+            </span>
+          </div>
         )}
       </div>
     </div>

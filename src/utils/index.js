@@ -1,10 +1,14 @@
 import { KAKAO_FEED_TEXT, TOKEN_NAME, YOUTUBE_IMAGE_URL } from 'src/constants';
+import { PATH } from 'src/constants';
 
-export const kakaoListShare = (data, youtubeId) => {
+export const kakaoListShare = (data, youtubeId, withoutYoutube) => {
   const condition = data[0].text;
   const youtubeUrl = data[1].text;
-  const youtubeImageUrl = getYoutubeImageUrl(youtubeId);
+  const youtubeImageUrl = withoutYoutube ? PATH.DOMAIN + PATH.LOGO_KAKAO_SHARE : getYoutubeImageUrl(youtubeId);
   const percentValue = getRandomNumber();
+  const DescriptionText = withoutYoutube
+    ? `${percentValue}${KAKAO_FEED_TEXT.DESCRIPTION_WITHOUT_YOUTUBE}`
+    : `${percentValue}${KAKAO_FEED_TEXT.DESCRIPTION_WITH_YOUTUBE}`;
 
   window.Kakao.Share.sendDefault({
     objectType: 'feed',
@@ -15,7 +19,7 @@ export const kakaoListShare = (data, youtubeId) => {
         webUrl: youtubeUrl,
         mobileWebUrl: youtubeUrl,
       },
-      description: percentValue + KAKAO_FEED_TEXT.DESCRIPTION,
+      description: DescriptionText,
     },
     itemContent: {
       profileText: KAKAO_FEED_TEXT.PROFILE_TEXT,
@@ -34,7 +38,7 @@ export const kakaoListShare = (data, youtubeId) => {
 
 export function getYoutubeId(url) {
   // 유튜브 URL 형식에 맞는 정규식 패턴 (youtu.be, youtube.com/watch, embed, v, shorts 지원)
-  const pattern = /(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|v\/|shorts\/))([^#&?]{11})/;
+  const pattern = /(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|v\/|shorts\/|live\/))([^#&?]{11})/;
   const match = url.match(pattern);
   const youtubeID = match === null ? false : match['1'];
   return youtubeID;
