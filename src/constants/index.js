@@ -1,6 +1,13 @@
 export const TITLE_TEXT = {
-  KOREAN: '[하루] 오늘의 확률 시뮬레이터',
-  ENGLISH: "Today's Luck Simulator",
+  LUCK_SIMULATOR: {
+    TITLE: '[하루] 오늘의 확률 시뮬레이터',
+    SUBTITLE: "Today's Luck Simulator",
+  },
+  HAROO: {
+    TITLE: '[하루] 오늘의 선택, 하루가 쑥쑥 자라요 ☺️',
+    SUBTITLE:
+      '매일 투표로 하루의 선택을 이끌어가고, 그에 따라 하루의 이야기도 변화합니다.\n당신의 선택이 하루의 성장과 스토리를 만들어가요!',
+  },
 };
 
 export const SCALE = {
@@ -14,6 +21,7 @@ export const COLOR = {
 export const FONT = {
   BIG_BLACK: 'text-2xl font-bold',
   MEDIUM_BLUE: `font-medium ${COLOR.SKY_BLUE}`,
+  SMALL_BLUE: `text-xs font-medium ${COLOR.SKY_BLUE}`,
   SMALL_GRAY: 'text-xs text-gray-300',
   SMALL_DARTGRAY: 'text-xs text-gray-400',
   HOVER_UNDERLINE: 'underline-offset-2 hover:underline',
@@ -21,16 +29,18 @@ export const FONT = {
 };
 
 export const DATA_TYPE = {
-  CONDITION: '무슨 확률이 궁금한가요?',
-  CONDITION_ADDITIONAL: '예시 : 오늘 고백하면 성공할 확률',
-  YOUTUBE: '응원 영상이 있나요?',
-  YOUTUBE_ADDITIONAL: ' 유튜브 링크를 넣으면 함께 전송돼요!',
-  WITHOUT_YOUTUBE: '유튜브 영상 없이 공유할래요.',
-  WITH_YOUTUBE: '유튜브 영상을 함께 보낼게요.',
-  TEXT: {
-    BUTTON_SHARE: '공유하기',
-    BUTTON_LOGOUT: '로그아웃',
-    MAX_LENGTH: '35',
+  LUCK_SIMULATOR: {
+    CONDITION: '무슨 확률이 궁금한가요?',
+    CONDITION_ADDITIONAL: '예시 : 오늘 고백하면 성공할 확률',
+    YOUTUBE: '응원 영상이 있나요?',
+    YOUTUBE_ADDITIONAL: ' 유튜브 링크를 넣으면 함께 전송돼요!',
+    WITHOUT_YOUTUBE: '유튜브 영상 없이 공유할래요.',
+    WITH_YOUTUBE: '유튜브 영상을 함께 보낼게요.',
+    TEXT: {
+      BUTTON_SHARE: '공유하기',
+      BUTTON_LOGOUT: '로그아웃',
+      MAX_LENGTH: '35',
+    },
   },
 };
 
