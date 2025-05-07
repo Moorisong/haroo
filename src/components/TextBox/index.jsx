@@ -1,4 +1,4 @@
-import { COLOR, DATA_TYPE, FONT, SCALE } from 'src/constants';
+import { DATA_TYPE, FONT, SCALE } from 'src/constants';
 
 const roundGrayBorderStyle = 'border border-gray-300 rounded-sm';
 
