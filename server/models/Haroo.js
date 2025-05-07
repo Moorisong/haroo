@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-// 하루의 스탯 고정 값 설정
+// 하루 스탯 고정 값
 const statFields = {
   불친절도: { type: Number, default: 0 },
   고백차인횟수: { type: Number, default: 0 },
@@ -26,6 +26,7 @@ const HarooSchema = new mongoose.Schema(
       default: '하루(Haroo)',
       maxlength: 15,
       trim: true,
+      unique: true,
     },
     currentStats: {
       type: Map,
