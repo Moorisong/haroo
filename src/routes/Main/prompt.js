@@ -46,26 +46,28 @@ MZ스타일로 인사말을 만들어도 좋고, 너무 선정적이지만 않�
 
 출력은 아래 형식의 객체입니다:
 {
-  todayPoll: {
-    date: 'YYYY-MM-DD',
-    topic: '...',
-    selectedOption: '...',
-    totalVotes: 123
+  "todayPoll": {
+    "date": "YYYY-MM-DD",
+    "topic": "...",
+    "selectedOption": "...",
+    "totalVotes": 123
   },
-  tomorrowPoll: {
-    date: 'YYYY-MM-DD',
-    topic: '...',
-    options: ['...', '...', '...', '...'],
-    knowledge: '...'
+  "tomorrowPoll": {
+    "date": "YYYY-MM-DD",
+    "topic": "...",
+    "options": ["...", "...", "...", "..."],
+    "knowledge": "..."
   },
-  harooStats: {
-    preUpdateStats: { ... },
-    statChanges: { ... },
-    postUpdateStats: { ... }
+  "harooStats": {
+    "prevStats": [{ label: "...", value: "..."}],
+    "statChanges": { },
+    "UpdatedStats": [{ label: "...", value: "..."}],
   },
-  harooGreeting: {
-    asciiArt: '...',
-    greeting: '...'
+  "harooGreeting": {
+    "asciiArt": "...",
+    "greeting": "..."
   }
 }
+프론트엔드에서 객체로 파싱할 것이기 때문에 양수인 경우 '+' 기호를 포함하지 말아주세요.
+
 `;
