@@ -2,17 +2,16 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getYoutubeId, validateYoutubeUrl, kakaoListShare, kakaoLogout } from 'src/utils';
 import { TextBox } from 'src/components/TextBox';
-import { ALERT_CONTENT, DATA_TYPE, SCALE, TOKEN_NAME } from 'src/constants';
+import { ALERT_CONTENT, BUTTON_STYLE, DATA_TYPE, SCALE, TOKEN_NAME } from 'src/constants';
 import Layout from 'src/components/Layout';
+import LogoutButton from 'src/components/LogoutButton';
 
 const defaultData = [
-  { title: DATA_TYPE.CONDITION, subTitle: DATA_TYPE.CONDITION_ADDITIONAL, text: '' },
-  { title: DATA_TYPE.YOUTUBE, subTitle: DATA_TYPE.YOUTUBE_ADDITIONAL, text: '' },
+  { title: DATA_TYPE.LUCK_SIMULATOR.CONDITION, subTitle: DATA_TYPE.LUCK_SIMULATOR.CONDITION_ADDITIONAL, text: '' },
+  { title: DATA_TYPE.LUCK_SIMULATOR.YOUTUBE, subTitle: DATA_TYPE.LUCK_SIMULATOR.YOUTUBE_ADDITIONAL, text: '' },
 ];
 
-const buttonStyle = 'cursor-pointer flex-1 h-[2.5rem] font-bold rounded-sm';
-
-export default function Main() {
+export default function Luck() {
   const [data, setData] = useState(defaultData);
   const [withoutYoutube, setWithoutYoutube] = useState(false);
   const navigate = useNavigate();
@@ -75,12 +74,10 @@ export default function Main() {
       ))}
 
       <div className={`flex flex-row gap-3 mt-5 ${SCALE.WEB_WIDTH}`}>
-        <button className={`${buttonStyle} bg-[#FEE500]`} onClick={onClickShare}>
-          {DATA_TYPE.TEXT.BUTTON_SHARE}
+        <button className={`${BUTTON_STYLE.LOGOUT} bg-[#FEE500]`} onClick={onClickShare}>
+          {DATA_TYPE.LUCK_SIMULATOR.TEXT.BUTTON_SHARE}
         </button>
-        <button className={`${buttonStyle} bg-[#E5F2FF] text-[#0051C1]`} onClick={onClickLogout}>
-          {DATA_TYPE.TEXT.BUTTON_LOGOUT}
-        </button>
+        <LogoutButton text={DATA_TYPE.LUCK_SIMULATOR.TEXT.BUTTON_LOGOUT} onClick={onClickLogout} />
       </div>
     </Layout>
   );
