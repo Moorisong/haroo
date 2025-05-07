@@ -1,7 +1,6 @@
 import { isDevEnvironment, kakaoLogin } from 'src/utils';
 import { FONT } from 'src/constants';
 import BrandHeader from 'src/components/BrandHeader';
-import Ad_thin from 'src/components/Ads/Ad_thin';
 
 export default function Login() {
   const isDevNow = isDevEnvironment();
@@ -23,8 +22,6 @@ export default function Login() {
       >
         <img src="/images/kakaoLogin.png" alt="Kakao Login Butoon" />
       </button>
-
-      <Ad_thin />
     </div>
   );
 }
