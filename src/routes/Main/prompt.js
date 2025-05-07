@@ -22,7 +22,7 @@ export const promptMessage = `
 - postUpdateStats: 최종 업데이트된 스탯 (Map 형식)
 
 4. 하루 인사말
-- asciiArt: 하루의 기분을 반영한 간단한 ASCII 아트 텍스트
+- asciiArt: 하루의 기분을 반영한 간단한 ASCII 아트 텍스트, 최대 3줄까지 그릴 수 있으며 상세하게 그릴 수록 좋습니다. 신경 써서 개성있게 그려주세요.
 - greeting: 한국 날씨, 스탯, 당일 국내외 이슈를 기반으로 하루의 기분을 표현한 간단한 인사말 (5줄 이내)
 
 중요한 규칙:
@@ -71,3 +71,31 @@ MZ스타일로 인사말을 만들어도 좋고, 너무 선정적이지만 않�
 프론트엔드에서 객체로 파싱할 것이기 때문에 양수인 경우 '+' 기호를 포함하지 말아주세요.
 
 `;
+
+
+
+
+
+// {
+//   "todayPoll": {
+//     "date": "YYYY-MM-DD",
+//     "topic": "...",
+//     "selectedOption": "...",
+//     "totalVotes": 123
+//   },
+//   "tomorrowPoll": {
+//     "date": "YYYY-MM-DD",
+//     "topic": "...",
+//     "options": ["...", "...", "...", "..."],
+//     "knowledge": "..."
+//   },
+//   "harooStats": {
+//     "prevStats": [{ label: "...", value: "..."}],
+//     "statChanges": { }, //
+//     "UpdatedStats": [{ label: "...", value: "..."}], //
+//   },
+//   "harooGreeting": {
+//     "asciiArt": "...",
+//     "greeting": "..."
+//   }
+// }
