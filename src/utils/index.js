@@ -1,6 +1,5 @@
-import { DATA_TYPE, KAKAO_FEED_TEXT, TOKEN_NAME, YOUTUBE_IMAGE_URL } from 'src/constants';
+import { KAKAO_FEED_TEXT, TOKEN_NAME, YOUTUBE_IMAGE_URL } from 'src/constants';
 import { PATH } from 'src/constants';
-import { apiBe } from 'src/services';
 
 export const kakaoListShare = (data, youtubeId, withoutYoutube) => {
   const condition = data[0].text;
@@ -70,15 +69,4 @@ export function kakaoLogout() {
 
 export function isDevEnvironment() {
   return process.env.NODE_ENV === 'development';
-}
-
-export async function getHarooData(body) {
-  const headers = { 'Content-Type': 'application/json' };
-  try {
-    const response = await apiBe.post(`${process.env.REACT_APP_NODE_URL}/chat`, body, { headers });
-    return response.data;
-  } catch (error) {
-    alert(DATA_TYPE.API_ERROR_MESSAGE, error);
-    throw error;
-  }
 }

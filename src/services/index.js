@@ -10,7 +10,6 @@ apiBe.interceptors.response.use(
   (response) => response,
   (error) => {
     alert(error.message);
-    window.location.href = `${process.env.REACT_APP_PROD_URL}/login`;
     throw error;
   },
 );
