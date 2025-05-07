@@ -66,3 +66,7 @@ export function kakaoLogin(url) {
 export function kakaoLogout() {
   window.sessionStorage.removeItem(TOKEN_NAME);
 }
+
+export function isDevEnvironment() {
+  return process.env.NODE_ENV === 'development';
+}
