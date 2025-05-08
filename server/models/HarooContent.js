@@ -17,12 +17,6 @@ const HarooContentSchema = new mongoose.Schema({
     maxlength: 200, // 3줄 정도 커버 가능
     required: true,
   },
-  knowledge: {
-    type: String,
-    required: true,
-    maxlength: 500,
-    trim: true,
-  },
   createdAt: {
     type: Date,
     default: Date.now,
