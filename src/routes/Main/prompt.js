@@ -1,17 +1,24 @@
-export const promptMessage = `
+const getTomorrowDate = () => {
+  const today = new Date();
+  today.setDate(today.getDate() + 1); // 오늘에서 1일 더하기
+  return today.toISOString(); // ISO 8601 형식의 문자열로 반환
+};
 
+const tomorrowDate = getTomorrowDate();
+
+export const promptMessage = `
 하루(Haroo)는 사용자가 선택한 투표 결과에 따라 성장하는 가상의 캐릭터입니다. 사용자는 매일 제공되는 다양한 주제에 대해 투표를 진행하고, 그에 따른 결과가 하루의 성격, 능력치, 반응에 영향을 미칩니다. 하루는 기본적으로 15개의 스탯이 존재하며, 각 스탯은 0으로 시작합니다. 투표 결과에 따라 AI는 하루의 스탯을 업데이트하거나, 새로운 특별한 스탯을 추가하여 하루를 변화시킬 수 있습니다. 모든 스토리 전개는 AI의 판단에 맡겨지며, 유저가 재미있고 유익하게 참여할 수 있는 방향으로 진행됩니다.
 
 요청 형식은 아래와 같습니다.
 
 1. 오늘자 종료된 투표 데이터
-- date: YYYY-MM-DD 형식
+- date: ${new Date()}
 - topic: 투표 주제
 - selectedOption: 선택된 항목
 - totalVotes: 총 투표 수
 
-2. 내일자 실행 예정 투표 데이터
-- date: YYYY-MM-DD 형식
+2. 내일자 실행 예정 투표 데이터(날짜는 대한민국 현재 기준)
+- date: ${tomorrowDate}
 - topic: 투표 주제
 - options: 항목 4개 (문자열 배열)
 - knowledge: 해당 주제와 관련된 유익하고 흥미로운 정보 (길이 약 10줄 이내)
@@ -45,24 +52,27 @@ MZ스타일로 인사말을 만들어도 좋고, 너무 선정적이지만 않�
 - 투표 항목 4개 중에 한개는 19금 드립이나, 폭소 가능한 항목을 넣어줘도 됩니다. 수위 조절만 잘 된다면 약간의 19금 드립은 좋습니다. 예를 들어 "같이 자자고 하기, 허벅지 만지기, 바지에 똥 지리게 해주세요, 겨드랑이 털" 이정도의 것들입니다.
 - 응답은 반드시 JSON.stringify 가능한 형태로 출력해주세요.
 문자열 내부 줄바꿈은 \n 형태로 이스케이프하고, 따옴표("), 백슬래시도 반드시 JSON 표준에 맞게 이스케이프 처리하세요.
+- 투표의 4개 항목은 서로 같은 내용이 될 수 없습니다.
 
 
 출력은 아래 형식의 객체입니다:
 {
-  "todayPoll": {
-    "date": "YYYY-MM-DD",
-    "topic": "...",
-    "selectedOption": "...",
-    "totalVotes": 123
-  },
-  "tomorrowPoll": {
-    "date": "YYYY-MM-DD",
-    "topic": "...",
-    "options": ["...", "...", "...", "..."],
-    "knowledge": "..."
+  "vote": {
+    "todayPoll": {
+      "date": "YYYY-MM-DD",
+      "topic": "...",
+      "selectedOption": "...",
+      "selectedVotesCnt": 123
+      "totalVotesCnt": 123
+    },
+    "tomorrowPoll": {
+      "date": "YYYY-MM-DD",
+      "topic": "...",
+      "options": ["...", "...", "...", "..."],
+      "knowledge": "..."
+    },
   },
   "harooStats": {
-    "prevStats": [{ label: "...", value: "..."}],
     "statChanges": { },
     "UpdatedStats": [{ label: "...", value: "..."}],
   },
@@ -71,34 +81,4 @@ MZ스타일로 인사말을 만들어도 좋고, 너무 선정적이지만 않�
     "greeting": "..."
   }
 }
-프론트엔드에서 객체로 파싱할 것이기 때문에 양수인 경우 '+' 기호를 포함하지 말아주세요.
-
 `;
-
-
-
-
-
-// {
-//   "todayPoll": {
-//     "date": "YYYY-MM-DD",
-//     "topic": "...",
-//     "selectedOption": "...",
-//     "totalVotes": 123
-//   },
-//   "tomorrowPoll": {
-//     "date": "YYYY-MM-DD",
-//     "topic": "...",
-//     "options": ["...", "...", "...", "..."],
-//     "knowledge": "..."
-//   },
-//   "harooStats": {
-//     "prevStats": [{ label: "...", value: "..."}],
-//     "statChanges": { }, //
-//     "UpdatedStats": [{ label: "...", value: "..."}], //
-//   },
-//   "harooGreeting": {
-//     "asciiArt": "...",
-//     "greeting": "..."
-//   }
-// }
