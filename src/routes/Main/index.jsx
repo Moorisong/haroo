@@ -28,8 +28,7 @@ export default function Main() {
 
     getHarooData(body)
       .then((response) => {
-        const parsedData = JSON.parse(response.reply);
-        setData(parsedData);
+        setData(response);
       })
       .catch((error) => {
         console.error(DATA_TYPE.ERROR_MESSAGE, error);
@@ -37,7 +36,7 @@ export default function Main() {
   }, []);
 
   useEffect(() => {
-    if (data.harooStats) console.log('data::: ', data.harooStats.UpdatedStats);
+    console.log('data::: ', data);
   }, [data]);
 
   const onClickLuckSimulaterButton = () => navigate('/luck');
