@@ -1,52 +1,35 @@
 const mongoose = require('mongoose');
+const { HAROO_DETAIL } = require('../constants');
 
-// 하루 스탯 고정 값
-const statFields = {
-  불친절도: { type: Number, default: 0 },
-  고백차인횟수: { type: Number, default: 0 },
-  연애횟수: { type: Number, default: 0 },
-  욕설지수: { type: Number, default: 0 },
-  애정표현력: { type: Number, default: 0 },
-  논리력: { type: Number, default: 0 },
-  공감능력: { type: Number, default: 0 },
-  감수성: { type: Number, default: 0 },
-  카리스마: { type: Number, default: 0 },
-  고집: { type: Number, default: 0 },
-  집중력: { type: Number, default: 0 },
-  꾸준함: { type: Number, default: 0 },
-  창의력: { type: Number, default: 0 },
-  자존감: { type: Number, default: 0 },
-  유머감각: { type: Number, default: 0 },
-};
+// 하루 디폴트 스탯 15개
+// [불친절도, 고백차인횟수, 연애횟수, 욕설지수, 애정표현력, 논리력, 공감능력, 감수성, 카리스마, 고집, 집중력, 꾸준함, 창의력, 자존감, 유머감각]
 
 const HarooSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      default: '하루(Haroo)',
+      default: HAROO_DETAIL.NAME_KOR_EN,
       maxlength: 15,
       trim: true,
       unique: true,
     },
-    currentStats: {
-      type: Map,
-      of: {
-        type: Number,
-        default: 0,
+    currentStats: [
+      {
+        label: { type: String, required: true },
+        value: { type: Number, required: true },
       },
-      default: statFields, // 기본값으로 모든 스탯을 0으로 설정
-    },
+    ],
     statsHistory: [
       {
         date: {
           type: Date,
-          required: true,
         },
-        statChanges: {
-          type: Map,
-          of: Number,
-          required: true,
-        },
+        statChanges: [
+          {
+            label: { type: String, required: true },
+            value: { type: Number, required: true },
+          },
+        ],
       },
     ],
     createdAt: {
