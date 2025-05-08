@@ -32,6 +32,7 @@ exports.saveOrUpdateHaroo = async (data) => {
 // 하루 인사말, 이모지, 지식 DB 저장
 exports.saveOrUpdateHarooContent = async (data) => {
   const today = new Date();
+
   try {
     const doc = await HarooContent.findOneAndUpdate(
       { date: today },
@@ -51,4 +52,9 @@ exports.saveOrUpdateHarooContent = async (data) => {
   } catch (err) {
     throw new Error('Error while saving or updating Haroo content: ' + err.message);
   }
+};
+
+exports.saveOrUpdateVote = async (data) => {
+  try {
+  } catch (err) {}
 };
