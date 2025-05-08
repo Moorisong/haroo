@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+
 const { HAROO_DETAIL } = require('../constants');
 
 // 하루 디폴트 스탯 15개

@@ -30,6 +30,12 @@ const VoteSchema = new mongoose.Schema({
         default: 0,
         min: 0,
       },
+      knowledge: {
+        type: String,
+        required: true,
+        maxlength: 500,
+        trim: true,
+      },
     },
   ],
   statChanges: {
