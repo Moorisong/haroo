@@ -1,6 +1,6 @@
 const { OpenAI } = require('openai'); // openai v4.x 기준
 
-const { saveOrUpdateHaroo, saveOrUpdateHarooContent } = require('../services/gptService');
+const { saveOrUpdateHaroo, saveOrUpdateHarooContent, saveOrUpdateVote } = require('../services/gptService');
 
 const openai = new OpenAI({
   apiKey: process.env.OPEN_AI_API_KEY,
@@ -33,6 +33,7 @@ const chatWithGPT = async (req, res) => {
 
     await saveOrUpdateHaroo(parsedResult.harooStats);
     await saveOrUpdateHarooContent(parsedResult.harooGreeting);
+    await saveOrUpdateVote(parsedResult.vote);
 
     // 결과 반환
     res.json(parsedResult);

@@ -5,17 +5,25 @@ const getTomorrowDate = () => {
 };
 
 const tomorrowDate = getTomorrowDate();
+const todayVoteSelectedOption = '선택된 항목입니다.';
+const selectedVotesCnt = 10;
+const totalVotesCnt = 55;
 
 export const promptMessage = `
-하루(Haroo)는 사용자가 선택한 투표 결과에 따라 성장하는 가상의 캐릭터입니다. 사용자는 매일 제공되는 다양한 주제에 대해 투표를 진행하고, 그에 따른 결과가 하루의 성격, 능력치, 반응에 영향을 미칩니다. 하루는 기본적으로 15개의 스탯이 존재하며, 각 스탯은 0으로 시작합니다. 투표 결과에 따라 AI는 하루의 스탯을 업데이트하거나, 새로운 특별한 스탯을 추가하여 하루를 변화시킬 수 있습니다. 모든 스토리 전개는 AI의 판단에 맡겨지며, 유저가 재미있고 유익하게 참여할 수 있는 방향으로 진행됩니다.
+하루(Haroo)는 사용자가 선택한 투표 결과에 따라 성장하는 가상의 캐릭터입니다. 
+사용자는 매일 제공되는 다양한 주제에 대해 투표를 진행하고, 그에 따른 결과가 하루의 성격, 능력치, 반응에 영향을 미칩니다. 
+하루는 기본적으로 15개의 스탯이 존재하며, 각 스탯은 0으로 시작합니다. 
+투표 결과에 따라 AI는 하루의 스탯을 업데이트하거나, 새로운 특별한 스탯을 추가하여 하루를 변화시킬 수 있습니다. 
+모든 스토리 전개는 AI의 판단에 맡겨지며, 유저가 재미있고 유익하게 참여할 수 있는 방향으로 진행됩니다.
 
 요청 형식은 아래와 같습니다.
 
 1. 오늘자 종료된 투표 데이터
 - date: ${new Date()}
-- topic: 투표 주제
-- selectedOption: 선택된 항목
-- totalVotes: 총 투표 수
+- selectedOption: ${todayVoteSelectedOption}
+- selectedVotesCnt: ${selectedVotesCnt} 
+- totalVotesCnt: ${totalVotesCnt}
+** todayVoteSelectedOption, selectedOption , selectedVotesCnt, totalVotesCnt 값은 유저가 선택한 항목으로, AI가 절대 수정하거나 새로 생성하지 말고 반드시 이 값을 그대로 사용해서 응답값으로 보내주세요.
 
 2. 내일자 실행 예정 투표 데이터(날짜는 대한민국 현재 기준)
 - date: ${tomorrowDate}

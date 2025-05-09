@@ -4,44 +4,38 @@ const VoteSchema = new mongoose.Schema({
   voteDate: {
     type: Date,
     required: true,
-    unique: true, // 하루에 하나만 생성됨
   },
-  voteOptions: [
-    {
-      topic: {
-        type: String,
-        required: true,
-        trim: true,
-        maxlength: 100,
-      },
-      option: {
-        type: String,
-        required: true,
-        trim: true,
-        maxlength: 100,
-      },
-      votes: {
-        type: Number,
-        default: 0,
-        min: 0,
-      },
-      totalVotesCnt: {
-        type: Number,
-        default: 0,
-        min: 0,
-      },
-      knowledge: {
-        type: String,
-        required: true,
-        maxlength: 500,
-        trim: true,
-      },
-    },
-  ],
-  statChanges: {
-    type: Map,
-    of: Number,
-    default: {},
+  topic: {
+    type: String,
+    required: true,
+    trim: true,
+    maxlength: 100,
+  },
+  options: {
+    type: [String],
+    required: true,
+    maxlength: 4,
+  },
+  selectedOption: {
+    type: String,
+    required: true,
+    trim: true,
+    maxlength: 100,
+  },
+  selectedVotesCnt: {
+    type: Number,
+    default: 0,
+    min: 0,
+  },
+  totalVotesCnt: {
+    type: Number,
+    default: 0,
+    min: 0,
+  },
+  knowledge: {
+    type: String,
+    maxlength: 500,
+    trim: true,
   },
   createdAt: {
     type: Date,
