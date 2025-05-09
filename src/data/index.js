@@ -30,3 +30,117 @@ export const vote = {
     그럼 오늘도 하루에게 무엇을 배워볼까요? 오늘의 선택이 내일의 하루를 만들어가요!\n
   `,
 };
+
+export const chatGptData = {
+  vote: {
+    todayPoll: {
+      date: '2025-05-09',
+      selectedOption: '선택된 항목입니다.',
+      selectedVotesCnt: 10,
+      totalVotesCnt: 55,
+    },
+    tomorrowPoll: {
+      date: '2025-05-10',
+      topic: '잠수함 창문에 달팽이 붙어있으면 내 반응은?',
+      options: [
+        '얼른 셀카 찍는다',
+        '동료와 신비로운 실험 시작',
+        '진지하게 연구 리포트 작성',
+        '나도 달팽이가 되어본다 (꾸엑)',
+      ],
+      knowledge:
+        '심해에서는 달팽이처럼 극한 환경에 적응한 생명체가 종종 발견됩니다. 실제로 잠수함 연구원들은 창문에 달라붙는 작은 생물과 조용히 눈을 맞추기도 하죠. 이런 기이한 만남은 인간의 호기심을 자극해서 새로운 탐구를 시작하게 만들곤 합니다! 오늘은 물속 세상에서 일어날 법한 별별 상상을 펼쳐봐요.',
+    },
+  },
+  harooStats: {
+    statChanges: [
+      {
+        label: '창의력',
+        value: '+3',
+      },
+      {
+        label: '공감능력',
+        value: '+2',
+      },
+      {
+        label: '카리스마',
+        value: '+2',
+      },
+      {
+        label: '욕설지수',
+        value: '-1',
+      },
+    ],
+    UpdatedStats: [
+      {
+        label: '불친절도',
+        value: '1',
+      },
+      {
+        label: '고백차인횟수',
+        value: '3',
+      },
+      {
+        label: '연애횟수',
+        value: '2',
+      },
+      {
+        label: '욕설지수',
+        value: '1',
+      },
+      {
+        label: '애정표현력',
+        value: '-3',
+      },
+      {
+        label: '논리력',
+        value: '-2',
+      },
+      {
+        label: '공감능력',
+        value: '3',
+      },
+      {
+        label: '감수성',
+        value: '13',
+      },
+      {
+        label: '카리스마',
+        value: '-2',
+      },
+      {
+        label: '고집',
+        value: '-3',
+      },
+      {
+        label: '집중력',
+        value: '46',
+      },
+      {
+        label: '꾸준함',
+        value: '3',
+      },
+      {
+        label: '창의력',
+        value: '46',
+      },
+      {
+        label: '자존감',
+        value: '1',
+      },
+      {
+        label: '유머감각',
+        value: '-4',
+      },
+      {
+        label: '이별극복력',
+        value: '-55',
+      },
+    ],
+  },
+  harooGreeting: {
+    asciiArt: '(  • v •)\n /|🍀|\\ \n  / \\',
+    greeting:
+      '잠수함 창밖에서 달팽이랑 눈 마주친 거 실화야?\n오늘은 창의력 + 공감력 만렙 하루 등장!👓\n신비로운 하루, 지구판 닌텐도월드 도전중!\n굴 껍질처럼 소프트하지만 깜짝친구 늘 환영🌊\n내일 뭐 붙었나 또 기대해줘~',
+  },
+};

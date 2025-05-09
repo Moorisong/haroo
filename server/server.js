@@ -6,6 +6,7 @@ const connectDB = require('./congif/db');
 const app = express();
 const harooRoutes = require('./routes/harooRoutes');
 const chatRoutes = require('./routes/chatRoutes');
+const dailyHarooRoutes = require('./routes/dailyHarooRoutes');
 
 const corsOptions = {
   origin: ['http://localhost:3000', 'https://haroo.vercel.app'],
@@ -20,3 +21,4 @@ app.listen(3001, () => {
 });
 app.use('/api/init', harooRoutes);
 app.use('/api/chat', chatRoutes);
+app.use('/api/haroo/today', dailyHarooRoutes);

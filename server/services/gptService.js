@@ -31,6 +31,7 @@ exports.saveOrUpdateHaroo = async (data) => {
     const lastStatDate = haroo.statsHistory?.[haroo.statsHistory.length - 1]?.date;
     const normalizedLastStatDate = normalizeDate(lastStatDate);
     const normalizedYesterday = normalizeDate(yesterday);
+
     if (normalizedLastStatDate.getTime() === normalizedYesterday.getTime()) {
       const updated = await Haroo.findOneAndUpdate(
         { name: HAROO_DETAIL.NAME_KOR_EN },
