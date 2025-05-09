@@ -1,5 +1,8 @@
+const { normalizeDate } = require('../utils');
+
 const { Haroo } = require('../models/Haroo');
 const { HarooContent } = require('../models/HarooContent');
+const { Vote } = require('../models/Vote');
 const { HAROO_DETAIL } = require('../constants');
 
 // 하루 최신 스탯, 스탯 변경 내역 DB 저장
@@ -56,5 +59,61 @@ exports.saveOrUpdateHarooContent = async (data) => {
 
 exports.saveOrUpdateVote = async (data) => {
   try {
-  } catch (err) {}
+    const today = new Date(data.todayPoll.date);
+    const tomorrow = new Date(data.tomorrowPoll.date);
+
+    const nomalizedDate = {
+      today: normalizeDate(today),
+      tomorrow: normalizeDate(tomorrow),
+    };
+
+    // Step 1: todayPoll 데이터 업데이트
+    const doc = await Vote.findOneAndUpdate(
+      { voteDate: nomalizedDate.today },
+      {
+        $set: {
+          updatedAt: nomalizedDate.today,
+          selectedOption: data.todayPoll.selectedOption,
+          selectedVotesCnt: data.todayPoll.selectedVotesCnt,
+          totalVotesCnt: data.todayPoll.totalVotesCnt,
+        },
+        $setOnInsert: {
+          voteDate: nomalizedDate.today,
+          topic: '첫 투표입니다.',
+          options: ['a', 'b', 'c', 'd'],
+          knowledge: '지식 영역입니다.',
+          createdAt: nomalizedDate.today,
+        },
+      },
+      {
+        new: true,
+        upsert: true,
+      },
+    );
+
+    // Step 2: tomorrowPoll 데이터 저장
+
+    const tomorrowDoc = await Vote.findOneAndUpdate(
+      { voteDate: nomalizedDate.tomorrow },
+      {
+        $setOnInsert: {
+          topic: data.tomorrowPoll.topic,
+          options: data.tomorrowPoll.options,
+          selectedOption: '', // 내일은 아직 선택되지 않음
+          selectedVotesCnt: 0, // 초기값
+          totalVotesCnt: 0, // 초기값
+          knowledge: data.tomorrowPoll.knowledge,
+          createdAt: nomalizedDate.today,
+        },
+      },
+      {
+        new: true,
+        upsert: true,
+      },
+    );
+
+    return { todayVote: doc, tomorrowVote: tomorrowDoc };
+  } catch (err) {
+    throw new Error('Error while saving or updating vote data: ' + err.message);
+  }
 };
