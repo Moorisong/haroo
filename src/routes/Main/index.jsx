@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { stats, greetString, vote, chatGptData } from 'src/data';
 import { DATA_TYPE, SCALE, TOKEN_NAME } from 'src/constants';
 import { kakaoLogout } from 'src/utils';
 import { fetchHarooResponseFromGpt } from 'src/services/harooApis';
@@ -12,7 +11,7 @@ import LogoutButton from 'src/components/LogoutButton';
 import Ad_thin from 'src/components/Ads/Ad_thin';
 import { getHarooData } from 'src/services/harooApis';
 
-import { promptMessage } from './prompt';
+// import { promptMessage } from './prompt';
 
 export default function Main() {
   const [data, setData] = useState({});
@@ -24,8 +23,8 @@ export default function Main() {
   }, []);
 
   useEffect(() => {
-    const message = promptMessage;
-    const body = JSON.stringify({ message });
+    // const message = promptMessage;
+    // const body = JSON.stringify({ message });
 
     // fetchHarooResponseFromGpt(body)
     //   .then((response) => {
@@ -57,23 +56,27 @@ export default function Main() {
   return (
     <>
       <Layout>
-        {data.harooContent && (
-          <div className="flex flex-col items-center gap-3">
-            <button
-              onClick={onClickLuckSimulaterButton}
-              className="bg-blue-500 hover:bg-blue-200 text-white font-semibold text-sm px-4 py-2 rounded shadow transition-all"
-            >
-              {DATA_TYPE.MAIN_PAGE.LUCK_BUTTON_TEXT}
-            </button>
+        <div className="max-w-3xl mx-auto px-4 py-8">
+          {data.harooContent && (
+            <div className="flex flex-col items-center gap-8">
+              <button
+                onClick={onClickLuckSimulaterButton}
+                className="bg-gradient-to-r from-blue-400 to-blue-600 hover:from-blue-500 hover:to-blue-700 text-white font-semibold text-sm px-6 py-2 rounded-full shadow-md transition-all"
+              >
+                {DATA_TYPE.MAIN_PAGE.LUCK_BUTTON_TEXT}
+              </button>
 
-            <HarooIntro introString={data.harooContent.greeting} />
-            <HarooStats data={data.harooStat.currentStats} />
-            <Vote data={data.todayVote} />
-            <div className={`flex flex-row gap-3 mt-5 ${SCALE.WEB_WIDTH}`}>
-              <LogoutButton text={DATA_TYPE.LUCK_SIMULATOR.TEXT.BUTTON_LOGOUT} onClick={onClickLogout} />
+              <HarooIntro introString={data.harooContent.greeting} emoticon={data.harooContent.emoticon} />
+              <HarooStats data={data.harooStat.currentStats} />
+              <Vote data={data.todayVote} />
+
+              <div className="flex justify-end mb-4">
+                <LogoutButton text={DATA_TYPE.LUCK_SIMULATOR.TEXT.BUTTON_LOGOUT} onClick={onClickLogout} />
+              </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
+        <Ad_thin />
       </Layout>
       <Ad_thin />
     </>

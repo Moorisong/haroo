@@ -21,7 +21,8 @@ const dailyHaroo = async (req, res) => {
         updatedAt: harooStatData.updatedAt,
       },
       harooContent: {
-        greeting: harooContentData.emoticon + harooContentData.greeting,
+        emoticon: harooContentData.emoticon,
+        greeting: harooContentData.greeting,
       },
       todayVote: {
         voteDate: voteData[1].voteDate,

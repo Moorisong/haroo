@@ -1,11 +1,10 @@
-import { BUTTON_STYLE } from 'src/constants';
-
-export default function LogoutButton(props) {
+export default function LogoutButton({ text, onClick }) {
   return (
-    <>
-      <button className={`${BUTTON_STYLE.LOGOUT} bg-[#E5F2FF] text-[#0051C1]`} onClick={props.onClick}>
-        {props.text}
-      </button>
-    </>
+    <button
+      className="bg-[#E5F2FF] text-[#0051C1] font-medium px-4 py-2 rounded-md shadow-sm hover:bg-[#d8ebff] transition"
+      onClick={onClick}
+    >
+      {text}
+    </button>
   );
 }
