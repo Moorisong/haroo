@@ -20,6 +20,7 @@ const chatWithGPT = async (req, res) => {
 
     // GPT 응답 내용 추출 및 유효성 검사
     const result = choices?.[0]?.message?.content;
+
     if (!result) {
       throw new Error('GPT 응답이 유효하지 않음');
     }
