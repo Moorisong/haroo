@@ -1,13 +1,37 @@
+const getTodayDate = () => {
+  const today = new Date();
+  return today.toISOString().split('T')[0]; // YYYY-MM-DD
+};
+
 const getTomorrowDate = () => {
   const today = new Date();
-  today.setDate(today.getDate() + 1); // 오늘에서 1일 더하기
-  return today.toISOString(); // ISO 8601 형식의 문자열로 반환
+  today.setDate(today.getDate() + 1);
+  return today.toISOString(); // ISO 8601 형식
 };
 
 const tomorrowDate = getTomorrowDate();
 const todayVoteSelectedOption = '선택된 항목입니다.';
 const selectedVotesCnt = 10;
 const totalVotesCnt = 55;
+const todayDateStr = getTodayDate();
+const currentStat = {
+  불친절도: 1,
+  고백차인횟수: 3,
+  연애횟수: 2,
+  욕설지수: 2,
+  애정표현력: -3,
+  논리력: -2,
+  공감능력: 1,
+  감수성: 13,
+  카리스마: -4,
+  고집: -3,
+  집중력: 46,
+  꾸준함: 3,
+  창의력: 43,
+  자존감: 1,
+  유머감각: -4,
+  이별극복력: -55,
+};
 
 export const promptMessage = `
 하루(Haroo)는 사용자가 선택한 투표 결과에 따라 성장하는 가상의 캐릭터입니다. 
@@ -19,8 +43,8 @@ export const promptMessage = `
 요청 형식은 아래와 같습니다.
 
 1. 오늘자 종료된 투표 데이터
-- date: ${new Date()}
-- selectedOption: ${todayVoteSelectedOption}
+- date: "${todayDateStr}"
+- selectedOption: ${JSON.stringify(todayVoteSelectedOption)}
 - selectedVotesCnt: ${selectedVotesCnt} 
 - totalVotesCnt: ${totalVotesCnt}
 ** todayVoteSelectedOption, selectedOption , selectedVotesCnt, totalVotesCnt 값은 유저가 선택한 항목으로, AI가 절대 수정하거나 새로 생성하지 말고 반드시 이 값을 그대로 사용해서 응답값으로 보내주세요.
@@ -32,22 +56,27 @@ export const promptMessage = `
 - knowledge: 해당 주제와 관련된 유익하고 흥미로운 정보 (길이 약 10줄 이내)
 
 3. 하루 스탯 데이터
-- preUpdateStats: 업데이트 전 스탯 (Map 형식)
+- currentStat: 현재 하루 스탯입니다. Map (key-value) 형태입니다.
+${JSON.stringify(currentStat, null, 2)}
 - statChanges: 변화한 스탯 (Map 형식, 변화한 항목만)
-- postUpdateStats: 최종 업데이트된 스탯 (Map 형식)
+- **주의:** statChanges에 들어가는 음수와 양수는 모두 앞에 양의 기호(+), 음의 기호(-)를 붙여주세요. 이스케이프 확실하게 해주시고요. 
+- UpdatedStats: 최종 업데이트된 스탯 (Map 형식)
+${JSON.stringify(currentStat)} 값에 변경된 스탯을 적용해서 연산하여 최신의 스탯 데이터 UpdatedStats로 만들어서 응답 값으로 내려주세요.
+- **중요:** 기존 값이 5이고 변화 값이 -3인 경우, 결과적으로 2로 반영되어야 합니다.
 
 4. 하루 인사말
 - asciiArt: 하루의 기분을 반영한 간단한 ASCII 아트 텍스트, 최대 3줄까지 그릴 수 있으며 상세하게 그릴 수록 좋습니다. 신경 써서 개성있게 그려주세요.
 - greeting: 한국 날씨, 스탯, 당일 국내외 이슈를 기반으로 하루의 기분을 표현한 간단한 인사말 (5줄 이내)
 
 중요한 규칙:
-- 기본 스탯 15개는 아래와 같고, 모두 0에서 시작됩니다:
+- 기본 스탯 15개는 아래와 같습니다:
   [불친절도, 고백차인횟수, 연애횟수, 욕설지수, 애정표현력, 논리력, 공감능력, 감수성, 카리스마, 고집, 집중력, 꾸준함, 창의력, 자존감, 유머감각]
-- 투표 결과에 따라 기존 스탯의 수치만 조정하거나, 새로운 특별 스탯을 생성해도 됩니다.
+
+- 투표 결과에 따라 기존 스탯의 수치만 조정하거나, 새로운 특별 스탯을 생성해도 됩니다. ${JSON.stringify(currentStat)} 에 더하거나 빼서 최신 스탯 데이터인 UpdatedStats를 만들어서 응답으로 내려주세요.
 - 스토리와 하루의 변화는 AI가 자유롭게 구성하지만, **폭력적이거나 '섹스'같은 원색적인 내용은 포함하지 마세요. 하지만 재미있게 즐길 정도의 19금 드립은 환영입니다**
 - 대신 **너무 진부하거나 밋밋하지 않게**, **과장되거나 유머러스한 표현은 자유롭게 사용해도 됩니다.**
 - 투표는 매일 밤 23:40에 생성되며 자정에 업로드되어 23:30까지 진행됩니다. 
-- 인사말은 하루의 성격과 스탯을 반영한 유머러스하고 개성있게 작성해주세요. 이 부분이 유저를 유치하는 데이 큰 역할을 해야합니다.
+- 인사말은 하루의 성격과 스탯을 반영한 유머러스하고 개성있게 작성해주세요. 이 부분이 유저를 유치하는 데 큰 역할을 해야합니다.
 MZ스타일로 인사말을 만들어도 좋고, 너무 선정적이지만 않으면 되니 자유도를 높게 잡아서 아주 재미있게 만들어주세요.
 인사말은 최대 5줄입니다. 현재 스탯을 기반으로 5줄 이내로 자유롭게 작성해주세요.
 하루의 인사말은 하루의 오늘 기분 상태에 따라 달라집니다. 하루의 기분에 영향을 미치는 요소는 한국의 날씨, 국내외 핫이슈, 스탯 등이 있습니다. 
@@ -56,21 +85,24 @@ MZ스타일로 인사말을 만들어도 좋고, 너무 선정적이지만 않�
 30개가 이미 만들어진 상태라면 ai의 판단에 맡겨 수치가 낮은 스탯은 제거하고 새로운 스탯을 생성하는 것도 가능합니다.(단 기본 스탯 15개는 삭제하지마세요.)
 다만 스탯 데이터 배열의 요소는 30개로 유지해주세요.
 - 투표 주제로 식사 메뉴, 날씨와 같은 식상한 토픽은 피해주세요. 아주 참신하고 웃긴 주제의 비율을 높여주세요. 연애, 인문학, 상식, 역사, 음악, 취향, 도서, 영화, mbti 등등 트렌드에 맞춘 주제나 사람들이 궁금증을 가지고 투표할 수 있는 주제를 생성해주세요.
-- 스탯은 하루에 여러개가 플러스될 수 있지만, 한가지 스탯은 하루에 1포인트만 상승할 수 있습니다. 스탯 수치 변경은 +1이 되거나 -1이 되거나 변동이 없을 수도 있습니다.
+- 스탯은 하루에 여러개가 플러스될 수 있지만, 한가지 스탯은 하루에 1포인트만 상승할 수 있습니다. 스탯 수치 변경은 +1 ~ +5 이 되거나 -1 ~ -5 이 되거나입니다. 0은 없습니다.
+스탯 변화는 매일 무조건 일어나야 합니다.
 - 투표 항목 4개 중에 한개는 19금 드립이나, 폭소 가능한 항목을 넣어줘도 됩니다. 수위 조절만 잘 된다면 약간의 19금 드립은 좋습니다. 예를 들어 "같이 자자고 하기, 허벅지 만지기, 바지에 똥 지리게 해주세요, 겨드랑이 털" 이정도의 것들입니다.
 - 응답은 반드시 JSON.stringify 가능한 형태로 출력해주세요.
-문자열 내부 줄바꿈은 \n 형태로 이스케이프하고, 따옴표("), 백슬래시도 반드시 JSON 표준에 맞게 이스케이프 처리하세요.
+문자열 내부 줄바꿈은 \n 형태로 이스케이프하고, 따옴표(") 백슬래시도 반드시 JSON 표준에 맞게 이스케이프 처리하세요.
+스탯 변화 배열 값으로 들어가는 양수 값이나 음수 값을 객체로 파싱할때 에러가 나지 않고 정상적으로 연산이 되도록 미리 조치해서 보내주세요.
 - 투표의 4개 항목은 서로 같은 내용이 될 수 없습니다.
+- 모든 날짜, 시간 데이터는 대한민국 기준입니다.
 
 
-출력은 아래 형식의 객체입니다:
+출력은 아래 형식의 객체입니다: 
 {
   "vote": {
     "todayPoll": {
       "date": "YYYY-MM-DD",
       "topic": "...",
       "selectedOption": "...",
-      "selectedVotesCnt": 123
+      "selectedVotesCnt": 123,
       "totalVotesCnt": 123
     },
     "tomorrowPoll": {
@@ -78,15 +110,20 @@ MZ스타일로 인사말을 만들어도 좋고, 너무 선정적이지만 않�
       "topic": "...",
       "options": ["...", "...", "...", "..."],
       "knowledge": "..."
-    },
+    }
   },
   "harooStats": {
-    "statChanges": { },
-    "UpdatedStats": [{ label: "...", value: "..."}],
+    "statChanges": [
+      { "label": "...", "value": "+123" },
+      { "label": "...", "value": "-123" }
+    ],
+    "UpdatedStats": [
+      { "label": "...", "value": "123" },
+      { "label": "...", "value": "123" }
+    ]
   },
   "harooGreeting": {
     "asciiArt": "...",
     "greeting": "..."
   }
-}
-`;
+}`;
