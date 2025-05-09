@@ -1,11 +1,8 @@
-export default function HarooIntro(props) {
+export default function HarooIntro({ introString, emoticon }) {
   return (
-    <div className="max-w-3xl mx-auto px-4 py-8 space-y-8">
-      <div className="flex justify-center">
-        <pre className="text-sm leading-tight font-mono bg-gray-100 p-4 rounded shadow text-center whitespace-pre-wrap">
-          {props.introString}
-        </pre>
-      </div>
+    <div className="w-full bg-gray-50 rounded-xl shadow-inner p-6 text-center space-y-4">
+      <pre className="text-lg font-mono">{emoticon}</pre>
+      <pre className="text-base font-mono whitespace-pre-wrap text-gray-800">{introString}</pre>
     </div>
   );
 }
