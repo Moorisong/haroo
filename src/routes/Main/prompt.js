@@ -10,7 +10,7 @@ const getTomorrowDate = () => {
 };
 
 const tomorrowDate = getTomorrowDate();
-const todayVoteSelectedOption = '선택된 항목입니다.';
+const todayVoteSelectedOption = '선택된 항목(임시)';
 const selectedVotesCnt = 10;
 const totalVotesCnt = 55;
 const todayDateStr = getTodayDate();
@@ -86,7 +86,7 @@ export const promptMessage = `
       { "label": "...", "value": "+123" },
       { "label": "...", "value": "-123" }
     ],
-    "UpdatedStats": [
+    "updatedStats": [
       { "label": "...", "value": "123" },
       { "label": "...", "value": "123" }
     ]
