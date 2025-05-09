@@ -61,13 +61,17 @@ export default function Main() {
             <div className="flex flex-col items-center gap-8">
               <button
                 onClick={onClickLuckSimulaterButton}
-                className="bg-gradient-to-r from-blue-400 to-blue-600 hover:from-blue-500 hover:to-blue-700 text-white font-semibold text-sm px-6 py-2 rounded-full shadow-md transition-all"
+                className="bg-gradient-to-r from-blue-400 to-blue-600 hover:from-blue-500 hover:to-blue-700 text-white font-semibold text-sm px-6 py-2 rounded-full shadow-md transition-all mb-8"
               >
                 {DATA_TYPE.MAIN_PAGE.LUCK_BUTTON_TEXT}
               </button>
 
-              <HarooIntro introString={data.harooContent.greeting} emoticon={data.harooContent.emoticon} />
-              <HarooStats data={data.harooStat.currentStats} />
+              {/* 반응형 디자인 적용 */}
+              <div className="flex flex-col md:flex-row gap-8 w-full">
+                <HarooIntro introString={data.harooContent.greeting} emoticon={data.harooContent.emoticon} />
+                <HarooStats data={data.harooStat.currentStats} />
+              </div>
+
               <Vote data={data.todayVote} />
 
               <div className="flex justify-end mb-4">

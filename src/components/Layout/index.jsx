@@ -3,7 +3,7 @@ import Footer from 'src/components/Footer';
 
 export default function Layout({ children }) {
   return (
-    <div className="flex flex-col items-center gap-5 mt-10">
+    <div className="flex flex-col items-center gap-5 mt-10 px-4">
       <BrandHeader />
       <main>{children}</main>
       <Footer />

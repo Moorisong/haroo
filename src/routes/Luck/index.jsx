@@ -76,7 +76,7 @@ export default function Luck() {
         ))}
 
         <div className={`flex flex-row gap-3 mt-5 ${SCALE.WEB_WIDTH}`}>
-          <button className={`${BUTTON_STYLE.LOGOUT} bg-[#FEE500]`} onClick={onClickShare}>
+          <button className={`${BUTTON_STYLE.LOGOUT} bg-[#FEE500] shadow`} onClick={onClickShare}>
             {DATA_TYPE.LUCK_SIMULATOR.TEXT.BUTTON_SHARE}
           </button>
           <LogoutButton text={DATA_TYPE.LUCK_SIMULATOR.TEXT.BUTTON_LOGOUT} onClick={onClickLogout} />
