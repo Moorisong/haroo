@@ -1,9 +1,10 @@
-const { normalizeDate, getStartAndEndOfDay, getTomorrowDate } = require('../utils');
+const { normalizeDate, getNormalizedDays } = require('../utils');
 
 const { Haroo } = require('../models/Haroo');
 const { HarooContent } = require('../models/HarooContent');
 const { HAROO_DETAIL } = require('../constants');
 const { findVoteAndUpdate } = require('../repository/vote.repository');
+const { findHarooContent } = require('../repository/harooContent.repository');
 
 // 하루 최신 스탯, 스탯 변경 내역 DB 저장
 exports.saveOrUpdateHaroo = async (data) => {
@@ -62,39 +63,30 @@ exports.saveOrUpdateHaroo = async (data) => {
 
 // 하루 인사말, 이모지, 지식 DB 저장
 exports.saveOrUpdateHarooContent = async (data) => {
-  // today -----------------
-  const today = new Date();
-  const normalizedToday = normalizeDate(today);
-  const { startOfDay: startOfToday, endOfDay: endOfToday } = getStartAndEndOfDay(normalizedToday);
+  const { normalizedToday, normalizedTomorrow } = getNormalizedDays();
 
-  // tomorrow -----------------
-  const tomorrow = new Date(today);
-  tomorrow.setDate(today.getDate() + 1);
-  const normalizedTomorrow = normalizeDate(tomorrow);
-  const { startOfDay: startOfTomorrow, endOfDay: endOfTomorrow } = getStartAndEndOfDay(normalizedTomorrow);
+  const todayDoc = findHarooContent(normalizedToday);
+  const tomorrowDoc = findHarooContent();
 
   try {
-    const docToday = await HarooContent.findOne({ date: { $gte: startOfToday, $lte: endOfToday } });
-    const docTomorrow = await HarooContent.findOne({ date: { $gte: startOfTomorrow, $lte: endOfTomorrow } });
-    let newHarooContent;
-    if (!docToday) {
+    let newHarooContent = null;
+
+    if (!todayDoc) {
+      // 오늘 데이터가 없다 : 오늘 날짜로 생성
       newHarooContent = new HarooContent({
         date: normalizedToday,
         greeting: data.greeting,
         emoticon: data.asciiArt,
       });
-      await newHarooContent.save();
-    }
-
-    if (docToday && !docTomorrow) {
+    } else if (todayDoc && !tomorrowDoc) {
+      // 오늘 데이터는 있는데 내일 데이터가 없다 : 내일 날짜로 생성
       newHarooContent = new HarooContent({
         date: normalizedTomorrow,
         greeting: data.greeting,
         emoticon: data.asciiArt,
       });
-      await newHarooContent.save();
     }
-    return docToday || docTomorrow || newHarooContent;
+    await newHarooContent.save();
   } catch (err) {
     throw new Error('Error while saving or updating Haroo content: ' + err.message);
   }
@@ -102,11 +94,7 @@ exports.saveOrUpdateHarooContent = async (data) => {
 
 // 투표 데이터 저장
 exports.saveOrUpdateVote = async (data) => {
-  const today = new Date();
-  const normalizedToday = normalizeDate(today);
-
-  const tomorrow = getTomorrowDate();
-  const normalizedTomorrow = normalizeDate(tomorrow);
+  const { normalizedToday, normalizedTomorrow } = getNormalizedDays();
 
   const todayOption = {
     set: {

@@ -31,9 +31,23 @@ function getYesterdayDate() {
   return yesterday;
 }
 
+function getNormalizedDays() {
+  const today = new Date();
+  const normalizedToday = normalizeDate(today);
+
+  const tomorrow = getTomorrowDate();
+  const normalizedTomorrow = normalizeDate(tomorrow);
+
+  const yesterday = getYesterdayDate();
+  const normalizedYesterday = normalizeDate(yesterday);
+
+  return { normalizedToday, normalizedTomorrow, normalizedYesterday };
+}
+
 module.exports = {
   normalizeDate,
   getStartAndEndOfDay,
   getTomorrowDate,
   getYesterdayDate,
+  getNormalizedDays,
 };
