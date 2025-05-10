@@ -15,6 +15,14 @@ export const TEXT = {
       '- 투표 결과에 따라 하루의 이야기 전개가 달라져요. 기대되죠?',
     ],
     STAT_TITLE: '🎹 하루의 스탯',
+    VOTE_RESULT: {
+      HEADER_TEXT_1: '지난 투표에서',
+      HEADER_TEXT_2: '가 가장 많이 선택됐어요!',
+      BODY_TEXT_1: '하루의',
+      BODY_TEXT_2: '스탯이 ',
+      BODY_TEXT_STAT_UP: ' 증가했어요',
+      BODY_TEXT_STAT_DOWN: ' 떨어졌어요',
+    },
   },
 };
 
@@ -69,7 +77,7 @@ export const COMPONENT_STYLE = {
   },
 
   VOTE: {
-    WRAPPER: `w-full bg-blue-25 ${STYLE.BORDER_ROUND} border-blue-300 p-6 mt-10 space-y-6`,
+    WRAPPER: `w-full bg-blue-25 ${STYLE.BORDER_ROUND} border-blue-300 p-6 mt-2 space-y-6`,
     TITLE: `text-center text-sm font-semibold`,
     TOPIC: `text-xl font-bold text-blue-900 text-center mb-6`,
     OPTIONS_GRID: `grid grid-cols-2 sm:grid-cols-4 gap-4`,
@@ -78,6 +86,18 @@ export const COMPONENT_STYLE = {
     OPTION_SELECTED: `bg-yellow-200`,
     RULES: `text-left text-xs text-gray-500 mt-4 space-y-1`,
     KNOWLEDGE_BOX: `${STYLE.LEFT_BORDER_INDEX_BLUE} w-full bg-blue-50 p-5 mt-6 text-sm text-gray-900 rounded-sm`,
+  },
+  VOTE_RESULT: {
+    RESULT_BOX: 'p-7 bg-white rounded-2xl shadow-md border border-gray-200',
+    RESULT_WRAPPER: 'relative w-full',
+    HEADER: 'flex items-start gap-3 mb-3',
+    HEADER_ICON: 'text-xl',
+    HEADER_TEXT: 'text-gray-800 text-base font-semibold',
+    BODY: 'flex items-start gap-3',
+    BODY_ICON: 'text-xs',
+    BODY_TEXT: 'text-gray-700 text-xs',
+    VALUE_POSITIVE: 'text-blue-600',
+    VALUE_NEGATIVE: 'text-red-600',
   },
 };
 

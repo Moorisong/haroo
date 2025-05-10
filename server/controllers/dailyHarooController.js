@@ -30,6 +30,7 @@ const dailyHaroo = async (req, res) => {
         options: voteData[1].options,
         knowledge: voteData[1].knowledge,
       },
+      lastStatChange: harooStatData.statsHistory.slice(-1)[0],
     };
 
     return res.status(200).json(result);

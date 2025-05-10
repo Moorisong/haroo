@@ -10,6 +10,7 @@ import Vote from 'src/components/Vote';
 import LogoutButton from 'src/components/LogoutButton';
 import Ad_thin from 'src/components/Ads/Ad_thin';
 import { getHarooData } from 'src/services/harooApis';
+import VoteResult from 'src/components/VoteResult';
 
 // import { promptMessage } from './prompt';
 
@@ -70,7 +71,7 @@ export default function Main() {
                 <HarooIntro introString={data.harooContent.greeting} emoticon={data.harooContent.emoticon} />
                 <HarooStats data={data.harooStat.currentStats} />
               </div>
-
+              <VoteResult data={data.harooStat.statsHistory[data.harooStat.statsHistory.length - 1]} />
               <Vote data={data.todayVote} />
 
               <div className="flex justify-end mb-4">

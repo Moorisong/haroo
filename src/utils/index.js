@@ -70,3 +70,8 @@ export function kakaoLogout() {
 export function isDevEnvironment() {
   return process.env.NODE_ENV === 'development';
 }
+
+export function getRandomEmlji() {
+  const emojis = ['🌱', '🌟', '🔥', '💥', '🌼', '🌸', '🍀', '🍃', '💚', '🧚🏻', '🌸'];
+  return emojis[Math.floor(Math.random() * emojis.length)];
+}
