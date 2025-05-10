@@ -13,7 +13,27 @@ function getStartAndEndOfDay(date) {
   return { startOfDay: start, endOfDay: end };
 }
 
+function getTomorrowDate() {
+  const today = new Date();
+
+  let tomorrow = new Date(today);
+  tomorrow.setDate(today.getDate() - +1);
+
+  return tomorrow;
+}
+
+function getYesterdayDate() {
+  const today = new Date();
+
+  let yesterday = new Date(today);
+  yesterday.setDate(today.getDate() - 1);
+
+  return yesterday;
+}
+
 module.exports = {
   normalizeDate,
   getStartAndEndOfDay,
+  getTomorrowDate,
+  getYesterdayDate,
 };

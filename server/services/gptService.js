@@ -1,9 +1,9 @@
-const { normalizeDate, getStartAndEndOfDay } = require('../utils');
+const { normalizeDate, getStartAndEndOfDay, getTomorrowDate } = require('../utils');
 
 const { Haroo } = require('../models/Haroo');
 const { HarooContent } = require('../models/HarooContent');
-const { Vote } = require('../models/Vote');
 const { HAROO_DETAIL } = require('../constants');
+const { findVoteAndUpdate } = require('../repository/vote.repository');
 
 // 하루 최신 스탯, 스탯 변경 내역 DB 저장
 exports.saveOrUpdateHaroo = async (data) => {
@@ -102,66 +102,49 @@ exports.saveOrUpdateHarooContent = async (data) => {
 
 // 투표 데이터 저장
 exports.saveOrUpdateVote = async (data) => {
-  // today -----------------
   const today = new Date();
   const normalizedToday = normalizeDate(today);
-  const { startOfDay: startOfToday, endOfDay: endOfToday } = getStartAndEndOfDay(normalizedToday);
 
-  // tomorrow -----------------
-  const tomorrow = new Date(today);
-  tomorrow.setDate(today.getDate() + 1);
+  const tomorrow = getTomorrowDate();
   const normalizedTomorrow = normalizeDate(tomorrow);
-  const { startOfDay: startOfTomorrow, endOfDay: endOfTomorrow } = getStartAndEndOfDay(normalizedTomorrow);
+
+  const todayOption = {
+    set: {
+      updatedAt: new Date(),
+      selectedOption: data.todayPoll.selectedOption,
+      selectedVotesCnt: data.todayPoll.selectedVotesCnt,
+      totalVotesCnt: data.todayPoll.totalVotesCnt,
+    },
+    setOnInsert: {
+      voteDate: normalizedToday,
+      topic: '첫 투표입니다.',
+      options: ['a', 'b', 'c', 'd'],
+      knowledge: '지식 영역입니다.',
+      createdAt: new Date(),
+    },
+  };
+
+  const tomorrowOption = {
+    setOnInsert: {
+      voteDate: normalizedTomorrow,
+      topic: data.tomorrowPoll.topic,
+      options: data.tomorrowPoll.options,
+      selectedOption: '', // 내일은 아직 선택되지 않음
+      selectedVotesCnt: 0, // 초기값
+      totalVotesCnt: 0, // 초기값
+      knowledge: data.tomorrowPoll.knowledge,
+      createdAt: new Date(),
+    },
+  };
 
   try {
-    // Step 1: todayPoll 데이터 업데이트
-    const doc = await Vote.findOneAndUpdate(
-      { voteDate: { $gte: startOfToday, $lte: endOfToday } },
-
-      {
-        $set: {
-          updatedAt: new Date(),
-          selectedOption: data.todayPoll.selectedOption,
-          selectedVotesCnt: data.todayPoll.selectedVotesCnt,
-          totalVotesCnt: data.todayPoll.totalVotesCnt,
-        },
-        $setOnInsert: {
-          voteDate: normalizedToday,
-          topic: '첫 투표입니다.',
-          options: ['a', 'b', 'c', 'd'],
-          knowledge: '지식 영역입니다.',
-          createdAt: new Date(),
-        },
-      },
-      {
-        new: true,
-        upsert: true,
-      },
-    );
+    // Step 1: todayPoll 데이터 업데이트 및 저장
+    const todayDoc = await findVoteAndUpdate(normalizedToday, todayOption);
 
     // Step 2: tomorrowPoll 데이터 저장
+    const tomorrowDoc = await findVoteAndUpdate(normalizedTomorrow, tomorrowOption);
 
-    const tomorrowDoc = await Vote.findOneAndUpdate(
-      { voteDate: { $gte: startOfTomorrow, $lte: endOfTomorrow } },
-      {
-        $setOnInsert: {
-          voteDate: normalizedTomorrow,
-          topic: data.tomorrowPoll.topic,
-          options: data.tomorrowPoll.options,
-          selectedOption: '', // 내일은 아직 선택되지 않음
-          selectedVotesCnt: 0, // 초기값
-          totalVotesCnt: 0, // 초기값
-          knowledge: data.tomorrowPoll.knowledge,
-          createdAt: new Date(),
-        },
-      },
-      {
-        new: true,
-        upsert: true,
-      },
-    );
-
-    return { todayVote: doc, tomorrowVote: tomorrowDoc };
+    return { todayVote: todayDoc, tomorrowVote: tomorrowDoc };
   } catch (err) {
     throw new Error('Error while saving or updating vote data: ' + err.message);
   }
