@@ -1,0 +1,45 @@
+const { getNormalizedDays } = require('../utils');
+
+const { Haroo } = require('../models/Haroo');
+const { HAROO_DETAIL } = require('../constants');
+
+exports.findHarooByName = async () => {
+  try {
+    return await Haroo.findOne({ name: HAROO_DETAIL.NAME_KOR_EN });
+  } catch (err) {
+    throw new Error('Failed to find haroo by name');
+  }
+};
+
+exports.findLatestHarooStat = async () => {
+  try {
+    return await Haroo.findOne().sort({ date: -1 });
+  } catch (err) {
+    throw new Error('Failed to find haroo stat by sort latest ');
+  }
+};
+
+exports.findHarooAndUpdate = async (data) => {
+  const { normalizedToday } = getNormalizedDays();
+  try {
+    return await Haroo.findOneAndUpdate(
+      { name: HAROO_DETAIL.NAME_KOR_EN },
+      {
+        $set: {
+          currentStats: data.updatedStats,
+        },
+        $push: {
+          statsHistory: {
+            date: normalizedToday,
+            statChanges: data.statChanges,
+          },
+        },
+      },
+      {
+        new: true,
+      },
+    );
+  } catch (err) {
+    throw new Error('Failed to find and update haroo');
+  }
+};

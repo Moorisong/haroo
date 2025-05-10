@@ -1,23 +1,25 @@
-const { normalizeDate, getNormalizedDays } = require('../utils');
+const { getNormalizedDays } = require('../utils');
 
 const { Haroo } = require('../models/Haroo');
 const { HarooContent } = require('../models/HarooContent');
 const { HAROO_DETAIL } = require('../constants');
 const { findVoteAndUpdate } = require('../repository/vote.repository');
-const { findHarooContent } = require('../repository/harooContent.repository');
+const { findHarooContentByDate } = require('../repository/harooContent.repository');
+const { findHarooByName, findHarooAndUpdate } = require('../repository/haroo.repository');
 
 // 하루 최신 스탯, 스탯 변경 내역 DB 저장
 exports.saveOrUpdateHaroo = async (data) => {
   try {
-    const today = new Date();
-    const normalizedToday = normalizeDate(today);
+    let haroo = await findHarooByName();
+    const lastStatDate = haroo.statsHistory?.[haroo.statsHistory.length - 1]?.date;
 
-    const yesterday = new Date(today);
-    yesterday.setDate(today.getDate() - 1);
+    const { normalizedToday, normalizedYesterday, normalizedDate } = getNormalizedDays(lastStatDate);
+    const normalizedLastStatDate = normalizedDate;
 
-    let haroo = await Haroo.findOne({ name: HAROO_DETAIL.NAME_KOR_EN });
+    const isUpdatePossible = normalizedLastStatDate.getTime() === normalizedYesterday.getTime();
 
     // 문서가 아예 없을 경우: 새로 생성
+
     if (!haroo) {
       const newHaroo = new Haroo({
         name: HAROO_DETAIL.NAME_KOR_EN,
@@ -28,34 +30,12 @@ exports.saveOrUpdateHaroo = async (data) => {
       return newHaroo;
     }
 
-    // 문서가 있고 어제 기록이 있을 경우: 업데이트
-    const lastStatDate = haroo.statsHistory?.[haroo.statsHistory.length - 1]?.date;
-    const normalizedLastStatDate = normalizeDate(lastStatDate);
-    const normalizedYesterday = normalizeDate(yesterday);
-
-    if (normalizedLastStatDate.getTime() === normalizedYesterday.getTime()) {
-      const updated = await Haroo.findOneAndUpdate(
-        { name: HAROO_DETAIL.NAME_KOR_EN },
-        {
-          $set: {
-            currentStats: data.updatedStats,
-          },
-          $push: {
-            statsHistory: {
-              date: normalizedToday,
-              statChanges: data.statChanges,
-            },
-          },
-        },
-        {
-          new: true,
-        },
-      );
+    // 문서가 있고 최신 기록의 날짜가 어제 날짜일 경우: 업데이트
+    if (isUpdatePossible) {
+      const updated = await findHarooAndUpdate(data);
       return updated;
-    } else {
-      // 어제 기록도 아니고 문서는 있으니 아무 것도 하지 않음
-      return haroo;
     }
+    return haroo;
   } catch (err) {
     throw new Error('Error while saving or updating Haroo: ' + err.message);
   }
@@ -65,11 +45,10 @@ exports.saveOrUpdateHaroo = async (data) => {
 exports.saveOrUpdateHarooContent = async (data) => {
   const { normalizedToday, normalizedTomorrow } = getNormalizedDays();
 
-  const todayDoc = findHarooContent(normalizedToday);
-  const tomorrowDoc = findHarooContent();
-
+  const todayDoc = await findHarooContentByDate(normalizedToday);
+  const tomorrowDoc = await findHarooContentByDate(normalizedTomorrow);
   try {
-    let newHarooContent = null;
+    let newHarooContent;
 
     if (!todayDoc) {
       // 오늘 데이터가 없다 : 오늘 날짜로 생성
@@ -86,7 +65,11 @@ exports.saveOrUpdateHarooContent = async (data) => {
         emoticon: data.asciiArt,
       });
     }
-    await newHarooContent.save();
+
+    // 오늘과 내일 모두 있다: 아무 일도 안 일어남
+    if (newHarooContent) {
+      await newHarooContent.save();
+    }
   } catch (err) {
     throw new Error('Error while saving or updating Haroo content: ' + err.message);
   }
@@ -105,9 +88,9 @@ exports.saveOrUpdateVote = async (data) => {
     },
     setOnInsert: {
       voteDate: normalizedToday,
-      topic: '첫 투표입니다.',
+      topic: 'Initial Vote',
       options: ['a', 'b', 'c', 'd'],
-      knowledge: '지식 영역입니다.',
+      knowledge: 'Knowledge Section',
       createdAt: new Date(),
     },
   };

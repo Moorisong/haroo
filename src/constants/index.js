@@ -16,6 +16,7 @@ export const TEXT = {
     ],
     STAT_TITLE: '🎹 하루의 스탯',
     VOTE_RESULT: {
+      HEADER_TEXT_0: '🗓️ ',
       HEADER_TEXT_1: '지난 투표에서',
       HEADER_TEXT_2: '가 가장 많이 선택됐어요!',
       BODY_TEXT_1: '하루의',
@@ -98,6 +99,9 @@ export const COMPONENT_STYLE = {
     BODY_TEXT: 'text-gray-700 text-xs',
     VALUE_POSITIVE: 'text-blue-600',
     VALUE_NEGATIVE: 'text-red-600',
+    TOPIC_BOX: 'flex items-center gap-x-1 mb-4',
+    TOPIC_DATE: 'text-xs text-gray-500',
+    TOPIC_TEXT: 'text-xs font-semibold text-gray-500',
   },
 };
 

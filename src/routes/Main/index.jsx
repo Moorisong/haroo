@@ -12,7 +12,7 @@ import Ad_thin from 'src/components/Ads/Ad_thin';
 import { getHarooData } from 'src/services/harooApis';
 import VoteResult from 'src/components/VoteResult';
 
-// import { promptMessage } from './prompt';
+import { promptMessage } from './prompt';
 
 export default function Main() {
   const [data, setData] = useState({});
@@ -24,8 +24,8 @@ export default function Main() {
   }, []);
 
   useEffect(() => {
-    // const message = promptMessage;
-    // const body = JSON.stringify({ message });
+    const message = promptMessage;
+    const body = JSON.stringify({ message });
 
     // fetchHarooResponseFromGpt(body)
     //   .then((response) => {
@@ -71,7 +71,10 @@ export default function Main() {
                 <HarooIntro introString={data.harooContent.greeting} emoticon={data.harooContent.emoticon} />
                 <HarooStats data={data.harooStat.currentStats} />
               </div>
-              <VoteResult data={data.harooStat.statsHistory[data.harooStat.statsHistory.length - 1]} />
+              <VoteResult
+                statData={data.harooStat.statsHistory[data.harooStat.statsHistory.length - 1]}
+                voteData={data.yesterdayVote}
+              />
               <Vote data={data.todayVote} />
 
               <div className="flex justify-end mb-4">

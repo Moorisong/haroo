@@ -2,13 +2,20 @@ const { getStartAndEndOfDay } = require('../utils');
 
 const { Vote } = require('../models/Vote');
 
-
 exports.findVoteByDate = async (normalizedDate) => {
   try {
     const { startOfDay, endOfDay } = getStartAndEndOfDay(normalizedDate);
-    return await Vote.findOne({ date: { $gte: startOfDay, $lte: endOfDay } });
+    return await Vote.findOne({ voteDate: { $gte: startOfDay, $lte: endOfDay } });
   } catch (err) {
     throw new Error('Failed to find vote by date');
+  }
+};
+
+exports.findLatestVote = async () => {
+  try {
+    return await Vote.find().sort({ voteDate: -1 });
+  } catch (err) {
+    throw new Error('Failed to find vote by sort latest ');
   }
 };
 

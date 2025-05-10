@@ -1,13 +1,19 @@
-const { Haroo } = require('../models/Haroo');
-const { HarooContent } = require('../models/HarooContent');
-const { Vote } = require('../models/Vote');
+const { getNormalizedDays } = require('../utils');
+
+const { findLatestHarooStat } = require('../repository/haroo.repository');
+const { findLatestHarooContent } = require('../repository/harooContent.repository');
+const { findLatestVote, findVoteByDate } = require('../repository/vote.repository');
 
 const dailyHaroo = async (req, res) => {
   try {
     let result = {};
-    const harooStatData = await Haroo.findOne().sort({ date: -1 });
-    const harooContentData = await HarooContent.findOne().sort({ date: -1 });
-    const voteData = await Vote.find().sort({ voteDate: -1 });
+
+    const { normalizedYesterday } = getNormalizedDays();
+
+    const harooStatData = await findLatestHarooStat();
+    const harooContentData = await findLatestHarooContent();
+    const todayVoteData = await findLatestVote();
+    const yesterdayVoteData = await findVoteByDate(normalizedYesterday);
 
     if (!harooStatData) {
       return res.status(404).json({ message: '하루 데이터가 존재하지 않습니다.' });
@@ -25,12 +31,13 @@ const dailyHaroo = async (req, res) => {
         greeting: harooContentData.greeting,
       },
       todayVote: {
-        voteDate: voteData[1].voteDate,
-        topic: voteData[1].topic,
-        options: voteData[1].options,
-        knowledge: voteData[1].knowledge,
+        voteDate: todayVoteData[1].voteDate,
+        topic: todayVoteData[1].topic,
+        options: todayVoteData[1].options,
+        knowledge: todayVoteData[1].knowledge,
       },
       lastStatChange: harooStatData.statsHistory.slice(-1)[0],
+      yesterdayVote: yesterdayVoteData,
     };
 
     return res.status(200).json(result);

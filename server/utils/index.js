@@ -1,11 +1,11 @@
 function normalizeDate(dateInput) {
-  const d = new Date(dateInput);
+  const d = new Date(dateInput || new Date());
   d.setHours(0, 0, 0, 0);
   return d;
 }
 
 function getStartAndEndOfDay(date) {
-  const d = new Date(date); // date는 이미 normalize됐다고 가정
+  const d = new Date(date); // date는 이미 normalize됨
   const start = new Date(d);
   start.setHours(0, 0, 0, 0);
   const end = new Date(d);
@@ -17,7 +17,7 @@ function getTomorrowDate() {
   const today = new Date();
 
   let tomorrow = new Date(today);
-  tomorrow.setDate(today.getDate() - +1);
+  tomorrow.setDate(today.getDate() + 1);
 
   return tomorrow;
 }
@@ -31,7 +31,7 @@ function getYesterdayDate() {
   return yesterday;
 }
 
-function getNormalizedDays() {
+function getNormalizedDays(date = false) {
   const today = new Date();
   const normalizedToday = normalizeDate(today);
 
@@ -41,7 +41,9 @@ function getNormalizedDays() {
   const yesterday = getYesterdayDate();
   const normalizedYesterday = normalizeDate(yesterday);
 
-  return { normalizedToday, normalizedTomorrow, normalizedYesterday };
+  const normalizedDate = normalizeDate(date);
+
+  return { normalizedToday, normalizedTomorrow, normalizedYesterday, normalizedDate };
 }
 
 module.exports = {
