@@ -1,39 +1,32 @@
 import { useState, useEffect } from 'react';
+import { STYLE, TEXT, COMPONENT_STYLE } from 'src/constants';
 
 export default function Vote({ data }) {
   const [clickedIndex, setClickedIndex] = useState(null);
 
-  // 페이지 로드 시 로컬스토리지에서 이미 투표한 항목 정보를 불러옵니다.
   useEffect(() => {
-    const savedVote = Object.keys(localStorage).find((key) => key.includes('haroo voted'));
+    const alreadyVoted = Object.keys(localStorage).find((key) => key.includes(TEXT.HAROO.VOTE_TOKEN));
 
-    if (savedVote) {
-      const savedIndex = localStorage.getItem(savedVote);
-      setClickedIndex(Number(savedIndex)); // 저장된 인덱스를 clickedIndex에 설정
+    if (alreadyVoted) {
+      const votedIndex = localStorage.getItem(alreadyVoted);
+      setClickedIndex(Number(votedIndex));
     }
 
-    // 매일 23시 30분에 로컬스토리지 비우기 및 애니메이션 초기화
     const interval = setInterval(() => {
       const now = new Date();
       if (now.getHours() === 23 && now.getMinutes() === 30) {
         localStorage.clear();
-        setClickedIndex(null); // 클릭된 항목 초기화
+        setClickedIndex(null);
       }
-    }, 60000); // 매분 체크
+    }, 60000 * 5); // 5분마다 체크
 
-    return () => clearInterval(interval); // 클린업
+    return () => clearInterval(interval);
   }, []);
 
   const handleClick = (index) => {
-    // 이미 클릭되었거나 로컬스토리지에 haroo voted가 있으면 막기
-    const alreadyVotedKey = Object.keys(localStorage).find((key) => key.includes('haroo voted'));
-
-    if (clickedIndex !== null || alreadyVotedKey) return;
-
-    setClickedIndex(index); // 클릭된 항목 인덱스를 상태로 설정
-
-    // 로컬스토리지에 투표 정보 저장
-    localStorage.setItem(`haroo voted ${new Date().toISOString()}`, index);
+    if (clickedIndex !== null) return;
+    setClickedIndex(index);
+    localStorage.setItem(`${TEXT.HAROO.VOTE_TOKEN} ${new Date().toISOString()}`, index);
   };
 
   const formatWithLineBreaks = (text) =>
@@ -49,18 +42,19 @@ export default function Vote({ data }) {
 
   return (
     <>
-      <div className="w-full bg-blue-25 rounded-sm border border-blue-300 p-6 mt-10 space-y-6">
-        <div className="text-center text-sm font-semibold">💬 오늘 하루의 선택! 투표하고 하루를 성장시켜요</div>
+      <div className={COMPONENT_STYLE.VOTE.WRAPPER}>
+        <div className={COMPONENT_STYLE.VOTE.TITLE}>{TEXT.HAROO.VOTE_TITLE}</div>
 
-        <h2 className="text-xl font-bold text-blue-900 text-center mb-6">{data.topic}</h2>
+        <h2 className={COMPONENT_STYLE.VOTE.TOPIC}>{data.topic}</h2>
 
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-          {data.options.map((e, index) => (
+        <div className={COMPONENT_STYLE.VOTE.OPTIONS_GRID}>
+          {data.options.map((e, i) => (
             <button
-              key={e}
-              onClick={() => handleClick(index)}
-              className={`transition-colors px-4 py-2 rounded-md font-medium text-sm
-              ${clickedIndex === index ? 'bg-yellow-100' : 'bg-blue-50 hover:bg-blue-100'}`}
+              key={e + i}
+              onClick={() => handleClick(i)}
+              className={`${COMPONENT_STYLE.VOTE.OPTION} ${
+                clickedIndex === i ? COMPONENT_STYLE.VOTE.OPTION_SELECTED : COMPONENT_STYLE.VOTE.OPTION_DEFAULT
+              }`}
               disabled={clickedIndex !== null}
             >
               {e}
@@ -68,16 +62,14 @@ export default function Vote({ data }) {
           ))}
         </div>
 
-        <div className="text-left text-xs text-gray-500 mt-4 space-y-1">
-          <p>- 투표는 매일 23시 30분에 마감돼요.</p>
-          <p>- 캐시를 비우면 투표한 내역이 사라질 수 있어요.</p>
-          <p>- 투표 결과에 따라 하루의 이야기 전개가 달라져요. 기대되죠?</p>
+        <div className={COMPONENT_STYLE.VOTE.RULES}>
+          {TEXT.HAROO.VOTE_RULES.map((e, i) => (
+            <p key={e + i}>{e}</p>
+          ))}
         </div>
       </div>
 
-      <div className="w-full bg-blue-50 border-l-7 border-[#4363b4] p-5 mt-6 text-sm text-gray-900 rounded-sm">
-        {formatWithLineBreaks(data.knowledge)}
-      </div>
+      <div className={COMPONENT_STYLE.VOTE.KNOWLEDGE_BOX}>{formatWithLineBreaks(data.knowledge)}</div>
     </>
   );
 }

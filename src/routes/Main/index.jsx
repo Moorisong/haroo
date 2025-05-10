@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { DATA_TYPE, SCALE, TOKEN_NAME } from 'src/constants';
+import { DATA_TYPE, PATH, STYLE, TOKEN_NAME } from 'src/constants';
 import { kakaoLogout } from 'src/utils';
 import { fetchHarooResponseFromGpt } from 'src/services/harooApis';
 import HarooIntro from 'src/components/HarooIntro';
@@ -19,7 +19,7 @@ export default function Main() {
 
   useEffect(() => {
     const token = window.sessionStorage.getItem(TOKEN_NAME);
-    if (!token) return navigate('/');
+    if (!token) return navigate(PATH.DEFAULT);
   }, []);
 
   useEffect(() => {
@@ -47,10 +47,10 @@ export default function Main() {
     console.log('data::: ', data);
   }, [data]);
 
-  const onClickLuckSimulaterButton = () => navigate('/luck');
+  const onClickLuckSimulaterButton = () => navigate(PATH.LUCK);
   const onClickLogout = () => {
     kakaoLogout();
-    return navigate('/');
+    return navigate(PATH.DEFAULT);
   };
 
   return (
@@ -58,7 +58,7 @@ export default function Main() {
       <Layout>
         <div className="max-w-3xl mx-auto px-4 py-8">
           {data.harooContent && (
-            <div className="flex flex-col items-center gap-8">
+            <div className={`${STYLE.FLEX_COL_ITEM_CENTER} gap-8`}>
               <button
                 onClick={onClickLuckSimulaterButton}
                 className="bg-gradient-to-r from-blue-400 to-blue-600 hover:from-blue-500 hover:to-blue-700 text-white font-semibold text-sm px-6 py-2 rounded-full shadow-md transition-all mb-8"
@@ -66,7 +66,6 @@ export default function Main() {
                 {DATA_TYPE.MAIN_PAGE.LUCK_BUTTON_TEXT}
               </button>
 
-              {/* 반응형 디자인 적용 */}
               <div className="flex flex-col md:flex-row gap-8 w-full">
                 <HarooIntro introString={data.harooContent.greeting} emoticon={data.harooContent.emoticon} />
                 <HarooStats data={data.harooStat.currentStats} />

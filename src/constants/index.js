@@ -1,4 +1,4 @@
-export const TITLE_TEXT = {
+export const TEXT = {
   LUCK_SIMULATOR: {
     TITLE: '[하루] 오늘의 확률 시뮬레이터',
     SUBTITLE: "Today's Luck Simulator",
@@ -7,6 +7,14 @@ export const TITLE_TEXT = {
     TITLE: '[하루] 오늘의 선택, 하루가 쑥쑥 자라요 ☺️',
     SUBTITLE:
       '매일 투표로 하루의 선택을 이끌어가고, 그에 따라 하루의 이야기도 변화합니다.\n당신의 선택이 하루의 성장과 스토리를 만들어가요!',
+    VOTE_TOKEN: 'haroo voted',
+    VOTE_TITLE: '💬 오늘 하루의 선택! 투표하고 하루를 성장시켜요',
+    VOTE_RULES: [
+      '- 투표는 매일 23시 30분에 마감돼요.',
+      '- 캐시를 비우면 투표한 내역이 사라질 수 있어요.',
+      '- 투표 결과에 따라 하루의 이야기 전개가 달라져요. 기대되죠?',
+    ],
+    STAT_TITLE: '🎹 하루의 스탯',
   },
 };
 
@@ -17,6 +25,8 @@ export const SCALE = {
 
 export const COLOR = {
   SKY_BLUE: 'text-[#008EED]',
+  PROGRESSBAR_RED: 'bg-red-600',
+  PROGRESSBAR_BLUE: 'bg-blue-600',
 };
 
 export const FONT = {
@@ -29,9 +39,48 @@ export const FONT = {
   HOVER_UNDERLINE_TO_GRAY: 'hover:text-gray-700 underline-offset-2 hover:underline',
 };
 
-export const BUTTON_STYLE = {
-  LOGOUT: 'cursor-pointer flex-1 h-[2.5rem] font-bold rounded-sm',
+export const STYLE = {
+  LOGIN_BUTTON: 'cursor-pointer flex-1 w-[5rem] h-[2.5rem] font-bold rounded-sm',
+  BORDER_ROUND: 'rounded-sm border',
+  BORDER_GRAY: 'border-gray-300',
+  LEFT_BORDER_INDEX_BLUE: 'border-l-7 border-[#4363b4]',
+  BG_LIGHT_GRAY: 'bg-[#f9fafb]',
+  FLEX_COL_ITEM_CENTER: 'flex flex-col items-center',
 };
+
+export const COMPONENT_STYLE = {
+  HAROO_INTRO: {
+    CONTAINER: `${STYLE.FLEX_COL_ITEM_CENTER} ${STYLE.BORDER_ROUND} ${STYLE.BG_LIGHT_GRAY} ${STYLE.BORDER_GRAY} w-full md:w-2/3 px-6 py-5 p-6 text-gray-700 justify-center space-y-2`,
+    EMOTICON: 'w-full text-center',
+    TEXT: 'w-full text-center text-sm leading-relaxed font-sans max-h-48 overflow-y-auto',
+  },
+  STAT: {
+    CONTAINER: `grid grid-cols-2 md:grid-cols-4 gap-4 w-full mt-6`,
+    BOX: `flex flex-col items-center justify-center bg-white p-4 border rounded-md shadow-sm`,
+    TITLE: `text-sm font-semibold text-gray-600`,
+    VALUE: `text-lg font-bold text-blue-500`,
+    CARD: `${STYLE.BORDER_ROUND} ${STYLE.BORDER_GRAY} w-full bg-white p-6 w-full md:w-1/3 flex flex-col justify-between`,
+    HEADER: 'text-xl font-bold mb-4 text-gray-800 text-center',
+    SCROLL_AREA: 'space-y-4 max-h-35 overflow-y-auto pr-1 flex-1',
+    LABEL_ROW: 'flex justify-between items-center text-xs',
+    LABEL_TEXT: 'font-medium text-gray-600',
+    VALUE_TEXT: 'font-mono text-gray-800',
+    BAR_BACKGROUND: 'w-full bg-gray-200 h-2 rounded-full overflow-hidden opacity-60',
+  },
+
+  VOTE: {
+    WRAPPER: `w-full bg-blue-25 ${STYLE.BORDER_ROUND} border-blue-300 p-6 mt-10 space-y-6`,
+    TITLE: `text-center text-sm font-semibold`,
+    TOPIC: `text-xl font-bold text-blue-900 text-center mb-6`,
+    OPTIONS_GRID: `grid grid-cols-2 sm:grid-cols-4 gap-4`,
+    OPTION: `transition-colors px-4 py-2 rounded-md font-medium text-sm`,
+    OPTION_DEFAULT: `bg-blue-50 hover:bg-blue-100`,
+    OPTION_SELECTED: `bg-yellow-200`,
+    RULES: `text-left text-xs text-gray-500 mt-4 space-y-1`,
+    KNOWLEDGE_BOX: `${STYLE.LEFT_BORDER_INDEX_BLUE} w-full bg-blue-50 p-5 mt-6 text-sm text-gray-900 rounded-sm`,
+  },
+};
+
 export const DATA_TYPE = {
   LUCK_SIMULATOR: {
     CONDITION: '무슨 확률이 궁금한가요?',
@@ -73,6 +122,9 @@ export const PATH = {
   LOGO_SVG: '/logo.svg',
   LOGO_KAKAO_SHARE: '/logo_kakao_share.jpg', // 카카오 공유하기 템플릿용 이미지
   DOMAIN: 'https://haroo.vercel.app',
+  LUCK: '/luck',
+  MAIN: '/main',
+  DEFAULT: '/',
 };
 
 export const YOUTUBE_IMAGE_URL = (id) => `https://img.youtube.com/vi/${id}/0.jpg`;
