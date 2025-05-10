@@ -2,10 +2,11 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getYoutubeId, validateYoutubeUrl, kakaoListShare, kakaoLogout } from 'src/utils';
 import { TextBox } from 'src/components/TextBox';
-import { ALERT_CONTENT, BUTTON_STYLE, DATA_TYPE, SCALE, TOKEN_NAME } from 'src/constants';
+import { ALERT_CONTENT, DATA_TYPE, PATH, SCALE, STYLE, TOKEN_NAME } from 'src/constants';
 import Layout from 'src/components/Layout';
 import Ad_thin from 'src/components/Ads/Ad_thin';
 import LogoutButton from 'src/components/LogoutButton';
+import ShareButton from 'src/components/ShareButton';
 
 const defaultData = [
   { title: DATA_TYPE.LUCK_SIMULATOR.CONDITION, subTitle: DATA_TYPE.LUCK_SIMULATOR.CONDITION_ADDITIONAL, text: '' },
@@ -19,7 +20,7 @@ export default function Luck() {
 
   useEffect(() => {
     const token = window.sessionStorage.getItem(TOKEN_NAME);
-    if (!token) return navigate('/');
+    if (!token) return navigate(PATH.DEFAULT);
   }, []);
 
   const onClickShare = () => {
@@ -39,7 +40,7 @@ export default function Luck() {
 
   const onClickLogout = () => {
     kakaoLogout();
-    return navigate('/');
+    return navigate(PATH.DEFAULT);
   };
 
   const onChangeText = (event) => {
@@ -63,23 +64,23 @@ export default function Luck() {
   return (
     <>
       <Layout>
-        {data.map((e, i) => (
-          <TextBox
-            id={i}
-            onChange={onChangeText}
-            youtubeOption={{ withoutYoutube, onToggle: handleToggleYoutube }}
-            key={e.title + i}
-            title={e.title}
-            subTitle={e.subTitle}
-            text={e.text}
-          />
-        ))}
+        <div className={`${STYLE.FLEX_COL_ITEM_CENTER} gap-4`}>
+          {data.map((e, i) => (
+            <TextBox
+              id={i}
+              onChange={onChangeText}
+              youtubeOption={{ withoutYoutube, onToggle: handleToggleYoutube }}
+              key={e.title + i}
+              title={e.title}
+              subTitle={e.subTitle}
+              text={e.text}
+            />
+          ))}
 
-        <div className={`flex flex-row gap-3 mt-5 ${SCALE.WEB_WIDTH}`}>
-          <button className={`${BUTTON_STYLE.LOGOUT} bg-[#FEE500] shadow`} onClick={onClickShare}>
-            {DATA_TYPE.LUCK_SIMULATOR.TEXT.BUTTON_SHARE}
-          </button>
-          <LogoutButton text={DATA_TYPE.LUCK_SIMULATOR.TEXT.BUTTON_LOGOUT} onClick={onClickLogout} />
+          <div className={`flex flex-row gap-3 mt-5 ${SCALE.WEB_WIDTH}`}>
+            <ShareButton onClick={onClickShare} />
+            <LogoutButton text={DATA_TYPE.LUCK_SIMULATOR.TEXT.BUTTON_LOGOUT} onClick={onClickLogout} />
+          </div>
         </div>
       </Layout>
 

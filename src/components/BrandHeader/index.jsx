@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { FONT, TITLE_TEXT, PATH } from 'src/constants';
+import { FONT, TEXT, PATH, STYLE } from 'src/constants';
 import { useLocation } from 'react-router-dom';
 
 export default function BrandHeader(props) {
@@ -7,21 +7,21 @@ export default function BrandHeader(props) {
   const navigate = useNavigate();
   const isLuckPage = location.pathname.includes('luck');
 
-  const titleString = isLuckPage ? TITLE_TEXT.LUCK_SIMULATOR.TITLE : TITLE_TEXT.HAROO.TITLE;
-  const subTitleString = isLuckPage ? TITLE_TEXT.LUCK_SIMULATOR.SUBTITLE : TITLE_TEXT.HAROO.SUBTITLE;
+  const titleString = isLuckPage ? TEXT.LUCK_SIMULATOR.TITLE : TEXT.HAROO.TITLE;
+  const subTitleString = isLuckPage ? TEXT.LUCK_SIMULATOR.SUBTITLE : TEXT.HAROO.SUBTITLE;
   const subTitleStyle = isLuckPage ? FONT.MEDIUM_BLUE : `${FONT.SMALL_BLUE} mt-5`;
 
-  const onClickLogo = () => navigate('/main');
+  const onClickLogo = () => navigate(PATH.MAIN);
 
   return (
-    <div className="flex flex-col items-center gap-5">
+    <div className={`${STYLE.FLEX_COL_ITEM_CENTER} gap-5`}>
       <img
         src={PATH.LOGO_SVG}
         alt="Haroo logo"
         className={`cursor-pointer ${props.scale} ?? ${undefined}`}
         onClick={onClickLogo}
       />
-      <div className="flex flex-col items-center text-center">
+      <div className={`${STYLE.FLEX_COL_ITEM_CENTER} text-center`}>
         <span className={FONT.BIG_BLACK}>{titleString}</span>
         <span className={`${subTitleStyle} whitespace-pre-line`}>{subTitleString}</span>
       </div>
