@@ -8,7 +8,7 @@ export async function fetchHarooResponseFromGpt(body) {
     return response.data;
   } catch (error) {
     alert(DATA_TYPE.API_ERROR_MESSAGE, error);
-    throw error;
+    throw new Error('error in fetch haroo response from gpt');
   }
 }
 
@@ -18,6 +18,6 @@ export async function getHarooData() {
     return response.data;
   } catch (error) {
     alert(DATA_TYPE.API_ERROR_MESSAGE, error);
-    throw error;
+    throw new Error('error in get haroo data');
   }
 }
