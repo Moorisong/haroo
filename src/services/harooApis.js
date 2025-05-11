@@ -14,10 +14,22 @@ export async function fetchHarooResponseFromGpt(body) {
 
 export async function getHarooData() {
   try {
-    const response = await apiBe.get(`${process.env.REACT_APP_NODE_URL}/api/haroo/today`);
+    const response = await apiBe.get(`${process.env.REACT_APP_BACKEND_LOCAL_URL}/api/haroo/today`);
     return response.data;
   } catch (error) {
     alert(DATA_TYPE.API_ERROR_MESSAGE, error);
     throw new Error('error in get haroo data');
+  }
+}
+
+export async function sendKakaoTokenToBackend(body) {
+  const headers = API_HEADER.JSON;
+
+  try {
+    const response = await apiBe.post(`${process.env.REACT_APP_BACKEND_LOCAL_URL}/auth/kakao`, body, { headers });
+    return response.data;
+  } catch (error) {
+    alert(DATA_TYPE.API_ERROR_MESSAGE, error);
+    throw new Error('error in send kakao token to the backend');
   }
 }
