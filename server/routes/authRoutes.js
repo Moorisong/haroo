@@ -1,6 +1,6 @@
 const express = require('express');
 
-const { getKakaoLoginToken } = require('../controllers/authController');
+const { getKakaoLoginToken } = require('../controllers/kakaoController');
 
 const router = express.Router();
 router.post('/', getKakaoLoginToken);
