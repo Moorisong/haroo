@@ -4,7 +4,7 @@ import { API_HEADER } from 'src/constants';
 export async function fetchHarooResponseFromGpt(body) {
   const headers = API_HEADER.JSON;
   try {
-    const response = await apiBe.post(`${process.env.REACT_APP_BACKEND_LOCAL_URL}/api/chat`, body, { headers });
+    const response = await apiBe.post(`${process.env.REACT_APP_BACKEND_URL}/api/chat`, body, { headers });
     return response.data;
   } catch (error) {
     throw new Error('error in fetch haroo response from gpt');
@@ -13,7 +13,7 @@ export async function fetchHarooResponseFromGpt(body) {
 
 export async function getHarooData() {
   try {
-    const response = await apiBe.get(`${process.env.REACT_APP_BACKEND_LOCAL_URL}/api/haroo/today`);
+    const response = await apiBe.get(`${process.env.REACT_APP_BACKEND_URL}/api/haroo/today`);
     return response.data;
   } catch (error) {
     throw new Error('error in get haroo data');
@@ -25,7 +25,7 @@ export async function sendKakaoTokenToBackend(code) {
   const body = { code };
 
   try {
-    const response = await apiBe.post(`${process.env.REACT_APP_BACKEND_LOCAL_URL}/auth/kakao`, body, { headers });
+    const response = await apiBe.post(`${process.env.REACT_APP_BACKEND_URL}/auth/kakao`, body, { headers });
     return response.data;
   } catch (error) {
     throw new Error('error in send kakao token to the backend');
