@@ -11,7 +11,7 @@ export default function VoteResult(props) {
           <span className={COMPONENT_STYLE.VOTE_RESULT.TOPIC_TEXT}>{props.voteData.topic}</span>
         </div>
 
-        {/* 헤더 */}
+        {/* 지난 투표 내용 */}
         <div className={COMPONENT_STYLE.VOTE_RESULT.HEADER}>
           <span className={COMPONENT_STYLE.VOTE_RESULT.HEADER_ICON}>🏆</span>
           <div className={COMPONENT_STYLE.VOTE_RESULT.HEADER_TEXT}>
