@@ -322,6 +322,9 @@
   .transform {
     transform: var(--tw-rotate-x) var(--tw-rotate-y) var(--tw-rotate-z) var(--tw-skew-x) var(--tw-skew-y);
   }
+  .cursor-not-allowed {
+    cursor: not-allowed;
+  }
   .cursor-pointer {
     cursor: pointer;
   }
@@ -619,6 +622,9 @@
   }
   .underline-offset-2 {
     text-underline-offset: 2px;
+  }
+  .opacity-40 {
+    opacity: 40%;
   }
   .opacity-60 {
     opacity: 60%;

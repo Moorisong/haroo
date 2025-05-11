@@ -1,8 +1,11 @@
 import { useState, useEffect } from 'react';
-import { STYLE, TEXT, COMPONENT_STYLE } from 'src/constants';
+import { TEXT, COMPONENT_STYLE } from 'src/constants';
 
 export default function Vote({ data }) {
   const [clickedIndex, setClickedIndex] = useState(null);
+
+  const now = new Date();
+  const isVotingClosed = now.getHours() === 23 && now.getMinutes() >= 30;
 
   useEffect(() => {
     const alreadyVoted = Object.keys(localStorage).find((key) => key.includes(TEXT.HAROO.VOTE_TOKEN));
@@ -11,20 +14,10 @@ export default function Vote({ data }) {
       const votedIndex = localStorage.getItem(alreadyVoted);
       setClickedIndex(Number(votedIndex));
     }
-
-    const interval = setInterval(() => {
-      const now = new Date();
-      if (now.getHours() === 23 && now.getMinutes() === 30) {
-        localStorage.clear();
-        setClickedIndex(null);
-      }
-    }, 60000 * 5); // 5분마다 체크
-
-    return () => clearInterval(interval);
   }, []);
 
   const handleClick = (index) => {
-    if (clickedIndex !== null) return;
+    if (clickedIndex !== null || isVotingClosed) return;
     setClickedIndex(index);
     localStorage.setItem(`${TEXT.HAROO.VOTE_TOKEN} ${new Date().toISOString()}`, index);
   };
@@ -48,18 +41,25 @@ export default function Vote({ data }) {
         <h2 className={COMPONENT_STYLE.VOTE.TOPIC}>{data.topic}</h2>
 
         <div className={COMPONENT_STYLE.VOTE.OPTIONS_GRID}>
-          {data.options.map((e, i) => (
-            <button
-              key={e + i}
-              onClick={() => handleClick(i)}
-              className={`${COMPONENT_STYLE.VOTE.OPTION} ${
-                clickedIndex === i ? COMPONENT_STYLE.VOTE.OPTION_SELECTED : COMPONENT_STYLE.VOTE.OPTION_DEFAULT
-              }`}
-              disabled={clickedIndex !== null}
-            >
-              {e}
-            </button>
-          ))}
+          {data.options.map((e, i) => {
+            const isSelected = clickedIndex === i;
+            const isDisabled = clickedIndex !== null || isVotingClosed;
+
+            return (
+              <button
+                key={e + i}
+                onClick={() => handleClick(i)}
+                className={`
+                  ${COMPONENT_STYLE.VOTE.OPTION}
+                  ${isSelected ? COMPONENT_STYLE.VOTE.OPTION_SELECTED : COMPONENT_STYLE.VOTE.OPTION_DEFAULT}
+                  ${isDisabled ? 'opacity-40 cursor-not-allowed pointer-events-none' : ''}
+                `}
+                disabled={isDisabled}
+              >
+                {e}
+              </button>
+            );
+          })}
         </div>
 
         <div className={COMPONENT_STYLE.VOTE.RULES}>
