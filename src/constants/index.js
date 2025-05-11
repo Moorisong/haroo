@@ -151,4 +151,8 @@ export const PATH = {
   DEFAULT: '/',
 };
 
+export const API_HEADER = {
+  JSON: { 'Content-Type': 'application/json' },
+};
+
 export const YOUTUBE_IMAGE_URL = (id) => `https://img.youtube.com/vi/${id}/0.jpg`;

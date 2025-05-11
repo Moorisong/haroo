@@ -1,7 +1,7 @@
-import axios from 'axios';
+const axios = require('axios');
 
-export const apiBe = axios.create({
-  baseURL: `${process.env.REACT_APP_FRONTEND_PROD_URL}`,
+const apiBe = axios.create({
+  baseURL: ` ${process.env.REACT_APP_BACKEND_URL}`,
   timeout: 60_000,
   withCredentials: true,
 });
@@ -12,3 +12,5 @@ apiBe.interceptors.response.use(
     throw error;
   },
 );
+
+module.exports = { apiBe };
