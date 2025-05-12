@@ -15,11 +15,11 @@ exports.getKaKaoAccessToken = async (code) => {
   return response.data.access_token;
 };
 
-exports.getUserId = async (accessToken) => {
+exports.getUserIdAndNickname = async (accessToken) => {
   const headers = {
     Authorization: `Bearer ${accessToken}`,
   };
 
-   const response = await apiBe.get(PAHT.KAKAO.USER, { headers });
-   return response.data.id;
+  const response = await apiBe.get(PAHT.KAKAO.USER, { headers });
+  return response.data;
 };

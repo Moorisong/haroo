@@ -1,15 +1,18 @@
 const jwt = require('jsonwebtoken');
-const { JWT_SECRET, JWT_EXPIRATION_TIME, JWT_REFRESH_EXPIRATION_TIME } = process.env;
 
-exports.createAccessToken = (user) =>
-   jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: JWT_EXPIRATION_TIME }) // 15분
-;
+const { JWT_SECRET } = process.env;
+const JWT_EXPIRATION_TIME = process.env.JWT_EXPIRATION_TIME || '2h';
+const JWT_REFRESH_EXPIRATION_TIME = process.env.JWT_REFRESH_EXPIRATION_TIME || '24h';
 
-exports.createRefreshToken = (user) =>
-   jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: JWT_REFRESH_EXPIRATION_TIME }) // 7일
-;
+if (!JWT_SECRET) {
+  throw new Error('Missing JWT_SECRET in environment variables');
+}
 
-exports.verifyRefreshToken = (refreshToken) => {
+const createAccessToken = (user) => jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: JWT_EXPIRATION_TIME });
+const createRefreshToken = (user) =>
+  jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: JWT_REFRESH_EXPIRATION_TIME });
+
+const verifyRefreshToken = (refreshToken) => {
   try {
     return jwt.verify(refreshToken, JWT_SECRET);
   } catch (error) {
@@ -17,21 +20,13 @@ exports.verifyRefreshToken = (refreshToken) => {
   }
 };
 
-exports.refreshAccessToken = (req, res) => {
-  const { refreshToken } = req.body;
+const getUserTokens = (user) => {
+  const accessToken = createAccessToken(user);
+  const refreshToken = createRefreshToken(user);
+  return { accessToken, refreshToken };
+};
 
-  if (!refreshToken) {
-    return res.status(401).json({ message: 'No refresh token provided' });
-  }
-
-  try {
-    // Refresh Token 검증
-    const user = verifyRefreshToken(refreshToken);
-
-    // 새로운 Access Token 발급
-    const accessToken = createAccessToken(user);
-    return res.status(200).json({ accessToken });
-  } catch (error) {
-    return res.status(403).json({ message: 'Invalid refresh token' });
-  }
+module.exports = {
+  verifyRefreshToken,
+  getUserTokens,
 };
