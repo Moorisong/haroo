@@ -46,8 +46,8 @@ export const promptMessage = `
 2. 내일 투표 생성
 - date: ${tomorrowDate}
 - topic: 참신하고 흥미로운 주제 (식상한 식사/날씨 금지)
-- options: 서로 다른 4개 항목 (1개는 기행/폭소/19금 드립 가능)
-- knowledge: 주제 관련 재미/신선/흥미+정보 (10줄 이내)
+- options: 서로 다른 4개 항목 (1개는 기행/폭소/19금 드립 가능), 잘 이해되도록 문장 연결, 국어에 특히 신경쓸 것
+- knowledge: 주제 관련 재미/신선/흥미+정보 (15줄 꽉꽉 채우기)
 
 3. 스탯 처리
 - currentStat: ${JSON.stringify(currentStat)}
