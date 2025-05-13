@@ -1,17 +1,17 @@
 const { getNormalizedDays } = require('../utils');
 
 const { findLatestHarooStat } = require('../repository/haroo.repository');
-const { findLatestHarooContent } = require('../repository/harooContent.repository');
+const { findHarooContentByDate } = require('../repository/harooContent.repository');
 const { findLatestVote, findVoteByDate } = require('../repository/vote.repository');
 
 const dailyHaroo = async (req, res) => {
   try {
     let result = {};
 
-    const { normalizedYesterday } = getNormalizedDays();
+    const { normalizedToday, normalizedYesterday } = getNormalizedDays();
 
     const harooStatData = await findLatestHarooStat();
-    const harooContentData = await findLatestHarooContent();
+    const harooContentData = await findHarooContentByDate(normalizedToday);
     const todayVoteData = await findLatestVote();
     const yesterdayVoteData = await findVoteByDate(normalizedYesterday);
 

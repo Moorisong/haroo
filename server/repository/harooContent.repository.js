@@ -11,14 +11,6 @@ exports.findHarooContentByDate = async (normalizedDate) => {
   }
 };
 
-exports.findLatestHarooContent = async () => {
-  try {
-    return await HarooContent.findOne().sort({ date: -1 });
-  } catch (err) {
-    throw new Error(`Failed to find haroo content  by sort latest ${err.message} `);
-  }
-};
-
 exports.createHarooContent = async (normalizedDate, data) => {
   try {
     const newHarooContent = new HarooContent({

@@ -1,6 +1,6 @@
 const { Haroo } = require('../models/Haroo');
 
-const initHaroo = async (req, res) => {
+const initHaroo = async (res) => {
   try {
     const existing = await Haroo.findOne();
     if (existing) {
