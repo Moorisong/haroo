@@ -4,31 +4,22 @@ const { Haroo } = require('../models/Haroo');
 const { HarooContent } = require('../models/HarooContent');
 const { HAROO_DETAIL, TEXT } = require('../constants');
 const { findVoteAndUpdate } = require('../repository/vote.repository');
-const { findHarooContentByDate } = require('../repository/harooContent.repository');
-const { findHarooByName, findHarooAndUpdate } = require('../repository/haroo.repository');
+const { findHarooContentByDate, createHarooContent } = require('../repository/harooContent.repository');
+const { findHarooByName, findHarooAndUpdate, createHaroo } = require('../repository/haroo.repository');
 
 // 하루 최신 스탯, 스탯 변경 내역 DB 저장
 exports.saveOrUpdateHaroo = async (data) => {
   try {
+    // 문서가 아예 없을 경우: 새로 생성
     let haroo = await findHarooByName();
+    if (!haroo) return createHaroo(normalizedToday);
+
     const lastStatDate = haroo.statsHistory?.[haroo.statsHistory.length - 1]?.date;
 
     const { normalizedToday, normalizedYesterday, normalizedDate } = getNormalizedDays(lastStatDate);
     const normalizedLastStatDate = normalizedDate;
 
     const isUpdatePossible = normalizedLastStatDate.getTime() === normalizedYesterday.getTime();
-
-    // 문서가 아예 없을 경우: 새로 생성
-
-    if (!haroo) {
-      const newHaroo = new Haroo({
-        name: HAROO_DETAIL.NAME_KOR_EN,
-        currentStats: [],
-        statsHistory: [{ date: normalizedToday, statChanges: [] }],
-      });
-      await newHaroo.save();
-      return newHaroo;
-    }
 
     // 문서가 있고 최신 기록의 날짜가 어제 날짜일 경우: 업데이트
     if (isUpdatePossible) {
@@ -48,28 +39,14 @@ exports.saveOrUpdateHarooContent = async (data) => {
   const todayDoc = await findHarooContentByDate(normalizedToday);
   const tomorrowDoc = await findHarooContentByDate(normalizedTomorrow);
   try {
-    let newHarooContent;
-
     if (!todayDoc) {
       // 오늘 데이터가 없다 : 오늘 날짜로 생성
-      newHarooContent = new HarooContent({
-        date: normalizedToday,
-        greeting: data.greeting,
-        emoticon: data.asciiArt,
-      });
+      await createHarooContent(normalizedToday, data);
     } else if (todayDoc && !tomorrowDoc) {
       // 오늘 데이터는 있는데 내일 데이터가 없다 : 내일 날짜로 생성
-      newHarooContent = new HarooContent({
-        date: normalizedTomorrow,
-        greeting: data.greeting,
-        emoticon: data.asciiArt,
-      });
+      await createHarooContent(normalizedTomorrow, data);
     }
-
     // 오늘과 내일 모두 있다: 아무 일도 안 일어남
-    if (newHarooContent) {
-      await newHarooContent.save();
-    }
   } catch (err) {
     throw new Error(`Error while saving or updating Haroo content: ${err.message}`);
   }

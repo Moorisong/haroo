@@ -18,3 +18,16 @@ exports.findLatestHarooContent = async () => {
     throw new Error(`Failed to find haroo content  by sort latest ${err.message} `);
   }
 };
+
+exports.createHarooContent = async (normalizedDate, data) => {
+  try {
+    const newHarooContent = new HarooContent({
+      date: normalizedDate,
+      greeting: data.greeting || undefined,
+      emoticon: data.asciiArt || undefined,
+    });
+    await newHarooContent.save();
+  } catch (err) {
+    throw new Error(`Failed to create haroo content : ${err.message}`);
+  }
+};

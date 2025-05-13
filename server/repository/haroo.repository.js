@@ -43,3 +43,17 @@ exports.findHarooAndUpdate = async (data) => {
     throw new Error(`Failed to find and update haroo : ${err.message}`);
   }
 };
+
+exports.createHaroo = async (normalizedToday) => {
+  try {
+    const newHaroo = new Haroo({
+      name: HAROO_DETAIL.NAME_KOR_EN,
+      currentStats: [],
+      statsHistory: [{ date: normalizedToday, statChanges: [] }],
+    });
+    await newHaroo.save();
+    return newHaroo;
+  } catch (err) {
+    throw new Error(`Failed to create haroo ${err.message}`);
+  }
+};
