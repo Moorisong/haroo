@@ -29,7 +29,7 @@ const chatWithGPT = async (req, res) => {
     try {
       parsedResult = JSON.parse(result);
     } catch (err) {
-      throw new Error('GPT 응답 파싱 오류');
+      throw new Error(`GPT 응답 파싱 오류 : ${err.message}`);
     }
 
     await saveOrUpdateHaroo(parsedResult.harooStats);

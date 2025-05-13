@@ -7,7 +7,7 @@ exports.findHarooByName = async () => {
   try {
     return await Haroo.findOne({ name: HAROO_DETAIL.NAME_KOR_EN });
   } catch (err) {
-    throw new Error('Failed to find haroo by name');
+    throw new Error(`Failed to find haroo by name : ${err.message}`);
   }
 };
 
@@ -15,7 +15,7 @@ exports.findLatestHarooStat = async () => {
   try {
     return await Haroo.findOne().sort({ date: -1 });
   } catch (err) {
-    throw new Error('Failed to find haroo stat by sort latest ');
+    throw new Error(`Failed to find haroo stat by sort latest : ${err.message}`);
   }
 };
 
@@ -40,6 +40,6 @@ exports.findHarooAndUpdate = async (data) => {
       },
     );
   } catch (err) {
-    throw new Error('Failed to find and update haroo');
+    throw new Error(`Failed to find and update haroo : ${err.message}`);
   }
 };

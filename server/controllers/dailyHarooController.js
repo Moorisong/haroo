@@ -41,8 +41,9 @@ const dailyHaroo = async (req, res) => {
     };
 
     return res.status(200).json(result);
-  } catch (error) {
-    return res.status(500).json({ message: '서버에서 오류가 발생했습니다.' });
+  } catch (err) {
+    res.status(500).json({ message: '서버에서 오류가 발생했습니다' });
+    throw new Error(`faild in dailyHaroo : ${err.message}`);
   }
 };
 module.exports = { dailyHaroo };

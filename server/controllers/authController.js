@@ -12,7 +12,7 @@ exports.refreshAccessToken = (req, res) => {
     const accessToken = createAccessToken({ id: payload.userId });
 
     return res.status(200).json({ accessToken });
-  } catch (error) {
-    return res.status(403).json({ message: '리프레시 토큰 검증 실패 --- Invalid refresh token' });
+  } catch (err) {
+    return res.status(403).json({ message: '리프레시 토큰 검증 실패 : ', err });
   }
 };

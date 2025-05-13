@@ -11,7 +11,7 @@ const initHaroo = async (req, res) => {
     await newHaroo.save();
     res.status(201).json({ message: '하루 생성 완료', haroo: newHaroo });
   } catch (err) {
-    res.status(500).json({ error: '하루 생성 오류' });
+    res.status(500).json({ message: 'Haroo 생성 중 에러가 발생했습니다.', err });
   }
 };
 

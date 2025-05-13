@@ -4,7 +4,7 @@ exports.findUserById = async (id) => {
   try {
     return await User.findOne({ kakaoId: id });
   } catch (error) {
-    throw new Error('Failed to find User by kakao ID');
+    throw new Error(`Failed to find User by kakao ID : ${err.message}`);
   }
 };
 
@@ -19,6 +19,6 @@ exports.findUserAndUpdate = async (user) => {
       { upsert: true, new: true },
     );
   } catch (error) {
-    throw new Error('Failed to find and update User by kakao ID');
+    throw new Error(`Failed to find and update User by kakao ID : ${err.message}`);
   }
 };

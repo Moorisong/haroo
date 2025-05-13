@@ -37,7 +37,7 @@ exports.saveOrUpdateHaroo = async (data) => {
     }
     return haroo;
   } catch (err) {
-    throw new Error('Error while saving or updating Haroo: ' + err.message);
+    throw new Error(`Error while saving or updating Haroo: ${err.message}`);
   }
 };
 
@@ -71,7 +71,7 @@ exports.saveOrUpdateHarooContent = async (data) => {
       await newHarooContent.save();
     }
   } catch (err) {
-    throw new Error('Error while saving or updating Haroo content: ' + err.message);
+    throw new Error(`Error while saving or updating Haroo content: ${err.message}`);
   }
 };
 
@@ -117,6 +117,6 @@ exports.saveOrUpdateVote = async (data) => {
 
     return { todayVote: todayDoc, tomorrowVote: tomorrowDoc };
   } catch (err) {
-    throw new Error('Error while saving or updating vote data: ' + err.message);
+    throw new Error(`Error while saving or updating vote data: ${err.message}`);
   }
 };
