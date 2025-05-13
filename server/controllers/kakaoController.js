@@ -14,7 +14,7 @@ const getKakaoLoginToken = async (req, res) => {
     const { accessToken, refreshToken } = getUserTokens(user);
 
     return res.status(200).json({ accessToken, refreshToken });
-  } catch (error) {
+  } catch (err) {
     return res.status(500).json({ message: '카카오 로그인 인증 단계에서 에러가 발생했습니다.', err });
   }
 };
