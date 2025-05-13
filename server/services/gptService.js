@@ -1,8 +1,6 @@
 const { getNormalizedDays } = require('../utils');
 
-const { Haroo } = require('../models/Haroo');
-const { HarooContent } = require('../models/HarooContent');
-const { HAROO_DETAIL, TEXT } = require('../constants');
+const { TEXT } = require('../constants');
 const { findVoteAndUpdate } = require('../repository/vote.repository');
 const { findHarooContentByDate, createHarooContent } = require('../repository/harooContent.repository');
 const { findHarooByName, findHarooAndUpdate, createHaroo } = require('../repository/haroo.repository');
