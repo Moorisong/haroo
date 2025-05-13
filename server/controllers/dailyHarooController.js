@@ -15,9 +15,18 @@ const dailyHaroo = async (req, res) => {
     const todayVoteData = await findLatestVote();
     const yesterdayVoteData = await findVoteByDate(normalizedYesterday);
 
-    if (!harooStatData) {
-      return res.status(404).json({ message: '하루 데이터가 존재하지 않습니다.' });
+    const dataMissing = !harooStatData || !todayVoteData || !todayVoteData[1] || !yesterdayVoteData;
+
+    if (dataMissing) {
+      console.log('missing data --- ', {
+        harooStatData: !!harooStatData,
+        todayVoteData: !!todayVoteData,
+        todayVoteDataIndex1: todayVoteData ? !!todayVoteData[1] : false,
+        yesterdayVoteData: !!yesterdayVoteData,
+      });
+      return res.status(404).json({ message: '데이터가 존재하지 않습니다.' });
     }
+
     result = {
       harooStat: {
         name: harooStatData.name,
