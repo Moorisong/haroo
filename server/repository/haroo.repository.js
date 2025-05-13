@@ -1,5 +1,3 @@
-const { getNormalizedDays } = require('../utils');
-
 const { Haroo } = require('../models/Haroo');
 const { HAROO_DETAIL } = require('../constants');
 
@@ -19,8 +17,7 @@ exports.findLatestHarooStat = async () => {
   }
 };
 
-exports.findHarooAndUpdate = async (data) => {
-  const { normalizedToday } = getNormalizedDays();
+exports.findHarooAndUpdate = async (data, normalizedDate) => {
   try {
     return await Haroo.findOneAndUpdate(
       { name: HAROO_DETAIL.NAME_KOR_EN },
@@ -30,7 +27,7 @@ exports.findHarooAndUpdate = async (data) => {
         },
         $push: {
           statsHistory: {
-            date: normalizedToday,
+            date: normalizedDate,
             statChanges: data.statChanges,
           },
         },

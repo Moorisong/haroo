@@ -18,6 +18,7 @@ const dailyHaroo = async (req, res) => {
     const dataMissing = !harooStatData || !todayVoteData || !todayVoteData[1] || !yesterdayVoteData;
 
     if (dataMissing) {
+      // eslint-disable-next-line no-console
       console.log('missing data --- ', {
         harooStatData: !!harooStatData,
         todayVoteData: !!todayVoteData,
