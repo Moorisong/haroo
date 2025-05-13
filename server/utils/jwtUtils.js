@@ -29,4 +29,6 @@ const getUserTokens = (user) => {
 module.exports = {
   verifyRefreshToken,
   getUserTokens,
+  createAccessToken,
+  createRefreshToken
 };

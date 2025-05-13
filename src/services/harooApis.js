@@ -32,9 +32,9 @@ export async function sendKakaoTokenToBackend(code) {
   }
 }
 
-export async function refreshAccessToken(accessToken) {
+export async function refreshAccessToken(refreshToken) {
   const headers = API_HEADER.JSON;
-  const body = { accessToken };
+  const body = refreshToken;
   try {
     const response = await apiBe.post(`${process.env.REACT_APP_BACKEND_URL}/auth/refresh`, body, { headers });
     return response.data;

@@ -1,6 +1,7 @@
 const { findUserAndUpdate } = require('../repository/user.repository');
 const { getKaKaoAccessToken, getUserIdAndNickname } = require('../services/kakaoService');
 const { getUserTokens } = require('../utils/jwtUtils');
+const { refreshAccessToken } = require('./authController');
 
 const getKakaoLoginToken = async (req, res) => {
   try {
@@ -19,4 +20,13 @@ const getKakaoLoginToken = async (req, res) => {
   }
 };
 
-module.exports = { getKakaoLoginToken };
+const getNewJwtTokens = (req, res) => {
+  try {
+    const newTokens = refreshAccessToken(req.body.refreshToken);
+    return res.status(200).json(newTokens);
+  } catch (err) {
+    throw new Error(`error in get new tokens : ${err.message}`);
+  }
+};
+
+module.exports = { getKakaoLoginToken, getNewJwtTokens };

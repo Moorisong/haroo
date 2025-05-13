@@ -23,4 +23,4 @@ app.listen(3001, () => {
 app.use('/api/init', harooRoutes);
 app.use('/api/chat', chatRoutes);
 app.use('/api/haroo/today', dailyHarooRoutes);
-app.use('/auth/kakao', authRoutes);
+app.use('/auth', authRoutes);

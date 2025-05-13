@@ -10,16 +10,15 @@ exports.saveOrUpdateHaroo = async (data) => {
   let haroo = await findHarooByName();
   const { normalizedToday, normalizedYesterday } = getNormalizedDays();
 
-  // 문서가 아예 없을 경우: 새로 생성
   if (!haroo) return createHaroo(normalizedToday);
 
   try {
     const lastStatDate = haroo.statsHistory?.[haroo.statsHistory.length - 1]?.date;
     const { normalizedDate: normalizedLastStatDate } = getNormalizedDays(lastStatDate);
 
+    // 문서가 있고 최신 기록의 날짜가 어제 날짜일 경우: 업데이트
     const isUpdatePossible = normalizedLastStatDate.getTime() === normalizedYesterday.getTime();
 
-    // 문서가 있고 최신 기록의 날짜가 어제 날짜일 경우: 업데이트
     if (isUpdatePossible) {
       const updated = await findHarooAndUpdate(data, normalizedToday);
       return updated;
