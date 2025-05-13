@@ -28,6 +28,17 @@ export async function sendKakaoTokenToBackend(code) {
     const response = await apiBe.post(`${process.env.REACT_APP_BACKEND_URL}/auth/kakao`, body, { headers });
     return response.data;
   } catch (err) {
-    throw new Error(`error in send kakao token to the backend ${err.message}`);
+    throw new Error(`error in send kakao token to the backend : ${err.message}`);
+  }
+}
+
+export async function refreshAccessToken(accessToken) {
+  const headers = API_HEADER.JSON;
+  const body = { accessToken };
+  try {
+    const response = await apiBe.post(`${process.env.REACT_APP_BACKEND_URL}/auth/refresh`, body, { headers });
+    return response.data;
+  } catch (err) {
+    throw new Error(`error in refresh jwt access token : ${err.message}`);
   }
 }
