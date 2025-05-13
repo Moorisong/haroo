@@ -4,6 +4,13 @@ module.exports.HAROO_DETAIL = {
 
 module.exports.TEXT = {
   AUTHORIZATION: 'authorization',
+  INITTIAL: {
+    VOTE: {
+      TOPIC: 'Initial Vote',
+      OPTIONS: ['a', 'b', 'c', 'd'],
+      KNOWLEDGE: 'Knowledge Section',
+    },
+  },
 };
 
 module.exports.PAHT = {

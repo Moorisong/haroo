@@ -2,7 +2,7 @@ const { getNormalizedDays } = require('../utils');
 
 const { Haroo } = require('../models/Haroo');
 const { HarooContent } = require('../models/HarooContent');
-const { HAROO_DETAIL } = require('../constants');
+const { HAROO_DETAIL, TEXT } = require('../constants');
 const { findVoteAndUpdate } = require('../repository/vote.repository');
 const { findHarooContentByDate } = require('../repository/harooContent.repository');
 const { findHarooByName, findHarooAndUpdate } = require('../repository/haroo.repository');
@@ -88,9 +88,9 @@ exports.saveOrUpdateVote = async (data) => {
     },
     setOnInsert: {
       voteDate: normalizedToday,
-      topic: 'Initial Vote',
-      options: ['a', 'b', 'c', 'd'],
-      knowledge: 'Knowledge Section',
+      topic: TEXT.INITTIAL.VOTE.TOPIC,
+      options: TEXT.INITTIAL.VOTE.OPTIONS,
+      knowledge: TEXT.INITTIAL.VOTE.KNOWLEDGE,
       createdAt: new Date(),
     },
   };
