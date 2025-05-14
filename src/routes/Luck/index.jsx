@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getYoutubeId, validateYoutubeUrl, kakaoListShare, kakaoLogout } from 'src/utils';
 import { TextBox } from 'src/components/TextBox';
-import { ALERT_CONTENT, DATA_TYPE, PATH, SCALE, STYLE, TOKEN_NAME } from 'src/constants';
+import { ALERT_CONTENT, DATA_TYPE, PATH, SCALE, STYLE } from 'src/constants';
 import Layout from 'src/components/Layout';
 import Ad_thin from 'src/components/Ads/Ad_thin';
 import LogoutButton from 'src/components/LogoutButton';
@@ -17,11 +17,6 @@ export default function Luck() {
   const [data, setData] = useState(defaultData);
   const [withoutYoutube, setWithoutYoutube] = useState(false);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const token = window.sessionStorage.getItem(TOKEN_NAME);
-    if (!token) return navigate(PATH.DEFAULT);
-  }, []);
 
   const onClickShare = () => {
     if (!window.Kakao.isInitialized()) window.Kakao.init(process.env.REACT_APP_KAKAO_APP_KEY);

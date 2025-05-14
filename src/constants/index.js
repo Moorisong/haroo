@@ -129,7 +129,6 @@ export const DATA_TYPE = {
 export const ALERT_CONTENT = {
   EMPTY_TEXT: '구하고싶은 확률을 입력해주세요.',
   INVALID_URL: '유튜브 동영상 주소를 정확하게 입력해주세요.',
-  LOGIN_ERROR: '로그인 중 오류가 발생했습니다.',
 };
 
 export const KAKAO_FEED_TEXT = {
@@ -139,9 +138,6 @@ export const KAKAO_FEED_TEXT = {
   PROFILE_TEXT: '오늘의 확률 시뮬레이터 ✨',
   BUTTON_TITLE_TEXT: '운세 직접 뽑아주기 👉',
 };
-
-//ksh 이거 지워
-export const TOKEN_NAME = 'harooToken';
 
 export const TOKEN = {
   ACCESS_TOKEN: 'accessToken',

@@ -1,4 +1,4 @@
-import { ENV, KAKAO_FEED_TEXT, TOKEN_NAME, YOUTUBE_IMAGE_URL } from 'src/constants';
+import { ENV, KAKAO_FEED_TEXT, YOUTUBE_IMAGE_URL } from 'src/constants';
 import { PATH } from 'src/constants';
 
 export const kakaoListShare = (data, youtubeId, withoutYoutube) => {
@@ -63,9 +63,7 @@ export function kakaoLogin(url) {
   window.location.href = url;
 }
 
-export function kakaoLogout() {
-  window.sessionStorage.removeItem(TOKEN_NAME);
-}
+export function kakaoLogout() {}
 
 export function isDevEnvironment() {
   return process.env.NODE_ENV === ENV.DEV;
