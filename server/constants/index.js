@@ -11,6 +11,18 @@ module.exports.TEXT = {
       KNOWLEDGE: 'Knowledge Section',
     },
   },
+  ENV: {
+    DEV: 'development',
+    PROD: 'production',
+  },
+  TOKEN: {
+    ACCESS_TOKEN: 'accessToken',
+    REFRESH_TOKEN: 'refreshToken',
+  },
+  COOKIE_MAX_AGE: {
+    ACCESS_TOKEN: 60 * 60 * 2 * 1000,
+    REFRESH_TOKEN: 60 * 60 * 24 * 1000
+  }
 };
 
 module.exports.PAHT = {

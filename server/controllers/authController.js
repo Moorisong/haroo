@@ -1,3 +1,4 @@
+const { TEXT } = require('../constants');
 const { createAccessToken, verifyRefreshToken, createRefreshToken } = require('../utils/jwtUtils');
 
 exports.refreshAccessToken = (refreshToken) => {
@@ -15,4 +16,18 @@ exports.refreshAccessToken = (refreshToken) => {
   } catch (err) {
     throw new Error(`invalid refresh token, login again please :  ${err.message}`);
   }
+};
+
+exports.extractAccessToken = (req) => {
+  const authHeader = req.headers[TEXT.AUTHORIZATION];
+  if (!authHeader) {
+    throw new Error('Authorization header missing');
+  }
+
+  const token = authHeader.split(' ')[1];
+  if (!token) {
+    throw new Error('Token missing from Authorization header');
+  }
+
+  return token;
 };

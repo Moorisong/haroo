@@ -20,6 +20,14 @@ const verifyRefreshToken = (refreshToken) => {
   }
 };
 
+const verifyAccessToken = (accessToken) => {
+  try {
+    return jwt.verify(accessToken, JWT_SECRET);
+  } catch (err) {
+    throw new Error(`Invalid access token : ${err.message}`);
+  }
+};
+
 const getUserTokens = (user) => {
   const accessToken = createAccessToken(user);
   const refreshToken = createRefreshToken(user);
@@ -30,5 +38,6 @@ module.exports = {
   verifyRefreshToken,
   getUserTokens,
   createAccessToken,
-  createRefreshToken
+  createRefreshToken,
+  verifyAccessToken,
 };

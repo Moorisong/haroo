@@ -1,3 +1,5 @@
+const { TEXT } = require('../constants');
+
 function normalizeDate(dateInput) {
   const d = new Date(dateInput || new Date());
   d.setHours(0, 0, 0, 0);
@@ -46,10 +48,29 @@ function getNormalizedDays(date = false) {
   return { normalizedToday, normalizedTomorrow, normalizedYesterday, normalizedDate };
 }
 
+function getCookieOption(maxAge) {
+  const result = {
+    accessToken: {
+      httpOnly: true, // JavaScript에서 접근할 수 없도록 설정
+      secure: process.env.NODE_ENV === TEXT.ENV.PROD, // https 환경에서만 쿠키 set
+      sameSite: 'None',
+      maxAge: maxAge.accessTokenMaxAge, // 쿠키 만료 시간
+    },
+    refreshToken: {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === TEXT.ENV.PROD,
+      sameSite: 'None',
+      maxAge: maxAge.refreshTokenMaxAge,
+    },
+  };
+  return result;
+}
+
 module.exports = {
   normalizeDate,
   getStartAndEndOfDay,
   getTomorrowDate,
   getYesterdayDate,
   getNormalizedDays,
+  getCookieOption,
 };

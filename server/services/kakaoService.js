@@ -1,5 +1,6 @@
 const { apiBe } = require('../api');
 const { TEXT, PAHT } = require('../constants');
+const { getUserTokens } = require('../utils/jwtUtils');
 
 exports.getKaKaoAccessToken = async (code) => {
   const headers = {
@@ -23,3 +24,5 @@ exports.getUserIdAndNickname = async (accessToken) => {
   const response = await apiBe.get(PAHT.KAKAO.USER, { headers });
   return response.data;
 };
+
+exports.getUserTokensForLogin = (user) => getUserTokens(user);
