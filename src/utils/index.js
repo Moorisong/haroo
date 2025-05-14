@@ -1,5 +1,6 @@
 import { ENV, KAKAO_FEED_TEXT, YOUTUBE_IMAGE_URL } from 'src/constants';
-import { PATH } from 'src/constants';
+import { PATH, TOKEN } from 'src/constants';
+import Cookies from 'js-cookie';
 
 export const kakaoListShare = (data, youtubeId, withoutYoutube) => {
   const condition = data[0].text;
@@ -63,7 +64,10 @@ export function kakaoLogin(url) {
   window.location.href = url;
 }
 
-export function kakaoLogout() {}
+export function clearTokens() {
+  Cookies.remove(TOKEN.ACCESS_TOKEN, { path: '/', sameSite: 'None', secure: true });
+  Cookies.remove(TOKEN.REFRESH_TOKEN, { path: '/', sameSite: 'None', secure: true });
+}
 
 export function isDevEnvironment() {
   return process.env.NODE_ENV === ENV.DEV;

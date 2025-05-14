@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getYoutubeId, validateYoutubeUrl, kakaoListShare, kakaoLogout } from 'src/utils';
+import { getYoutubeId, validateYoutubeUrl, kakaoListShare, clearTokens } from 'src/utils';
 import { TextBox } from 'src/components/TextBox';
 import { ALERT_CONTENT, DATA_TYPE, PATH, SCALE, STYLE } from 'src/constants';
 import Layout from 'src/components/Layout';
@@ -34,7 +34,7 @@ export default function Luck() {
   };
 
   const onClickLogout = () => {
-    kakaoLogout();
+    clearTokens();
     return navigate(PATH.DEFAULT);
   };
 
