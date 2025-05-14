@@ -20,7 +20,7 @@ export async function getHarooData() {
   }
 }
 
-export async function sendKakaoTokenToBackend(code) {
+export async function sendKakaoCodeToBackend(code) {
   const headers = API_HEADER.JSON;
   const body = { code };
 

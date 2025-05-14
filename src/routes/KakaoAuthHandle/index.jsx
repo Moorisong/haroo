@@ -1,7 +1,7 @@
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useEffect } from 'react';
 import { PATH } from 'src/constants';
-import { sendKakaoTokenToBackend } from 'src/services/harooApis';
+import { sendKakaoCodeToBackend } from 'src/services/harooApis';
 
 export default function KakaoAuthHandle() {
   const navigate = useNavigate();
@@ -10,7 +10,7 @@ export default function KakaoAuthHandle() {
   const code = searchParams.get('code');
 
   useEffect(() => {
-    sendKakaoTokenToBackend(code).finally(() => {
+    sendKakaoCodeToBackend(code).finally(() => {
       navigate(PATH.MAIN);
     });
   }, []);
