@@ -140,7 +140,17 @@ export const KAKAO_FEED_TEXT = {
   BUTTON_TITLE_TEXT: '운세 직접 뽑아주기 👉',
 };
 
+//ksh 이거 지워
 export const TOKEN_NAME = 'harooToken';
+
+export const TOKEN = {
+  ACCESS_TOKEN: 'accessToken',
+  REFRESH_TOKEN: 'refreshToken',
+};
+
+export const HEADERS = {
+  AUTHORIZATION: 'authorization',
+};
 
 export const PATH = {
   LOGO_SVG: '/logo.svg',
