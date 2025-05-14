@@ -1,4 +1,4 @@
-import { KAKAO_FEED_TEXT, TOKEN_NAME, YOUTUBE_IMAGE_URL } from 'src/constants';
+import { ENV, KAKAO_FEED_TEXT, TOKEN_NAME, YOUTUBE_IMAGE_URL } from 'src/constants';
 import { PATH } from 'src/constants';
 
 export const kakaoListShare = (data, youtubeId, withoutYoutube) => {
@@ -68,7 +68,7 @@ export function kakaoLogout() {
 }
 
 export function isDevEnvironment() {
-  return process.env.NODE_ENV === 'development';
+  return process.env.NODE_ENV === ENV.DEV;
 }
 
 export function getRandomEmlji() {

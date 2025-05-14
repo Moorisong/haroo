@@ -155,4 +155,9 @@ export const API_HEADER = {
   JSON: { 'Content-Type': 'application/json' },
 };
 
+export const ENV = {
+  DEV: 'development',
+  PROD: 'production',
+};
+
 export const YOUTUBE_IMAGE_URL = (id) => `https://img.youtube.com/vi/${id}/0.jpg`;
