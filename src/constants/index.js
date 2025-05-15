@@ -61,7 +61,7 @@ export const COMPONENT_STYLE = {
   HAROO_INTRO: {
     CONTAINER: `${STYLE.FLEX_COL_ITEM_CENTER} ${STYLE.BORDER_ROUND} ${STYLE.BG_LIGHT_GRAY} ${STYLE.BORDER_GRAY} w-full md:w-2/3 px-6 py-5 p-6 text-gray-700 justify-center space-y-2`,
     EMOTICON: 'w-full text-center',
-    TEXT: 'w-full text-center text-sm leading-relaxed font-sans max-h-48 overflow-y-auto',
+    TEXT: 'w-full text-center text-sm leading-relaxed font-sans max-h-48 overflow-y-auto whitespace-pre-wrap',
   },
   STAT: {
     CONTAINER: `grid grid-cols-2 md:grid-cols-4 gap-4 w-full mt-6`,
