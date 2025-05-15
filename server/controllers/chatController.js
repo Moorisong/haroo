@@ -1,6 +1,6 @@
 const { OpenAI } = require('openai'); // openai v4.x 기준
 
-const { saveOrUpdateHaroo, saveOrUpdateHarooContent, saveOrUpdateVote } = require('../services/gptService');
+const { saveOrUpdateHaroo, saveOrUpdateHarooContent, saveOrUpdateVote } = require('../services/harooService');
 
 const openai = new OpenAI({
   apiKey: process.env.OPEN_AI_API_KEY,
