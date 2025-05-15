@@ -4,7 +4,6 @@ const { verifyAccessToken } = require('../utils/jwtUtils');
 const verifyTokenMiddleware = (req, res, next) => {
   try {
     const accessToken = extractAccessToken(req);
-
     verifyAccessToken(accessToken);
     next();
   } catch (err) {
@@ -12,4 +11,4 @@ const verifyTokenMiddleware = (req, res, next) => {
   }
 };
 
-module.exports = verifyTokenMiddleware;
+module.exports = { verifyTokenMiddleware };

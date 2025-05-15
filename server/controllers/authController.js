@@ -1,33 +1,42 @@
+const { getCookieOption } = require('../utils');
+
 const { TEXT } = require('../constants');
 const { createAccessToken, verifyRefreshToken, createRefreshToken } = require('../utils/jwtUtils');
 
-exports.refreshAccessToken = (refreshToken) => {
-  if (!refreshToken) {
-    throw new Error('No refresh token provided. Please login again.');
-  }
-
+exports.refreshAccessToken = (cookie, res) => {
   try {
-    const payload = verifyRefreshToken(refreshToken);
-    const accessToken = createAccessToken({ id: payload.userId });
+    const refreshToken = cookie?.[TEXT.TOKEN.REFRESH_TOKEN];
 
+    if (!refreshToken) {
+      return res.status(401).json({ message: 'No refresh token provided' });
+    }
+
+    const payload = verifyRefreshToken(refreshToken);
+
+    // 새 토큰 발급
+    const newAccessToken = createAccessToken({ id: payload.userId });
     const newRefreshToken = createRefreshToken({ id: payload.userId });
 
-    return { accessToken, refreshToken: newRefreshToken };
+    // 쿠키 설정 후 응답
+    const tokenMaxAge = {
+      accessToken: TEXT.COOKIE_MAX_AGE.ACCESS_TOKEN,
+      refreshToken: TEXT.COOKIE_MAX_AGE.REFRESH_TOKEN,
+    };
+    const cookieOption = getCookieOption(tokenMaxAge);
+
+    res.cookie(TEXT.TOKEN.ACCESS_TOKEN, newAccessToken, cookieOption.accessToken);
+    res.cookie(TEXT.TOKEN.REFRESH_TOKEN, newRefreshToken, cookieOption.refreshToken);
+
+    return res.status(200).json({ message: 'token refresh success!' });
   } catch (err) {
-    throw new Error(`invalid refresh token, login again please :  ${err.message}`);
+    return res.status(401).json({ message: 'Invalid or expired refresh token' });
   }
 };
 
 exports.extractAccessToken = (req) => {
-  const authHeader = req.headers[TEXT.AUTHORIZATION];
-  if (!authHeader) {
-    throw new Error('Authorization header missing');
-  }
-
-  const token = authHeader.split(' ')[1];
+  const token = req.cookies?.[TEXT.TOKEN.ACCESS_TOKEN];
   if (!token) {
-    throw new Error('Token missing from Authorization header');
+    throw new Error('Access token missing from cookies');
   }
-
   return token;
 };

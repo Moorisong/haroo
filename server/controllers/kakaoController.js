@@ -25,7 +25,7 @@ const getKakaoLoginToken = async (req, res) => {
     res.cookie(TEXT.TOKEN.ACCESS_TOKEN, accessToken, cookieOption.accessToken);
     res.cookie(TEXT.TOKEN.REFRESH_TOKEN, refreshToken, cookieOption.refreshToken);
 
-    return res.status(200).json({ accessToken, refreshToken });
+    res.status(200).json({ message: 'login success!' });
   } catch (err) {
     return res.status(500).json({ message: '카카오 로그인 인증 단계에서 에러가 발생했습니다.', err: err.message });
   }
@@ -33,10 +33,9 @@ const getKakaoLoginToken = async (req, res) => {
 
 const getNewJwtTokens = (req, res) => {
   try {
-    const newTokens = refreshAccessToken(req.body.refreshToken);
-    return res.status(200).json(newTokens);
+    refreshAccessToken(req.cookies, res);
   } catch (err) {
-    throw new Error(`error in get new tokens : ${err.message}`);
+    return res.status(500).json({ message: `error in get new tokens : ${err.message}` });
   }
 };
 
