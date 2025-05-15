@@ -1,7 +1,17 @@
 import axios from 'axios';
-import Cookies from 'js-cookie';
-import { HEADERS, PATH, TOKEN } from 'src/constants';
+import { HEADERS, PATH } from 'src/constants';
 import { refreshAccessToken } from 'src/services/harooApis';
+
+let globalAccessToken = null;
+let globalRefreshToken = null;
+
+export const setGlobalAccessToken = (token) => {
+  globalAccessToken = token;
+};
+
+export const setGlobalRefreshToken = (token) => {
+  globalRefreshToken = token;
+};
 
 export const apiBe = axios.create({
   baseURL: `${process.env.REACT_APP_FRONTEND_PROD_URL}`,
@@ -11,12 +21,9 @@ export const apiBe = axios.create({
 
 apiBe.interceptors.request.use(
   (config) => {
-    // 쿠키에서 access token을 가져오기
-    const accessToken = Cookies.get(TOKEN.ACCESS_TOKEN);
-
     // access token이 있으면 Authorization 헤더에 추가
-    if (accessToken) {
-      config.headers[HEADERS.AUTHORIZATION] = `Bearer ${accessToken}`;
+    if (globalAccessToken) {
+      config.headers[HEADERS.AUTHORIZATION] = `Bearer ${globalAccessToken}`;
     }
 
     return config;
@@ -35,24 +42,18 @@ apiBe.interceptors.response.use(
       originalRequest._retry = true;
 
       try {
-        const refreshToken = Cookies.get(TOKEN.REFRESH_TOKEN);
-
-        if (!refreshToken) {
+        if (!globalRefreshToken) {
           throw new Error('No refresh token found in cookie storage');
         }
 
         // access token 재발급
-        const data = await refreshAccessToken({ refreshToken });
-
-        // 새 token들 쿠키에 저장
-        Cookies.set(TOKEN.ACCESS_TOKEN, data.accessToken, { path: '/', sameSite: 'None', secure: true });
-        Cookies.set(TOKEN.REFRESH_TOKEN, data.refreshToken, { path: '/', sameSite: 'None', secure: true });
+        const data = await refreshAccessToken(globalRefreshToken);
 
         // 헤더에 새 access token 설정 후 재요청
         originalRequest.headers[HEADERS.AUTHORIZATION] = `Bearer ${data.accessToken}`;
 
         return apiBe(originalRequest); // 재요청
-      } catch (refreshError) {
+      } catch (err) {
         window.location.href = PATH.DEFAULT;
       }
     }

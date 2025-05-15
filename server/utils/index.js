@@ -49,17 +49,18 @@ function getNormalizedDays(date = false) {
 }
 
 function getCookieOption(maxAge) {
+  const isProd = process.env.NODE_ENV === TEXT.ENV.PROD;
   const result = {
     accessToken: {
       httpOnly: true, // JavaScript에서 접근할 수 없도록 설정
-      secure: process.env.NODE_ENV === TEXT.ENV.PROD, // https 환경에서만 쿠키 set
-      sameSite: 'None',
+      secure: isProd, // https 환경에서만 쿠키 set
+      sameSite: isProd ? 'None' : 'Lax',
       maxAge: maxAge.accessTokenMaxAge, // 쿠키 만료 시간
     },
     refreshToken: {
       httpOnly: true,
-      secure: process.env.NODE_ENV === TEXT.ENV.PROD,
-      sameSite: 'None',
+      secure: isProd,
+      sameSite: isProd ? 'None' : 'Lax',
       maxAge: maxAge.refreshTokenMaxAge,
     },
   };

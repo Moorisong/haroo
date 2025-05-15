@@ -1,5 +1,6 @@
 import { apiBe } from 'src/services';
 import { API_HEADER } from 'src/constants';
+import axios from 'axios';
 
 export async function fetchHarooResponseFromGpt(body) {
   const headers = API_HEADER.JSON;
@@ -34,9 +35,14 @@ export async function sendKakaoCodeToBackend(code) {
 
 export async function refreshAccessToken(refreshToken) {
   const headers = API_HEADER.JSON;
-  const body = refreshToken;
+  const body = { refreshToken };
+
   try {
-    const response = await apiBe.post(`${process.env.REACT_APP_BACKEND_URL}/auth/refresh`, body, { headers });
+    // apiBe 안 타고, 순수한 axios로 refresh 요청
+    const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/auth/refresh`, body, {
+      headers,
+      withCredentials: true,
+    });
     return response.data;
   } catch (err) {
     throw new Error(`error in refresh jwt access token : ${err.message}`);

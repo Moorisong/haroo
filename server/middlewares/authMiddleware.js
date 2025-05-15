@@ -1,4 +1,5 @@
-const { verifyAccessToken, extractAccessToken } = require('../utils/jwtUtils');
+const { extractAccessToken } = require('../controllers/authController');
+const { verifyAccessToken } = require('../utils/jwtUtils');
 
 const verifyTokenMiddleware = (req, res, next) => {
   try {
