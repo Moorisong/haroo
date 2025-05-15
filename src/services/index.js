@@ -1,17 +1,6 @@
 import axios from 'axios';
-import { HEADERS, PATH } from 'src/constants';
+import { PATH } from 'src/constants';
 import { refreshAccessToken } from 'src/services/harooApis';
-
-let globalAccessToken = null;
-let globalRefreshToken = null;
-
-export const setGlobalAccessToken = (token) => {
-  globalAccessToken = token;
-};
-
-export const setGlobalRefreshToken = (token) => {
-  globalRefreshToken = token;
-};
 
 export const apiBe = axios.create({
   baseURL: `${process.env.REACT_APP_FRONTEND_PROD_URL}`,
@@ -21,11 +10,7 @@ export const apiBe = axios.create({
 
 apiBe.interceptors.request.use(
   (config) => {
-    // access token이 있으면 Authorization 헤더에 추가
-    if (globalAccessToken) {
-      config.headers[HEADERS.AUTHORIZATION] = `Bearer ${globalAccessToken}`;
-    }
-
+    config.withCredentials = true; // 쿠키 포함
     return config;
   },
   (error) => Promise.reject(error),
@@ -42,15 +27,8 @@ apiBe.interceptors.response.use(
       originalRequest._retry = true;
 
       try {
-        if (!globalRefreshToken) {
-          throw new Error('No refresh token found in cookie storage');
-        }
-
-        // access token 재발급
-        const data = await refreshAccessToken(globalRefreshToken);
-
-        // 헤더에 새 access token 설정 후 재요청
-        originalRequest.headers[HEADERS.AUTHORIZATION] = `Bearer ${data.accessToken}`;
+        // 토큰들 재발급
+        await refreshAccessToken();
 
         return apiBe(originalRequest); // 재요청
       } catch (err) {
