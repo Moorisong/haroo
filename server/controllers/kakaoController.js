@@ -3,8 +3,8 @@ const { getCookieOption } = require('../utils');
 const { findUserAndUpdate } = require('../repository/user.repository');
 const { getKaKaoAccessToken, getUserIdAndNickname } = require('../services/kakaoService');
 const { getUserTokens } = require('../utils/jwtUtils');
-const { refreshAccessToken } = require('./authController');
 const { TEXT } = require('../constants');
+const { refreshAccessToken } = require('./authController');
 
 const getKakaoLoginToken = async (req, res) => {
   try {

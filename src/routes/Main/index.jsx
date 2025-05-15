@@ -11,8 +11,6 @@ import Ad_thin from 'src/components/Ads/Ad_thin';
 import { getHarooData } from 'src/services/harooApis';
 import VoteResult from 'src/components/VoteResult';
 
-import { promptMessage } from './prompt';
-
 export default function Main() {
   const [data, setData] = useState({});
   const navigate = useNavigate();

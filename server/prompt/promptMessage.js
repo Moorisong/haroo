@@ -1,12 +1,12 @@
 const getTodayDate = () => {
   const today = new Date();
-  return today.toISOString().split('T')[0]; //YYYY-MM-DD
+  return today.toISOString().split('T')[0];
 };
 
 const getTomorrowDate = () => {
   const today = new Date();
   today.setDate(today.getDate() + 1);
-  return today.toISOString().split('T')[0]; //YYYY-MM-DD
+  return today.toISOString().split('T')[0];
 };
 
 const tomorrowDate = getTomorrowDate();
@@ -33,7 +33,7 @@ const currentStat = {
   이별극복력: -55,
 };
 
-export const promptMessage = `
+const promptMessage = `
 하루(Haroo)는 유저 투표 결과로 성장하는 캐릭터입니다. 매일 제공되는 주제에 따라 유저가 선택한 항목을 기반으로 하루의 스탯이 변경되며, 반응과 인사말도 달라집니다. AI는 아래 형식을 따라 응답해야 합니다:
 
 1. 오늘 투표 결과
@@ -46,7 +46,7 @@ export const promptMessage = `
 2. 내일 투표 생성
 - date: ${tomorrowDate}
 - topic: 참신하고 흥미로운 주제 (식상한 식사/날씨 금지)
-- options: 서로 다른 4개 항목 (1개는 기행/폭소/19금 드립 가능), 잘 이해되도록 문장 연결, 국어에 특히 신경쓸 것
+- options: 서로 다른 4개 항목 (1개는 기행/폭소/19금 드립 가능), 잘 이해되도록 문장 연결, 국어에 특히 신경쓸 것, 항목은 간결하고 이해하기 쉽게
 - knowledge: 주제 관련 재미/신선/흥미+정보 (15줄 꽉꽉 채우기)
 
 3. 스탯 처리
@@ -97,3 +97,5 @@ export const promptMessage = `
   }
 }
 `;
+
+module.exports = { promptMessage };
