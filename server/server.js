@@ -6,7 +6,6 @@ const cors = require('cors');
 const connectDB = require('./congif/db');
 const app = express();
 const harooRoutes = require('./routes/harooRoutes');
-const chatRoutes = require('./routes/chatRoutes');
 const dailyHarooRoutes = require('./routes/dailyHarooRoutes');
 const authRoutes = require('./routes/authRoutes');
 
@@ -23,6 +22,5 @@ app.listen(3001, () => {
   connectDB();
 });
 app.use('/api/init', harooRoutes);
-app.use('/api/chat', chatRoutes);
 app.use('/api/haroo/today', dailyHarooRoutes);
 app.use('/auth', authRoutes);

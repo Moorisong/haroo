@@ -2,16 +2,6 @@ import { apiBe } from 'src/services';
 import { API_HEADER } from 'src/constants';
 import axios from 'axios';
 
-export async function fetchHarooResponseFromGpt(body) {
-  const headers = API_HEADER.JSON;
-  try {
-    const response = await apiBe.post(`${process.env.REACT_APP_BACKEND_URL}/api/chat`, body, { headers });
-    return response.data;
-  } catch (err) {
-    throw new Error(`error in fetch haroo response from gpt ${err.message}`);
-  }
-}
-
 export async function getHarooData() {
   try {
     const response = await apiBe.get(`${process.env.REACT_APP_BACKEND_URL}/api/haroo/today`);

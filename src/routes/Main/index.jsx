@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { DATA_TYPE, PATH, STYLE } from 'src/constants';
 import { clearTokens } from 'src/utils';
-import { fetchHarooResponseFromGpt } from 'src/services/harooApis';
 import HarooIntro from 'src/components/HarooIntro';
 import Layout from 'src/components/Layout';
 import HarooStats from 'src/components/HarooStats';
@@ -19,17 +18,6 @@ export default function Main() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const message = promptMessage;
-    const body = JSON.stringify({ message });
-
-    // fetchHarooResponseFromGpt(body)
-    //   .then((response) => {
-    //     setData(response);
-    //   })
-    //   .catch((error) => {
-    //     console.error(DATA_TYPE.ERROR_MESSAGE, error);
-    //   });
-
     getHarooData()
       .then((response) => {
         setData(response);
