@@ -7,7 +7,7 @@ exports.findVoteByDate = async (normalizedDate) => {
     const { startOfDay, endOfDay } = getStartAndEndOfDay(normalizedDate);
     return await Vote.findOne({ voteDate: { $gte: startOfDay, $lte: endOfDay } });
   } catch (err) {
-    throw new Error('Failed to find vote by date');
+    throw new Error(`Failed to find vote by date : ${err.message}`);
   }
 };
 
@@ -15,7 +15,7 @@ exports.findLatestVote = async () => {
   try {
     return await Vote.find().sort({ voteDate: -1 });
   } catch (err) {
-    throw new Error('Failed to find vote by sort latest ');
+    throw new Error(`Failed to find vote by sort latest : ${err.message}`);
   }
 };
 
@@ -31,6 +31,6 @@ exports.findVoteAndUpdate = async (normalizedDate, option) => {
       { new: true, upsert: true },
     );
   } catch (err) {
-    throw new Error('Failed to update vote');
+    throw new Error(`Failed to update vote : ${err.message}`);
   }
 };

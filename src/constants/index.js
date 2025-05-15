@@ -61,7 +61,7 @@ export const COMPONENT_STYLE = {
   HAROO_INTRO: {
     CONTAINER: `${STYLE.FLEX_COL_ITEM_CENTER} ${STYLE.BORDER_ROUND} ${STYLE.BG_LIGHT_GRAY} ${STYLE.BORDER_GRAY} w-full md:w-2/3 px-6 py-5 p-6 text-gray-700 justify-center space-y-2`,
     EMOTICON: 'w-full text-center',
-    TEXT: 'w-full text-center text-sm leading-relaxed font-sans max-h-48 overflow-y-auto',
+    TEXT: 'w-full text-center text-sm leading-relaxed font-sans max-h-48 overflow-y-auto whitespace-pre-wrap',
   },
   STAT: {
     CONTAINER: `grid grid-cols-2 md:grid-cols-4 gap-4 w-full mt-6`,
@@ -129,7 +129,6 @@ export const DATA_TYPE = {
 export const ALERT_CONTENT = {
   EMPTY_TEXT: '구하고싶은 확률을 입력해주세요.',
   INVALID_URL: '유튜브 동영상 주소를 정확하게 입력해주세요.',
-  LOGIN_ERROR: '로그인 중 오류가 발생했습니다.',
 };
 
 export const KAKAO_FEED_TEXT = {
@@ -140,7 +139,14 @@ export const KAKAO_FEED_TEXT = {
   BUTTON_TITLE_TEXT: '운세 직접 뽑아주기 👉',
 };
 
-export const TOKEN_NAME = 'harooToken';
+export const TOKEN = {
+  ACCESS_TOKEN: 'accessToken',
+  REFRESH_TOKEN: 'refreshToken',
+};
+
+export const HEADERS = {
+  AUTHORIZATION: 'authorization',
+};
 
 export const PATH = {
   LOGO_SVG: '/logo.svg',
@@ -153,6 +159,11 @@ export const PATH = {
 
 export const API_HEADER = {
   JSON: { 'Content-Type': 'application/json' },
+};
+
+export const ENV = {
+  DEV: 'development',
+  PROD: 'production',
 };
 
 export const YOUTUBE_IMAGE_URL = (id) => `https://img.youtube.com/vi/${id}/0.jpg`;

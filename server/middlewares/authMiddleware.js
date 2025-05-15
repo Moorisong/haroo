@@ -1,22 +1,14 @@
-const jwt = require('jsonwebtoken');
+const { extractAccessToken } = require('../controllers/authController');
+const { verifyAccessToken } = require('../utils/jwtUtils');
 
-const { TEXT } = require('../constants');
-const { JWT_SECRET } = process.env;
-
-const verifyTokenFromApp = (req, res, next) => {
-  const token = req.headers[TEXT.AUTHORIZATION];
-
-  if (!token) {
-    return res.status(401).json({ error: 'No token provided' });
-  }
-
-  jwt.verify(token, JWT_SECRET, (err, decoded) => {
-    if (err) {
-      return res.status(401).json({ error: 'Invalid token' });
-    }
-    req.user = decoded;
+const verifyTokenMiddleware = (req, res, next) => {
+  try {
+    const accessToken = extractAccessToken(req);
+    verifyAccessToken(accessToken);
     next();
-  });
+  } catch (err) {
+    return res.status(401).json({ message: 'Invalid or expired access token' });
+  }
 };
 
-module.exports = { verifyTokenFromApp };
+module.exports = { verifyTokenMiddleware };

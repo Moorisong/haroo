@@ -1,3 +1,4 @@
+const cookieParser = require('cookie-parser');
 require('dotenv').config({ path: '.env.local' });
 const express = require('express');
 const cors = require('cors');
@@ -14,6 +15,7 @@ const corsOptions = {
   credentials: true,
 };
 
+app.use(cookieParser());
 app.use(cors(corsOptions));
 app.use(express.json());
 
@@ -23,4 +25,4 @@ app.listen(3001, () => {
 app.use('/api/init', harooRoutes);
 app.use('/api/chat', chatRoutes);
 app.use('/api/haroo/today', dailyHarooRoutes);
-app.use('/auth/kakao', authRoutes);
+app.use('/auth', authRoutes);

@@ -1,18 +1,42 @@
-const { createAccessToken, verifyRefreshToken } = require('../utils/jwtUtils');
+const { getCookieOption } = require('../utils');
 
-exports.refreshAccessToken = (req, res) => {
-  const { refreshToken } = req.body;
+const { TEXT } = require('../constants');
+const { createAccessToken, verifyRefreshToken, createRefreshToken } = require('../utils/jwtUtils');
 
-  if (!refreshToken) {
-    return res.status(401).json({ message: 'No refresh token provided' });
-  }
-
+exports.refreshAccessToken = (cookie, res) => {
   try {
-    const payload = verifyRefreshToken(refreshToken);
-    const accessToken = createAccessToken({ id: payload.userId });
+    const refreshToken = cookie?.[TEXT.TOKEN.REFRESH_TOKEN];
 
-    return res.status(200).json({ accessToken });
-  } catch (error) {
-    return res.status(403).json({ message: '리프레시 토큰 검증 실패 --- Invalid refresh token' });
+    if (!refreshToken) {
+      return res.status(401).json({ message: 'No refresh token provided' });
+    }
+
+    const payload = verifyRefreshToken(refreshToken);
+
+    // 새 토큰 발급
+    const newAccessToken = createAccessToken({ id: payload.userId });
+    const newRefreshToken = createRefreshToken({ id: payload.userId });
+
+    // 쿠키 설정 후 응답
+    const tokenMaxAge = {
+      accessToken: TEXT.COOKIE_MAX_AGE.ACCESS_TOKEN,
+      refreshToken: TEXT.COOKIE_MAX_AGE.REFRESH_TOKEN,
+    };
+    const cookieOption = getCookieOption(tokenMaxAge);
+
+    res.cookie(TEXT.TOKEN.ACCESS_TOKEN, newAccessToken, cookieOption.accessToken);
+    res.cookie(TEXT.TOKEN.REFRESH_TOKEN, newRefreshToken, cookieOption.refreshToken);
+
+    return res.status(200).json({ message: 'token refresh success!' });
+  } catch (err) {
+    return res.status(401).json({ message: 'Invalid or expired refresh token' });
   }
+};
+
+exports.extractAccessToken = (req) => {
+  const token = req.cookies?.[TEXT.TOKEN.ACCESS_TOKEN];
+  if (!token) {
+    throw new Error('Access token missing from cookies');
+  }
+  return token;
 };

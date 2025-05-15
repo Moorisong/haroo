@@ -1,8 +1,9 @@
 const express = require('express');
 
-const { getKakaoLoginToken } = require('../controllers/kakaoController');
+const { getKakaoLoginToken, getNewJwtTokens } = require('../controllers/kakaoController');
 
 const router = express.Router();
-router.post('/', getKakaoLoginToken);
+router.post('/kakao', getKakaoLoginToken);
+router.post('/refresh', getNewJwtTokens);
 
 module.exports = router;

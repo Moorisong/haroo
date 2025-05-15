@@ -1,5 +1,3 @@
-const { getNormalizedDays } = require('../utils');
-
 const { Haroo } = require('../models/Haroo');
 const { HAROO_DETAIL } = require('../constants');
 
@@ -7,7 +5,7 @@ exports.findHarooByName = async () => {
   try {
     return await Haroo.findOne({ name: HAROO_DETAIL.NAME_KOR_EN });
   } catch (err) {
-    throw new Error('Failed to find haroo by name');
+    throw new Error(`Failed to find haroo by name : ${err.message}`);
   }
 };
 
@@ -15,12 +13,11 @@ exports.findLatestHarooStat = async () => {
   try {
     return await Haroo.findOne().sort({ date: -1 });
   } catch (err) {
-    throw new Error('Failed to find haroo stat by sort latest ');
+    throw new Error(`Failed to find haroo stat by sort latest : ${err.message}`);
   }
 };
 
-exports.findHarooAndUpdate = async (data) => {
-  const { normalizedToday } = getNormalizedDays();
+exports.findHarooAndUpdate = async (data, normalizedDate) => {
   try {
     return await Haroo.findOneAndUpdate(
       { name: HAROO_DETAIL.NAME_KOR_EN },
@@ -30,7 +27,7 @@ exports.findHarooAndUpdate = async (data) => {
         },
         $push: {
           statsHistory: {
-            date: normalizedToday,
+            date: normalizedDate,
             statChanges: data.statChanges,
           },
         },
@@ -40,6 +37,20 @@ exports.findHarooAndUpdate = async (data) => {
       },
     );
   } catch (err) {
-    throw new Error('Failed to find and update haroo');
+    throw new Error(`Failed to find and update haroo : ${err.message}`);
+  }
+};
+
+exports.createHaroo = async (normalizedToday) => {
+  try {
+    const newHaroo = new Haroo({
+      name: HAROO_DETAIL.NAME_KOR_EN,
+      currentStats: [],
+      statsHistory: [{ date: normalizedToday, statChanges: [] }],
+    });
+    await newHaroo.save();
+    return newHaroo;
+  } catch (err) {
+    throw new Error(`Failed to create haroo ${err.message}`);
   }
 };

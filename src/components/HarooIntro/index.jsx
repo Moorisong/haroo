@@ -7,7 +7,7 @@ export default function HarooIntro({ introString, emoticon }) {
         <pre className="text-xl font-bold block">{emoticon}</pre>
       </div>
       <div className={COMPONENT_STYLE.HAROO_INTRO.TEXT}>
-        <pre>{introString}</pre>
+        <div>{introString}</div>
       </div>
     </div>
   );

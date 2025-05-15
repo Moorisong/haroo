@@ -15,8 +15,16 @@ const createRefreshToken = (user) =>
 const verifyRefreshToken = (refreshToken) => {
   try {
     return jwt.verify(refreshToken, JWT_SECRET);
-  } catch (error) {
-    throw new Error('Invalid refresh token');
+  } catch (err) {
+    throw new Error(`Invalid refresh token : ${err.message}`);
+  }
+};
+
+const verifyAccessToken = (accessToken) => {
+  try {
+    return jwt.verify(accessToken, JWT_SECRET);
+  } catch (err) {
+    throw new Error(`Invalid access token : ${err.message}`);
   }
 };
 
@@ -29,4 +37,7 @@ const getUserTokens = (user) => {
 module.exports = {
   verifyRefreshToken,
   getUserTokens,
+  createAccessToken,
+  createRefreshToken,
+  verifyAccessToken,
 };

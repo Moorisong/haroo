@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { DATA_TYPE, PATH, STYLE, TOKEN_NAME } from 'src/constants';
-import { kakaoLogout } from 'src/utils';
+import { DATA_TYPE, PATH, STYLE } from 'src/constants';
+import { clearTokens } from 'src/utils';
 import { fetchHarooResponseFromGpt } from 'src/services/harooApis';
 import HarooIntro from 'src/components/HarooIntro';
 import Layout from 'src/components/Layout';
@@ -17,11 +17,6 @@ import { promptMessage } from './prompt';
 export default function Main() {
   const [data, setData] = useState({});
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const token = window.sessionStorage.getItem(TOKEN_NAME);
-    if (!token) return navigate(PATH.DEFAULT);
-  }, []);
 
   useEffect(() => {
     const message = promptMessage;
@@ -50,7 +45,7 @@ export default function Main() {
 
   const onClickLuckSimulaterButton = () => navigate(PATH.LUCK);
   const onClickLogout = () => {
-    kakaoLogout();
+    clearTokens();
     return navigate(PATH.DEFAULT);
   };
 
