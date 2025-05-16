@@ -49,7 +49,7 @@ exports.saveOrUpdateHarooContent = async (data) => {
   }
 };
 
-// 투표 데이터 저장
+// 투표 메타 데이터 저장
 exports.saveOrUpdateVote = async (data) => {
   const { normalizedToday, normalizedTomorrow } = getNormalizedDays();
 

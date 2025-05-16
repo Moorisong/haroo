@@ -12,6 +12,7 @@ const app = express();
 const harooRoutes = require('./routes/harooRoutes');
 const dailyHarooRoutes = require('./routes/dailyHarooRoutes');
 const authRoutes = require('./routes/authRoutes');
+const voteOptionRoutes = require('./routes/voteOptionRoutes')
 
 const corsOptions = {
   origin: ['http://localhost:3000', 'https://haroo.vercel.app'],
@@ -25,6 +26,7 @@ app.use(express.json());
 app.use('/api/init', harooRoutes);
 app.use('/api/haroo/today', dailyHarooRoutes);
 app.use('/auth', authRoutes);
+app.use('/vote', voteOptionRoutes);
 
 connectDB()
   .then(() => {
