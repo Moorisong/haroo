@@ -41,6 +41,7 @@ const dailyHaroo = async (req, res) => {
         greeting: harooContentData.greeting,
       },
       todayVote: {
+        voteId:  todayVoteData[1]._id,
         voteDate: todayVoteData[1].voteDate,
         topic: todayVoteData[1].topic,
         options: todayVoteData[1].options,
