@@ -56,9 +56,6 @@ exports.saveOrUpdateVote = async (data) => {
   const todayOption = {
     set: {
       updatedAt: new Date(),
-      selectedOption: data.todayPoll.selectedOption,
-      selectedVotesCnt: data.todayPoll.selectedVotesCnt,
-      totalVotesCnt: data.todayPoll.totalVotesCnt,
     },
     setOnInsert: {
       voteDate: normalizedToday,
@@ -74,9 +71,6 @@ exports.saveOrUpdateVote = async (data) => {
       voteDate: normalizedTomorrow,
       topic: data.tomorrowPoll.topic,
       options: data.tomorrowPoll.options,
-      selectedOption: '', // 내일은 아직 선택되지 않음
-      selectedVotesCnt: 0, // 초기값
-      totalVotesCnt: 0, // 초기값
       knowledge: data.tomorrowPoll.knowledge,
       createdAt: new Date(),
     },
