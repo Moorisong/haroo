@@ -32,11 +32,3 @@ exports.refreshAccessToken = (cookie, res) => {
     return res.status(401).json({ message: 'Invalid or expired refresh token' });
   }
 };
-
-exports.extractAccessToken = (req) => {
-  const token = req.cookies?.[TEXT.TOKEN.ACCESS_TOKEN];
-  if (!token) {
-    throw new Error('Access token missing from cookies');
-  }
-  return token;
-};
