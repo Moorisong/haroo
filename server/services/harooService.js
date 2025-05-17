@@ -3,12 +3,12 @@ const { getNormalizedDays } = require('../utils');
 const { TEXT } = require('../constants');
 const { findVoteAndUpdate, findVoteByDate } = require('../repository/vote.repository');
 const { findHarooContentByDate, createHarooContent } = require('../repository/harooContent.repository');
-const { findHarooByName, findHarooAndUpdate, createHaroo } = require('../repository/haroo.repository');
+const { findHaroo, findHarooAndUpdate, createHaroo } = require('../repository/haroo.repository');
 const { findVoteOptionByVoteId } = require('../repository/voteOption.repository');
 
 // 하루 최신 스탯, 스탯 변경 내역 DB 저장
 exports.saveOrUpdateHaroo = async (data) => {
-  let haroo = await findHarooByName();
+  let haroo = await findHaroo();
   const { normalizedToday, normalizedYesterday } = getNormalizedDays();
 
   if (!haroo) return createHaroo(normalizedToday);
