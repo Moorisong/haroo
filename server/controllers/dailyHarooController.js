@@ -2,7 +2,8 @@ const { getNormalizedDays } = require('../utils');
 
 const { findLatestHarooStat } = require('../repository/haroo.repository');
 const { findHarooContentByDate } = require('../repository/harooContent.repository');
-const { findLatestVote, findVoteByDate } = require('../repository/vote.repository');
+const { findVoteByDate } = require('../repository/vote.repository');
+const { findVoteOptionByVoteId } = require('../repository/voteOption.repository');
 
 const dailyHaroo = async (req, res) => {
   try {
@@ -12,17 +13,21 @@ const dailyHaroo = async (req, res) => {
 
     const harooStatData = await findLatestHarooStat();
     const harooContentData = await findHarooContentByDate(normalizedToday);
-    const todayVoteData = await findLatestVote();
+
+    const todayVoteData = await findVoteByDate(normalizedToday);
     const yesterdayVoteData = await findVoteByDate(normalizedYesterday);
 
-    const dataMissing = !harooStatData || !todayVoteData || !todayVoteData[1] || !yesterdayVoteData;
+    const todayVoteId = todayVoteData._id;
+    const todayVoteOptionsData = await findVoteOptionByVoteId(todayVoteId);
+
+    const dataMissing = !harooStatData || !todayVoteData || !todayVoteData || !yesterdayVoteData;
 
     if (dataMissing) {
       // eslint-disable-next-line no-console
       console.log('missing data --- ', {
         harooStatData: !!harooStatData,
         todayVoteData: !!todayVoteData,
-        todayVoteDataIndex1: todayVoteData ? !!todayVoteData[1] : false,
+        todayVoteDataIndex1: !!todayVoteData,
         yesterdayVoteData: !!yesterdayVoteData,
       });
       return res.status(404).json({ message: '데이터가 존재하지 않습니다.' });
@@ -41,10 +46,12 @@ const dailyHaroo = async (req, res) => {
         greeting: harooContentData.greeting,
       },
       todayVote: {
-        voteDate: todayVoteData[1].voteDate,
-        topic: todayVoteData[1].topic,
-        options: todayVoteData[1].options,
-        knowledge: todayVoteData[1].knowledge,
+        voteId: todayVoteData._id,
+        voteDate: todayVoteData.voteDate,
+        topic: todayVoteData.topic,
+        options: todayVoteData.options,
+        optionsData: todayVoteOptionsData,
+        knowledge: todayVoteData.knowledge,
       },
       lastStatChange: harooStatData.statsHistory.slice(-1)[0],
       yesterdayVote: yesterdayVoteData,

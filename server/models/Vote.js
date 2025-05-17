@@ -16,22 +16,7 @@ const VoteSchema = new mongoose.Schema({
     required: true,
     maxlength: 4,
   },
-  selectedOption: {
-    type: String,
-    required: true,
-    trim: true,
-    maxlength: 100,
-  },
-  selectedVotesCnt: {
-    type: Number,
-    default: 0,
-    min: 0,
-  },
-  totalVotesCnt: {
-    type: Number,
-    default: 0,
-    min: 0,
-  },
+
   knowledge: {
     type: String,
     maxlength: 500,
