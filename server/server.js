@@ -24,7 +24,7 @@ app.use(cors(corsOptions));
 app.use(express.json());
 
 app.use('/api/init', harooRoutes);
-app.use('/api/haroo/today', dailyHarooRoutes);
+app.use('/api/today', dailyHarooRoutes);
 app.use('/auth', authRoutes);
 app.use('/vote', voteOptionRoutes);
 

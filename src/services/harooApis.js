@@ -4,7 +4,7 @@ import axios from 'axios';
 
 export async function getHarooData() {
   try {
-    const response = await apiBe.get(`${process.env.REACT_APP_BACKEND_URL}/api/haroo/today`);
+    const response = await apiBe.get(`${process.env.REACT_APP_BACKEND_URL}/api/today`);
     return response.data;
   } catch (err) {
     throw new Error(`error in get haroo data ${err.message}`);
