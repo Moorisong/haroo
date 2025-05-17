@@ -12,7 +12,15 @@ exports.findVoteOptionAndUpdate = async (voteId, optionIndex) => {
     );
 
     return updatedOption;
-  } catch (error) {
-    throw new Error(`투표 저장 중 에러 발생: ${error.message}`);
+  } catch (err) {
+    throw new Error(`투표 저장 중 에러 발생: ${err.message}`);
+  }
+};
+
+exports.findVoteOptionByVoteId = async (voteId) => {
+  try {
+    return await VoteOption.find({ voteId });
+  } catch (err) {
+    throw new Error(`투표 항목 데이터 로딩 중 에러 발생: ${err.message}`);
   }
 };
