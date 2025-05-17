@@ -17,7 +17,7 @@ export const TEXT = {
     STAT_TITLE: '🎹 하루의 스탯',
     VOTE_RESULT: {
       HEADER_TEXT_0: '🗓️ ',
-      HEADER_TEXT_1: '지난 투표에서',
+      HEADER_TEXT_1: '지난 투표에서 ',
       HEADER_TEXT_2: '가 가장 많이 선택됐어요!',
       BODY_TEXT_1: '하루의',
       BODY_TEXT_2: '스탯이 ',
