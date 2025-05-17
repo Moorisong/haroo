@@ -1,7 +1,7 @@
 const { Haroo } = require('../models/Haroo');
 const { HAROO_DETAIL } = require('../constants');
 
-exports.findHarooByName = async () => {
+exports.findHaroo = async () => {
   try {
     return await Haroo.findOne({ name: HAROO_DETAIL.NAME_KOR_EN });
   } catch (err) {

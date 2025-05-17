@@ -1,13 +1,14 @@
 const { getNormalizedDays } = require('../utils');
 
 const { TEXT } = require('../constants');
-const { findVoteAndUpdate } = require('../repository/vote.repository');
+const { findVoteAndUpdate, findVoteByDate } = require('../repository/vote.repository');
 const { findHarooContentByDate, createHarooContent } = require('../repository/harooContent.repository');
-const { findHarooByName, findHarooAndUpdate, createHaroo } = require('../repository/haroo.repository');
+const { findHaroo, findHarooAndUpdate, createHaroo } = require('../repository/haroo.repository');
+const { findVoteOptionByVoteId } = require('../repository/voteOption.repository');
 
 // 하루 최신 스탯, 스탯 변경 내역 DB 저장
 exports.saveOrUpdateHaroo = async (data) => {
-  let haroo = await findHarooByName();
+  let haroo = await findHaroo();
   const { normalizedToday, normalizedYesterday } = getNormalizedDays();
 
   if (!haroo) return createHaroo(normalizedToday);
@@ -53,20 +54,31 @@ exports.saveOrUpdateHarooContent = async (data) => {
 exports.saveOrUpdateVote = async (data) => {
   const { normalizedToday, normalizedTomorrow } = getNormalizedDays();
 
-  const todayOption = {
-    set: {
-      updatedAt: new Date(),
-    },
-    setOnInsert: {
-      voteDate: normalizedToday,
-      topic: TEXT.INITTIAL.VOTE.TOPIC,
-      options: TEXT.INITTIAL.VOTE.OPTIONS,
-      knowledge: TEXT.INITTIAL.VOTE.KNOWLEDGE,
-      createdAt: new Date(),
-    },
-  };
+  let todayVote = await findVoteByDate(normalizedToday);
 
-  const tomorrowOption = {
+  if (todayVote) {
+    // 오늘 데이터 있으면 업데이트
+    const todayVoteOptionsData = await findVoteOptionByVoteId(todayVote._id);
+    const topOptionIdx = this.pickTopVoteOptionIndex(todayVoteOptionsData);
+
+    todayVote.selectedOption = todayVote.options[topOptionIdx];
+    todayVote.updatedAt = new Date();
+    await todayVote.save();
+  } else {
+    // 오늘 데이터 없으면 새로 생성
+    todayVote = await findVoteAndUpdate(normalizedToday, {
+      setOnInsert: {
+        voteDate: normalizedToday,
+        topic: TEXT.INITTIAL.VOTE.TOPIC,
+        options: TEXT.INITTIAL.VOTE.OPTIONS,
+        knowledge: TEXT.INITTIAL.VOTE.KNOWLEDGE,
+        createdAt: new Date(),
+      },
+    });
+  }
+
+  // 내일 데이터 upsert
+  const tomorrowDoc = await findVoteAndUpdate(normalizedTomorrow, {
     setOnInsert: {
       voteDate: normalizedTomorrow,
       topic: data.tomorrowPoll.topic,
@@ -74,17 +86,20 @@ exports.saveOrUpdateVote = async (data) => {
       knowledge: data.tomorrowPoll.knowledge,
       createdAt: new Date(),
     },
-  };
+  });
 
-  try {
-    // Step 1: todayPoll 데이터 업데이트 및 저장
-    const todayDoc = await findVoteAndUpdate(normalizedToday, todayOption);
+  return { todayVote, tomorrowVote: tomorrowDoc };
+};
 
-    // Step 2: tomorrowPoll 데이터 저장
-    const tomorrowDoc = await findVoteAndUpdate(normalizedTomorrow, tomorrowOption);
-
-    return { todayVote: todayDoc, tomorrowVote: tomorrowDoc };
-  } catch (err) {
-    throw new Error(`Error while saving or updating vote data: ${err.message}`);
+// 투표 항목 중 1위 항목 index 추출
+exports.pickTopVoteOptionIndex = (voteOptions) => {
+  if (!Array.isArray(voteOptions) || voteOptions.length === 0) {
+    throw new Error('투표 옵션 배열이 비어있습니다.');
   }
+
+  const maxCount = Math.max(...voteOptions.map((e) => e.votesCnt));
+  const topOptions = voteOptions.filter((opt) => opt.votesCnt === maxCount);
+  const winner = topOptions[Math.floor(Math.random() * topOptions.length)];
+
+  return winner.optionIndex;
 };
