@@ -1,6 +1,6 @@
 const { VoteOption } = require('../models/VoteOption');
 
-exports.findOneAndUpdate = async (voteId, optionIndex) => {
+exports.findVoteOptionAndUpdate = async (voteId, optionIndex) => {
   try {
     const updatedOption = await VoteOption.findOneAndUpdate(
       { voteId, optionIndex },

@@ -1,9 +1,9 @@
-const { findOneAndUpdate } = require('../repository/voteOption.repository');
+const { findVoteOptionAndUpdate } = require('../repository/voteOption.repository');
 
 const submitVotedData = async (req, res) => {
   try {
     const { voteId, optionIndex } = req.body;
-    const newVoteOpionData = await findOneAndUpdate(voteId, optionIndex);
+    const newVoteOpionData = await findVoteOptionAndUpdate(voteId, optionIndex);
 
     return res.status(200).json(newVoteOpionData);
   } catch (err) {
