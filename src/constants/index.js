@@ -77,6 +77,15 @@ export const COMPONENT_STYLE = {
     BAR_BACKGROUND: 'w-full bg-gray-200 h-2 rounded-full overflow-hidden opacity-60',
   },
 
+  MAIN: {
+    CONTAINER: 'max-w-3xl mx-auto px-4 py-8',
+    WRAPPER: `${STYLE.FLEX_COL_ITEM_CENTER} gap-8`,
+    BUTTON:
+      'bg-gradient-to-r from-blue-400 to-blue-600 hover:from-blue-500 hover:to-blue-700 text-white font-semibold text-sm px-6 py-2 rounded-full shadow-md transition-all mb-8 cursor-pointer',
+    FLEX_ROW: 'flex flex-col md:flex-row gap-8 w-full',
+    LOGOUT_WRAPPER: 'flex justify-end mb-4',
+  },
+
   VOTE: {
     WRAPPER: `w-full bg-blue-25 ${STYLE.BORDER_ROUND} border-blue-300 p-6 mt-2 space-y-6`,
     TITLE: `text-center text-sm font-semibold`,

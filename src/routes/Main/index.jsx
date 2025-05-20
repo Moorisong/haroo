@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { DATA_TYPE, PATH, STYLE } from 'src/constants';
+import { COMPONENT_STYLE, DATA_TYPE, PATH, STYLE } from 'src/constants';
 import { clearTokens } from 'src/utils';
 import HarooIntro from 'src/components/HarooIntro';
 import Layout from 'src/components/Layout';
@@ -38,27 +38,25 @@ export default function Main() {
   return (
     <>
       <Layout>
-        <div className="max-w-3xl mx-auto px-4 py-8">
+        <div className={COMPONENT_STYLE.MAIN.CONTAINER}>
           {data.harooContent && (
-            <div className={`${STYLE.FLEX_COL_ITEM_CENTER} gap-8`}>
-              <button
-                onClick={onClickLuckSimulaterButton}
-                className="bg-gradient-to-r from-blue-400 to-blue-600 hover:from-blue-500 hover:to-blue-700 text-white font-semibold text-sm px-6 py-2 rounded-full shadow-md transition-all mb-8"
-              >
+            <div className={COMPONENT_STYLE.MAIN.WRAPPER}>
+              <button onClick={onClickLuckSimulaterButton} className={COMPONENT_STYLE.MAIN.BUTTON}>
                 {DATA_TYPE.MAIN_PAGE.LUCK_BUTTON_TEXT}
               </button>
 
-              <div className="flex flex-col md:flex-row gap-8 w-full">
+              <div className={COMPONENT_STYLE.MAIN.FLEX_ROW}>
                 <HarooIntro introString={data.harooContent.greeting} emoticon={data.harooContent.emoticon} />
                 <HarooStats data={data.harooStat.currentStats} />
               </div>
+
               <VoteResult
                 statData={data.harooStat.statsHistory[data.harooStat.statsHistory.length - 1]}
                 voteData={data.yesterdayVote}
               />
               <Vote data={data.todayVote} />
 
-              <div className="flex justify-end mb-4">
+              <div className={COMPONENT_STYLE.MAIN.LOGOUT_WRAPPER}>
                 <LogoutButton text={DATA_TYPE.LUCK_SIMULATOR.TEXT.BUTTON_LOGOUT} onClick={onClickLogout} />
               </div>
             </div>
