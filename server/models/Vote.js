@@ -18,7 +18,6 @@ const VoteSchema = new mongoose.Schema({
   },
   selectedOption: {
     type: String,
-    required: true,
     trim: true,
     maxlength: 100,
   },

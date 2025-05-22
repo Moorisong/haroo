@@ -19,6 +19,7 @@ export const TEXT = {
       HEADER_TEXT_0: '🗓️ ',
       HEADER_TEXT_1: '지난 투표에서 ',
       HEADER_TEXT_2: '가 가장 많이 선택됐어요!',
+      HEADER_NO_VOTED: '지난번엔 아무도 투표를 하지 않았어요 :(',
       BODY_TEXT_1: '하루의',
       BODY_TEXT_2: '스탯이 ',
       BODY_TEXT_STAT_UP: ' 증가했어요',
