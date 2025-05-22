@@ -26,7 +26,7 @@ const dailyHaroo = async (req, res) => {
         todayVoteDataIndex1: !!todayVoteData,
         yesterdayVoteData: !!yesterdayVoteData,
       });
-      return res.status(404).json({ message: '데이터가 존재하지 않습니다.' });
+      return res.status(404).json({ message: '데이터가 존재하지 않습니다.', isFallback: true });
     }
 
     result = {
