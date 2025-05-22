@@ -25,6 +25,7 @@ export const TEXT = {
       BODY_TEXT_STAT_DOWN: ' 떨어졌어요',
     },
   },
+  EXCEPTION: '오늘 하루는 서버 문제로 살짝 쉬어가요.\n푹 쉬고 내일 다시 만나요! 🌼',
 };
 
 export const SCALE = {
@@ -111,6 +112,10 @@ export const COMPONENT_STYLE = {
     TOPIC_BOX: 'flex items-center gap-x-1 mb-4',
     TOPIC_DATE: 'text-xs text-gray-500',
     TOPIC_TEXT: 'text-xs font-semibold text-gray-500',
+  },
+  EXCEPTION: {
+    CONTAINER: 'w-full flex justify-center items-center',
+    BOX: 'text-center bg-yellow-100 text-yellow-800 text-sm px-5 py-4 rounded-md border border-yellow-300 mt-10 my-2',
   },
 };
 

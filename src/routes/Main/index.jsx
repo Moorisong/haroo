@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { COMPONENT_STYLE, DATA_TYPE, PATH, STYLE } from 'src/constants';
+import { COMPONENT_STYLE, DATA_TYPE, PATH } from 'src/constants';
 import { clearTokens } from 'src/utils';
 import HarooIntro from 'src/components/HarooIntro';
 import Layout from 'src/components/Layout';
@@ -10,6 +10,8 @@ import LogoutButton from 'src/components/LogoutButton';
 import Ad_thin from 'src/components/Ads/Ad_thin';
 import { getHarooData } from 'src/services/harooApis';
 import VoteResult from 'src/components/VoteResult';
+
+import Exception from '../Execption';
 
 export default function Main() {
   const [data, setData] = useState({});
@@ -22,6 +24,7 @@ export default function Main() {
       })
       .catch((error) => {
         console.error(DATA_TYPE.ERROR_MESSAGE, error);
+        setData(false);
       });
   }, []);
 
@@ -35,6 +38,7 @@ export default function Main() {
     return navigate(PATH.DEFAULT);
   };
 
+  if (!data) return <Exception />;
   return (
     <>
       <Layout>
