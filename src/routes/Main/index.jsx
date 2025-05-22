@@ -10,8 +10,8 @@ import LogoutButton from 'src/components/LogoutButton';
 import Ad_thin from 'src/components/Ads/Ad_thin';
 import { getHarooData } from 'src/services/harooApis';
 import VoteResult from 'src/components/VoteResult';
-
-import Exception from '../Execption';
+import LuckButton from 'src/components/LuckButton';
+import Exception from 'src/routes/Execption';
 
 export default function Main() {
   const [data, setData] = useState({});
@@ -45,9 +45,7 @@ export default function Main() {
         <div className={COMPONENT_STYLE.MAIN.CONTAINER}>
           {data.harooContent && (
             <div className={COMPONENT_STYLE.MAIN.WRAPPER}>
-              <button onClick={onClickLuckSimulaterButton} className={COMPONENT_STYLE.MAIN.BUTTON}>
-                {DATA_TYPE.MAIN_PAGE.LUCK_BUTTON_TEXT}
-              </button>
+              <LuckButton onClick={onClickLuckSimulaterButton} />
 
               <div className={COMPONENT_STYLE.MAIN.FLEX_ROW}>
                 <HarooIntro introString={data.harooContent.greeting} emoticon={data.harooContent.emoticon} />

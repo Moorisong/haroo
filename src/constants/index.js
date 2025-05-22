@@ -115,7 +115,7 @@ export const COMPONENT_STYLE = {
   },
   EXCEPTION: {
     CONTAINER: 'w-full flex justify-center items-center',
-    BOX: 'text-center bg-yellow-100 text-yellow-800 text-sm px-5 py-4 rounded-md border border-yellow-300 mt-10 my-2',
+    BOX: 'text-center bg-yellow-100 text-yellow-800 text-sm px-5 py-4 rounded-md border border-yellow-300 mb-7',
   },
 };
 

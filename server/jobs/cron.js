@@ -5,7 +5,7 @@ const { saveOrUpdateHaroo, saveOrUpdateHarooContent, saveOrUpdateVote } = requir
 const { requestGPT } = require('../services/gptService');
 
 cron.schedule(
-  '30 23 * * *',
+  '29 20 * * *',
   async () => {
     try {
       console.log('크론 시작 - GPT 요청 중...'); // eslint-disable-line no-console
