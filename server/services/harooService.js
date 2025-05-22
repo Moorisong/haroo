@@ -61,7 +61,12 @@ exports.saveOrUpdateVote = async (data) => {
     const todayVoteOptionsData = await findVoteOptionByVoteId(todayVote._id);
     const topOptionIdx = this.pickTopVoteOptionIndex(todayVoteOptionsData);
 
-    todayVote.selectedOption = todayVote.options[topOptionIdx];
+    if (topOptionIdx !== undefined) {
+      todayVote.selectedOption = todayVote.options?.[topOptionIdx];
+    } else {
+      todayVote.selectedOption = undefined; // 필드가 MongoDB에 저장되지 않음
+    }
+
     todayVote.updatedAt = new Date();
     await todayVote.save();
   } else {
@@ -94,7 +99,7 @@ exports.saveOrUpdateVote = async (data) => {
 // 투표 항목 중 1위 항목 index 추출
 exports.pickTopVoteOptionIndex = (voteOptions) => {
   if (!Array.isArray(voteOptions) || voteOptions.length === 0) {
-    throw new Error('투표 옵션 배열이 비어있습니다.');
+    return undefined;
   }
 
   const maxCount = Math.max(...voteOptions.map((e) => e.votesCnt));

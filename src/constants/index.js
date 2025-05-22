@@ -19,12 +19,14 @@ export const TEXT = {
       HEADER_TEXT_0: '🗓️ ',
       HEADER_TEXT_1: '지난 투표에서 ',
       HEADER_TEXT_2: '가 가장 많이 선택됐어요!',
+      HEADER_NO_VOTED: '지난번엔 아무도 투표를 하지 않았어요 :(',
       BODY_TEXT_1: '하루의',
       BODY_TEXT_2: '스탯이 ',
       BODY_TEXT_STAT_UP: ' 증가했어요',
       BODY_TEXT_STAT_DOWN: ' 떨어졌어요',
     },
   },
+  EXCEPTION: '오늘 하루는 서버 문제로 살짝 쉬어가요.\n푹 쉬고 내일 다시 만나요! 🌼',
 };
 
 export const SCALE = {
@@ -77,6 +79,15 @@ export const COMPONENT_STYLE = {
     BAR_BACKGROUND: 'w-full bg-gray-200 h-2 rounded-full overflow-hidden opacity-60',
   },
 
+  MAIN: {
+    CONTAINER: 'max-w-3xl mx-auto px-4 py-8',
+    WRAPPER: `${STYLE.FLEX_COL_ITEM_CENTER} gap-8`,
+    BUTTON:
+      'bg-gradient-to-r from-blue-400 to-blue-600 hover:from-blue-500 hover:to-blue-700 text-white font-semibold text-sm px-6 py-2 rounded-full shadow-md transition-all mb-8 cursor-pointer',
+    FLEX_ROW: 'flex flex-col md:flex-row gap-8 w-full',
+    LOGOUT_WRAPPER: 'flex justify-end mb-4',
+  },
+
   VOTE: {
     WRAPPER: `w-full bg-blue-25 ${STYLE.BORDER_ROUND} border-blue-300 p-6 mt-2 space-y-6`,
     TITLE: `text-center text-sm font-semibold`,
@@ -102,6 +113,10 @@ export const COMPONENT_STYLE = {
     TOPIC_BOX: 'flex items-center gap-x-1 mb-4',
     TOPIC_DATE: 'text-xs text-gray-500',
     TOPIC_TEXT: 'text-xs font-semibold text-gray-500',
+  },
+  EXCEPTION: {
+    CONTAINER: 'w-full flex justify-center items-center',
+    BOX: 'text-center bg-yellow-100 text-yellow-800 text-sm px-5 py-4 rounded-md border border-yellow-300 mb-7',
   },
 };
 

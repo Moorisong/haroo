@@ -26,7 +26,7 @@ const dailyHaroo = async (req, res) => {
         todayVoteDataIndex1: !!todayVoteData,
         yesterdayVoteData: !!yesterdayVoteData,
       });
-      return res.status(404).json({ message: '데이터가 존재하지 않습니다.' });
+      return res.status(404).json({ message: '데이터가 존재하지 않습니다.', isFallback: true });
     }
 
     result = {
@@ -48,7 +48,7 @@ const dailyHaroo = async (req, res) => {
 
     return res.status(200).json(result);
   } catch (err) {
-    res.status(500).json({ message: '서버에서 오류가 발생했습니다' });
+    res.status(500).json({ message: '서버에서 오류가 발생했습니다', isFallback: true });
     throw new Error(`faild in dailyHaroo : ${err.message}`);
   }
 };

@@ -2,6 +2,8 @@ import { SCALE, COMPONENT_STYLE, TEXT } from 'src/constants';
 import { getRandomEmlji } from 'src/utils';
 
 export default function VoteResult(props) {
+  const noVoted = !props.voteData.selectedOption;
+
   return (
     <div className={`${COMPONENT_STYLE.VOTE_RESULT.RESULT_WRAPPER} ${SCALE.WEB_WIDTH} mx-auto`}>
       <div className={COMPONENT_STYLE.VOTE_RESULT.RESULT_BOX}>
@@ -13,12 +15,20 @@ export default function VoteResult(props) {
 
         {/* 지난 투표 내용 */}
         <div className={COMPONENT_STYLE.VOTE_RESULT.HEADER}>
-          <span className={COMPONENT_STYLE.VOTE_RESULT.HEADER_ICON}>🏆</span>
-          <div className={COMPONENT_STYLE.VOTE_RESULT.HEADER_TEXT}>
-            {TEXT.HAROO.VOTE_RESULT.HEADER_TEXT_1}
-            <span className="text-indigo-600 font-bold">{props.topVoted || props.voteData.selectedOption}</span>{' '}
-            {TEXT.HAROO.VOTE_RESULT.HEADER_TEXT_2}
-          </div>
+          {noVoted ? (
+            <span className={COMPONENT_STYLE.VOTE_RESULT.HEADER_TEXT}>{TEXT.HAROO.VOTE_RESULT.HEADER_NO_VOTED}</span>
+          ) : (
+            <>
+              <span className={COMPONENT_STYLE.VOTE_RESULT.HEADER_ICON}>🏆</span>
+              <div className={COMPONENT_STYLE.VOTE_RESULT.HEADER_TEXT}>
+                {TEXT.HAROO.VOTE_RESULT.HEADER_TEXT_1}
+                <span className="text-indigo-600 font-bold">
+                  {props.topVoted || props.voteData.selectedOption}
+                </span>{' '}
+                {TEXT.HAROO.VOTE_RESULT.HEADER_TEXT_2}
+              </div>
+            </>
+          )}
         </div>
 
         {props.statData.statChanges?.map((stat) => {
