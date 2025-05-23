@@ -1,25 +1,18 @@
-import { useState, useEffect } from 'react';
 import { TEXT, COMPONENT_STYLE } from 'src/constants';
+import { submitVote } from 'src/services/harooApis';
 
 export default function Vote({ data }) {
-  const [clickedIndex, setClickedIndex] = useState(null);
-
   const now = new Date();
   const isVotingClosed = now.getHours() === 23 && now.getMinutes() >= 30;
 
-  useEffect(() => {
-    const alreadyVoted = Object.keys(localStorage).find((key) => key.includes(TEXT.HAROO.VOTE_TOKEN));
+  const handleClick = async (index) => {
+    if (isVotingClosed) return;
 
-    if (alreadyVoted) {
-      const votedIndex = localStorage.getItem(alreadyVoted);
-      setClickedIndex(Number(votedIndex));
+    try {
+      await submitVote(data._id, index);
+    } catch (error) {
+      return alert('투표에 실패했습니다.');
     }
-  }, []);
-
-  const handleClick = (index) => {
-    if (clickedIndex !== null || isVotingClosed) return;
-    setClickedIndex(index);
-    localStorage.setItem(`${TEXT.HAROO.VOTE_TOKEN} ${new Date().toISOString()}`, index);
   };
 
   const formatWithLineBreaks = (text) =>
@@ -42,8 +35,8 @@ export default function Vote({ data }) {
 
         <div className={COMPONENT_STYLE.VOTE.OPTIONS_GRID}>
           {data.options.map((e, i) => {
-            const isSelected = clickedIndex === i;
-            const isDisabled = clickedIndex !== null || isVotingClosed;
+            const isSelected = i === 0;
+            const isDisabled = isVotingClosed; //추가하기
 
             return (
               <button

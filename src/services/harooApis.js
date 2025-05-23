@@ -11,6 +11,18 @@ export async function getHarooData() {
   }
 }
 
+export async function submitVote(voteId, optionIndex) {
+  try {
+    const headers = API_HEADER.JSON;
+    const body = { voteId, optionIndex };
+
+    const response = await apiBe.post(`${process.env.REACT_APP_BACKEND_URL}/vote/submit`, body, { headers });
+    return response.data;
+  } catch (err) {
+    throw new Error(`error in submit vote : ${err.message}`);
+  }
+}
+
 export async function sendKakaoCodeToBackend(code) {
   const headers = API_HEADER.JSON;
   const body = { code };
