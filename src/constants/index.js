@@ -7,7 +7,6 @@ export const TEXT = {
     TITLE: '[하루] 오늘의 선택, 하루가 쑥쑥 자라요 ☺️',
     SUBTITLE:
       '매일 투표로 하루의 선택을 이끌어가고, 그에 따라 하루의 이야기도 변화합니다.\n당신의 선택이 하루의 성장과 스토리를 만들어가요!',
-    VOTE_TOKEN: 'haroo voted',
     VOTE_TITLE: '💬 오늘 하루의 선택! 투표하고 하루를 성장시켜요',
     VOTE_RULES: [
       '- 투표는 매일 23시 30분에 종료돼요. 놓치지 마세요!',
@@ -15,6 +14,7 @@ export const TEXT = {
       '- 1등이 여러개면 하루가 랜덤으로 하나를 선택해요. 결과는 다음 날 확인하세요!',
     ],
     STAT_TITLE: '🎹 하루의 스탯',
+    VOTE_CONFIRM: '한번 선택하면 바꿀 수 없어요!\n정말 이걸로 투표할까요? 🌱',
     VOTE_RESULT: {
       HEADER_TEXT_0: '🗓️ ',
       HEADER_TEXT_1: '지난 투표에서 ',

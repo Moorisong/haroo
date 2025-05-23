@@ -7,6 +7,8 @@ export default function Vote({ data }) {
 
   const handleClick = async (index) => {
     if (isVotingClosed) return;
+    const confirmed = window.confirm(TEXT.HAROO.VOTE_CONFIRM);
+    if (!confirmed) return;
 
     try {
       await submitVote(data._id, index);
@@ -36,7 +38,7 @@ export default function Vote({ data }) {
         <div className={COMPONENT_STYLE.VOTE.OPTIONS_GRID}>
           {data.options.map((e, i) => {
             const isSelected = i === 0;
-            const isDisabled = isVotingClosed; //추가하기
+            const isDisabled = isVotingClosed; // ksh 로직 추가하기
 
             return (
               <button
