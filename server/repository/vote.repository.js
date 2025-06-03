@@ -36,7 +36,7 @@ exports.updateVotedUserId = async (voteId, userId, optionIndex) => {
       $set: { updatedAt: new Date() },
     },
   );
-  if (result.modifiedCount === 0) throw new Error('이미 투표 하셨어요!');
+  if (result.modifiedCount === 0) throw new Error('오늘은 이미 투표 하셨어요!');
   return result;
 };
 

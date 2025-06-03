@@ -12,7 +12,7 @@ const submitVotedData = async (req, res) => {
 
     return res.status(200).json(newVoteOptionData);
   } catch (err) {
-    return res.status(409).json({ error: `occured error during submiting voted data : ${err.message}` });
+    return res.status(409).json({ error: err.message });
   }
 };
 
