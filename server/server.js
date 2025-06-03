@@ -12,7 +12,9 @@ const app = express();
 const harooRoutes = require('./routes/harooRoutes');
 const dailyHarooRoutes = require('./routes/dailyHarooRoutes');
 const authRoutes = require('./routes/authRoutes');
-const voteOptionRoutes = require('./routes/voteOptionRoutes')
+const voteOptionRoutes = require('./routes/voteOptionRoutes');
+
+const PORT = process.env.PORT || 8080;
 
 const corsOptions = {
   origin: ['http://localhost:3000', 'https://haroo.vercel.app'],
@@ -30,8 +32,8 @@ app.use('/vote', voteOptionRoutes);
 
 connectDB()
   .then(() => {
-    app.listen(3001, () => {
-      console.log('mongoDB connected! port:3001'); // eslint-disable-line no-console
+    app.listen(PORT, () => {
+      console.log(`mongoDB connected! port:${PORT}`); // eslint-disable-line no-console
     });
   })
   .catch((err) => {
