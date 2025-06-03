@@ -17,7 +17,6 @@ const dailyHaroo = async (req, res) => {
 
     const todayVoteData = await findVoteByDate(normalizedToday);
     const yesterdayVoteData = await findVoteByDate(normalizedYesterday);
-    const todayUserVoteState = await findVoteStateByUserId(todayVoteData._id, userId);
 
     const dataMissing = !harooStatData || !todayVoteData || !todayVoteData || !yesterdayVoteData;
 
@@ -31,6 +30,8 @@ const dailyHaroo = async (req, res) => {
       });
       return res.status(404).json({ message: '데이터가 존재하지 않습니다.', isFallback: true });
     }
+
+    const todayUserVoteState = await findVoteStateByUserId(todayVoteData._id, userId);
 
     result = {
       harooStat: {
