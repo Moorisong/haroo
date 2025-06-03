@@ -1,4 +1,4 @@
-require('dotenv').config({ path: '.env.local' });
+require('dotenv').config({ path: '.env.production' });
 require('./jobs/cron');
 
 const cookieParser = require('cookie-parser');
