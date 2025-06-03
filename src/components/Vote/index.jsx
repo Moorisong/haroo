@@ -13,7 +13,8 @@ export default function Vote({ data }) {
     try {
       await submitVote(data._id, index);
     } catch (error) {
-      return alert('투표에 실패했습니다.');
+      const message = error.response?.data?.message || error.message || '문제가 발생했어요!';
+      return alert(message);
     }
   };
 

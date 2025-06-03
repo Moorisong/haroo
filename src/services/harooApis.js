@@ -19,7 +19,8 @@ export async function submitVote(voteId, optionIndex) {
     const response = await apiBe.post(`${process.env.REACT_APP_BACKEND_URL}/vote/submit`, body, { headers });
     return response.data;
   } catch (err) {
-    throw new Error(`error in submit vote : ${err.message}`);
+    const serverMsg = err.response?.data?.error || '투표 중 오류가 발생했습니다.';
+    throw new Error(serverMsg);
   }
 }
 
