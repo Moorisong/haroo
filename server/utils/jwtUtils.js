@@ -34,10 +34,19 @@ const getUserTokens = (user) => {
   return { accessToken, refreshToken };
 };
 
+const decodeToken = (token) => {
+  try {
+    return jwt.decode(token);
+  } catch (err) {
+    throw new Error(`Failed to decode token: ${err.message}`);
+  }
+};
+
 module.exports = {
   verifyRefreshToken,
   getUserTokens,
   createAccessToken,
   createRefreshToken,
   verifyAccessToken,
+  decodeToken
 };

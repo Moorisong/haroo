@@ -74,9 +74,9 @@ exports.saveOrUpdateVote = async (data) => {
     todayVote = await findVoteAndUpdate(normalizedToday, {
       setOnInsert: {
         voteDate: normalizedToday,
-        topic: TEXT.INITTIAL.VOTE.TOPIC,
-        options: TEXT.INITTIAL.VOTE.OPTIONS,
-        knowledge: TEXT.INITTIAL.VOTE.KNOWLEDGE,
+        topic: TEXT.INITIAL.VOTE.TOPIC,
+        options: TEXT.INITIAL.VOTE.OPTIONS,
+        knowledge: TEXT.INITIAL.VOTE.KNOWLEDGE,
         createdAt: new Date(),
       },
     });

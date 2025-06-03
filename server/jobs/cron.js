@@ -1,15 +1,16 @@
 const cron = require('node-cron');
 
-const { promptMessage } = require('../prompt/promptMessage');
+const { getPromptMessage } = require('../prompt/promptMessage');
 const { saveOrUpdateHaroo, saveOrUpdateHarooContent, saveOrUpdateVote } = require('../services/harooService');
 const { requestGPT } = require('../services/gptService');
 
 cron.schedule(
-  '29 20 * * *',
+  '30 23 * * *',
   async () => {
     try {
       console.log('크론 시작 - GPT 요청 중...'); // eslint-disable-line no-console
-      const parsedResult = await requestGPT(promptMessage);
+      const prompt = await getPromptMessage();
+      const parsedResult = await requestGPT(prompt);
 
       await saveOrUpdateHaroo(parsedResult.harooStats);
       await saveOrUpdateHarooContent(parsedResult.harooGreeting);

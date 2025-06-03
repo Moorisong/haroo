@@ -56,7 +56,7 @@ export default function Main() {
                 statData={data.harooStat.statsHistory[data.harooStat.statsHistory.length - 1]}
                 voteData={data.yesterdayVote}
               />
-              <Vote data={data.todayVote} />
+              <Vote voteData={data.todayVote} userVoteData={data.todayUserVoteState} />
 
               <div className={COMPONENT_STYLE.MAIN.LOGOUT_WRAPPER}>
                 <LogoutButton text={DATA_TYPE.LUCK_SIMULATOR.TEXT.BUTTON_LOGOUT} onClick={onClickLogout} />

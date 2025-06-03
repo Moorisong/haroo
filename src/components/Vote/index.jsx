@@ -1,25 +1,26 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import { DATA_TYPE } from 'src/constants';
 import { TEXT, COMPONENT_STYLE } from 'src/constants';
+import { submitVote } from 'src/services/harooApis';
 
-export default function Vote({ data }) {
-  const [clickedIndex, setClickedIndex] = useState(null);
-
+export default function Vote({ voteData, userVoteData }) {
+  const initialVoteIndex = userVoteData.isVoted ? userVoteData.optionIndex : undefined;
+  const [clikedIndex, setClickedIndex] = useState(initialVoteIndex);
   const now = new Date();
   const isVotingClosed = now.getHours() === 23 && now.getMinutes() >= 30;
 
-  useEffect(() => {
-    const alreadyVoted = Object.keys(localStorage).find((key) => key.includes(TEXT.HAROO.VOTE_TOKEN));
+  const handleClick = async (index) => {
+    if (isVotingClosed) return;
+    const confirmed = window.confirm(TEXT.HAROO.VOTE_CONFIRM);
+    if (!confirmed) return;
 
-    if (alreadyVoted) {
-      const votedIndex = localStorage.getItem(alreadyVoted);
-      setClickedIndex(Number(votedIndex));
+    try {
+      await submitVote(voteData._id, index);
+      setClickedIndex(index);
+    } catch (error) {
+      const message = error.response?.data?.message || error.message || DATA_TYPE.ERROR_MESSAGE;
+      return alert(message);
     }
-  }, []);
-
-  const handleClick = (index) => {
-    if (clickedIndex !== null || isVotingClosed) return;
-    setClickedIndex(index);
-    localStorage.setItem(`${TEXT.HAROO.VOTE_TOKEN} ${new Date().toISOString()}`, index);
   };
 
   const formatWithLineBreaks = (text) =>
@@ -38,12 +39,12 @@ export default function Vote({ data }) {
       <div className={COMPONENT_STYLE.VOTE.WRAPPER}>
         <div className={COMPONENT_STYLE.VOTE.TITLE}>{TEXT.HAROO.VOTE_TITLE}</div>
 
-        <h2 className={COMPONENT_STYLE.VOTE.TOPIC}>{data.topic}</h2>
+        <h2 className={COMPONENT_STYLE.VOTE.TOPIC}>{voteData.topic}</h2>
 
         <div className={COMPONENT_STYLE.VOTE.OPTIONS_GRID}>
-          {data.options.map((e, i) => {
-            const isSelected = clickedIndex === i;
-            const isDisabled = clickedIndex !== null || isVotingClosed;
+          {voteData.options.map((e, i) => {
+            const isDisabled = isVotingClosed;
+            const isSelected = i === clikedIndex;
 
             return (
               <button
@@ -69,7 +70,7 @@ export default function Vote({ data }) {
         </div>
       </div>
 
-      <div className={COMPONENT_STYLE.VOTE.KNOWLEDGE_BOX}>{formatWithLineBreaks(data.knowledge)}</div>
+      <div className={COMPONENT_STYLE.VOTE.KNOWLEDGE_BOX}>{formatWithLineBreaks(voteData.knowledge)}</div>
     </>
   );
 }

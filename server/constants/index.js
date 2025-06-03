@@ -4,7 +4,7 @@ module.exports.HAROO_DETAIL = {
 
 module.exports.TEXT = {
   AUTHORIZATION: 'authorization',
-  INITTIAL: {
+  INITIAL: {
     VOTE: {
       TOPIC: 'Initial Vote',
       OPTIONS: ['a', 'b', 'c', 'd'],

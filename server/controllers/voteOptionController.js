@@ -1,13 +1,18 @@
+const { updateVotedUserId } = require('../repository/vote.repository');
 const { findVoteOptionAndUpdate } = require('../repository/voteOption.repository');
+const { decodeToken } = require('../utils/jwtUtils');
 
 const submitVotedData = async (req, res) => {
   try {
     const { voteId, optionIndex } = req.body;
-    const newVoteOpionData = await findVoteOptionAndUpdate(voteId, optionIndex);
+    const newVoteOptionData = await findVoteOptionAndUpdate(voteId, optionIndex);
+    const { userId } = decodeToken(req.cookies.accessToken);
 
-    return res.status(200).json(newVoteOpionData);
+    await updateVotedUserId(voteId, userId, optionIndex);
+
+    return res.status(200).json(newVoteOptionData);
   } catch (err) {
-    throw new Error(`occured error during submiting voted data : ${err.message}`);
+    return res.status(409).json({ error: err.message });
   }
 };
 

@@ -5,11 +5,13 @@ const getTomorrowDate = () => {
   today.setDate(today.getDate() + 1);
   return today.toISOString().split('T')[0];
 };
-const tomorrowDate = getTomorrowDate();
-const haroo = findHaroo();
-const currentStat = haroo.currentStats;
 
-const promptMessage = `
+const getPromptMessage = async () => {
+  const haroo = await findHaroo();
+  const currentStat = haroo.currentStats;
+  const tomorrowDate = getTomorrowDate();
+
+  return `
 하루(Haroo)는 유저 투표 결과로 성장하는 캐릭터(성별:남자)입니다. 매일 제공되는 주제에 따라 유저가 선택한 항목을 기반으로 하루의 스탯이 변경되며, 반응과 인사말도 달라집니다.  
 특히, **막장 또라이+MZ 스타일로 도파민 팍팍 터지는 자극적인 표현과 기행을 필수 포함**하며, 하루 행동 투표는 스토리 급전개와 엉뚱함으로 유저 재미 극대화가 목적입니다.  
 AI는 아래 형식을 따라 응답해야 합니다:
@@ -70,5 +72,6 @@ AI는 아래 형식을 따라 응답해야 합니다:
   }
 }
 `;
+};
 
-module.exports = { promptMessage };
+module.exports = { getPromptMessage };

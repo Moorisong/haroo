@@ -11,6 +11,19 @@ export async function getHarooData() {
   }
 }
 
+export async function submitVote(voteId, optionIndex) {
+  try {
+    const headers = API_HEADER.JSON;
+    const body = { voteId, optionIndex };
+
+    const response = await apiBe.post(`${process.env.REACT_APP_BACKEND_URL}/vote/submit`, body, { headers });
+    return response.data;
+  } catch (err) {
+    const serverMsg = err.response?.data?.error || '투표 중 오류가 발생했습니다.';
+    throw new Error(serverMsg);
+  }
+}
+
 export async function sendKakaoCodeToBackend(code) {
   const headers = API_HEADER.JSON;
   const body = { code };
