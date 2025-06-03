@@ -27,15 +27,35 @@ exports.findVoteAndUpdate = async (normalizedDate, option) => {
   }
 };
 
-exports.updateVotedUserId = async (voteId, userId) => {
+exports.updateVotedUserId = async (voteId, userId, optionIndex) => {
   const result = await Vote.updateOne(
-    { _id: voteId, votedUserIds: { $ne: userId } },
+    { _id: voteId, 'votedUsers.userId': { $ne: userId } }, // 중복 투표 방지
     {
       $inc: { totalVotes: 1 },
-      $push: { votedUserIds: userId },
+      $push: { votedUsers: { userId, optionIndex } },
       $set: { updatedAt: new Date() },
     },
   );
   if (result.modifiedCount === 0) throw new Error('이미 투표 하셨어요!');
   return result;
+};
+
+exports.findVoteStateByUserId = async (voteId, userId) => {
+  try {
+    const vote = await Vote.findOne(
+      { _id: voteId, 'votedUsers.userId': userId },
+      { 'votedUsers.$': 1 }, // 매칭되는 votedUsers 항목만 가져옴
+    );
+
+    if (!vote || !vote.votedUsers || vote.votedUsers.length === 0) {
+      return { isVoted: false };
+    }
+
+    return {
+      isVoted: true,
+      optionIndex: vote.votedUsers[0].optionIndex,
+    };
+  } catch (err) {
+    throw new Error(`Failed to check vote state: ${err.message}`);
+  }
 };

@@ -2,12 +2,14 @@ const { getNormalizedDays } = require('../utils');
 
 const { findLatestHarooStat } = require('../repository/haroo.repository');
 const { findHarooContentByDate } = require('../repository/harooContent.repository');
-const { findVoteByDate } = require('../repository/vote.repository');
+const { findVoteByDate, findVoteStateByUserId } = require('../repository/vote.repository');
+const { decodeToken } = require('../utils/jwtUtils');
 
 const dailyHaroo = async (req, res) => {
   try {
     let result = {};
 
+    const { userId } = decodeToken(req.cookies.accessToken);
     const { normalizedToday, normalizedYesterday } = getNormalizedDays();
 
     const harooStatData = await findLatestHarooStat();
@@ -15,6 +17,7 @@ const dailyHaroo = async (req, res) => {
 
     const todayVoteData = await findVoteByDate(normalizedToday);
     const yesterdayVoteData = await findVoteByDate(normalizedYesterday);
+    const isVotedToday = await findVoteStateByUserId(todayVoteData._id, userId);
 
     const dataMissing = !harooStatData || !todayVoteData || !todayVoteData || !yesterdayVoteData;
 
@@ -44,6 +47,7 @@ const dailyHaroo = async (req, res) => {
       todayVote: todayVoteData,
       lastStatChange: harooStatData.statsHistory.slice(-1)[0],
       yesterdayVote: yesterdayVoteData,
+      isVotedToday,
     };
 
     return res.status(200).json(result);

@@ -25,7 +25,12 @@ const VoteSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
-  votedUserIds: [String],
+  votedUsers: [
+    {
+      userId: { type: String, required: true },
+      optionIndex: { type: Number, required: true },
+    },
+  ],
   knowledge: {
     type: String,
     maxlength: 900,

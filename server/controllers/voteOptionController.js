@@ -8,7 +8,7 @@ const submitVotedData = async (req, res) => {
     const newVoteOptionData = await findVoteOptionAndUpdate(voteId, optionIndex);
     const { userId } = decodeToken(req.cookies.accessToken);
 
-    await updateVotedUserId(voteId, userId);
+    await updateVotedUserId(voteId, userId, optionIndex);
 
     return res.status(200).json(newVoteOptionData);
   } catch (err) {
