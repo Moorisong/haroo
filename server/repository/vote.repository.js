@@ -26,3 +26,16 @@ exports.findVoteAndUpdate = async (normalizedDate, option) => {
     throw new Error(`Failed to update vote : ${err.message}`);
   }
 };
+
+exports.updateVotedUserId = async (voteId, userId) => {
+  const result = await Vote.updateOne(
+    { _id: voteId, votedUserIds: { $ne: userId } },
+    {
+      $inc: { totalVotes: 1 },
+      $push: { votedUserIds: userId },
+      $set: { updatedAt: new Date() },
+    },
+  );
+  if (result.modifiedCount === 0) throw new Error('이미 투표 하셨어요!');
+  return result;
+};
