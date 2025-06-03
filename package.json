@@ -3,20 +3,29 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "axios": "^1.7.9",
+    "axios": "^1.9.0",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
     "cra-template": "1.2.0",
+    "dotenv": "^16.5.0",
+    "js-cookie": "^3.0.5",
+    "jsonwebtoken": "^9.0.2",
+    "node-cron": "^4.0.5",
+    "openai": "^4.97.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-scripts": "5.0.1"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "cross-env NODE_ENV=development react-scripts start",
+    "prod": "cross-env NODE_ENV=production react-scripts build",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "lint": "eslint src --fix",
+    "lint": "eslint src server --fix",
     "fix": "prettier src --write",
-    "css": "postcss src/index.css -o src/dist/styles.css"
+    "css": "postcss src/index.css -o src/dist/styles.css",
+    "node": "node server/server.js"
   },
   "eslintConfig": {
     "extends": [
@@ -38,7 +47,10 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.0.8",
+    "cross-env": "^7.0.3",
     "eslint-config-prettier": "^9.1.0",
+    "express": "^5.1.0",
+    "mongoose": "^7.8.7",
     "postcss": "^8.5.3",
     "postcss-cli": "^11.0.1",
     "prettier": "^3.4.2",

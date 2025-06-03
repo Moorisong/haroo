@@ -1,87 +1,72 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getYoutubeId, validateYoutubeUrl, kakaoListShare, kakaoLogout } from 'src/utils';
-import { TextBox } from 'src/components/TextBox';
-import { ALERT_CONTENT, DATA_TYPE, SCALE, TOKEN_NAME } from 'src/constants';
+import { COMPONENT_STYLE, DATA_TYPE, PATH } from 'src/constants';
+import { clearTokens } from 'src/utils';
+import HarooIntro from 'src/components/HarooIntro';
 import Layout from 'src/components/Layout';
-
-const defaultData = [
-  { title: DATA_TYPE.CONDITION, subTitle: DATA_TYPE.CONDITION_ADDITIONAL, text: '' },
-  { title: DATA_TYPE.YOUTUBE, subTitle: DATA_TYPE.YOUTUBE_ADDITIONAL, text: '' },
-];
-
-const buttonStyle = 'cursor-pointer flex-1 h-[2.5rem] font-bold rounded-sm';
+import HarooStats from 'src/components/HarooStats';
+import Vote from 'src/components/Vote';
+import LogoutButton from 'src/components/LogoutButton';
+import Ad_thin from 'src/components/Ads/Ad_thin';
+import { getHarooData } from 'src/services/harooApis';
+import VoteResult from 'src/components/VoteResult';
+import LuckButton from 'src/components/LuckButton';
+import Exception from 'src/routes/Execption';
 
 export default function Main() {
-  const [data, setData] = useState(defaultData);
-  const [withoutYoutube, setWithoutYoutube] = useState(false);
+  const [data, setData] = useState({});
   const navigate = useNavigate();
 
   useEffect(() => {
-    const token = window.sessionStorage.getItem(TOKEN_NAME);
-    if (!token) return navigate('/');
+    getHarooData()
+      .then((response) => {
+        setData(response);
+      })
+      .catch((error) => {
+        console.error(DATA_TYPE.ERROR_MESSAGE, error);
+        setData(false);
+      });
   }, []);
 
-  const onClickShare = () => {
-    if (!window.Kakao.isInitialized()) window.Kakao.init(process.env.REACT_APP_KAKAO_APP_KEY);
-    const youtubeId = getYoutubeId(data[1].text);
-    const isValidYoutubeUrl = validateYoutubeUrl(youtubeId);
-    const isTextEmpty = data[0].text.length === 0;
+  useEffect(() => {
+    console.log('data::: ', data);
+  }, [data]);
 
-    if (!isValidYoutubeUrl || isTextEmpty) {
-      if (isTextEmpty) return alert(ALERT_CONTENT.EMPTY_TEXT);
-      if (!withoutYoutube && !isValidYoutubeUrl) return alert(ALERT_CONTENT.INVALID_URL);
-    }
-
-    kakaoListShare(data, youtubeId, withoutYoutube);
-    return setData(defaultData);
-  };
-
+  const onClickLuckSimulaterButton = () => navigate(PATH.LUCK);
   const onClickLogout = () => {
-    kakaoLogout();
-    return navigate('/');
+    clearTokens();
+    return navigate(PATH.DEFAULT);
   };
 
-  const onChangeText = (event) => {
-    const index = Number(event.target.id);
-    const value = event.target.value;
-
-    setData((prevData) => {
-      const newData = [...prevData];
-      newData[index] = {
-        ...newData[index],
-        text: index === 0 ? (value.length < 36 ? value : prevData[0].text) : value,
-      };
-      return newData;
-    });
-  };
-
-  const handleToggleYoutube = () => {
-    setWithoutYoutube((prev) => !prev);
-  };
-
+  if (!data) return <Exception />;
   return (
-    <Layout>
-      {data.map((e, i) => (
-        <TextBox
-          id={i}
-          onChange={onChangeText}
-          youtubeOption={{ withoutYoutube, onToggle: handleToggleYoutube }}
-          key={e.title + i}
-          title={e.title}
-          subTitle={e.subTitle}
-          text={e.text}
-        />
-      ))}
+    <>
+      <Layout>
+        <div className={COMPONENT_STYLE.MAIN.CONTAINER}>
+          {data.harooContent && (
+            <div className={COMPONENT_STYLE.MAIN.WRAPPER}>
+              <LuckButton onClick={onClickLuckSimulaterButton} />
 
-      <div className={`flex flex-row gap-3 mt-5 ${SCALE.WEB_WIDTH}`}>
-        <button className={`${buttonStyle} bg-[#FEE500]`} onClick={onClickShare}>
-          {DATA_TYPE.TEXT.BUTTON_SHARE}
-        </button>
-        <button className={`${buttonStyle} bg-[#E5F2FF] text-[#0051C1]`} onClick={onClickLogout}>
-          {DATA_TYPE.TEXT.BUTTON_LOGOUT}
-        </button>
-      </div>
-    </Layout>
+              <div className={COMPONENT_STYLE.MAIN.FLEX_ROW}>
+                <HarooIntro introString={data.harooContent.greeting} emoticon={data.harooContent.emoticon} />
+                <HarooStats data={data.harooStat.currentStats} />
+              </div>
+
+              <VoteResult
+                statData={data.harooStat.statsHistory[data.harooStat.statsHistory.length - 1]}
+                voteData={data.yesterdayVote}
+              />
+              <Vote voteData={data.todayVote} userVoteData={data.todayUserVoteState} />
+
+              <div className={COMPONENT_STYLE.MAIN.LOGOUT_WRAPPER}>
+                <LogoutButton text={DATA_TYPE.LUCK_SIMULATOR.TEXT.BUTTON_LOGOUT} onClick={onClickLogout} />
+              </div>
+            </div>
+          )}
+        </div>
+        <Ad_thin />
+      </Layout>
+      <Ad_thin />
+    </>
   );
 }

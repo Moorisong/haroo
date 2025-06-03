@@ -10,7 +10,9 @@ export const TextBox = (props) => {
   const isYoutubeLinkSkipped = isYoutubeBox && youtubeOption.withoutYoutube;
   const showInputArea = !isYoutubeLinkSkipped;
   const textLength = text.length;
-  const underlineMessage = youtubeOption.withoutYoutube ? DATA_TYPE.WITH_YOUTUBE : DATA_TYPE.WITHOUT_YOUTUBE;
+  const underlineMessage = youtubeOption.withoutYoutube
+    ? DATA_TYPE.LUCK_SIMULATOR.WITH_YOUTUBE
+    : DATA_TYPE.LUCK_SIMULATOR.WITHOUT_YOUTUBE;
   const icon = youtubeOption.withoutYoutube ? '👉' : '🖐️';
 
   return (
@@ -40,7 +42,7 @@ export const TextBox = (props) => {
               textLength >= 35 ? 'text-red-500 font-semibold' : FONT.SMALL_DARTGRAY
             } text-xs pointer-events-none`}
           >
-            {`${textLength}/${DATA_TYPE.TEXT.MAX_LENGTH}`}
+            {`${textLength}/${DATA_TYPE.LUCK_SIMULATOR.TEXT.MAX_LENGTH}`}
           </span>
         )}
 
