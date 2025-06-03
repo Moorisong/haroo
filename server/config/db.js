@@ -6,7 +6,7 @@ const connectDB = async () => {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
-    console.log('✅ MongoDB connected! --- port:3001'); // eslint-disable-line no-console
+    console.log('✅ MongoDB connected!'); // eslint-disable-line no-console
   } catch (err) {
     console.error('❌ MongoDB connection error:', err); // eslint-disable-line no-console
     process.exit(1); // 서버 중단
