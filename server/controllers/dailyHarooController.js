@@ -17,7 +17,7 @@ const dailyHaroo = async (req, res) => {
 
     const todayVoteData = await findVoteByDate(normalizedToday);
     const yesterdayVoteData = await findVoteByDate(normalizedYesterday);
-    const isVotedToday = await findVoteStateByUserId(todayVoteData._id, userId);
+    const todayUserVoteState = await findVoteStateByUserId(todayVoteData._id, userId);
 
     const dataMissing = !harooStatData || !todayVoteData || !todayVoteData || !yesterdayVoteData;
 
@@ -47,7 +47,7 @@ const dailyHaroo = async (req, res) => {
       todayVote: todayVoteData,
       lastStatChange: harooStatData.statsHistory.slice(-1)[0],
       yesterdayVote: yesterdayVoteData,
-      isVotedToday,
+      todayUserVoteState,
     };
 
     return res.status(200).json(result);
