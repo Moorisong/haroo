@@ -1,4 +1,4 @@
-const { TEXT } = require('../constants');
+const constants = require('../constants');
 
 function normalizeDate(dateInput) {
   const d = new Date(dateInput || new Date());
@@ -49,7 +49,7 @@ function getNormalizedDays(date = false) {
 }
 
 function getCookieOption(maxAge) {
-  const isProd = process.env.NODE_ENV === TEXT.ENV.PROD;
+  const isProd = process.env.NODE_ENV === constants.ENV.PROD;
   const result = {
     accessToken: {
       httpOnly: true, // JavaScript에서 접근할 수 없도록 설정

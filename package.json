@@ -17,15 +17,16 @@
     "react-scripts": "5.0.1"
   },
   "scripts": {
-    "start": "cross-env NODE_ENV=development react-scripts start",
-    "prod": "cross-env NODE_ENV=production react-scripts build",
+    "fdev": "cross-env NODE_ENV=development react-scripts start",
+    "fprod": "cross-env NODE_ENV=production npm run build && http-server build -p 3000",
     "build": "react-scripts build",
+    "bdev": "cross-env NODE_ENV=development node server/server.js",
+    "bprod": "cross-env NODE_ENV=production node server/server.js",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "lint": "eslint src server --fix",
     "fix": "prettier src --write",
-    "css": "postcss src/index.css -o src/dist/styles.css",
-    "node": "node server/server.js"
+    "css": "postcss src/index.css -o src/dist/styles.css"
   },
   "eslintConfig": {
     "extends": [
@@ -48,6 +49,7 @@
   "devDependencies": {
     "@tailwindcss/postcss": "^4.0.8",
     "cross-env": "^7.0.3",
+    "env-cmd": "^10.1.0",
     "eslint-config-prettier": "^9.1.0",
     "express": "^5.1.0",
     "mongoose": "^7.8.7",
