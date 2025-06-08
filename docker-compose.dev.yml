@@ -1,14 +1,13 @@
 # docker-compose.dev.yml
-version: '3'
 services:
   backend:
     build:
       context: .
-      dockerfile: Dockerfile.dev  # 개발용 Dockerfile 따로 지정
+      dockerfile: Dockerfile.dev # 개발용 Dockerfile 따로 지정
     ports:
-      - "8080:8080"  # 호스트:컨테이너
+      - '8080:8080' # 호스트:컨테이너
     volumes:
-      - .:/app  # 코드 변경 즉시 컨테이너에 반영
-      - /app/node_modules  # node_modules는 컨테이너 내부에서 유지
+      - .:/app # 코드 변경 즉시 컨테이너에 반영
+      - /app/node_modules # node_modules는 컨테이너 내부에서 유지
     environment:
       - NODE_ENV=development

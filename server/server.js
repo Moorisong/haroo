@@ -1,15 +1,17 @@
 const dotenv = require('dotenv');
 const path = require('path');
+const cors = require('cors');
+const cookieParser = require('cookie-parser');
+const express = require('express');
+
 const constants = require('./constants');
+
 const envPath = process.env.NODE_ENV === constants.ENV.DEV ? '.env.local' : '.env.production';
 
 dotenv.config({ path: path.resolve(__dirname, `../${envPath}`) });
 
 require('./jobs/cron');
 
-const cookieParser = require('cookie-parser');
-const express = require('express');
-const cors = require('cors');
 
 // eslint-disable-next-line import/order
 const connectDB = require('./config/db');
