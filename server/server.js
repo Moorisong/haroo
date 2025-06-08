@@ -12,7 +12,6 @@ dotenv.config({ path: path.resolve(__dirname, `../${envPath}`) });
 
 require('./jobs/cron');
 
-
 // eslint-disable-next-line import/order
 const connectDB = require('./config/db');
 const app = express();
@@ -39,7 +38,7 @@ app.use('/vote', voteOptionRoutes);
 
 connectDB()
   .then(() => {
-    app.listen(PORT, () => {
+    app.listen(PORT, '0.0.0.0', () => {
       console.log(`mongoDB connected! port:${PORT}`); // eslint-disable-line no-console
     });
   })
