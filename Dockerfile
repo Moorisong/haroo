@@ -11,6 +11,10 @@ RUN npm install
 # 앱 코드 복사
 COPY . .
 
+# 타임존을 UTC로 설정
+ENV TZ=UTC
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
 # 환경변수 및 포트 설정
 ENV PORT=8080
 EXPOSE 8080

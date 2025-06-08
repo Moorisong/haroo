@@ -7,12 +7,12 @@ function normalizeDate(dateInput) {
 }
 
 function getStartAndEndOfDay(date) {
-  const d = new Date(date); // date는 이미 normalize됨
-  const start = new Date(d);
-  start.setHours(0, 0, 0, 0);
-  const end = new Date(d);
-  end.setHours(23, 59, 59, 999);
-  return { startOfDay: start, endOfDay: end };
+  const d = new Date(date);
+
+  const startOfDay = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate(), 0, 0, 0, 0));
+  const endOfDay = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate(), 23, 59, 59, 999));
+
+  return { startOfDay, endOfDay };
 }
 
 function getTomorrowDate() {
@@ -48,6 +48,12 @@ function getNormalizedDays(date = false) {
   return { normalizedToday, normalizedTomorrow, normalizedYesterday, normalizedDate };
 }
 
+function subtractOneDayUTC(date) {
+  const result = new Date(date);
+  result.setUTCDate(result.getUTCDate() - 1);
+  return result;
+}
+
 function getCookieOption(maxAge) {
   const isProd = process.env.NODE_ENV === constants.ENV.PROD;
   const result = {
@@ -73,5 +79,6 @@ module.exports = {
   getTomorrowDate,
   getYesterdayDate,
   getNormalizedDays,
-  getCookieOption,
+  subtractOneDayUTC,
+  getCookieOption
 };
