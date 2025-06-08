@@ -6,10 +6,11 @@ exports.getKaKaoAccessToken = async (code) => {
   const headers = {
     'Content-Type': 'application/x-www-form-urlencoded',
   };
+
   const data = {
     grant_type: `${TEXT.AUTHORIZATION}_code`,
     client_id: process.env.REACT_APP_KAKAO_REST_API_KEY,
-    redirect_uri: `${process.env.REACT_APP_FRONTEND_URL}/auth`,
+    redirect_uri: `${process.env.FRONTEND_DOMAIN}/auth`,
     code: code,
   };
   const response = await apiBe.post(PATH.KAKAO.AUTH_TOKEN, data, { headers });
