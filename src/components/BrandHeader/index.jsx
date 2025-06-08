@@ -6,12 +6,16 @@ export default function BrandHeader(props) {
   const location = useLocation();
   const navigate = useNavigate();
   const isLuckPage = location.pathname.includes('luck');
+  const isLoginPage = location.pathname === '/';
 
   const titleString = isLuckPage ? TEXT.LUCK_SIMULATOR.TITLE : TEXT.HAROO.TITLE;
   const subTitleString = isLuckPage ? TEXT.LUCK_SIMULATOR.SUBTITLE : TEXT.HAROO.SUBTITLE;
   const subTitleStyle = isLuckPage ? FONT.MEDIUM_BLUE : `${FONT.SMALL_BLUE} mt-5`;
 
-  const onClickLogo = () => navigate(PATH.MAIN);
+  const onClickLogo = () => {
+    if (isLoginPage) return;
+    return navigate(PATH.MAIN);
+  };
 
   return (
     <div className={`${STYLE.FLEX_COL_ITEM_CENTER} gap-5`}>
