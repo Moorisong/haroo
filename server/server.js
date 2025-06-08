@@ -20,7 +20,7 @@ const dailyHarooRoutes = require('./routes/dailyHarooRoutes');
 const authRoutes = require('./routes/authRoutes');
 const voteOptionRoutes = require('./routes/voteOptionRoutes');
 
-const PORT = process.env.SERVER_PORT;
+const PORT = process.env.PORT || 8080;
 
 const corsOptions = {
   origin: ['http://localhost:3000', 'https://haroo.vercel.app'],
