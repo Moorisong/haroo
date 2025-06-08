@@ -1,4 +1,10 @@
-require('dotenv').config({ path: '.env.production' });
+const dotenv = require('dotenv');
+const path = require('path');
+const constants = require('./constants');
+const envPath = process.env.NODE_ENV === constants.ENV.DEV ? '.env.local' : '.env.production';
+
+dotenv.config({ path: path.resolve(__dirname, `../${envPath}`) });
+
 require('./jobs/cron');
 
 const cookieParser = require('cookie-parser');
@@ -8,13 +14,12 @@ const cors = require('cors');
 // eslint-disable-next-line import/order
 const connectDB = require('./config/db');
 const app = express();
-
 const harooRoutes = require('./routes/harooRoutes');
 const dailyHarooRoutes = require('./routes/dailyHarooRoutes');
 const authRoutes = require('./routes/authRoutes');
 const voteOptionRoutes = require('./routes/voteOptionRoutes');
 
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.SERVER_PORT;
 
 const corsOptions = {
   origin: ['http://localhost:3000', 'https://haroo.vercel.app'],

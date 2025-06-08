@@ -1,5 +1,5 @@
 const { apiBe } = require('../api');
-const { TEXT, PAHT } = require('../constants');
+const { TEXT, PATH } = require('../constants');
 const { getUserTokens } = require('../utils/jwtUtils');
 
 exports.getKaKaoAccessToken = async (code) => {
@@ -12,7 +12,7 @@ exports.getKaKaoAccessToken = async (code) => {
     redirect_uri: `${process.env.REACT_APP_FRONTEND_URL}/auth`,
     code: code,
   };
-  const response = await apiBe.post(PAHT.KAKAO.AUTH_TOKEN, data, { headers });
+  const response = await apiBe.post(PATH.KAKAO.AUTH_TOKEN, data, { headers });
   return response.data.access_token;
 };
 
@@ -21,7 +21,7 @@ exports.getUserIdAndNickname = async (accessToken) => {
     Authorization: `Bearer ${accessToken}`,
   };
 
-  const response = await apiBe.get(PAHT.KAKAO.USER, { headers });
+  const response = await apiBe.get(PATH.KAKAO.USER, { headers });
   return response.data;
 };
 
