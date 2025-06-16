@@ -1,18 +1,26 @@
-require('dotenv').config({ path: '.env.local' });
-require('./jobs/cron');
-
+const dotenv = require('dotenv');
+const path = require('path');
+const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const express = require('express');
-const cors = require('cors');
+
+const constants = require('./constants');
+
+const envPath = process.env.NODE_ENV === constants.ENV.DEV ? '.env.local' : '.env.production';
+
+dotenv.config({ path: path.resolve(__dirname, `../${envPath}`) });
+
+require('./jobs/cron');
 
 // eslint-disable-next-line import/order
 const connectDB = require('./config/db');
 const app = express();
-
 const harooRoutes = require('./routes/harooRoutes');
 const dailyHarooRoutes = require('./routes/dailyHarooRoutes');
 const authRoutes = require('./routes/authRoutes');
-const voteOptionRoutes = require('./routes/voteOptionRoutes')
+const voteOptionRoutes = require('./routes/voteOptionRoutes');
+
+const PORT = process.env.PORT || 8080;
 
 const corsOptions = {
   origin: ['http://localhost:3000', 'https://haroo.vercel.app'],
@@ -30,8 +38,8 @@ app.use('/vote', voteOptionRoutes);
 
 connectDB()
   .then(() => {
-    app.listen(3001, () => {
-      console.log('mongoDB connected! port:3001'); // eslint-disable-line no-console
+    app.listen(PORT, '0.0.0.0', () => {
+      console.log(`mongoDB connected! port:${PORT}`); // eslint-disable-line no-console
     });
   })
   .catch((err) => {

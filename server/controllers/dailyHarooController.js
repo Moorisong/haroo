@@ -1,4 +1,4 @@
-const { getNormalizedDays } = require('../utils');
+const { getNormalizedDays, subtractOneDayUTC } = require('../utils');
 
 const { findLatestHarooStat } = require('../repository/haroo.repository');
 const { findHarooContentByDate } = require('../repository/harooContent.repository');
@@ -11,13 +11,17 @@ const dailyHaroo = async (req, res) => {
 
     const { userId } = decodeToken(req.cookies.accessToken);
     const { normalizedToday, normalizedYesterday } = getNormalizedDays();
+    const mongoQueryDateForPreviousDay = {
+      // UTC 날짜로 저장된 몽고DB 데이터를 제대로 불러올 수 있도록
+      today: subtractOneDayUTC(normalizedToday),
+      yesterday: subtractOneDayUTC(normalizedYesterday),
+    };
 
     const harooStatData = await findLatestHarooStat();
-    const harooContentData = await findHarooContentByDate(normalizedToday);
+    const harooContentData = await findHarooContentByDate(mongoQueryDateForPreviousDay.today);
 
-    const todayVoteData = await findVoteByDate(normalizedToday);
-    const yesterdayVoteData = await findVoteByDate(normalizedYesterday);
-    const todayUserVoteState = await findVoteStateByUserId(todayVoteData._id, userId);
+    const todayVoteData = await findVoteByDate(mongoQueryDateForPreviousDay.today);
+    const yesterdayVoteData = await findVoteByDate(mongoQueryDateForPreviousDay.yesterday);
 
     const dataMissing = !harooStatData || !todayVoteData || !todayVoteData || !yesterdayVoteData;
 
@@ -31,6 +35,8 @@ const dailyHaroo = async (req, res) => {
       });
       return res.status(404).json({ message: '데이터가 존재하지 않습니다.', isFallback: true });
     }
+
+    const todayUserVoteState = await findVoteStateByUserId(todayVoteData._id, userId);
 
     result = {
       harooStat: {
