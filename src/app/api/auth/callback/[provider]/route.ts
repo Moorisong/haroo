@@ -3,11 +3,11 @@ import { createServerClient } from '@supabase/ssr'
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { provider: string } }
+  { params }: { params: Promise<{ provider: string }> }
 ) {
   const requestUrl = new URL(req.url)
   const code = requestUrl.searchParams.get('code')
-  const { provider } = params
+  const { provider } = await params
 
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
   const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
