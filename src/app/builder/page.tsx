@@ -15,6 +15,7 @@ import SnapGridCanvas from '@/components/builder/SnapGridCanvas'
 import RevisionMeter from '@/components/builder/RevisionMeter'
 import ViewportSwitcher from '@/components/builder/ViewportSwitcher'
 import SidePropertyPanel from '@/components/builder/SidePropertyPanel'
+import ProjectTypeSelectionModal from '@/components/builder/ProjectTypeSelectionModal'
 
 type FilterTab = 'ALL' | BlockTier
 
@@ -65,6 +66,9 @@ export default function BuilderPage() {
 
   return (
     <div className="h-screen flex flex-col bg-white overflow-hidden">
+      {/* 진입 시 프로젝트 타입 선택 모달 */}
+      <ProjectTypeSelectionModal />
+
       {/* 빌더 헤더 */}
       <header className="flex-shrink-0 h-14 border-b border-slate-200 bg-white flex items-center justify-between px-4 sm:px-5 z-20">
         <div className="flex items-center gap-3">
