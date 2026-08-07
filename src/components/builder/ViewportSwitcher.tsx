@@ -14,7 +14,7 @@ export default function ViewportSwitcher() {
   } = useBuilderStore()
 
   const viewports: { id: DeviceViewport; label: string; icon: string }[] = [
-    { id: 'desktop', label: '데스크톱 (편집)', icon: '🖥️' },
+    { id: 'desktop', label: '데스크톱 (메인 편집)', icon: '🖥️' },
     { id: 'tablet', label: '태블릿 (미리보기)', icon: '💻' },
     { id: 'mobile', label: '모바일 (미리보기)', icon: '📱' },
   ]
