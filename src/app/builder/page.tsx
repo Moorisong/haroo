@@ -5,7 +5,7 @@ import Link from 'next/link'
 import {
   Layout, Star, Map, Image, MessageSquare, Bell, CreditCard, BarChart2,
   Calendar, Users, Gift, BookOpen, Heart, Clock, Share2, FileText, Video,
-  Plus, Eye, Save, ArrowRight, Layers,
+  ArrowRight,
 } from 'lucide-react'
 import type { BlockTier } from '@/types'
 import { useBuilderStore } from '@/stores/useBuilderStore'
@@ -13,6 +13,8 @@ import { useDraftAutoSave } from '@/hooks/useDraftAutoSave'
 import TouchDndProvider from '@/components/builder/TouchDndProvider'
 import BuilderCanvas from '@/components/builder/BuilderCanvas'
 import RevisionMeter from '@/components/builder/RevisionMeter'
+import ViewportSwitcher from '@/components/builder/ViewportSwitcher'
+import SidePropertyPanel from '@/components/builder/SidePropertyPanel'
 
 type FilterTab = 'ALL' | BlockTier
 
@@ -53,7 +55,7 @@ const TIER_BADGE: Record<string, string> = {
 
 export default function BuilderPage() {
   const [activeTab, setActiveTab] = useState<FilterTab>('ALL')
-  const [previewMode, setPreviewMode] = useState(false)
+
   const { canvasBlocks, addBlock, isDirty } = useBuilderStore()
 
   // 500ms debounce 자동 저장
@@ -79,15 +81,7 @@ export default function BuilderPage() {
           {isDirty && <span className="w-2 h-2 rounded-full bg-amber-400" title="저장 대기 중" />}
         </div>
         <div className="flex items-center gap-2">
-          <button
-            onClick={() => setPreviewMode(!previewMode)}
-            className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg border transition-colors ${
-              previewMode ? 'bg-slate-900 text-white border-slate-900' : 'border-slate-200 text-slate-600 hover:bg-slate-50'
-            }`}
-          >
-            <Eye size={13} />
-            <span className="hidden sm:inline">미리보기</span>
-          </button>
+          {/* ViewportSwitcher 내부에서 미리보기를 토글하므로 헤더의 미리보기 버튼 제거 혹은 유지. 여기선 제거합니다. */}
           <Link
             href="/checkout"
             className="flex items-center gap-1.5 px-4 py-1.5 bg-slate-900 text-white text-xs font-bold rounded-lg hover:bg-slate-800 transition-colors"
@@ -143,50 +137,42 @@ export default function BuilderPage() {
         </aside>
 
         {/* 중앙: 캔버스 */}
-        <main className="flex-1 overflow-y-auto bg-slate-100 flex justify-center">
-          <div className="w-full max-w-sm my-6 mx-4">
-            {/* 모바일 프레임 */}
-            <div className="rounded-3xl border-4 border-slate-900 bg-white overflow-hidden shadow-2xl">
-              <div className="bg-slate-900 px-4 py-2 flex items-center justify-center">
-                <div className="w-14 h-1 bg-slate-600 rounded-full" />
-              </div>
-              <div className="bg-slate-800 px-3 py-1.5 flex items-center gap-2">
-                <div className="flex-1 bg-slate-700 rounded px-2 py-0.5 text-xs text-slate-400">mybrand.haroo.site</div>
-              </div>
-              <div className="min-h-96 bg-white">
-                <TouchDndProvider>
-                  <BuilderCanvas />
-                </TouchDndProvider>
-              </div>
-              <div className="bg-slate-900 text-center py-2">
-                <span className="text-[10px] text-slate-500">Powered by <span className="text-slate-300 font-semibold">Haroo</span></span>
-              </div>
-            </div>
+        {/* 중앙: 캔버스 영역 */}
+        <main className="flex-1 flex flex-col overflow-hidden bg-slate-100 relative">
+          <ViewportSwitcher />
+          
+          <TouchDndProvider>
+            <BuilderCanvas />
+          </TouchDndProvider>
 
-            {/* 수정 비용 미터 */}
+          {/* 수정 비용 미터 (우측 하단 플로팅 등) */}
+          <div className="absolute bottom-4 right-4 z-10">
             <RevisionMeter />
+          </div>
 
-            {/* 모바일용 블록 팔레트 */}
-            <div className="mt-4 md:hidden">
-              <div className="text-xs font-bold text-slate-700 mb-2 px-1">블록 추가하기</div>
-              <div className="grid grid-cols-3 gap-2">
-                {ALL_BLOCKS.slice(0, 9).map((block) => {
-                  const Icon = block.icon
-                  return (
-                    <button
-                      key={block.id}
-                      onClick={() => addBlock(block)}
-                      className="flex flex-col items-center gap-1 p-3 bg-white rounded-xl border border-slate-200 hover:border-slate-400 transition-all"
-                    >
-                      <Icon size={16} className="text-slate-600" />
-                      <span className="text-[10px] font-semibold text-slate-700 text-center leading-tight">{block.name}</span>
-                    </button>
-                  )
-                })}
-              </div>
+          {/* 모바일용 블록 팔레트 (작은 화면에서만) */}
+          <div className="mt-4 md:hidden px-4 pb-4">
+            <div className="text-xs font-bold text-slate-700 mb-2 px-1">블록 추가하기</div>
+            <div className="grid grid-cols-3 gap-2">
+              {ALL_BLOCKS.slice(0, 9).map((block) => {
+                const Icon = block.icon
+                return (
+                  <button
+                    key={block.id}
+                    onClick={() => addBlock(block)}
+                    className="flex flex-col items-center gap-1 p-3 bg-white rounded-xl border border-slate-200 hover:border-slate-400 transition-all"
+                  >
+                    <Icon size={16} className="text-slate-600" />
+                    <span className="text-[10px] font-semibold text-slate-700 text-center leading-tight">{block.name}</span>
+                  </button>
+                )
+              })}
             </div>
           </div>
         </main>
+
+        {/* 우측: 속성 패널 */}
+        <SidePropertyPanel />
       </div>
     </div>
   )

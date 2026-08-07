@@ -1,9 +1,30 @@
 // ============================================================
 // Haroo 전역 TypeScript 타입 정의
 // ============================================================
+import { z } from 'zod'
 
 // 블록 티어
 export type BlockTier = 'STARTER' | 'STANDARD' | 'PROFESSIONAL'
+
+// 블록 인풋 Zod 스키마
+export const BlockInputConfigSchema = z.object({
+  title: z.string().optional(),
+  subtitle: z.string().optional(),
+  imageUrl: z.string().url().optional(),
+  videoUrl: z.string().url().optional(),
+  buttonText: z.string().optional(),
+  buttonLink: z.string().optional(),
+  formFields: z.array(z.object({
+    id: z.string(),
+    label: z.string(),
+    type: z.enum(['text', 'textarea', 'checkbox']),
+    required: z.boolean()
+  })).optional(),
+  backgroundColor: z.string().optional(),
+  textColor: z.string().optional(),
+}).catchall(z.any())
+
+export type BlockInputConfig = z.infer<typeof BlockInputConfigSchema>
 
 // 캔버스 블록 인스턴스 (instanceId로 구분)
 export interface CanvasBlock {
@@ -12,7 +33,11 @@ export interface CanvasBlock {
   name: string
   tier: BlockTier
   icon?: React.ElementType
+  inputConfig?: BlockInputConfig
 }
+
+// 뷰포트 기기 타입
+export type DeviceViewport = 'mobile' | 'tablet' | 'desktop'
 
 // 드래프트 (임시 저장)
 export interface Draft {

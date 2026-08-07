@@ -1,20 +1,48 @@
 'use client'
 
+import React from 'react'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import { GripVertical, Trash2, Settings, Layout, Plus } from 'lucide-react'
 import { useBuilderStore } from '@/stores/useBuilderStore'
+import FloatingQuickToolbar from './FloatingQuickToolbar'
 import type { CanvasBlock } from '@/types'
 import { cn } from '@/lib/utils'
 
-const TIER_BADGE: Record<string, string> = {
-  STARTER: 'bg-slate-100 text-slate-600 border-slate-200',
-  STANDARD: 'bg-sky-50 text-sky-600 border-sky-200',
-  PROFESSIONAL: 'bg-slate-900 text-white border-slate-900',
+import BlkHero01 from '@/components/blocks/blk_hero_01'
+import BlkForm01 from '@/components/blocks/blk_form_01'
+import BlkTxt01 from '@/components/blocks/blk_txt_01'
+import BlkVideo01 from '@/components/blocks/blk_video_01'
+
+// 실제 배포될 블록 컴포넌트 매핑 레지스트리
+const BlockRegistry: Record<string, React.FC<{ config: any }>> = {
+  blk_hero_01: BlkHero01,
+  blk_form_01: BlkForm01,
+  blk_txt_01: BlkTxt01,
+  blk_video_01: BlkVideo01,
 }
 
-function SortableBlockItem({ block }: { block: CanvasBlock }) {
-  const { removeBlock, selectBlock, selectedInstanceId } = useBuilderStore()
+// 블록 렌더러 - 매핑된 컴포넌트가 있으면 렌더링, 없으면 Fallback
+function BlockRenderer({ block, isPreviewMode }: { block: CanvasBlock; isPreviewMode: boolean }) {
+  const config = block.inputConfig || {}
+  const Component = BlockRegistry[block.blockId]
+  
+  if (Component) {
+    return <Component config={config} />
+  }
+
+  // 매핑되지 않은 블록들을 위한 Fallback
+  return (
+    <div 
+      className="p-8 flex flex-col items-center justify-center min-h-[200px] border border-dashed border-slate-300 bg-slate-50"
+    >
+      <h2 className="text-xl font-bold mb-2 text-slate-400">{block.name}</h2>
+      <p className="text-sm opacity-50 text-center">(실물 UI 컴포넌트 미구현 - {block.blockId})</p>
+    </div>
+  )
+}
+
+function SortableCanvasBlock({ block }: { block: CanvasBlock }) {
+  const { selectBlock, selectedInstanceId, isPreviewMode } = useBuilderStore()
   const isSelected = selectedInstanceId === block.instanceId
 
   const {
@@ -32,76 +60,79 @@ function SortableBlockItem({ block }: { block: CanvasBlock }) {
     opacity: isDragging ? 0.4 : 1,
   }
 
-  const Icon = block.icon ?? Layout
-
-  return (
-    <div
-      ref={setNodeRef}
-      style={style}
-      onClick={() => selectBlock(block.instanceId)}
-      className={cn(
-        'group flex items-center gap-3 px-3 py-3 hover:bg-slate-50 transition-colors cursor-pointer',
-        isSelected && 'bg-sky-50 border-l-2 border-sky-500',
-      )}
-    >
-      <div
-        {...attributes}
-        {...listeners}
-        className="cursor-grab active:cursor-grabbing text-slate-300 hover:text-slate-500 flex-shrink-0 touch-none"
-      >
-        <GripVertical size={14} />
-      </div>
-      <div className="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center flex-shrink-0">
-        <Icon size={14} className="text-slate-600" />
-      </div>
-      <div className="flex-1 min-w-0">
-        <div className="text-xs font-semibold text-slate-800 truncate">{block.name}</div>
-        <span className={cn('inline-block px-1.5 py-0.5 text-[9px] font-bold rounded border mt-0.5', TIER_BADGE[block.tier])}>
-          {block.tier}
-        </span>
-      </div>
-      <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-        <button
-          onClick={(e) => { e.stopPropagation(); selectBlock(block.instanceId) }}
-          className="p-1 text-slate-400 hover:text-slate-700 rounded transition-colors"
-        >
-          <Settings size={12} />
-        </button>
-        <button
-          onClick={(e) => { e.stopPropagation(); removeBlock(block.instanceId) }}
-          className="p-1 text-slate-400 hover:text-red-500 rounded transition-colors"
-        >
-          <Trash2 size={12} />
-        </button>
-      </div>
-    </div>
-  )
-}
-
-/**
- * 빌더 캔버스 - 조립된 블록 목록 표시 (DnD sortable)
- * 빈 상태: 플레이스홀더 / 블록 있음: SortableItem 목록
- */
-export default function BuilderCanvas() {
-  const { canvasBlocks } = useBuilderStore()
-
-  if (canvasBlocks.length === 0) {
+  if (isPreviewMode) {
     return (
-      <div className="flex flex-col items-center justify-center h-96 text-center px-6">
-        <div className="w-12 h-12 rounded-2xl bg-slate-100 flex items-center justify-center mb-3">
-          <Plus size={20} className="text-slate-400" />
-        </div>
-        <p className="text-sm font-semibold text-slate-700">블록을 추가해보세요</p>
-        <p className="text-xs text-slate-400 mt-1">왼쪽 팔레트에서 원하는 블록을 선택하세요</p>
+      <div id={`block-${block.instanceId}`}>
+        <BlockRenderer block={block} isPreviewMode={true} />
       </div>
     )
   }
 
   return (
-    <div className="divide-y divide-slate-100">
-      {canvasBlocks.map((block) => (
-        <SortableBlockItem key={block.instanceId} block={block} />
-      ))}
+    <div
+      ref={setNodeRef}
+      style={style}
+      onClick={(e) => {
+        e.stopPropagation()
+        selectBlock(block.instanceId)
+      }}
+      className={cn(
+        'relative group cursor-pointer transition-all duration-200',
+        isSelected ? 'ring-1 ring-indigo-500 ring-offset-0 z-10' : 'hover:ring-1 hover:ring-slate-300'
+      )}
+    >
+      {/* 1px 인디고 가이드라인 및 Floating Toolbar */}
+      {isSelected && <FloatingQuickToolbar />}
+      
+      {/* DnD Drag Handle (옵션: 호버 시 표시) */}
+      <div 
+        {...attributes}
+        {...listeners}
+        className="absolute top-2 left-2 z-20 p-1 bg-white/80 rounded shadow-sm opacity-0 group-hover:opacity-100 cursor-grab active:cursor-grabbing hover:bg-slate-100"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-slate-600"><circle cx="9" cy="12" r="1"/><circle cx="9" cy="5" r="1"/><circle cx="9" cy="19" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="5" r="1"/><circle cx="15" cy="19" r="1"/></svg>
+      </div>
+
+      <BlockRenderer block={block} isPreviewMode={false} />
+    </div>
+  )
+}
+
+export default function BuilderCanvas() {
+  const { canvasBlocks, deviceViewport, selectBlock } = useBuilderStore()
+
+  // 뷰포트에 따른 Width 설정
+  const getCanvasWidthClass = () => {
+    switch (deviceViewport) {
+      case 'mobile': return 'max-w-[375px]'
+      case 'tablet': return 'max-w-[768px]'
+      case 'desktop': return 'max-w-[1200px]'
+      default: return 'max-w-[1200px]'
+    }
+  }
+
+  return (
+    <div 
+      className="flex-1 overflow-y-auto bg-slate-100 p-8 flex justify-center"
+      onClick={() => selectBlock(null)} // 캔버스 빈 공간 클릭 시 선택 해제
+    >
+      <div className={cn(
+        'w-full bg-white shadow-sm min-h-[800px] transition-all duration-300 flex flex-col',
+        getCanvasWidthClass()
+      )}>
+        {canvasBlocks.length === 0 ? (
+          <div className="flex-1 flex flex-col items-center justify-center text-slate-400">
+            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="mb-4 opacity-50"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+            <p className="font-medium text-sm">블록을 추가하여 실시간 라이브 캔버스를 채워보세요</p>
+          </div>
+        ) : (
+          <div className="flex flex-col w-full h-full">
+            {canvasBlocks.map((block) => (
+              <SortableCanvasBlock key={block.instanceId} block={block} />
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   )
 }

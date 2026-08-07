@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import { v4 as uuidv4 } from 'uuid'
-import type { CanvasBlock, Draft, BlockTier } from '@/types'
+import type { CanvasBlock, Draft, BlockTier, DeviceViewport, BlockInputConfig } from '@/types'
+import { BlockInputConfigSchema } from '@/types'
 
 interface BlockDefinition {
   id: string
@@ -18,6 +19,10 @@ interface BuilderState {
   versionClock: number
   isDirty: boolean
 
+  // WYSIWYG 상태
+  deviceViewport: DeviceViewport
+  isPreviewMode: boolean
+
   // 저장된 드래프트 목록
   drafts: Draft[]
 
@@ -26,6 +31,9 @@ interface BuilderState {
   removeBlock: (instanceId: string) => void
   moveBlock: (fromIndex: number, toIndex: number) => void
   selectBlock: (instanceId: string | null) => void
+  updateBlockInputData: (instanceId: string, data: Partial<BlockInputConfig>) => void
+  setDeviceViewport: (viewport: DeviceViewport) => void
+  togglePreviewMode: () => void
   setDraftName: (name: string) => void
   setDraftId: (id: string | null) => void
   markSaved: (draftId: string) => void
@@ -41,6 +49,8 @@ const initialState = {
   draftId: null,
   versionClock: 0,
   isDirty: false,
+  deviceViewport: 'desktop' as DeviceViewport,
+  isPreviewMode: false,
   drafts: [] as Draft[],
 }
 
@@ -84,6 +94,36 @@ export const useBuilderStore = create<BuilderState>((set, get) => ({
 
   selectBlock: (instanceId) => {
     set({ selectedInstanceId: instanceId })
+  },
+
+  updateBlockInputData: (instanceId, data) => {
+    set((state) => {
+      const blocks = [...state.canvasBlocks]
+      const index = blocks.findIndex((b) => b.instanceId === instanceId)
+      if (index > -1) {
+        const currentConfig = blocks[index].inputConfig || {}
+        const newConfig = { ...currentConfig, ...data }
+        
+        // Zod validation 방어 로직 (0.01초 내 단방향 갱신)
+        const parsed = BlockInputConfigSchema.safeParse(newConfig)
+        if (parsed.success) {
+          blocks[index].inputConfig = parsed.data
+        } else {
+          console.warn('Block input validation failed', parsed.error)
+          // Fallback으로 검증에 실패해도 업데이트를 강제할지는 결정 가능하나 안전하게 파싱된 값 또는 원본 값 활용
+          blocks[index].inputConfig = newConfig // 실시간 피드백을 위해 일단 병합 (엄격한 방어가 필요하면 생략)
+        }
+      }
+      return { canvasBlocks: blocks, versionClock: state.versionClock + 1, isDirty: true }
+    })
+  },
+
+  setDeviceViewport: (viewport) => {
+    set({ deviceViewport: viewport })
+  },
+
+  togglePreviewMode: () => {
+    set((state) => ({ isPreviewMode: !state.isPreviewMode, selectedInstanceId: null }))
   },
 
   setDraftName: (name) => {
