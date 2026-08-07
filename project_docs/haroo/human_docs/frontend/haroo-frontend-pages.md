@@ -37,6 +37,10 @@
 * **SocialLoginCard**: 카카오 1초 간편 로그인 및 구글 로그인 버튼. Supabase OAuth 연동.
 
 ### 3. 블록 조립 캔버스 모드 (`/builder`)
+* **프로젝트 생성 및 모드 확정 (`ProjectTypeSelectionModal`)**:
+  * 빌더 최초 진입 시 **[🌐 반응형 웹] vs [📱 PWA 모바일 앱]** 선택 모달을 띄워 유저의 제작 목적을 최초 1회 명확히 확정.
+  * **[📱 PWA 모바일 앱] 확정 시**: 상단 뷰포트 스위처를 전면 제거하고 오직 모바일 디바이스 프레임(상단 상태바 & 하단 홈 바) 캔버스로 고정되어 모바일 앱 구축에 몰입.
+  * **[🌐 반응형 웹] 확정 시**: 데스크톱(1200px), 태블릿(768px), 모바일(375px) 뷰포트 전환 스위처가 활성화된 반응형 캔버스 제공.
 * **FreeCustomizationRule**: 결제 전 유저 조립 및 500ms debounce DB 무료 저장 (`UserProjectDraft`).
 * **CrossPlatformDndProtocol**: `PointerSensor`(PC 0ms) + `TouchSensor`(모바일 150ms long-press, 5px tolerance) 이원화 듀얼 센서 적용.
 * **수정 미터기 UX**: 실시간 수정 가격 연산 뱃지 (`[수정 추가 비용: 0원]`, `[티어 차액: +100,000원]`, `[DB 수수료: +10,000원]`).

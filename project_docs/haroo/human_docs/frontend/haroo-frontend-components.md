@@ -47,9 +47,10 @@
 19. **`CouponIssuerDrawer.tsx`**: blk_coupon_01 시리얼 난수 번호 발급 모듈.
 20. **`AdminAuthModal.tsx`**: 푸터 [Admin] 클릭 시 비밀번호 인증 팝업.
 21. **`BuilderCanvas.tsx`**: WYSIWYG 실물 렌더링 및 `1px indigo-500` 포커스 스타일 적용 캔버스.
-22. **`ViewportSwitcher.tsx`**: 모바일(375px), 태블릿(768px), 데스크톱(1200px) 디바이스 프레임 스위처 및 미리보기 모드 토글.
+22. **`ViewportSwitcher.tsx`**: 확정된 프로젝트 모드(`WEB` vs `PWA`)를 상단에 명확히 표출. `WEB` 모드일 때만 모바일(375px), 태블릿(768px), 데스크톱(1200px) 디바이스 스위처를 제공하고 `PWA` 모드에서는 뷰포트 버튼을 전면 제거하여 혼란 방지.
+23. **`ProjectTypeSelectionModal.tsx`**: 빌더 신규 진입 시 반응형 웹 vs PWA 모바일 앱 선택 카드를 띄워 제작 목적을 확정하는 모달 컴포넌트.
 23. **`SidePropertyPanel.tsx`**: 우측 슬라이드 오픈 듀얼 인풋 에디팅 사이드 컨트롤러 (폰트/색상/영상URL/폼수집항목 실시간 제어).
-24. **`FloatingQuickToolbar.tsx`**: 선택된 블록 상단에 표시되는 퀵 설정 바 (이동, 복제, 삭제, 인풋 설정).
+24. **`FloatingQuickToolbar.tsx`**: 선택된 블록 상단에 표시되는 퀵 설정 바 (위로 이동, 아래로 이동, 복제, 삭제).
 
 ---
 
