@@ -32,8 +32,11 @@ export default function FloatingQuickToolbar() {
     })
   }
 
+  const isFirstBlock = blockIndex === 0
+  const positionClass = isFirstBlock ? 'top-2 left-1/2 -translate-x-1/2' : '-top-12 left-1/2 -translate-x-1/2'
+
   return (
-    <div className="absolute -top-12 left-1/2 -translate-x-1/2 z-50 flex items-center space-x-1 p-1 bg-slate-800 rounded-lg shadow-xl animate-in fade-in zoom-in duration-200">
+    <div className={`absolute ${positionClass} z-50 flex items-center space-x-1 p-1 bg-slate-800 rounded-lg shadow-xl animate-in fade-in zoom-in duration-200`}>
       <button onClick={handleMoveUp} className="p-1.5 text-white hover:bg-slate-700 rounded transition-colors" title="위로 이동">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m18 15-6-6-6 6"/></svg>
       </button>

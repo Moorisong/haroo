@@ -143,7 +143,7 @@ export default function BuilderCanvas() {
 
   return (
     <div 
-      className="flex-1 overflow-y-auto bg-slate-100 p-8 flex justify-center"
+      className="flex-1 overflow-y-auto bg-slate-100 pt-14 pb-8 px-8 flex justify-center"
       onClick={() => selectBlock(null)} // 캔버스 빈 공간 클릭 시 선택 해제
     >
       <div className={cn(
