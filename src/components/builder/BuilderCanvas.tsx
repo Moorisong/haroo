@@ -1,8 +1,8 @@
 'use client'
 
 import React from 'react'
-import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
+import { DragOverlay, useDndContext, useDraggable } from '@dnd-kit/core'
 import { useBuilderStore } from '@/stores/useBuilderStore'
 import FloatingQuickToolbar from './FloatingQuickToolbar'
 import BlockResizeHandles from './BlockResizeHandles'
@@ -72,12 +72,16 @@ function BlockRenderer({ block, isPreviewMode }: { block: CanvasBlock; isPreview
   )
 }
 
-function SortableCanvasBlock({ block }: { block: CanvasBlock }) {
+function DraggableCanvasBlock({ block }: { block: CanvasBlock }) {
   const { selectBlock, selectedInstanceId, isPreviewMode } = useBuilderStore()
   const isSelected = selectedInstanceId === block.instanceId
   const config = block.inputConfig || {}
   const containerWidth = (config.containerWidth as ContainerWidth) || 'wide'
   const customWidthPx = config.customWidthPx as number | undefined
+
+  // 절대 위치 가져오기 (없으면 0)
+  const posX = config.posX || 0
+  const posY = config.posY || 0
 
   const WIDTH_STEPS: { key: ContainerWidth; label: string; maxPx: number }[] = [
     { key: 'narrow', label: '좁음', maxPx: 576 },
@@ -93,21 +97,23 @@ function SortableCanvasBlock({ block }: { block: CanvasBlock }) {
     listeners,
     setNodeRef,
     transform,
-    transition,
     isDragging,
-  } = useSortable({ id: block.instanceId })
+  } = useDraggable({ id: block.instanceId })
 
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-    opacity: isDragging ? 0.4 : 1,
+  // 드래그 중 실시간 변환
+  const style: React.CSSProperties = {
+    position: 'absolute',
+    left: `${posX}px`,
+    top: `${posY}px`,
     width: `${currentMaxPx}px`,
     maxWidth: '100%',
+    zIndex: isDragging ? 50 : (isSelected ? 10 : 1),
+    transform: CSS.Translate.toString(transform),
   }
 
   if (isPreviewMode) {
     return (
-      <div id={`block-${block.instanceId}`} style={{ width: `${currentMaxPx}px`, maxWidth: '100%' }}>
+      <div id={`block-${block.instanceId}`} style={{ position: 'absolute', left: `${posX}px`, top: `${posY}px`, width: `${currentMaxPx}px`, maxWidth: '100%' }}>
         <BlockRenderer block={block} isPreviewMode={true} />
       </div>
     )
@@ -117,24 +123,25 @@ function SortableCanvasBlock({ block }: { block: CanvasBlock }) {
     <div
       ref={setNodeRef}
       style={style}
+      data-sortable-block="true" // BlockResizeHandles에서 부모를 찾기 위한 속성
       onClick={(e) => {
         e.stopPropagation()
         selectBlock(block.instanceId)
       }}
       className={cn(
-        'relative group cursor-pointer transition-all duration-200 shrink-0',
-        isSelected ? 'ring-1 ring-indigo-500 ring-offset-0 z-10' : 'hover:ring-1 hover:ring-slate-300'
+        'group cursor-pointer shrink-0',
+        isSelected ? 'ring-1 ring-indigo-500 ring-offset-0' : 'hover:ring-1 hover:ring-slate-300'
       )}
     >
       {/* 1px 인디고 가이드라인 및 Floating Toolbar */}
       {isSelected && <FloatingQuickToolbar />}
       
-      {/* DnD Drag Handle (옵션: 호버 시 표시) */}
+      {/* DnD Drag Handle */}
       <div 
         {...attributes}
         {...listeners}
         className="absolute top-2 left-2 z-30 p-1 bg-white/80 rounded shadow-sm opacity-0 group-hover:opacity-100 cursor-grab active:cursor-grabbing hover:bg-slate-100"
-        title="드래그하여 순서 이동"
+        title="드래그하여 자유 이동"
       >
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-slate-600"><circle cx="9" cy="12" r="1"/><circle cx="9" cy="5" r="1"/><circle cx="9" cy="19" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="5" r="1"/><circle cx="15" cy="19" r="1"/></svg>
       </div>
@@ -168,24 +175,22 @@ export default function BuilderCanvas() {
 
   return (
     <div 
-      className="flex-1 overflow-y-auto bg-slate-100 pt-14 pb-8 px-8 flex justify-center"
+      className="flex-1 overflow-y-auto bg-slate-100 pt-14 pb-8 px-8 flex justify-center overflow-x-hidden"
       onClick={() => selectBlock(null)} // 캔버스 빈 공간 클릭 시 선택 해제
     >
       <div className={cn(
-        'w-full bg-white shadow-sm min-h-[800px] transition-all duration-300 flex flex-col',
+        'w-full bg-white shadow-sm min-h-[1200px] transition-all duration-300 relative',
         getCanvasWidthClass()
       )}>
         {canvasBlocks.length === 0 ? (
-          <div className="flex-1 flex flex-col items-center justify-center text-slate-400">
+          <div className="absolute inset-0 flex flex-col items-center justify-center text-slate-400 pointer-events-none">
             <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="mb-4 opacity-50"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
             <p className="font-medium text-sm">블록을 추가하여 실시간 라이브 캔버스를 채워보세요</p>
           </div>
         ) : (
-          <div className="flex flex-wrap items-start content-start w-full h-full">
-            {canvasBlocks.map((block) => (
-              <SortableCanvasBlock key={block.instanceId} block={block} />
-            ))}
-          </div>
+          canvasBlocks.map((block) => (
+            <DraggableCanvasBlock key={block.instanceId} block={block} />
+          ))
         )}
       </div>
     </div>

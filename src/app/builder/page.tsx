@@ -11,7 +11,7 @@ import type { BlockTier } from '@/types'
 import { useBuilderStore } from '@/stores/useBuilderStore'
 import { useDraftAutoSave } from '@/hooks/useDraftAutoSave'
 import TouchDndProvider from '@/components/builder/TouchDndProvider'
-import BuilderCanvas from '@/components/builder/BuilderCanvas'
+import SnapGridCanvas from '@/components/builder/SnapGridCanvas'
 import RevisionMeter from '@/components/builder/RevisionMeter'
 import ViewportSwitcher from '@/components/builder/ViewportSwitcher'
 import SidePropertyPanel from '@/components/builder/SidePropertyPanel'
@@ -141,14 +141,7 @@ export default function BuilderPage() {
         <main className="flex-1 flex flex-col overflow-hidden bg-slate-100 relative">
           <ViewportSwitcher />
           
-          <TouchDndProvider>
-            <BuilderCanvas />
-          </TouchDndProvider>
-
-          {/* 수정 비용 미터 (우측 하단 플로팅 등) */}
-          <div className="absolute bottom-4 right-4 z-10">
-            <RevisionMeter />
-          </div>
+          <SnapGridCanvas />
 
           {/* 모바일용 블록 팔레트 (작은 화면에서만) */}
           <div className="mt-4 md:hidden px-4 pb-4">

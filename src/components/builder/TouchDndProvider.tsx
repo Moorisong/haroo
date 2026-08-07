@@ -2,7 +2,6 @@
 
 import {
   DndContext,
-  closestCenter,
   KeyboardSensor,
   PointerSensor,
   TouchSensor,
@@ -10,11 +9,6 @@ import {
   useSensors,
   type DragEndEvent,
 } from '@dnd-kit/core'
-import {
-  SortableContext,
-  sortableKeyboardCoordinates,
-  rectSortingStrategy,
-} from '@dnd-kit/sortable'
 import { useBuilderStore } from '@/stores/useBuilderStore'
 
 interface TouchDndProviderProps {
@@ -23,10 +17,10 @@ interface TouchDndProviderProps {
 
 /**
  * DnD 프로바이더 - 터치(모바일) + 포인터(데스크톱) 동시 지원
- * @dnd-kit/core의 TouchSensor로 iOS/Android 드래그 이슈 해결
+ * 절대 좌표 기반 자유 드래그 모드
  */
 export default function TouchDndProvider({ children }: TouchDndProviderProps) {
-  const { canvasBlocks, moveBlock } = useBuilderStore()
+  const { canvasBlocks, updateBlockInputData } = useBuilderStore()
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -34,30 +28,30 @@ export default function TouchDndProvider({ children }: TouchDndProviderProps) {
     }),
     useSensor(TouchSensor, {
       activationConstraint: { delay: 200, tolerance: 8 },
-    }),
-    useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
-    }),
+    })
   )
 
   const handleDragEnd = (event: DragEndEvent) => {
-    const { active, over } = event
-    if (!over || active.id === over.id) return
+    const { active, delta } = event
+    if (!active || (delta.x === 0 && delta.y === 0)) return
 
-    const oldIndex = canvasBlocks.findIndex((b) => b.instanceId === active.id)
-    const newIndex = canvasBlocks.findIndex((b) => b.instanceId === over.id)
-    if (oldIndex !== -1 && newIndex !== -1) {
-      moveBlock(oldIndex, newIndex)
+    const block = canvasBlocks.find((b) => b.instanceId === active.id)
+    if (block) {
+      const config = block.inputConfig || {}
+      const currentX = config.posX || 0
+      const currentY = config.posY || 0
+
+      // delta 값을 기존 좌표에 더하여 영구 저장
+      updateBlockInputData(block.instanceId, {
+        posX: Math.round(currentX + delta.x),
+        posY: Math.round(currentY + delta.y),
+      })
     }
   }
 
-  const blockIds = canvasBlocks.map((b) => b.instanceId)
-
   return (
-    <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-      <SortableContext items={blockIds} strategy={rectSortingStrategy}>
-        {children}
-      </SortableContext>
+    <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
+      {children}
     </DndContext>
   )
 }

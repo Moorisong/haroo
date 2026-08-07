@@ -2,6 +2,7 @@ import { create } from 'zustand'
 import { v4 as uuidv4 } from 'uuid'
 import type { CanvasBlock, Draft, BlockTier, DeviceViewport, BlockInputConfig } from '@/types'
 import { BlockInputConfigSchema } from '@/types'
+import { getNextBlockY, CANVAS_WIDTH, snapToGrid } from '@/lib/snapGrid'
 
 interface BlockDefinition {
   id: string
@@ -62,12 +63,19 @@ export const useBuilderStore = create<BuilderState>((set, get) => ({
   ...initialState,
 
   addBlock: (def) => {
+    const currentBlocks = get().canvasBlocks
+    const nextY = getNextBlockY(currentBlocks)
     const newBlock: CanvasBlock = {
       instanceId: uuidv4(),
       blockId: def.id,
       name: def.name,
       tier: def.tier,
       icon: def.icon,
+      inputConfig: {
+        posX: 0,
+        posY: snapToGrid(nextY),
+        customWidthPx: CANVAS_WIDTH,
+      },
     }
     set((state) => ({
       canvasBlocks: [...state.canvasBlocks, newBlock],
