@@ -1,6 +1,6 @@
 import { cn } from '@/lib/utils'
 
-interface Props {
+interface Props extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode
   className?: string
   noPadding?: boolean
@@ -10,7 +10,7 @@ interface Props {
  * 20종 원자 컴포넌트: atom_card_01
  * 1px border-slate-200 규격의 기본 카드 래퍼
  */
-export default function AtomCard01({ children, className, noPadding = false }: Props) {
+export default function AtomCard01({ children, className, noPadding = false, ...rest }: Props) {
   return (
     <div
       className={cn(
@@ -18,6 +18,7 @@ export default function AtomCard01({ children, className, noPadding = false }: P
         !noPadding && 'p-5',
         className
       )}
+      {...rest}
     >
       {children}
     </div>
