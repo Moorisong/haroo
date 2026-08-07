@@ -10,8 +10,8 @@ interface Props { config: BlockInputConfig }
 
 export default function BlkMap01({ config }: Props) {
   const {
-    title = '오시는 길',
-    subtitle = '저희 매장으로 오시는 방법을 안내해 드립니다.',
+    title = '지도 / 위치 안내',
+    subtitle = '상세 주소 및 위치 정보를 안내해 드립니다.',
     mapAddress = '서울특별시 강남구 테헤란로 123',
     backgroundColor = '#ffffff',
     textColor = '#0f172a',
@@ -26,7 +26,7 @@ export default function BlkMap01({ config }: Props) {
       <div className="w-full px-6 py-14 flex justify-center">
         <div className="w-full max-w-2xl">
           <div className="mb-8 text-center">
-            <AtomBadge01 variant="info" className="mb-3 mx-auto">📍 오시는 길</AtomBadge01>
+            <AtomBadge01 variant="info" className="mb-3 mx-auto">📍 위치 안내</AtomBadge01>
             <AtomText01 as="h2" className="text-2xl font-bold mb-2">{title}</AtomText01>
             <AtomText01 as="p" className="opacity-70 text-sm">{subtitle}</AtomText01>
           </div>

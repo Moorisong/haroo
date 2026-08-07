@@ -11,24 +11,24 @@ interface Props { config: BlockInputConfig }
 
 export default function BlkTalk01({ config }: Props) {
   const {
-    title = '카카오 알림톡 자동 발송',
-    subtitle = '예약 확인, 수업 안내, 이벤트 소식을 고객에게 자동으로 보내드려요.',
-    buttonText = '알림톡 설정하기',
+    title = '자동 메시지 및 알림 안내',
+    subtitle = '중요 안내, 확인 연락, 주요 소식을 수신자에게 자동으로 전송해 드립니다.',
+    buttonText = '알림 서비스 설정하기',
     backgroundColor = '#FEE500',
     textColor = '#000000',
   } = config
 
   const features = [
     { icon: '✉️', text: '월 100건 무료 발송 (초과 시 LMS 자동 전환)' },
-    { icon: '⚡', text: '예약·결제 완료 즉시 자동 발송' },
-    { icon: '📋', text: '메시지 템플릿 커스터마이징 가능' },
+    { icon: '⚡', text: '이벤트 및 조건 충족 시 즉시 자동 발송' },
+    { icon: '📋', text: '메시지 템플릿 커스터마이징 지원' },
   ]
 
   return (
     <AtomCard01 noPadding className="w-full border-none rounded-none" style={{ backgroundColor, color: textColor }}>
       <div className="w-full px-6 py-14 flex justify-center">
         <div className="w-full max-w-lg">
-          <AtomBadge01 className="mb-4 bg-black/10 text-black border-black/20">카카오 알림톡</AtomBadge01>
+          <AtomBadge01 className="mb-4 bg-black/10 text-black border-black/20">자동 메시지 알림</AtomBadge01>
           <AtomText01 as="h2" className="text-2xl font-black mb-2">{title}</AtomText01>
           <AtomText01 as="p" className="opacity-70 text-sm mb-8">{subtitle}</AtomText01>
 

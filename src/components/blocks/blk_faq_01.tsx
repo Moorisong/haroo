@@ -17,8 +17,8 @@ interface Props { config: BlockInputConfig }
 
 export default function BlkFaq01({ config }: Props) {
   const {
-    title = '자주 묻는 질문',
-    subtitle = '궁금하신 사항을 빠르게 확인해 보세요.',
+    title = '아코디언 목록',
+    subtitle = '클릭하여 상세 내용을 펼쳐보세요.',
     backgroundColor = '#ffffff',
     textColor = '#0f172a',
     faqItems = DEFAULT_FAQS,
@@ -29,7 +29,7 @@ export default function BlkFaq01({ config }: Props) {
       <div className="w-full px-6 py-14 flex justify-center">
         <div className="w-full max-w-2xl">
           <div className="text-center mb-8">
-            <AtomBadge01 variant="default" className="mb-3 mx-auto">FAQ</AtomBadge01>
+            <AtomBadge01 variant="default" className="mb-3 mx-auto">아코디언</AtomBadge01>
             <AtomText01 as="h2" className="text-2xl font-bold mb-2">{title}</AtomText01>
             <AtomText01 as="p" className="opacity-70 text-sm">{subtitle}</AtomText01>
           </div>

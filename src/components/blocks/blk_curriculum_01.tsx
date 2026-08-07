@@ -25,8 +25,8 @@ interface Props { config: BlockInputConfig }
 
 export default function BlkCurriculum01({ config }: Props) {
   const {
-    title = '강의 커리큘럼',
-    subtitle = '체계적으로 구성된 커리큘럼을 통해 단계별로 학습하세요.',
+    title = '단계별 프로세스 리스트',
+    subtitle = '체계적인 단계 구성에 따라 순서대로 확인해 보세요.',
     backgroundColor = '#ffffff',
     textColor = '#0f172a',
     curriculumUnits = DEFAULT_UNITS,
@@ -40,7 +40,7 @@ export default function BlkCurriculum01({ config }: Props) {
       <div className="w-full px-6 py-14 flex justify-center">
         <div className="w-full max-w-2xl">
           <div className="text-center mb-8">
-            <AtomBadge01 variant="info" className="mb-3 mx-auto">📚 커리큘럼</AtomBadge01>
+            <AtomBadge01 variant="info" className="mb-3 mx-auto">프로세스</AtomBadge01>
             <AtomText01 as="h2" className="text-2xl font-bold mb-2">{title}</AtomText01>
             <AtomText01 as="p" className="opacity-70 text-sm mb-6">{subtitle}</AtomText01>
             <AtomProgress01 value={progress} max={100} showLabel size="md" />

@@ -31,9 +31,9 @@ export default function BlkConsultingSlot01({ config }: Props) {
   const slots = generateSlots()
 
   const {
-    title = '컨설팅 예약',
-    subtitle = '원하시는 날짜와 시간을 선택하여 간편하게 예약하세요.',
-    buttonText = '예약 확정하기',
+    title = '타임 슬롯 / 일정 예약',
+    subtitle = '원하시는 날짜와 시간대를 선택하여 간편하게 예약해 보세요.',
+    buttonText = '일정 예약 확정',
     sessionDuration = '50분',
     backgroundColor = '#ffffff',
     textColor = '#0f172a',
@@ -48,7 +48,7 @@ export default function BlkConsultingSlot01({ config }: Props) {
             <AtomBadge01 variant="success" className="mb-3 mx-auto">예약 완료</AtomBadge01>
             <AtomText01 as="h2" className="text-xl font-bold mb-2">{name}님, 예약이 확정되었어요!</AtomText01>
             <AtomText01 as="p" className="text-sm opacity-70">선택 시간: {selectedTime} ({sessionDuration})</AtomText01>
-            <AtomText01 as="p" className="text-xs text-slate-400 mt-2">확인 문자가 {phone}으로 발송됩니다.</AtomText01>
+            <AtomText01 as="p" className="text-xs text-slate-400 mt-2">확인 안내가 {phone}으로 발송됩니다.</AtomText01>
           </div>
         </div>
       </AtomCard01>
@@ -60,7 +60,7 @@ export default function BlkConsultingSlot01({ config }: Props) {
       <div className="w-full px-6 py-14 flex justify-center">
         <div className="w-full max-w-md">
           <div className="text-center mb-8">
-            <AtomBadge01 variant="info" className="mb-3 mx-auto">📅 예약</AtomBadge01>
+            <AtomBadge01 variant="info" className="mb-3 mx-auto">📅 일정 예약</AtomBadge01>
             <AtomText01 as="h2" className="text-2xl font-bold mb-2">{title}</AtomText01>
             <AtomText01 as="p" className="opacity-70 text-sm">{subtitle}</AtomText01>
           </div>
