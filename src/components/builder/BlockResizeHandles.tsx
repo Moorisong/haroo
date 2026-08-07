@@ -230,10 +230,20 @@ export default function BlockResizeHandles({
       {children}
 
       {isSelected && (
-        <>
-          {/* 우측 하단 리사이즈 핸들 단일화 */}
-          {renderHandle('br', '-bottom-2 -right-2 w-6 h-6', 'cursor-nwse-resize')}
-        </>
+        <div
+          data-resize-handle="true"
+          className="absolute -bottom-3 -right-3 z-50 flex items-center gap-1 px-2 py-1 bg-slate-900 text-white rounded-md shadow-lg border border-slate-700 cursor-nwse-resize select-none hover:scale-105 transition-transform"
+          onPointerDown={(e) => handlePointerDown(e, 'br')}
+          title="드래그하여 크기 조절"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-slate-300">
+            <polyline points="15 3 21 3 21 9" />
+            <polyline points="9 21 3 21 3 15" />
+            <line x1="21" x2="14" y1="3" y2="10" />
+            <line x1="3" x2="10" y1="21" y2="14" />
+          </svg>
+          <span className="text-[10px] font-bold text-slate-200">크기 조절</span>
+        </div>
       )}
     </div>
   )
