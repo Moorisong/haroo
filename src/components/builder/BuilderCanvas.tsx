@@ -9,16 +9,46 @@ import type { CanvasBlock } from '@/types'
 import { cn } from '@/lib/utils'
 
 import BlkHero01 from '@/components/blocks/blk_hero_01'
-import BlkForm01 from '@/components/blocks/blk_form_01'
 import BlkTxt01 from '@/components/blocks/blk_txt_01'
+import BlkShare01 from '@/components/blocks/blk_share_01'
 import BlkVideo01 from '@/components/blocks/blk_video_01'
+import BlkDday01 from '@/components/blocks/blk_dday_01'
+import BlkPricing01 from '@/components/blocks/blk_pricing_01'
+import BlkForm01 from '@/components/blocks/blk_form_01'
+import BlkTalk01 from '@/components/blocks/blk_talk_01'
+import BlkMap01 from '@/components/blocks/blk_map_01'
+import BlkAlbum01 from '@/components/blocks/blk_album_01'
+import BlkFaq01 from '@/components/blocks/blk_faq_01'
+import BlkStampCard01 from '@/components/blocks/blk_stamp_card_01'
+import BlkCurriculum01 from '@/components/blocks/blk_curriculum_01'
+import BlkLike01 from '@/components/blocks/blk_like_01'
+import BlkAuth01 from '@/components/blocks/blk_auth_01'
+import BlkPay01 from '@/components/blocks/blk_pay_01'
+import BlkStats01 from '@/components/blocks/blk_stats_01'
+import BlkCoupon01 from '@/components/blocks/blk_coupon_01'
+import BlkConsultingSlot01 from '@/components/blocks/blk_consulting_slot_01'
 
-// 실제 배포될 블록 컴포넌트 매핑 레지스트리
+// 19종 실제 배포 블록 컴포넌트 매핑 레지스트리
 const BlockRegistry: Record<string, React.FC<{ config: any }>> = {
   blk_hero_01: BlkHero01,
-  blk_form_01: BlkForm01,
   blk_txt_01: BlkTxt01,
+  blk_share_01: BlkShare01,
   blk_video_01: BlkVideo01,
+  blk_dday_01: BlkDday01,
+  blk_pricing_01: BlkPricing01,
+  blk_form_01: BlkForm01,
+  blk_talk_01: BlkTalk01,
+  blk_map_01: BlkMap01,
+  blk_album_01: BlkAlbum01,
+  blk_faq_01: BlkFaq01,
+  blk_stamp_card_01: BlkStampCard01,
+  blk_curriculum_01: BlkCurriculum01,
+  blk_like_01: BlkLike01,
+  blk_auth_01: BlkAuth01,
+  blk_pay_01: BlkPay01,
+  blk_stats_01: BlkStats01,
+  blk_coupon_01: BlkCoupon01,
+  blk_consulting_slot_01: BlkConsultingSlot01,
 }
 
 // 블록 렌더러 - 매핑된 컴포넌트가 있으면 렌더링, 없으면 Fallback
