@@ -28,8 +28,8 @@ export default function ViewportSwitcher() {
           {projectType === 'PWA' ? 'PWA 모바일 앱 모드' : '반응형 웹사이트 모드'}
         </div>
 
-        {/* 뷰포트 전환 (웹 모드일 때만 표출, PWA 모드일 땐 완전히 숨김) */}
-        {projectType === 'WEB' ? (
+        {/* 뷰포트 전환 (웹 모드일 때만 표출) */}
+        {projectType === 'WEB' && (
           <div className="hidden sm:flex items-center space-x-1 pl-2 border-l border-slate-200">
             {viewports.map((vp) => (
               <button
@@ -46,12 +46,6 @@ export default function ViewportSwitcher() {
                 {vp.label}
               </button>
             ))}
-          </div>
-        ) : (
-          <div className="flex items-center pl-2 border-l border-slate-200">
-            <span className="text-xs text-slate-500 font-medium">
-              모바일 전용 단독 앱 화면 (375px)
-            </span>
           </div>
         )}
       </div>
