@@ -128,7 +128,7 @@ function DraggableBlock({ block, canvasRef, onDragStart, onDragMove, onDragEnd }
       const rawX = startPosX + (moveEv.clientX - startClientX) / scale
       const rawY = startPosY + (moveEv.clientY - startClientY) / scale
       const snappedX = Math.max(0, Math.min(CANVAS_WIDTH - blockWidth, snapToGrid(rawX)))
-      const snappedY = Math.max(0, snapToGrid(rawY))
+      const snappedY = Math.max(8, snapToGrid(rawY))
       onDragMove(block.instanceId, snappedX, snappedY)
     }
 
@@ -136,7 +136,7 @@ function DraggableBlock({ block, canvasRef, onDragStart, onDragMove, onDragEnd }
       const rawX = startPosX + (upEv.clientX - startClientX) / scale
       const rawY = startPosY + (upEv.clientY - startClientY) / scale
       const snappedX = Math.max(0, Math.min(CANVAS_WIDTH - blockWidth, snapToGrid(rawX)))
-      const snappedY = Math.max(0, snapToGrid(rawY))
+      const snappedY = Math.max(8, snapToGrid(rawY))
       updateBlockInputData(block.instanceId, { posX: snappedX, posY: snappedY })
       onDragEnd()
       window.removeEventListener('pointermove', onMove)
@@ -289,7 +289,7 @@ function DesktopCanvas() {
             }}
           >
             {/* 데스크톱 프레임 상단 헤더 */}
-            <div className="bg-slate-900 text-slate-300 text-xs py-1.5 flex items-center justify-between px-4 font-medium shrink-0 border-b border-slate-800">
+            <div className="bg-slate-900 text-slate-300 text-xs py-1.5 flex items-center justify-between px-4 font-medium shrink-0 border-b border-slate-800 relative z-20">
               <span className="flex items-center gap-1.5">
                 <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                 Desktop Canvas (1200px)
@@ -341,12 +341,13 @@ function DesktopCanvas() {
 }
 
 // ──────────────────────────────────────────────────────────────
-// 반응형 모바일/태블릿 뷰 (세로 스택 모드)
+// 반응형 모바일/태블릿 뷰 (세로 스택 모드 및 PWA 앱 스마트폰 프레임)
 // ──────────────────────────────────────────────────────────────
 function ResponsiveViewCanvas({ viewport }: { viewport: DeviceViewport }) {
-  const { canvasBlocks, selectBlock, selectedInstanceId, isPreviewMode } = useBuilderStore()
+  const { canvasBlocks, selectBlock, selectedInstanceId, isPreviewMode, projectType } = useBuilderStore()
   
   const frameWidth = viewport === 'mobile' ? 375 : 768
+  const isPwa = projectType === 'PWA'
 
   // 모바일 뷰에서는 블록들을 posY 기준으로 정렬하여 차례대로 표시
   const sortedBlocks = useMemo(() => {
@@ -355,35 +356,56 @@ function ResponsiveViewCanvas({ viewport }: { viewport: DeviceViewport }) {
 
   return (
     <div 
-      className="flex-1 overflow-y-auto bg-slate-100 flex justify-center py-10 px-4 min-h-0"
+      className="flex-1 overflow-y-auto bg-slate-100 flex justify-center py-8 px-4 min-h-0"
       onClick={() => selectBlock(null)}
     >
       <div 
-        className="bg-white shadow-xl rounded-2xl border border-slate-200 flex flex-col relative transition-all duration-300 my-auto h-fit"
+        className={cn(
+          'bg-white shadow-2xl rounded-[36px] border flex flex-col relative transition-all duration-300 my-auto h-fit overflow-hidden',
+          isPwa ? 'border-slate-800 ring-4 ring-slate-900/10' : 'border-slate-300'
+        )}
         style={{ width: frameWidth, minHeight: 667 }}
       >
-        {/* 모바일 프레임 상단 헤더 */}
-        <div className="bg-slate-900 text-slate-300 text-xs py-1.5 flex items-center justify-between px-4 font-medium rounded-t-2xl shrink-0 border-b border-slate-800">
+        {/* PWA 앱 또는 모바일 프레임 상단 헤더 */}
+        <div className="bg-slate-900 text-slate-300 text-xs py-2 flex items-center justify-between px-4 font-medium shrink-0 border-b border-slate-800">
           <span className="flex items-center gap-1.5">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-            {viewport === 'mobile' ? 'Mobile Preview (375px)' : 'Tablet Preview (768px)'}
+            {isPwa ? '📱 PWA App Frame (375px)' : viewport === 'mobile' ? 'Mobile View (375px)' : 'Tablet View (768px)'}
           </span>
-          <span className="text-[10px] text-slate-400">Scrollable</span>
+          <span className="text-[10px] text-slate-400">
+            {isPwa ? '홈 화면 앱 스타일' : 'Scrollable'}
+          </span>
         </div>
+
+        {/* PWA 전용 디바이스 상단 노치 / 상태바 미러링 */}
+        {isPwa && (
+          <div className="bg-slate-900 text-white text-[11px] px-6 py-1 flex items-center justify-between font-semibold select-none border-b border-slate-800/50">
+            <span>9:41</span>
+            <div className="w-16 h-3.5 bg-black rounded-full mx-auto" />
+            <div className="flex items-center space-x-1.5 text-[10px]">
+              <span>5G</span>
+              <span>100%</span>
+            </div>
+          </div>
+        )}
 
         <div className="flex-1 flex flex-col w-full relative">
           {sortedBlocks.length === 0 ? (
             <div className="flex-1 flex flex-col items-center justify-center text-slate-400 p-8 min-h-[400px]">
-              <p className="text-sm font-medium">데스크톱 모드에서 블록을 추가해 보세요</p>
+              <p className="text-sm font-medium text-center">
+                {isPwa ? 'PWA 앱에 블록을 추가하여 메인 화면을 완성하세요' : '데스크톱 모드에서 블록을 추가해 보세요'}
+              </p>
             </div>
           ) : (
-            sortedBlocks.map(block => {
+            sortedBlocks.map((block) => {
               const isSelected = selectedInstanceId === block.instanceId
+              const config = block.inputConfig || {}
+
               return (
                 <div 
                   key={block.instanceId}
                   className={cn(
-                    'w-full relative transition-all',
+                    'w-full relative transition-all overflow-visible',
                     !isPreviewMode && 'cursor-pointer hover:ring-1 hover:ring-inset hover:ring-slate-300',
                     !isPreviewMode && isSelected && 'ring-2 ring-inset ring-indigo-500 z-10'
                   )}
@@ -393,12 +415,35 @@ function ResponsiveViewCanvas({ viewport }: { viewport: DeviceViewport }) {
                     selectBlock(block.instanceId)
                   }}
                 >
-                  <BlockRenderer block={block} isPreviewMode={isPreviewMode} />
+                  {!isPreviewMode && isSelected && <FloatingQuickToolbar />}
+                  
+                  {/* PWA 모드에서는 크기 조절 핸들을 보이지 않고 순수 수직 블록만 렌더링 */}
+                  {isPwa ? (
+                    <BlockRenderer block={block} isPreviewMode={isPreviewMode} />
+                  ) : (
+                    <BlockResizeHandles
+                      instanceId={block.instanceId}
+                      isSelected={!isPreviewMode && isSelected}
+                      containerWidth={(config.containerWidth as ContainerWidth) || 'wide'}
+                      paddingY={config.paddingY as PaddingYOption}
+                      customWidthPx={config.customWidthPx as number | undefined}
+                      customPaddingYPx={config.customPaddingYPx as number | undefined}
+                    >
+                      <BlockRenderer block={block} isPreviewMode={isPreviewMode} />
+                    </BlockResizeHandles>
+                  )}
                 </div>
               )
             })
           )}
         </div>
+
+        {/* PWA 전용 스마트폰 하단 홈 바 (Home Indicator) 미러링 */}
+        {isPwa && (
+          <div className="bg-white py-2 flex justify-center shrink-0 border-t border-slate-100">
+            <div className="w-32 h-1 bg-slate-900 rounded-full opacity-60" />
+          </div>
+        )}
       </div>
     </div>
   )
