@@ -2,7 +2,7 @@ import { cn } from '@/lib/utils'
 
 interface Props {
   children: React.ReactNode
-  variant?: 'default' | 'success' | 'warning' | 'error' | 'outline'
+  variant?: 'default' | 'success' | 'warning' | 'error' | 'outline' | 'info'
   className?: string
 }
 
@@ -17,6 +17,7 @@ export default function AtomBadge01({ children, variant = 'default', className }
     warning: 'bg-amber-100 text-amber-700 border-transparent',
     error: 'bg-red-100 text-red-700 border-transparent',
     outline: 'bg-transparent text-slate-700 border-slate-200',
+    info: 'bg-sky-100 text-sky-700 border-transparent',
   }
 
   return (
