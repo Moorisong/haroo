@@ -35,6 +35,11 @@ export const BlockInputConfigSchema = z.object({
   paddingY: z.enum(PADDING_Y_OPTIONS).optional(),
   customWidthPx: z.number().optional(),
   customPaddingYPx: z.number().optional(),
+  // 스냅 그리드 캔버스 절대 위치 좌표
+  posX: z.number().optional(),
+  posY: z.number().optional(),
+  // 블록의 실제 렌더링 높이 (스마트 가이드 계산용)
+  blockHeight: z.number().optional(),
 }).catchall(z.any())
 
 export type BlockInputConfig = z.infer<typeof BlockInputConfigSchema>
