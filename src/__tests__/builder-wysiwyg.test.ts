@@ -48,6 +48,27 @@ function runTests() {
       console.log('✅ Viewport switched to mobile')
     }
 
+    // projectType switch & confirm (WEB vs PWA)
+    /** PWA 모드 선택 및 확정 시 deviceViewport가 mobile로 고정되고 projectTypeSelected가 true가 되는지 검증 */
+    useBuilderStore.getState().confirmProjectType('PWA')
+    if (
+      useBuilderStore.getState().projectType === 'PWA' &&
+      useBuilderStore.getState().deviceViewport === 'mobile' &&
+      useBuilderStore.getState().projectTypeSelected === true
+    ) {
+      console.log('✅ PWA Mode confirmed & auto-locked to mobile viewport')
+    } else {
+      console.error('❌ PWA Mode confirm failed')
+    }
+
+    useBuilderStore.getState().confirmProjectType('WEB')
+    if (
+      useBuilderStore.getState().projectType === 'WEB' &&
+      useBuilderStore.getState().deviceViewport === 'desktop'
+    ) {
+      console.log('✅ WEB Mode confirmed & desktop viewport set')
+    }
+
     // preview toggle
     useBuilderStore.getState().togglePreviewMode()
     if (useBuilderStore.getState().isPreviewMode === true) {

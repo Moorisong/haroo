@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { v4 as uuidv4 } from 'uuid'
-import type { CanvasBlock, Draft, BlockTier, DeviceViewport, BlockInputConfig } from '@/types'
+import type { CanvasBlock, Draft, BlockTier, DeviceViewport, BlockInputConfig, ProjectType } from '@/types'
 import { BlockInputConfigSchema } from '@/types'
 import { getNextBlockY, CANVAS_WIDTH, snapToGrid } from '@/lib/snapGrid'
 
@@ -20,7 +20,9 @@ interface BuilderState {
   versionClock: number
   isDirty: boolean
 
-  // WYSIWYG 상태
+  // WYSIWYG 및 프로젝트 모드 상태
+  projectType: ProjectType
+  projectTypeSelected: boolean
   deviceViewport: DeviceViewport
   isPreviewMode: boolean
 
@@ -33,6 +35,8 @@ interface BuilderState {
   moveBlock: (fromIndex: number, toIndex: number) => void
   selectBlock: (instanceId: string | null) => void
   updateBlockInputData: (instanceId: string, data: Partial<BlockInputConfig>) => void
+  setProjectType: (type: ProjectType) => void
+  confirmProjectType: (type: ProjectType) => void
   setDeviceViewport: (viewport: DeviceViewport) => void
   togglePreviewMode: () => void
   setDraftName: (name: string) => void
@@ -50,6 +54,8 @@ const initialState = {
   draftId: null,
   versionClock: 0,
   isDirty: false,
+  projectType: 'WEB' as ProjectType,
+  projectTypeSelected: false,
   deviceViewport: 'desktop' as DeviceViewport,
   isPreviewMode: false,
   drafts: [] as Draft[],
@@ -95,9 +101,27 @@ export const useBuilderStore = create<BuilderState>((set, get) => ({
 
   moveBlock: (fromIndex, toIndex) => {
     const blocks = [...get().canvasBlocks]
+    if (fromIndex < 0 || fromIndex >= blocks.length || toIndex < 0 || toIndex >= blocks.length) return
+
     const [moved] = blocks.splice(fromIndex, 1)
     blocks.splice(toIndex, 0, moved)
-    set({ canvasBlocks: blocks, versionClock: get().versionClock + 1, isDirty: true })
+
+    // posY 기준 스냅 그리드 좌표 재계산 (데스크톱 및 PWA 캔버스 모두 동기화)
+    let currentY = 16
+    const updatedBlocks = blocks.map((b) => {
+      const h = b.inputConfig?.blockHeight || 200
+      const updated = {
+        ...b,
+        inputConfig: {
+          ...b.inputConfig,
+          posY: snapToGrid(currentY),
+        },
+      }
+      currentY += h + 16
+      return updated
+    })
+
+    set({ canvasBlocks: updatedBlocks, versionClock: get().versionClock + 1, isDirty: true })
   },
 
   selectBlock: (instanceId) => {
@@ -124,6 +148,22 @@ export const useBuilderStore = create<BuilderState>((set, get) => ({
       }
       return { canvasBlocks: blocks, versionClock: state.versionClock + 1, isDirty: true }
     })
+  },
+
+  setProjectType: (type) => {
+    if (type === 'PWA') {
+      set({ projectType: 'PWA', deviceViewport: 'mobile' })
+    } else {
+      set({ projectType: 'WEB' })
+    }
+  },
+
+  confirmProjectType: (type) => {
+    if (type === 'PWA') {
+      set({ projectType: 'PWA', deviceViewport: 'mobile', projectTypeSelected: true })
+    } else {
+      set({ projectType: 'WEB', deviceViewport: 'desktop', projectTypeSelected: true })
+    }
   },
 
   setDeviceViewport: (viewport) => {

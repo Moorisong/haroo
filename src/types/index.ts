@@ -54,6 +54,9 @@ export interface CanvasBlock {
   inputConfig?: BlockInputConfig
 }
 
+// 프로젝트 모드 타입 (웹 vs PWA 앱)
+export type ProjectType = 'WEB' | 'PWA'
+
 // 뷰포트 기기 타입
 export type DeviceViewport = 'mobile' | 'tablet' | 'desktop'
 
