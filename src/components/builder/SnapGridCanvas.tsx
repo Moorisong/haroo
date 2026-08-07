@@ -338,9 +338,26 @@ function ResponsiveViewCanvas({ viewport }: { viewport: DeviceViewport }) {
 
   return (
     <div 
-      className="flex-1 overflow-y-auto bg-slate-100 flex justify-center py-8 px-4 min-h-0"
+      className="flex-1 overflow-y-auto bg-slate-100 flex flex-col items-center py-6 px-4 min-h-0"
       onClick={() => selectBlock(null)}
     >
+      {/* WEB 모드 반응형 미리보기 안내 상단 뱃지 */}
+      {!isPwa && (
+        <div className="mb-4 inline-flex items-center gap-2 px-3.5 py-1.5 bg-sky-50 border border-sky-200 rounded-full text-xs font-bold text-sky-800 shadow-sm animate-in fade-in duration-200 select-none">
+          <span>👁️ {viewport === 'mobile' ? '모바일' : '태블릿'} 반응형 미리보기 모드</span>
+          <span className="text-slate-400 font-normal">|</span>
+          <button
+            onClick={(e) => {
+              e.stopPropagation()
+              useBuilderStore.getState().setDeviceViewport('desktop')
+            }}
+            className="text-sky-600 hover:text-sky-900 underline font-extrabold flex items-center gap-1"
+          >
+            🖥️ 데스크톱 편집으로 이동
+          </button>
+        </div>
+      )}
+
       <div 
         className={cn(
           'bg-white shadow-2xl rounded-[36px] border flex flex-col relative transition-all duration-300 my-auto h-fit overflow-hidden',
@@ -352,10 +369,10 @@ function ResponsiveViewCanvas({ viewport }: { viewport: DeviceViewport }) {
         <div className="bg-slate-900 text-slate-300 text-xs py-2 flex items-center justify-between px-4 font-medium shrink-0 border-b border-slate-800">
           <span className="flex items-center gap-1.5">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-            {isPwa ? '📱 PWA App Frame (375px)' : viewport === 'mobile' ? 'Mobile View (375px)' : 'Tablet View (768px)'}
+            {isPwa ? '📱 PWA App Frame (375px)' : viewport === 'mobile' ? 'Mobile Responsive Preview (375px)' : 'Tablet Responsive Preview (768px)'}
           </span>
           <span className="text-[10px] text-slate-400">
-            {isPwa ? '홈 화면 앱 스타일' : 'Scrollable'}
+            {isPwa ? '홈 화면 앱 스타일' : 'Preview Only'}
           </span>
         </div>
 
@@ -389,7 +406,7 @@ function ResponsiveViewCanvas({ viewport }: { viewport: DeviceViewport }) {
                   className={cn(
                     'w-full relative transition-all overflow-visible',
                     !isPreviewMode && 'cursor-pointer hover:ring-1 hover:ring-inset hover:ring-slate-300',
-                    !isPreviewMode && isSelected && 'ring-2 ring-inset ring-indigo-500 z-10'
+                    !isPreviewMode && isSelected && 'ring-2 ring-inset ring-sky-500 z-10'
                   )}
                   onClick={(e) => {
                     if (isPreviewMode) return
@@ -397,23 +414,24 @@ function ResponsiveViewCanvas({ viewport }: { viewport: DeviceViewport }) {
                     selectBlock(block.instanceId)
                   }}
                 >
-                  {!isPreviewMode && isSelected && <FloatingQuickToolbar />}
-                  
-                  {/* PWA 모드에서는 크기 조절 핸들을 보이지 않고 순수 수직 블록만 렌더링 */}
-                  {isPwa ? (
-                    <BlockRenderer block={block} isPreviewMode={isPreviewMode} />
-                  ) : (
-                    <BlockResizeHandles
-                      instanceId={block.instanceId}
-                      isSelected={!isPreviewMode && isSelected}
-                      containerWidth={(config.containerWidth as ContainerWidth) || 'wide'}
-                      paddingY={config.paddingY as PaddingYOption}
-                      customWidthPx={config.customWidthPx as number | undefined}
-                      customPaddingYPx={config.customPaddingYPx as number | undefined}
-                    >
-                      <BlockRenderer block={block} isPreviewMode={isPreviewMode} />
-                    </BlockResizeHandles>
+                  {/* WEB 모드 반응형 미리보기 상태에서 블록 선택 시 안내 툴팁 */}
+                  {!isPwa && !isPreviewMode && isSelected && (
+                    <div className="absolute -top-10 left-1/2 -translate-x-1/2 z-50 flex items-center gap-1.5 px-3 py-1.5 bg-slate-900 text-white text-[11px] font-bold rounded-lg shadow-xl animate-in fade-in duration-150 whitespace-nowrap">
+                      <span>👁️ 반응형 결과 확인 중입니다</span>
+                      <button
+                        onClick={(ev) => {
+                          ev.stopPropagation()
+                          useBuilderStore.getState().setDeviceViewport('desktop')
+                        }}
+                        className="px-1.5 py-0.5 bg-sky-600 hover:bg-sky-500 rounded text-white text-[10px] font-extrabold transition-colors ml-1"
+                      >
+                        🖥️ 데스크톱에서 편집
+                      </button>
+                    </div>
                   )}
+                  
+                  {/* PWA 모드가 아니거나 미리보기 모드가 아니더라도 태블릿/모바일은 위치/크기 변경 불가능하도록 순수 렌더링 */}
+                  <BlockRenderer block={block} isPreviewMode={isPreviewMode} />
                 </div>
               )
             })
