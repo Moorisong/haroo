@@ -44,15 +44,15 @@ export default function BlkHero01({ config }: Props) {
             </AtomBadge01>
           )}
 
-          <AtomText01 as="h1" className="text-2xl sm:text-3xl font-black text-white mb-2 leading-tight">
+          <AtomText01 as="h1" className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-white mb-3 md:mb-4 leading-tight tracking-tight">
             {title}
           </AtomText01>
 
-          <AtomText01 as="p" className="text-sm sm:text-base text-slate-200 mb-6 max-w-md">
+          <AtomText01 as="p" className="text-sm sm:text-lg md:text-xl text-slate-200 mb-6 md:mb-8 max-w-2xl font-normal leading-relaxed">
             {subtitle}
           </AtomText01>
 
-          <AtomBtn01 size="lg" className="px-8 bg-white text-slate-900 hover:bg-slate-100 font-bold rounded-xl">
+          <AtomBtn01 size="lg" className="px-8 md:px-10 py-3 md:py-4 bg-white text-slate-900 hover:bg-slate-100 font-bold text-sm md:text-base rounded-xl shadow-lg transition-all">
             {buttonText}
           </AtomBtn01>
         </div>

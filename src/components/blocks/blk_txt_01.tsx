@@ -23,11 +23,11 @@ export default function BlkTxt01({ config }: Props) {
   return (
     <AtomCard01 noPadding className="w-full border-none rounded-none" style={{ backgroundColor, color: textColor }}>
       <div className={`${layout.wrapperClass} px-6 ${layout.paddingClass}`}>
-        <div className={`${layout.innerClass} text-center`}>
-          <AtomText01 variant="h2" className="mb-4 font-bold tracking-tight">
+        <div className={`${layout.innerClass} text-center max-w-4xl mx-auto`}>
+          <AtomText01 variant="h2" className="text-xl sm:text-2xl md:text-4xl lg:text-5xl mb-3 md:mb-5 font-black tracking-tight leading-tight">
             {title}
           </AtomText01>
-          <AtomText01 variant="p" className="opacity-90 leading-relaxed whitespace-pre-wrap">
+          <AtomText01 variant="p" className="text-xs sm:text-sm md:text-lg lg:text-xl opacity-80 leading-relaxed whitespace-pre-wrap font-normal">
             {subtitle}
           </AtomText01>
         </div>

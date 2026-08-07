@@ -4,20 +4,20 @@ import type { ContainerWidth, PaddingYOption } from '@/types'
 // 이중 반응형 헬퍼: 영역 크기 조절 + 기기 맞춤형 반응형 Tailwind 클래스 도출
 // ─────────────────────────────────────────────────────────────────────────────
 
-/** 컨테이너 폭 → Tailwind max-w 클래스 */
+/** 컨테이너 폭 → Tailwind max-w 클래스 (데스크톱 최적 확장) */
 export const CONTAINER_WIDTH_CLASS: Record<ContainerWidth, string> = {
   full:   'max-w-full',
-  wide:   'max-w-6xl',
-  medium: 'max-w-4xl',
-  narrow: 'max-w-xl',
+  wide:   'max-w-7xl',
+  medium: 'max-w-5xl',
+  narrow: 'max-w-2xl',
 }
 
-/** 상하 패딩 → Tailwind py 클래스 (기기 반응형 sm: 조합 포함) */
+/** 상하 패딩 → Tailwind py 클래스 (데스크톱 넉넉한 비율 확장) */
 export const PADDING_Y_CLASS: Record<PaddingYOption, string> = {
-  compact:       'py-6 sm:py-8',
-  normal:        'py-10 sm:py-14',
-  spacious:      'py-16 sm:py-20',
-  extraSpacious: 'py-20 sm:py-28',
+  compact:       'py-6 sm:py-8 md:py-10',
+  normal:        'py-10 sm:py-14 md:py-20 lg:py-24',
+  spacious:      'py-14 sm:py-20 md:py-28 lg:py-32',
+  extraSpacious: 'py-18 sm:py-28 md:py-36 lg:py-40',
 }
 
 /**
