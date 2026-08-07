@@ -169,16 +169,16 @@ function DraggableBlock({ block, canvasRef, onDragStart, onDragMove, onDragEnd }
       )}
       onClick={(e) => { e.stopPropagation(); selectBlock(block.instanceId) }}
     >
-      {/* 드래그 핸들: 선택 또는 호버 시 표시 */}
+      {/* 선명하게 인식 가능한 드래그 핸들 (Slate-900 뱃지 스타일) */}
       <div
         className={cn(
-          'absolute top-2 left-2 z-30 p-1.5 bg-white rounded-md shadow-md border border-slate-200 cursor-grab active:cursor-grabbing transition-opacity',
-          isSelected ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
+          'absolute top-3 left-3 z-30 flex items-center gap-1.5 px-2.5 py-1.5 bg-slate-900 text-white rounded-lg shadow-lg cursor-grab active:cursor-grabbing transition-all select-none border border-slate-700/80',
+          isSelected ? 'opacity-100 scale-100' : 'opacity-0 group-hover:opacity-100 group-hover:scale-100'
         )}
         onPointerDown={handlePointerDown}
-        title="드래그하여 이동"
+        title="드래그하여 자유 이동"
       >
-        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-slate-500">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-slate-300">
           <circle cx="9" cy="5" r="1.2" fill="currentColor" stroke="none"/>
           <circle cx="9" cy="12" r="1.2" fill="currentColor" stroke="none"/>
           <circle cx="9" cy="19" r="1.2" fill="currentColor" stroke="none"/>
@@ -186,6 +186,7 @@ function DraggableBlock({ block, canvasRef, onDragStart, onDragMove, onDragEnd }
           <circle cx="15" cy="12" r="1.2" fill="currentColor" stroke="none"/>
           <circle cx="15" cy="19" r="1.2" fill="currentColor" stroke="none"/>
         </svg>
+        <span className="text-[11px] font-bold text-slate-200">위치 이동</span>
       </div>
 
       {isSelected && <FloatingQuickToolbar />}
