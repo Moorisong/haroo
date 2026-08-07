@@ -343,13 +343,13 @@ function ResponsiveViewCanvas({ viewport }: { viewport: DeviceViewport }) {
     >
       <div 
         className={cn(
-          'bg-white shadow-2xl rounded-[36px] border flex flex-col relative transition-all duration-300 my-auto h-fit overflow-hidden',
+          'bg-white shadow-2xl rounded-[36px] border flex flex-col relative transition-all duration-300 my-4 h-fit shrink-0',
           isPwa ? 'border-slate-800 ring-4 ring-slate-900/10' : 'border-slate-300'
         )}
         style={{ width: frameWidth, minHeight: 667 }}
       >
         {/* PWA 앱 또는 모바일/태블릿 미리보기 프레임 상단 헤더 */}
-        <div className="bg-slate-900 text-slate-300 text-xs py-2 flex items-center justify-between px-4 font-medium shrink-0 border-b border-slate-800">
+        <div className="bg-slate-900 text-slate-300 text-xs py-2 flex items-center justify-between px-4 font-medium shrink-0 border-b border-slate-800 rounded-t-[35px]">
           <span className="flex items-center gap-1.5">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
             {isPwa ? '📱 PWA App Frame (375px)' : viewport === 'mobile' ? 'Mobile View (375px)' : 'Tablet View (768px)'}
