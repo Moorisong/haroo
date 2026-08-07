@@ -57,7 +57,8 @@ const TIER_BADGE: Record<string, string> = {
 export default function BuilderPage() {
   const [activeTab, setActiveTab] = useState<FilterTab>('ALL')
 
-  const { canvasBlocks, addBlock, isDirty } = useBuilderStore()
+  const { canvasBlocks, addBlock, isDirty, deviceViewport } = useBuilderStore()
+  const isPreviewMode = deviceViewport !== 'desktop'
 
   // 500ms debounce 자동 저장
   useDraftAutoSave()
@@ -98,7 +99,10 @@ export default function BuilderPage() {
 
       <div className="flex-1 flex overflow-hidden">
         {/* 왼쪽: 블록 팔레트 */}
-        <aside className="hidden md:flex w-64 sm:w-72 flex-shrink-0 border-r border-slate-200 bg-slate-50 flex-col overflow-hidden">
+        <aside className="hidden md:flex w-64 sm:w-72 flex-shrink-0 border-r border-slate-200 bg-slate-50 flex-col overflow-hidden relative">
+          {isPreviewMode && (
+            <div className="absolute inset-0 bg-white/50 backdrop-blur-[2px] z-10" />
+          )}
           <div className="flex-shrink-0 p-3 border-b border-slate-200">
             <div className="text-xs font-bold text-slate-700 mb-2">블록 추가</div>
             <div className="grid grid-cols-4 gap-1">
@@ -148,7 +152,10 @@ export default function BuilderPage() {
           <SnapGridCanvas />
 
           {/* 모바일용 블록 팔레트 (작은 화면에서만) */}
-          <div className="mt-4 md:hidden px-4 pb-4">
+          <div className="mt-4 md:hidden px-4 pb-4 relative">
+            {isPreviewMode && (
+              <div className="absolute inset-0 bg-slate-100/60 backdrop-blur-[2px] z-10 rounded-xl mx-4 mb-4" />
+            )}
             <div className="text-xs font-bold text-slate-700 mb-2 px-1">블록 추가하기</div>
             <div className="grid grid-cols-3 gap-2">
               {ALL_BLOCKS.map((block) => {
