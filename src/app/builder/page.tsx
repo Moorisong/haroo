@@ -154,7 +154,7 @@ export default function BuilderPage() {
           <div className="mt-4 md:hidden px-4 pb-4">
             <div className="text-xs font-bold text-slate-700 mb-2 px-1">블록 추가하기</div>
             <div className="grid grid-cols-3 gap-2">
-              {ALL_BLOCKS.slice(0, 9).map((block) => {
+              {ALL_BLOCKS.map((block) => {
                 const Icon = block.icon
                 return (
                   <button
