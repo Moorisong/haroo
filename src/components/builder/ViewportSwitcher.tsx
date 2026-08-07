@@ -9,6 +9,7 @@ export default function ViewportSwitcher() {
 
   const viewports: { id: DeviceViewport; label: string; icon: string }[] = [
     { id: 'mobile', label: '모바일', icon: '📱' },
+    { id: 'tablet', label: '태블릿', icon: '💻' },
     { id: 'desktop', label: '데스크톱', icon: '🖥️' },
   ]
 
