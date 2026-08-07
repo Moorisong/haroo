@@ -1,7 +1,8 @@
 import React from 'react'
 import AtomText01 from '../atoms/atom_text_01'
 import AtomCard01 from '../atoms/atom_card_01'
-import type { BlockInputConfig } from '@/types'
+import { getBlockLayout } from '@/lib/blockLayout'
+import type { BlockInputConfig, ContainerWidth, PaddingYOption } from '@/types'
 
 interface Props {
   config: BlockInputConfig
@@ -13,7 +14,9 @@ export default function BlkVideo01({ config }: Props) {
     subtitle = '영상을 통해 더 자세한 내용을 확인해보세요.',
     videoUrl,
     backgroundColor = '#f8fafc',
-    textColor = '#0f172a'
+    textColor = '#0f172a',
+    containerWidth = 'wide',
+    paddingY = 'normal',
   } = config
 
   // 유튜브 URL을 embed용 URL로 변환하는 간단한 헬퍼
@@ -32,10 +35,12 @@ export default function BlkVideo01({ config }: Props) {
 
   const embedUrl = getEmbedUrl(videoUrl)
 
+  const layout = getBlockLayout(containerWidth as ContainerWidth, paddingY as PaddingYOption)
+
   return (
     <AtomCard01 noPadding className="w-full border-none rounded-none" style={{ backgroundColor, color: textColor }}>
-      <div className="w-full px-6 py-16 flex justify-center">
-        <div className="w-full max-w-4xl">
+      <div className={`${layout.wrapperClass} px-6 ${layout.paddingClass}`}>
+        <div className={`${layout.innerClass}`}>
         <div className="text-center mb-8">
           <AtomText01 variant="h2" className="mb-2 font-bold">{title}</AtomText01>
           <AtomText01 variant="p" className="opacity-80">{subtitle}</AtomText01>

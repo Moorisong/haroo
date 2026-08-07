@@ -2,6 +2,7 @@
 
 import React, { useRef } from 'react'
 import { useBuilderStore } from '@/stores/useBuilderStore'
+import type { BlockInputConfig } from '@/types'
 
 export default function SidePropertyPanel() {
   const { selectedInstanceId, canvasBlocks, updateBlockInputData } = useBuilderStore()
@@ -18,7 +19,7 @@ export default function SidePropertyPanel() {
   const block = canvasBlocks.find(b => b.instanceId === selectedInstanceId)
   if (!block) return null
 
-  const config = block.inputConfig || {}
+  const config = (block.inputConfig || {}) as BlockInputConfig
 
   const handleChange = (field: string, value: any) => {
     updateBlockInputData(selectedInstanceId, { [field]: value })
@@ -215,6 +216,67 @@ export default function SidePropertyPanel() {
                 onChange={(e) => handleChange('textColor', e.target.value)}
                 className="flex-1 px-3 py-2 border border-slate-300 rounded-md text-sm uppercase"
               />
+            </div>
+          </div>
+        </div>
+
+        {/* 레이아웃 & 크기 조절 (이중 반응형) */}
+        <div className="space-y-4 pt-4 border-t border-slate-100">
+          <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider">레이아웃 & 크기 조절</h4>
+
+          {/* 컨테이너 폭 (블록 가로 크기) */}
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-slate-700">블록 가로 폭</label>
+            <div className="grid grid-cols-4 gap-1">
+              {([
+                { value: 'narrow', label: '좁음', icon: '▪' },
+                { value: 'medium', label: '보통', icon: '▪▪' },
+                { value: 'wide',   label: '넓음', icon: '▪▪▪' },
+                { value: 'full',   label: '꽉참', icon: '▬' },
+              ] as const).map((opt) => (
+                <button
+                  key={opt.value}
+                  type="button"
+                  onClick={() => handleChange('containerWidth', opt.value)}
+                  className={`py-1.5 text-center text-[10px] font-bold rounded border transition-all ${
+                    (config.containerWidth || 'wide') === opt.value
+                      ? 'bg-slate-900 text-white border-slate-900'
+                      : 'bg-white text-slate-500 border-slate-200 hover:border-slate-400'
+                  }`}
+                >
+                  <div className="text-sm mb-0.5">{opt.icon}</div>
+                  {opt.label}
+                </button>
+              ))}
+            </div>
+            <p className="text-[10px] text-slate-400">
+              {{'full': '전체 폭 (100%) — 꽉 채우기', 'wide': '넓게 (max 72rem) — 기본', 'medium': '보통 (max 56rem)', 'narrow': '좁게 (max 36rem) — 집중형'}[config.containerWidth || 'wide']}
+            </p>
+          </div>
+
+          {/* 상하 여백 (블록 세로 높이 인상) */}
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-slate-700">상하 여백</label>
+            <div className="grid grid-cols-4 gap-1">
+              {([
+                { value: 'compact',       label: '작게' },
+                { value: 'normal',        label: '보통' },
+                { value: 'spacious',      label: '넓게' },
+                { value: 'extraSpacious', label: '특대' },
+              ] as const).map((opt) => (
+                <button
+                  key={opt.value}
+                  type="button"
+                  onClick={() => handleChange('paddingY', opt.value)}
+                  className={`py-2 text-center text-[10px] font-bold rounded border transition-all ${
+                    (config.paddingY || 'normal') === opt.value
+                      ? 'bg-slate-900 text-white border-slate-900'
+                      : 'bg-white text-slate-500 border-slate-200 hover:border-slate-400'
+                  }`}
+                >
+                  {opt.label}
+                </button>
+              ))}
             </div>
           </div>
         </div>

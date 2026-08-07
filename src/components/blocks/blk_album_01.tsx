@@ -5,7 +5,8 @@ import AtomCard01 from '../atoms/atom_card_01'
 import AtomText01 from '../atoms/atom_text_01'
 import AtomImage01 from '../atoms/atom_image_01'
 import AtomBadge01 from '../atoms/atom_badge_01'
-import type { BlockInputConfig } from '@/types'
+import { getBlockLayout } from '@/lib/blockLayout'
+import type { BlockInputConfig, ContainerWidth, PaddingYOption } from '@/types'
 
 const DEFAULT_IMAGES = [
   'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400&h=400&fit=crop',
@@ -25,13 +26,17 @@ export default function BlkAlbum01({ config }: Props) {
     subtitle = '우리 매장의 다양한 모습을 담았습니다.',
     backgroundColor = '#ffffff',
     textColor = '#0f172a',
+    containerWidth = 'wide',
+    paddingY = 'normal',
     galleryImages = DEFAULT_IMAGES,
   } = config as BlockInputConfig & { galleryImages?: string[] }
 
+  const layout = getBlockLayout(containerWidth as ContainerWidth, paddingY as PaddingYOption)
+
   return (
     <AtomCard01 noPadding className="w-full border-none rounded-none" style={{ backgroundColor, color: textColor }}>
-      <div className="w-full px-6 py-14 flex justify-center">
-        <div className="w-full max-w-3xl">
+      <div className={`${layout.wrapperClass} px-6 ${layout.paddingClass}`}>
+        <div className={`${layout.innerClass}`}>
           <div className="text-center mb-8">
             <AtomBadge01 variant="default" className="mb-3 mx-auto">📸 갤러리</AtomBadge01>
             <AtomText01 as="h2" className="text-2xl font-bold mb-2">{title}</AtomText01>

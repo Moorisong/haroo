@@ -5,7 +5,8 @@ import AtomText01 from '../atoms/atom_text_01'
 import AtomBtn01 from '../atoms/atom_btn_01'
 import AtomBadge01 from '../atoms/atom_badge_01'
 import AtomDivider01 from '../atoms/atom_divider_01'
-import type { BlockInputConfig } from '@/types'
+import { getBlockLayout } from '@/lib/blockLayout'
+import type { BlockInputConfig, ContainerWidth, PaddingYOption } from '@/types'
 
 interface Props { config: BlockInputConfig }
 
@@ -18,14 +19,18 @@ export default function BlkPay01({ config }: Props) {
     buttonText = '결제하기',
     backgroundColor = '#ffffff',
     textColor = '#0f172a',
+    containerWidth = 'wide',
+    paddingY = 'normal',
     price = '29,000',
     productName = '월정액 구독권',
   } = config as BlockInputConfig & { price?: string; productName?: string }
 
+  const layout = getBlockLayout(containerWidth as ContainerWidth, paddingY as PaddingYOption)
+
   return (
     <AtomCard01 noPadding className="w-full border-none rounded-none" style={{ backgroundColor, color: textColor }}>
-      <div className="w-full px-6 py-14 flex justify-center">
-        <div className="w-full max-w-md">
+      <div className={`${layout.wrapperClass} px-6 ${layout.paddingClass}`}>
+        <div className={`${layout.innerClass}`}>
           <div className="text-center mb-8">
             <AtomBadge01 variant="default" className="mb-3 mx-auto">💳 결제</AtomBadge01>
             <AtomText01 as="h2" className="text-2xl font-bold mb-2">{title}</AtomText01>

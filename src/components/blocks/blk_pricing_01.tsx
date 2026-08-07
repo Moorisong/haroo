@@ -5,7 +5,8 @@ import AtomText01 from '../atoms/atom_text_01'
 import AtomBtn01 from '../atoms/atom_btn_01'
 import AtomBadge01 from '../atoms/atom_badge_01'
 import AtomDivider01 from '../atoms/atom_divider_01'
-import type { BlockInputConfig } from '@/types'
+import { getBlockLayout } from '@/lib/blockLayout'
+import type { BlockInputConfig, ContainerWidth, PaddingYOption } from '@/types'
 
 interface PricingPlan {
   name: string
@@ -51,12 +52,16 @@ export default function BlkPricing01({ config }: Props) {
     subtitle = '당신의 비즈니스에 꼭 맞는 플랜을 골라보세요.',
     backgroundColor = '#f8fafc',
     textColor = '#0f172a',
+    containerWidth = 'wide',
+    paddingY = 'normal',
   } = config
+
+  const layout = getBlockLayout(containerWidth as ContainerWidth, paddingY as PaddingYOption)
 
   return (
     <AtomCard01 noPadding className="w-full border-none rounded-none" style={{ backgroundColor, color: textColor }}>
-      <div className="w-full px-6 py-16 flex justify-center">
-        <div className="w-full max-w-4xl">
+      <div className={`${layout.wrapperClass} px-6 ${layout.paddingClass}`}>
+        <div className={`${layout.innerClass}`}>
           <div className="text-center mb-12">
             <AtomText01 as="h2" className="text-3xl font-black mb-3">{title}</AtomText01>
             <AtomText01 as="p" className="opacity-70">{subtitle}</AtomText01>

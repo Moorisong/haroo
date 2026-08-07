@@ -6,6 +6,14 @@ import { z } from 'zod'
 // 블록 티어
 export type BlockTier = 'STARTER' | 'STANDARD' | 'PROFESSIONAL'
 
+// 블록 컨테이너 폭 옵션
+export const CONTAINER_WIDTHS = ['full', 'wide', 'medium', 'narrow'] as const
+export type ContainerWidth = typeof CONTAINER_WIDTHS[number]
+
+// 블록 상하 여백 옵션
+export const PADDING_Y_OPTIONS = ['compact', 'normal', 'spacious', 'extraSpacious'] as const
+export type PaddingYOption = typeof PADDING_Y_OPTIONS[number]
+
 // 블록 인풋 Zod 스키마
 export const BlockInputConfigSchema = z.object({
   title: z.string().optional(),
@@ -22,6 +30,9 @@ export const BlockInputConfigSchema = z.object({
   })).optional(),
   backgroundColor: z.string().optional(),
   textColor: z.string().optional(),
+  // 이중 반응형: 블록 컨테이너 폭 & 상하 여백
+  containerWidth: z.enum(CONTAINER_WIDTHS).optional(),
+  paddingY: z.enum(PADDING_Y_OPTIONS).optional(),
 }).catchall(z.any())
 
 export type BlockInputConfig = z.infer<typeof BlockInputConfigSchema>

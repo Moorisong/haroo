@@ -5,7 +5,8 @@ import AtomCard01 from '../atoms/atom_card_01'
 import AtomText01 from '../atoms/atom_text_01'
 import AtomBtn01 from '../atoms/atom_btn_01'
 import AtomBadge01 from '../atoms/atom_badge_01'
-import type { BlockInputConfig } from '@/types'
+import { getBlockLayout } from '@/lib/blockLayout'
+import type { BlockInputConfig, ContainerWidth, PaddingYOption } from '@/types'
 
 interface Props { config: BlockInputConfig }
 
@@ -19,6 +20,8 @@ export default function BlkLike01({ config }: Props) {
     subtitle = '좋아요와 스크랩으로 응원해 주세요!',
     backgroundColor = '#ffffff',
     textColor = '#0f172a',
+    containerWidth = 'wide',
+    paddingY = 'normal',
   } = config
 
   const handleLike = () => {
@@ -26,10 +29,12 @@ export default function BlkLike01({ config }: Props) {
     setCount((c) => liked ? c - 1 : c + 1)
   }
 
+  const layout = getBlockLayout(containerWidth as ContainerWidth, paddingY as PaddingYOption)
+
   return (
     <AtomCard01 noPadding className="w-full border-none rounded-none" style={{ backgroundColor, color: textColor }}>
-      <div className="w-full px-6 py-14 flex justify-center">
-        <div className="w-full max-w-sm text-center">
+      <div className={`${layout.wrapperClass} px-6 ${layout.paddingClass}`}>
+        <div className={`${layout.innerClass} text-center`}>
           <AtomText01 as="h2" className="text-xl font-bold mb-2">{title}</AtomText01>
           <AtomText01 as="p" className="opacity-60 text-sm mb-8">{subtitle}</AtomText01>
 

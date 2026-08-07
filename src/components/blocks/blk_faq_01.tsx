@@ -4,7 +4,8 @@ import AtomCard01 from '../atoms/atom_card_01'
 import AtomText01 from '../atoms/atom_text_01'
 import AtomBadge01 from '../atoms/atom_badge_01'
 import AtomAccordion01, { type AccordionItem } from '../atoms/atom_accordion_01'
-import type { BlockInputConfig } from '@/types'
+import { getBlockLayout } from '@/lib/blockLayout'
+import type { BlockInputConfig, ContainerWidth, PaddingYOption } from '@/types'
 
 const DEFAULT_FAQS: AccordionItem[] = [
   { id: '1', question: '예약은 어떻게 하나요?', answer: '상단의 예약 폼을 통해 이름, 연락처, 원하시는 날짜를 입력하시면 24시간 내 확인 문자를 보내드립니다.' },
@@ -21,13 +22,17 @@ export default function BlkFaq01({ config }: Props) {
     subtitle = '클릭하여 상세 내용을 펼쳐보세요.',
     backgroundColor = '#ffffff',
     textColor = '#0f172a',
+    containerWidth = 'wide',
+    paddingY = 'normal',
     faqItems = DEFAULT_FAQS,
   } = config as BlockInputConfig & { faqItems?: AccordionItem[] }
 
+  const layout = getBlockLayout(containerWidth as ContainerWidth, paddingY as PaddingYOption)
+
   return (
     <AtomCard01 noPadding className="w-full border-none rounded-none" style={{ backgroundColor, color: textColor }}>
-      <div className="w-full px-6 py-14 flex justify-center">
-        <div className="w-full max-w-2xl">
+      <div className={`${layout.wrapperClass} px-6 ${layout.paddingClass}`}>
+        <div className={`${layout.innerClass}`}>
           <div className="text-center mb-8">
             <AtomBadge01 variant="default" className="mb-3 mx-auto">아코디언</AtomBadge01>
             <AtomText01 as="h2" className="text-2xl font-bold mb-2">{title}</AtomText01>

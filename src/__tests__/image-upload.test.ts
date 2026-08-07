@@ -11,7 +11,7 @@ function runImageUploadTests() {
   
   const parsed = BlockInputConfigSchema.safeParse(validImageConfig)
   if (parsed.success) {
-    console.log('✅ Zod Validation Success for image config:', parsed.data.imageUrl.slice(0, 30) + '...')
+    console.log('✅ Zod Validation Success for image config:', parsed.data.imageUrl?.slice(0, 30) + '...')
   } else {
     console.error('❌ Zod Validation Failed:', parsed.error)
   }

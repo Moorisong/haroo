@@ -5,7 +5,8 @@ import AtomText01 from '../atoms/atom_text_01'
 import AtomBtn01 from '../atoms/atom_btn_01'
 import AtomBadge01 from '../atoms/atom_badge_01'
 import AtomDivider01 from '../atoms/atom_divider_01'
-import type { BlockInputConfig } from '@/types'
+import { getBlockLayout } from '@/lib/blockLayout'
+import type { BlockInputConfig, ContainerWidth, PaddingYOption } from '@/types'
 
 interface Props { config: BlockInputConfig }
 
@@ -16,6 +17,8 @@ export default function BlkTalk01({ config }: Props) {
     buttonText = '알림 서비스 설정하기',
     backgroundColor = '#FEE500',
     textColor = '#000000',
+    containerWidth = 'wide',
+    paddingY = 'normal',
   } = config
 
   const features = [
@@ -24,10 +27,12 @@ export default function BlkTalk01({ config }: Props) {
     { icon: '📋', text: '메시지 템플릿 커스터마이징 지원' },
   ]
 
+  const layout = getBlockLayout(containerWidth as ContainerWidth, paddingY as PaddingYOption)
+
   return (
     <AtomCard01 noPadding className="w-full border-none rounded-none" style={{ backgroundColor, color: textColor }}>
-      <div className="w-full px-6 py-14 flex justify-center">
-        <div className="w-full max-w-lg">
+      <div className={`${layout.wrapperClass} px-6 ${layout.paddingClass}`}>
+        <div className={`${layout.innerClass}`}>
           <AtomBadge01 className="mb-4 bg-black/10 text-black border-black/20">자동 메시지 알림</AtomBadge01>
           <AtomText01 as="h2" className="text-2xl font-black mb-2">{title}</AtomText01>
           <AtomText01 as="p" className="opacity-70 text-sm mb-8">{subtitle}</AtomText01>

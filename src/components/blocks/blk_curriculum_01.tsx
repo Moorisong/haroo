@@ -5,7 +5,8 @@ import AtomText01 from '../atoms/atom_text_01'
 import AtomBadge01 from '../atoms/atom_badge_01'
 import AtomProgress01 from '../atoms/atom_progress_01'
 import AtomDivider01 from '../atoms/atom_divider_01'
-import type { BlockInputConfig } from '@/types'
+import { getBlockLayout } from '@/lib/blockLayout'
+import type { BlockInputConfig, ContainerWidth, PaddingYOption } from '@/types'
 
 interface CurriculumUnit {
   title: string
@@ -29,16 +30,20 @@ export default function BlkCurriculum01({ config }: Props) {
     subtitle = '체계적인 단계 구성에 따라 순서대로 확인해 보세요.',
     backgroundColor = '#ffffff',
     textColor = '#0f172a',
+    containerWidth = 'wide',
+    paddingY = 'normal',
     curriculumUnits = DEFAULT_UNITS,
   } = config as BlockInputConfig & { curriculumUnits?: CurriculumUnit[] }
 
   const completedCount = curriculumUnits.filter((u) => u.completed).length
   const progress = Math.round((completedCount / curriculumUnits.length) * 100)
 
+  const layout = getBlockLayout(containerWidth as ContainerWidth, paddingY as PaddingYOption)
+
   return (
     <AtomCard01 noPadding className="w-full border-none rounded-none" style={{ backgroundColor, color: textColor }}>
-      <div className="w-full px-6 py-14 flex justify-center">
-        <div className="w-full max-w-2xl">
+      <div className={`${layout.wrapperClass} px-6 ${layout.paddingClass}`}>
+        <div className={`${layout.innerClass}`}>
           <div className="text-center mb-8">
             <AtomBadge01 variant="info" className="mb-3 mx-auto">프로세스</AtomBadge01>
             <AtomText01 as="h2" className="text-2xl font-bold mb-2">{title}</AtomText01>

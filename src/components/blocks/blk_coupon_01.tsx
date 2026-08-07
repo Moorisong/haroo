@@ -8,7 +8,8 @@ import AtomBadge01 from '../atoms/atom_badge_01'
 import AtomInput01 from '../atoms/atom_input_01'
 import AtomLabel01 from '../atoms/atom_label_01'
 import AtomDivider01 from '../atoms/atom_divider_01'
-import type { BlockInputConfig } from '@/types'
+import { getBlockLayout } from '@/lib/blockLayout'
+import type { BlockInputConfig, ContainerWidth, PaddingYOption } from '@/types'
 
 interface Props { config: BlockInputConfig }
 
@@ -28,6 +29,8 @@ export default function BlkCoupon01({ config }: Props) {
     expiryText = '발급 후 30일 유효',
     backgroundColor = '#ffffff',
     textColor = '#0f172a',
+    containerWidth = 'wide',
+    paddingY = 'normal',
   } = config as BlockInputConfig & { discountText?: string; expiryText?: string }
 
   const handleIssue = () => {
@@ -35,10 +38,12 @@ export default function BlkCoupon01({ config }: Props) {
     setIssued(true)
   }
 
+  const layout = getBlockLayout(containerWidth as ContainerWidth, paddingY as PaddingYOption)
+
   return (
     <AtomCard01 noPadding className="w-full border-none rounded-none" style={{ backgroundColor, color: textColor }}>
-      <div className="w-full px-6 py-14 flex justify-center">
-        <div className="w-full max-w-sm text-center">
+      <div className={`${layout.wrapperClass} px-6 ${layout.paddingClass}`}>
+        <div className={`${layout.innerClass} text-center`}>
           <AtomBadge01 variant="success" className="mb-4 mx-auto">🎫 쿠폰</AtomBadge01>
           <AtomText01 as="h2" className="text-2xl font-bold mb-2">{title}</AtomText01>
           <AtomText01 as="p" className="opacity-70 text-sm mb-8">{subtitle}</AtomText01>

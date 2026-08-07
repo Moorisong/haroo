@@ -5,7 +5,8 @@ import AtomText01 from '../atoms/atom_text_01'
 import AtomBadge01 from '../atoms/atom_badge_01'
 import AtomProgress01 from '../atoms/atom_progress_01'
 import AtomDivider01 from '../atoms/atom_divider_01'
-import type { BlockInputConfig } from '@/types'
+import { getBlockLayout } from '@/lib/blockLayout'
+import type { BlockInputConfig, ContainerWidth, PaddingYOption } from '@/types'
 
 interface StatItem { label: string; value: string; change: string; positive: boolean }
 
@@ -24,12 +25,16 @@ export default function BlkStats01({ config }: Props) {
     subtitle = '실시간으로 방문자 현황을 확인하세요.',
     backgroundColor = '#ffffff',
     textColor = '#0f172a',
+    containerWidth = 'wide',
+    paddingY = 'normal',
   } = config
+
+  const layout = getBlockLayout(containerWidth as ContainerWidth, paddingY as PaddingYOption)
 
   return (
     <AtomCard01 noPadding className="w-full border-none rounded-none" style={{ backgroundColor, color: textColor }}>
-      <div className="w-full px-6 py-14 flex justify-center">
-        <div className="w-full max-w-3xl">
+      <div className={`${layout.wrapperClass} px-6 ${layout.paddingClass}`}>
+        <div className={`${layout.innerClass}`}>
           <div className="flex items-center justify-between mb-8">
             <div>
               <AtomText01 as="h2" className="text-2xl font-bold">{title}</AtomText01>

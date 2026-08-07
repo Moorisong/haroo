@@ -6,7 +6,8 @@ import AtomTextarea01 from '../atoms/atom_textarea_01'
 import AtomCheckbox01 from '../atoms/atom_checkbox_01'
 import AtomLabel01 from '../atoms/atom_label_01'
 import AtomCard01 from '../atoms/atom_card_01'
-import type { BlockInputConfig } from '@/types'
+import { getBlockLayout } from '@/lib/blockLayout'
+import type { BlockInputConfig, ContainerWidth, PaddingYOption } from '@/types'
 
 interface Props {
   config: BlockInputConfig
@@ -23,13 +24,17 @@ export default function BlkForm01({ config }: Props) {
       { id: 'message', label: '문의내용', type: 'textarea', required: false }
     ],
     backgroundColor = '#ffffff',
-    textColor = '#0f172a'
+    textColor = '#0f172a',
+    containerWidth = 'wide',
+    paddingY = 'normal',
   } = config
+
+  const layout = getBlockLayout(containerWidth as ContainerWidth, paddingY as PaddingYOption)
 
   return (
     <AtomCard01 noPadding className="w-full border-none rounded-none" style={{ backgroundColor, color: textColor }}>
-      <div className="w-full px-6 py-16 flex justify-center">
-        <div className="w-full max-w-md">
+      <div className={`${layout.wrapperClass} px-6 ${layout.paddingClass}`}>
+        <div className={`${layout.innerClass}`}>
         <div className="text-center mb-8">
           <AtomText01 variant="h2" className="mb-2 font-bold">{title}</AtomText01>
           <AtomText01 variant="p" className="opacity-80">{subtitle}</AtomText01>

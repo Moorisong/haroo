@@ -16,9 +16,9 @@ export const COLORS = {
 // 구독 플랜 상수
 // ============================================================
 export const SUBSCRIPTION_PLANS = [
-  { months: 1, discount: 0, monthlyPrice: 29000, total: 29000, note: '매월 자동 결제' },
-  { months: 3, discount: 10, monthlyPrice: 26000, total: 78000, note: '3개월 단위 일시불' },
-  { months: 6, discount: 20, monthlyPrice: 23000, total: 138000, note: '6개월 단위 일시불' },
+  { months: 1, discount: 0, monthlyPrice: 29000, total: 29000, note: '매월 자동 결제', recommended: false },
+  { months: 3, discount: 10, monthlyPrice: 26000, total: 78000, note: '3개월 단위 일시불', recommended: false },
+  { months: 6, discount: 20, monthlyPrice: 23000, total: 138000, note: '6개월 단위 일시불', recommended: false },
   { months: 12, discount: 30, monthlyPrice: 20000, total: 240000, note: '12개월 단위 일시불', recommended: true },
 ] as const
 
