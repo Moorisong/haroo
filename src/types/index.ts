@@ -37,7 +37,7 @@ export interface CanvasBlock {
 }
 
 // 뷰포트 기기 타입
-export type DeviceViewport = 'mobile' | 'tablet' | 'desktop'
+export type DeviceViewport = 'mobile' | 'desktop'
 
 // 드래프트 (임시 저장)
 export interface Draft {

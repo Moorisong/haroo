@@ -43,9 +43,9 @@ function runTests() {
     }
 
     // viewport switch
-    useBuilderStore.getState().setDeviceViewport('tablet')
-    if (useBuilderStore.getState().deviceViewport === 'tablet') {
-      console.log('✅ Viewport switched to tablet')
+    useBuilderStore.getState().setDeviceViewport('mobile')
+    if (useBuilderStore.getState().deviceViewport === 'mobile') {
+      console.log('✅ Viewport switched to mobile')
     }
 
     // preview toggle

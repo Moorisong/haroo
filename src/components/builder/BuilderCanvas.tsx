@@ -135,7 +135,6 @@ export default function BuilderCanvas() {
   const getCanvasWidthClass = () => {
     switch (deviceViewport) {
       case 'mobile': return 'max-w-[375px]'
-      case 'tablet': return 'max-w-[768px]'
       case 'desktop': return 'max-w-[1200px]'
       default: return 'max-w-[1200px]'
     }
