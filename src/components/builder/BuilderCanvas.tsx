@@ -126,17 +126,16 @@ function SortableCanvasBlock({ block }: { block: CanvasBlock }) {
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-slate-600"><circle cx="9" cy="12" r="1"/><circle cx="9" cy="5" r="1"/><circle cx="9" cy="19" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="5" r="1"/><circle cx="15" cy="19" r="1"/></svg>
       </div>
 
-      {isSelected ? (
-        <BlockResizeHandles
-          instanceId={block.instanceId}
-          containerWidth={config.containerWidth as ContainerWidth}
-          paddingY={config.paddingY as PaddingYOption}
-        >
-          <BlockRenderer block={block} isPreviewMode={false} />
-        </BlockResizeHandles>
-      ) : (
+      <BlockResizeHandles
+        instanceId={block.instanceId}
+        isSelected={isSelected}
+        containerWidth={config.containerWidth as ContainerWidth}
+        paddingY={config.paddingY as PaddingYOption}
+        customWidthPx={config.customWidthPx as number | undefined}
+        customPaddingYPx={config.customPaddingYPx as number | undefined}
+      >
         <BlockRenderer block={block} isPreviewMode={false} />
-      )}
+      </BlockResizeHandles>
     </div>
   )
 }

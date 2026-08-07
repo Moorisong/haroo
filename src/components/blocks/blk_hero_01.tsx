@@ -33,11 +33,11 @@ export default function BlkHero01({ config }: Props) {
   return (
     <AtomCard01 noPadding className="border-none rounded-none w-full">
       {/* 히어로는 배경 이미지가 전체 폭 — paddingY로 세로 크기 조절 */}
-      <div className={`relative ${layout.paddingClass} w-full`} style={{ minHeight: '16rem' }}>
+      <div className={`relative ${layout.paddingClass} ${layout.wrapperClass}`} style={{ minHeight: '16rem' }}>
         <AtomImage01 src={imageUrl} alt="히어로 이미지" fill />
         <div className="absolute inset-0 bg-slate-900/40" />
 
-        <div className="relative z-10 flex flex-col items-center justify-center h-full text-center px-6">
+        <div className={`relative z-10 flex flex-col items-center justify-center h-full text-center px-6 ${layout.innerClass}`}>
           {badgeText && (
             <AtomBadge01 variant="success" className="mb-4 shadow-sm border-none bg-emerald-500 text-white">
               {badgeText}

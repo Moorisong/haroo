@@ -4,6 +4,7 @@ import type { ContainerWidth, PaddingYOption } from '@/types'
 
 interface BlockResizeHandlesProps {
   instanceId: string
+  isSelected?: boolean
   containerWidth?: ContainerWidth
   paddingY?: PaddingYOption
   children: React.ReactNode
@@ -27,10 +28,13 @@ type HandleType = 'left' | 'right' | 'top' | 'bottom' | 'tl' | 'tr' | 'bl' | 'br
 
 export default function BlockResizeHandles({
   instanceId,
+  isSelected = false,
   containerWidth = 'wide',
   paddingY = 'normal',
+  customWidthPx,
+  customPaddingYPx,
   children,
-}: BlockResizeHandlesProps) {
+}: BlockResizeHandlesProps & { customWidthPx?: number, customPaddingYPx?: number }) {
   const { updateBlockInputData } = useBuilderStore()
   const containerRef = useRef<HTMLDivElement>(null)
 
@@ -39,30 +43,54 @@ export default function BlockResizeHandles({
   const [currentWidthLabel, setCurrentWidthLabel] = useState<string>('')
   const [currentPaddingLabel, setCurrentPaddingLabel] = useState<string>('')
 
+  // 실제 픽셀값 변환 맵 (커스텀 값이 없을 때의 기준점)
+  const PADDING_Y_PIXELS: Record<PaddingYOption, number> = {
+    compact: 24,
+    normal: 40,
+    spacious: 64,
+    extraSpacious: 80,
+  }
+
+  // 현재 최대 폭 (커스텀 픽셀이 있으면 커스텀, 없으면 스냅 폭)
+  const baseMaxPx = WIDTH_STEPS.find((s) => s.key === containerWidth)?.maxPx || 1152
+  const currentMaxPx = customWidthPx || baseMaxPx
+  const handleOffset = currentMaxPx / 2
+
   // 마우스 드래그 핸들러
   const handlePointerDown = (
     e: React.PointerEvent<HTMLDivElement>,
     handle: HandleType
   ) => {
+    // 이벤트 전파 및 기본 동작 완벽 차단 (DND 충돌 및 스크롤 방지)
     e.stopPropagation()
     e.preventDefault()
+    e.nativeEvent.stopPropagation()
 
     if (!containerRef.current) return
     const rect = containerRef.current.getBoundingClientRect()
+
     const startX = e.clientX
     const startY = e.clientY
-    const startWidth = rect.width
-    const startHeight = rect.height
+    
+    // 드래그 시작 시점의 기준 폭과 여백
+    const startWidth = Math.min(rect.width, currentMaxPx)
+    const startPadding = customPaddingYPx ?? PADDING_Y_PIXELS[paddingY]
 
     setIsResizing(true)
     setActiveHandle(handle);
-    (e.target as HTMLElement).setPointerCapture(e.pointerId)
+    
+    const target = e.target as HTMLElement
+    try {
+      target.setPointerCapture(e.pointerId)
+    } catch (_) {}
 
-    let lastSavedWidth: ContainerWidth = containerWidth
-    let lastSavedPadding: PaddingYOption = paddingY
+    let lastSavedPx = currentMaxPx
+    let lastSavedPadding = startPadding
 
     const onPointerMove = (moveEv: PointerEvent) => {
-      // 좌측 핸들 드래그 시 왼쪽으로 이동한 거리만큼 너비가 증가함
+      // DnD 등 타 이벤트 개입 원천 차단
+      moveEv.stopPropagation()
+
       let deltaX = 0
       if (handle === 'right' || handle === 'tr' || handle === 'br') {
         deltaX = (moveEv.clientX - startX) * 2
@@ -70,7 +98,6 @@ export default function BlockResizeHandles({
         deltaX = (startX - moveEv.clientX) * 2
       }
 
-      // 상단 핸들 드래그 시 위로 이동한 거리만큼 높이가 증가함
       let deltaY = 0
       if (handle === 'bottom' || handle === 'bl' || handle === 'br') {
         deltaY = moveEv.clientY - startY
@@ -78,65 +105,55 @@ export default function BlockResizeHandles({
         deltaY = startY - moveEv.clientY
       }
 
-      let pendingWidthKey: ContainerWidth = lastSavedWidth
-      let pendingPaddingKey: PaddingYOption = lastSavedPadding
+      let newWidth = lastSavedPx
+      let newPadding = lastSavedPadding
 
-      // 폭 실시간 반영 로직
       if (handle.includes('left') || handle.includes('right') || handle.includes('t') || handle.includes('b')) {
-        const newWidth = Math.max(320, Math.min(1400, startWidth + deltaX))
-
-        if (newWidth < 680) pendingWidthKey = 'narrow'
-        else if (newWidth < 1000) pendingWidthKey = 'medium'
-        else if (newWidth < 1280) pendingWidthKey = 'wide'
-        else pendingWidthKey = 'full'
-
-        const step = WIDTH_STEPS.find((s) => s.key === pendingWidthKey)
-        setCurrentWidthLabel(`${Math.round(newWidth)}px (${step?.label || ''})`)
+        newWidth = Math.max(320, Math.min(1400, startWidth + deltaX))
+        setCurrentWidthLabel(`${Math.round(newWidth)}px`)
       }
 
-      // 높이/여백 실시간 반영 로직
       if (handle.includes('top') || handle.includes('bottom') || handle.includes('l') || handle.includes('r')) {
-        const newHeight = Math.max(100, startHeight + deltaY)
-        if (newHeight < 150) pendingPaddingKey = 'compact'
-        else if (newHeight < 250) pendingPaddingKey = 'normal'
-        else if (newHeight < 380) pendingPaddingKey = 'spacious'
-        else pendingPaddingKey = 'extraSpacious'
-
-        const pStep = PADDING_STEPS.find((p) => p.key === pendingPaddingKey)
-        setCurrentPaddingLabel(`여백: ${pStep?.label || ''}`)
+        // 총 드래그 거리를 상하 각각의 패딩 증분으로 분할
+        newPadding = Math.max(0, startPadding + (deltaY / 2))
+        setCurrentPaddingLabel(`${Math.round(newPadding)}px`)
       }
 
-      // 상태 변경이 있을 경우에만 Zustand Store 라이브 업데이트 (성능 최적화)
-      if (pendingWidthKey !== lastSavedWidth || pendingPaddingKey !== lastSavedPadding) {
+      // 상태 변경이 있을 경우에만 Zustand Store 라이브 업데이트 (최적화)
+      if (Math.abs(newWidth - lastSavedPx) > 1 || Math.abs(newPadding - lastSavedPadding) > 1) {
         updateBlockInputData(instanceId, {
-          containerWidth: pendingWidthKey,
-          paddingY: pendingPaddingKey,
+          customWidthPx: Math.round(newWidth),
+          customPaddingYPx: Math.round(newPadding),
         })
-        lastSavedWidth = pendingWidthKey
-        lastSavedPadding = pendingPaddingKey
+        lastSavedPx = newWidth
+        lastSavedPadding = newPadding
       }
     }
 
     const onPointerUp = (upEv: PointerEvent) => {
+      upEv.stopPropagation()
       setIsResizing(false)
       setActiveHandle(null)
       try {
-        (upEv.target as HTMLElement).releasePointerCapture(upEv.pointerId)
+        target.releasePointerCapture(upEv.pointerId)
       } catch (_) {}
 
       window.removeEventListener('pointermove', onPointerMove)
       window.removeEventListener('pointerup', onPointerUp)
+      window.removeEventListener('pointercancel', onPointerUp)
     }
 
     window.addEventListener('pointermove', onPointerMove)
     window.addEventListener('pointerup', onPointerUp)
+    window.addEventListener('pointercancel', onPointerUp)
   }
 
   // 핸들 UI 컴포넌트 도우미
-  const VerticalHandle = ({ type, positionClass }: { type: HandleType, positionClass: string }) => (
+  const VerticalHandle = ({ type, positionClass, style }: { type: HandleType, positionClass: string, style?: React.CSSProperties }) => (
     <div
       onPointerDown={(e) => handlePointerDown(e, type)}
       className={`absolute ${positionClass} z-40 w-6 h-12 flex items-center justify-center cursor-ew-resize opacity-0 group-hover/resize:opacity-100 transition-opacity`}
+      style={style}
       title="가로 폭 리사이즈"
     >
       <div className="w-2.5 h-8 bg-white border-2 border-indigo-600 rounded-full shadow-md hover:scale-110 active:scale-125 transition-transform flex items-center justify-center">
@@ -157,10 +174,11 @@ export default function BlockResizeHandles({
     </div>
   )
 
-  const CornerHandle = ({ type, positionClass, cursor }: { type: HandleType, positionClass: string, cursor: string }) => (
+  const CornerHandle = ({ type, positionClass, cursor, style }: { type: HandleType, positionClass: string, cursor: string, style?: React.CSSProperties }) => (
     <div
       onPointerDown={(e) => handlePointerDown(e, type)}
       className={`absolute ${positionClass} z-40 w-6 h-6 flex items-center justify-center ${cursor} opacity-0 group-hover/resize:opacity-100 transition-opacity`}
+      style={style}
       title="가로/세로 동시 리사이즈"
     >
       <div className="w-3.5 h-3.5 bg-indigo-600 border-2 border-white rounded-full shadow-md hover:scale-125 active:scale-150 transition-transform" />
@@ -168,7 +186,22 @@ export default function BlockResizeHandles({
   )
 
   return (
-    <div ref={containerRef} className="relative group/resize w-full">
+    <div ref={containerRef} id={`block-resize-${instanceId}`} className="relative group/resize w-full flex justify-center">
+      {/* 커스텀 픽셀 폭/높이 CSS 오버라이드 (실시간 리사이징 적용) */}
+      <style>{`
+        #block-resize-${instanceId} > div:first-of-type {
+          max-width: ${currentMaxPx}px !important; 
+          margin-left: auto; 
+          margin-right: auto;
+        }
+        ${customPaddingYPx ? `
+        #block-resize-${instanceId} [class*="py-"] {
+          padding-top: ${customPaddingYPx}px !important; 
+          padding-bottom: ${customPaddingYPx}px !important;
+        }
+        ` : ''}
+      `}</style>
+
       {/* 캔버스 드래그 리사이징 중 가이드 툴팁 */}
       {isResizing && (
         <div className="absolute -top-10 left-1/2 -translate-x-1/2 z-50 px-3 py-1.5 bg-slate-900/90 text-white text-xs font-bold rounded-full shadow-lg backdrop-blur-sm animate-in fade-in zoom-in-95 duration-150 flex items-center gap-2">
@@ -180,23 +213,55 @@ export default function BlockResizeHandles({
 
       {/* 실시간 드래그 중 영역 파란 가이드선 */}
       {isResizing && (
-        <div className="absolute inset-0 border-2 border-indigo-500 border-dashed pointer-events-none z-40 rounded-sm" />
+        <div className="absolute inset-0 border-2 border-indigo-500 border-dashed pointer-events-none z-40 rounded-sm max-w-full mx-auto" style={{ maxWidth: currentMaxPx ? `${currentMaxPx}px` : undefined }} />
       )}
 
       {/* 블록 콘텐츠 원본 */}
       {children}
 
-      {/* 상하좌우 및 모서리 핸들 */}
-      <VerticalHandle type="left" positionClass="top-1/2 -left-3 -translate-y-1/2" />
-      <VerticalHandle type="right" positionClass="top-1/2 -right-3 -translate-y-1/2" />
-      
-      <HorizontalHandle type="top" positionClass="-top-3 left-1/2 -translate-x-1/2" />
-      <HorizontalHandle type="bottom" positionClass="-bottom-3 left-1/2 -translate-x-1/2" />
+      {isSelected && (
+        <>
+          {/* 상하좌우 및 모서리 핸들 */}
+          <VerticalHandle 
+            type="left" 
+            positionClass="top-1/2 -translate-y-1/2 -ml-3" 
+            style={{ left: `max(0px, calc(50% - ${handleOffset}px))` }} 
+          />
+          <VerticalHandle 
+            type="right" 
+            positionClass="top-1/2 -translate-y-1/2 -mr-3" 
+            style={{ right: `max(0px, calc(50% - ${handleOffset}px))` }} 
+          />
+          
+          <HorizontalHandle type="top" positionClass="-top-3 left-1/2 -translate-x-1/2" />
+          <HorizontalHandle type="bottom" positionClass="-bottom-3 left-1/2 -translate-x-1/2" />
 
-      <CornerHandle type="tl" positionClass="-top-2 -left-2" cursor="cursor-nwse-resize" />
-      <CornerHandle type="tr" positionClass="-top-2 -right-2" cursor="cursor-nesw-resize" />
-      <CornerHandle type="bl" positionClass="-bottom-2 -left-2" cursor="cursor-nesw-resize" />
-      <CornerHandle type="br" positionClass="-bottom-2 -right-2" cursor="cursor-nwse-resize" />
+          <CornerHandle 
+            type="tl" 
+            positionClass="-top-2 -ml-2" 
+            cursor="cursor-nwse-resize" 
+            style={{ left: `max(0px, calc(50% - ${handleOffset}px))` }} 
+          />
+          <CornerHandle 
+            type="tr" 
+            positionClass="-top-2 -mr-2" 
+            cursor="cursor-nesw-resize" 
+            style={{ right: `max(0px, calc(50% - ${handleOffset}px))` }} 
+          />
+          <CornerHandle 
+            type="bl" 
+            positionClass="-bottom-2 -ml-2" 
+            cursor="cursor-nesw-resize" 
+            style={{ left: `max(0px, calc(50% - ${handleOffset}px))` }} 
+          />
+          <CornerHandle 
+            type="br" 
+            positionClass="-bottom-2 -mr-2" 
+            cursor="cursor-nwse-resize" 
+            style={{ right: `max(0px, calc(50% - ${handleOffset}px))` }} 
+          />
+        </>
+      )}
     </div>
   )
 }

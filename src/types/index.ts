@@ -33,6 +33,8 @@ export const BlockInputConfigSchema = z.object({
   // 이중 반응형: 블록 컨테이너 폭 & 상하 여백
   containerWidth: z.enum(CONTAINER_WIDTHS).optional(),
   paddingY: z.enum(PADDING_Y_OPTIONS).optional(),
+  customWidthPx: z.number().optional(),
+  customPaddingYPx: z.number().optional(),
 }).catchall(z.any())
 
 export type BlockInputConfig = z.infer<typeof BlockInputConfigSchema>
