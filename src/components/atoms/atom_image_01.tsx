@@ -20,6 +20,8 @@ interface Props {
 export default function AtomImage01({ src, alt, width, height, fill = false, className }: Props) {
   const [error, setError] = useState(false)
 
+  const isDataUrl = src?.startsWith('data:') || src?.startsWith('blob:') || src?.includes('unsplash.com')
+
   return (
     <div className={cn('relative overflow-hidden', className, fill && 'w-full h-full')}>
       {!error ? (
@@ -29,6 +31,7 @@ export default function AtomImage01({ src, alt, width, height, fill = false, cla
           width={fill ? undefined : (width || 400)}
           height={fill ? undefined : (height || 300)}
           fill={fill}
+          unoptimized={isDataUrl}
           className={cn('object-cover', fill && 'absolute inset-0')}
           onError={() => setError(true)}
           // Next.js Image 컴포넌트는 기본적으로 최신 브라우저에서 이미지 회전을 자동으로 처리함. (image-orientation: from-image)
