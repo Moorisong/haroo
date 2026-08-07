@@ -54,7 +54,6 @@ export default function BlockResizeHandles({
   // 현재 최대 폭 (커스텀 픽셀이 있으면 커스텀, 없으면 스냅 폭)
   const baseMaxPx = WIDTH_STEPS.find((s) => s.key === containerWidth)?.maxPx || 1152
   const currentMaxPx = customWidthPx || baseMaxPx
-  const handleOffset = currentMaxPx / 2
 
   // 마우스 드래그 핸들러
   const handlePointerDown = (
@@ -93,9 +92,9 @@ export default function BlockResizeHandles({
 
       let deltaX = 0
       if (handle === 'right' || handle === 'tr' || handle === 'br') {
-        deltaX = (moveEv.clientX - startX) * 2
+        deltaX = moveEv.clientX - startX
       } else if (handle === 'left' || handle === 'tl' || handle === 'bl') {
-        deltaX = (startX - moveEv.clientX) * 2
+        deltaX = startX - moveEv.clientX
       }
 
       let deltaY = 0
@@ -149,11 +148,10 @@ export default function BlockResizeHandles({
   }
 
   // 핸들 UI 컴포넌트 도우미
-  const VerticalHandle = ({ type, positionClass, style }: { type: HandleType, positionClass: string, style?: React.CSSProperties }) => (
+  const VerticalHandle = ({ type, positionClass }: { type: HandleType, positionClass: string }) => (
     <div
       onPointerDown={(e) => handlePointerDown(e, type)}
       className={`absolute ${positionClass} z-40 w-6 h-12 flex items-center justify-center cursor-ew-resize opacity-0 group-hover/resize:opacity-100 transition-opacity`}
-      style={style}
       title="가로 폭 리사이즈"
     >
       <div className="w-2.5 h-8 bg-white border-2 border-indigo-600 rounded-full shadow-md hover:scale-110 active:scale-125 transition-transform flex items-center justify-center">
@@ -174,11 +172,10 @@ export default function BlockResizeHandles({
     </div>
   )
 
-  const CornerHandle = ({ type, positionClass, cursor, style }: { type: HandleType, positionClass: string, cursor: string, style?: React.CSSProperties }) => (
+  const CornerHandle = ({ type, positionClass, cursor }: { type: HandleType, positionClass: string, cursor: string }) => (
     <div
       onPointerDown={(e) => handlePointerDown(e, type)}
       className={`absolute ${positionClass} z-40 w-6 h-6 flex items-center justify-center ${cursor} opacity-0 group-hover/resize:opacity-100 transition-opacity`}
-      style={style}
       title="가로/세로 동시 리사이즈"
     >
       <div className="w-3.5 h-3.5 bg-indigo-600 border-2 border-white rounded-full shadow-md hover:scale-125 active:scale-150 transition-transform" />
@@ -213,7 +210,7 @@ export default function BlockResizeHandles({
 
       {/* 실시간 드래그 중 영역 파란 가이드선 */}
       {isResizing && (
-        <div className="absolute inset-0 border-2 border-indigo-500 border-dashed pointer-events-none z-40 rounded-sm max-w-full mx-auto" style={{ maxWidth: currentMaxPx ? `${currentMaxPx}px` : undefined }} />
+        <div className="absolute inset-0 border-2 border-indigo-500 border-dashed pointer-events-none z-40 rounded-sm max-w-full mx-auto" />
       )}
 
       {/* 블록 콘텐츠 원본 */}
@@ -224,13 +221,11 @@ export default function BlockResizeHandles({
           {/* 상하좌우 및 모서리 핸들 */}
           <VerticalHandle 
             type="left" 
-            positionClass="top-1/2 -translate-y-1/2 -ml-3" 
-            style={{ left: `max(0px, calc(50% - ${handleOffset}px))` }} 
+            positionClass="top-1/2 -translate-y-1/2 -left-3" 
           />
           <VerticalHandle 
             type="right" 
-            positionClass="top-1/2 -translate-y-1/2 -mr-3" 
-            style={{ right: `max(0px, calc(50% - ${handleOffset}px))` }} 
+            positionClass="top-1/2 -translate-y-1/2 -right-3" 
           />
           
           <HorizontalHandle type="top" positionClass="-top-3 left-1/2 -translate-x-1/2" />
@@ -238,27 +233,23 @@ export default function BlockResizeHandles({
 
           <CornerHandle 
             type="tl" 
-            positionClass="-top-2 -ml-2" 
+            positionClass="-top-2 -left-2" 
             cursor="cursor-nwse-resize" 
-            style={{ left: `max(0px, calc(50% - ${handleOffset}px))` }} 
           />
           <CornerHandle 
             type="tr" 
-            positionClass="-top-2 -mr-2" 
+            positionClass="-top-2 -right-2" 
             cursor="cursor-nesw-resize" 
-            style={{ right: `max(0px, calc(50% - ${handleOffset}px))` }} 
           />
           <CornerHandle 
             type="bl" 
-            positionClass="-bottom-2 -ml-2" 
+            positionClass="-bottom-2 -left-2" 
             cursor="cursor-nesw-resize" 
-            style={{ left: `max(0px, calc(50% - ${handleOffset}px))` }} 
           />
           <CornerHandle 
             type="br" 
-            positionClass="-bottom-2 -mr-2" 
+            positionClass="-bottom-2 -right-2" 
             cursor="cursor-nwse-resize" 
-            style={{ right: `max(0px, calc(50% - ${handleOffset}px))` }} 
           />
         </>
       )}

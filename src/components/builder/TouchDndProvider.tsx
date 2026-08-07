@@ -13,7 +13,7 @@ import {
 import {
   SortableContext,
   sortableKeyboardCoordinates,
-  verticalListSortingStrategy,
+  rectSortingStrategy,
 } from '@dnd-kit/sortable'
 import { useBuilderStore } from '@/stores/useBuilderStore'
 
@@ -55,7 +55,7 @@ export default function TouchDndProvider({ children }: TouchDndProviderProps) {
 
   return (
     <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-      <SortableContext items={blockIds} strategy={verticalListSortingStrategy}>
+      <SortableContext items={blockIds} strategy={rectSortingStrategy}>
         {children}
       </SortableContext>
     </DndContext>

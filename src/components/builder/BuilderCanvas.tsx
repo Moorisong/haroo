@@ -76,6 +76,17 @@ function SortableCanvasBlock({ block }: { block: CanvasBlock }) {
   const { selectBlock, selectedInstanceId, isPreviewMode } = useBuilderStore()
   const isSelected = selectedInstanceId === block.instanceId
   const config = block.inputConfig || {}
+  const containerWidth = (config.containerWidth as ContainerWidth) || 'wide'
+  const customWidthPx = config.customWidthPx as number | undefined
+
+  const WIDTH_STEPS: { key: ContainerWidth; label: string; maxPx: number }[] = [
+    { key: 'narrow', label: '좁음', maxPx: 576 },
+    { key: 'medium', label: '보통', maxPx: 896 },
+    { key: 'wide',   label: '넓음', maxPx: 1152 },
+    { key: 'full',   label: '꽉참', maxPx: 1400 },
+  ]
+  const baseMaxPx = WIDTH_STEPS.find((s) => s.key === containerWidth)?.maxPx || 1152
+  const currentMaxPx = customWidthPx || baseMaxPx
 
   const {
     attributes,
@@ -90,11 +101,13 @@ function SortableCanvasBlock({ block }: { block: CanvasBlock }) {
     transform: CSS.Transform.toString(transform),
     transition,
     opacity: isDragging ? 0.4 : 1,
+    width: `${currentMaxPx}px`,
+    maxWidth: '100%',
   }
 
   if (isPreviewMode) {
     return (
-      <div id={`block-${block.instanceId}`}>
+      <div id={`block-${block.instanceId}`} style={{ width: `${currentMaxPx}px`, maxWidth: '100%' }}>
         <BlockRenderer block={block} isPreviewMode={true} />
       </div>
     )
@@ -109,7 +122,7 @@ function SortableCanvasBlock({ block }: { block: CanvasBlock }) {
         selectBlock(block.instanceId)
       }}
       className={cn(
-        'relative group cursor-pointer transition-all duration-200',
+        'relative group cursor-pointer transition-all duration-200 shrink-0',
         isSelected ? 'ring-1 ring-indigo-500 ring-offset-0 z-10' : 'hover:ring-1 hover:ring-slate-300'
       )}
     >
@@ -129,9 +142,9 @@ function SortableCanvasBlock({ block }: { block: CanvasBlock }) {
       <BlockResizeHandles
         instanceId={block.instanceId}
         isSelected={isSelected}
-        containerWidth={config.containerWidth as ContainerWidth}
+        containerWidth={containerWidth}
         paddingY={config.paddingY as PaddingYOption}
-        customWidthPx={config.customWidthPx as number | undefined}
+        customWidthPx={customWidthPx}
         customPaddingYPx={config.customPaddingYPx as number | undefined}
       >
         <BlockRenderer block={block} isPreviewMode={false} />
@@ -168,7 +181,7 @@ export default function BuilderCanvas() {
             <p className="font-medium text-sm">블록을 추가하여 실시간 라이브 캔버스를 채워보세요</p>
           </div>
         ) : (
-          <div className="flex flex-col w-full h-full">
+          <div className="flex flex-wrap items-start content-start w-full h-full">
             {canvasBlocks.map((block) => (
               <SortableCanvasBlock key={block.instanceId} block={block} />
             ))}
