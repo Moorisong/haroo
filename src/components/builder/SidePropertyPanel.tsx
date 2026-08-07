@@ -4,14 +4,19 @@ import React, { useRef } from 'react'
 import { useBuilderStore } from '@/stores/useBuilderStore'
 import type { BlockInputConfig } from '@/types'
 
+import RevisionMeter from './RevisionMeter'
+
 export default function SidePropertyPanel() {
   const { selectedInstanceId, canvasBlocks, updateBlockInputData } = useBuilderStore()
   const fileInputRef = useRef<HTMLInputElement>(null)
   
   if (!selectedInstanceId) {
     return (
-      <div className="w-80 h-full bg-slate-50 border-l border-slate-200 p-6 flex items-center justify-center text-slate-400 text-sm text-center">
-        캔버스에서 블록을 선택하면<br/>속성을 편집할 수 있습니다.
+      <div className="w-80 h-full bg-slate-50 border-l border-slate-200 p-6 flex flex-col justify-between overflow-y-auto">
+        <div className="flex-1 flex items-center justify-center text-slate-400 text-sm text-center">
+          캔버스에서 블록을 선택하면<br/>속성을 편집할 수 있습니다.
+        </div>
+        <RevisionMeter />
       </div>
     )
   }
@@ -220,6 +225,7 @@ export default function SidePropertyPanel() {
           </div>
         </div>
 
+        <RevisionMeter originalTier={block.tier} />
       </div>
     </div>
   )
