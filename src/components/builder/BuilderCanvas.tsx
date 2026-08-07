@@ -5,7 +5,8 @@ import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { useBuilderStore } from '@/stores/useBuilderStore'
 import FloatingQuickToolbar from './FloatingQuickToolbar'
-import type { CanvasBlock } from '@/types'
+import BlockResizeHandles from './BlockResizeHandles'
+import type { CanvasBlock, ContainerWidth, PaddingYOption } from '@/types'
 import { cn } from '@/lib/utils'
 
 import BlkHero01 from '@/components/blocks/blk_hero_01'
@@ -74,6 +75,7 @@ function BlockRenderer({ block, isPreviewMode }: { block: CanvasBlock; isPreview
 function SortableCanvasBlock({ block }: { block: CanvasBlock }) {
   const { selectBlock, selectedInstanceId, isPreviewMode } = useBuilderStore()
   const isSelected = selectedInstanceId === block.instanceId
+  const config = block.inputConfig || {}
 
   const {
     attributes,
@@ -118,12 +120,23 @@ function SortableCanvasBlock({ block }: { block: CanvasBlock }) {
       <div 
         {...attributes}
         {...listeners}
-        className="absolute top-2 left-2 z-20 p-1 bg-white/80 rounded shadow-sm opacity-0 group-hover:opacity-100 cursor-grab active:cursor-grabbing hover:bg-slate-100"
+        className="absolute top-2 left-2 z-30 p-1 bg-white/80 rounded shadow-sm opacity-0 group-hover:opacity-100 cursor-grab active:cursor-grabbing hover:bg-slate-100"
+        title="드래그하여 순서 이동"
       >
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-slate-600"><circle cx="9" cy="12" r="1"/><circle cx="9" cy="5" r="1"/><circle cx="9" cy="19" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="5" r="1"/><circle cx="15" cy="19" r="1"/></svg>
       </div>
 
-      <BlockRenderer block={block} isPreviewMode={false} />
+      {isSelected ? (
+        <BlockResizeHandles
+          instanceId={block.instanceId}
+          containerWidth={config.containerWidth as ContainerWidth}
+          paddingY={config.paddingY as PaddingYOption}
+        >
+          <BlockRenderer block={block} isPreviewMode={false} />
+        </BlockResizeHandles>
+      ) : (
+        <BlockRenderer block={block} isPreviewMode={false} />
+      )}
     </div>
   )
 }
