@@ -1,7 +1,7 @@
 # 조립 캔버스 & 듀얼 DND Agent Reference
 
-## 📝 1. 연동 기획 명세 (`haroo-frontend-pages.md`, `haroo-frontend-components.md`)
-- `/builder` 캔버스 모드 라우트, 500ms debounce DB 무료 저장, 듀얼 센서 DND 파이프라인, 수정 미터기 UX 연동 명세.
+## 📝 1. 연동 기획 명세 (`haroo-frontend-pages.md`, `haroo-frontend-components.md`, `haroo-frontend-wysiwyg-builder.md`)
+- `/builder` 캔버스 모드 라우트, 500ms debounce DB 무료 저장, 듀얼 센서 DND 파이프라인, 수정 미터기 UX 연동 및 WYSIWYG 실시간 라이브 캔버스 연동 명세.
 
 ## 🤖 2. AI 개발 지침 및 설계 구조
 ### 🎯 목적
@@ -18,8 +18,9 @@ dnd-kit 기반의 PC PointerSensor(0ms) + 모바일 TouchSensor(150ms long-press
 
 ### 🛠️ 개발 단계 (Step-by-Step 상세 로직)
 1. `TouchDndProvider.tsx`: `PointerSensor`와 `TouchSensor`를 이원화 구성하여 모바일 스크롤과 블록 DND 드래그 충돌 원천 차단.
-2. `useDraftAutoSave.ts`: `selectedBlocks` 변경 시 500ms debounce 후 `POST /api/drafts/save` 호출 (localStorage 전면 금지).
-3. `useRevisionPriceCalculator.ts`: 원본 draft 대비 수정 케이스 A~D(단순 UI 0원 / 동티어 0원 / 티어 차액 +100,000원 / DB 수수료 +10,000원) 연산.
+2. `BuilderCanvas.tsx`: DND 기능과 결합하여, 드래그 드롭 후 **WYSIWYG 실시간 라이브 조립 캔버스** 환경이 파괴되지 않도록 블록 렌더링 유지.
+3. `useDraftAutoSave.ts`: `selectedBlocks` 변경 및 **0.01초 단방향 동기화 인풋 데이터 변경** 시 500ms debounce 후 `POST /api/drafts/save` 호출 (localStorage 전면 금지).
+4. `useRevisionPriceCalculator.ts`: 원본 draft 대비 수정 케이스 A~D(단순 UI 0원 / 동티어 0원 / 티어 차액 +100,000원 / DB 수수료 +10,000원) 연산.
 
 ## 🚨 3. 철벽 코드 컨벤션 및 제약 조건
 - **[300줄 분리 규칙]**: 단일 파일 300줄 초과 시 블록 컨트롤러와 메인 캔버스 뷰 분리.

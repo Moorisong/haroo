@@ -18,7 +18,7 @@
 
 ## 🛒 2. Zustand 전역 상태 & Custom Hooks 명세
 
-1. **`stores/useBuilderStore.ts`**: `selectedBlocks`, `activeBlockId`, `globalFont`, `themeColor`, `isEditingMode`, `revisionDeltaAmount` 관리.
+1. **`stores/useBuilderStore.ts`**: `selectedBlocks`, `activeBlockId`, `globalFont`, `themeColor`, `isEditingMode`, `revisionDeltaAmount` 관리. 추가로 WYSIWYG 렌더링을 위한 `deviceViewport` ('mobile' | 'tablet' | 'desktop'), `isPreviewMode`, 및 0.01초 단방향 Zod 동기화 업데이트 메서드(`updateBlockInputData`)를 포함.
 2. **`hooks/useDraftAutoSave.ts`**: 500ms debounce 연동 Supabase DB 자동 저장 처리 (`UserProjectDraft`). `localStorage` 사용 전면 금지.
 3. **`hooks/useRevisionPriceCalculator.ts`**: 원본 config 대비 티어 차액 및 DB 수수료 실시간 연산.
 
@@ -46,6 +46,10 @@
 18. **`DigitalStampModal.tsx`**: blk_stamp_card_01 10회 도장 찍기 & 쿠폰 팝업.
 19. **`CouponIssuerDrawer.tsx`**: blk_coupon_01 시리얼 난수 번호 발급 모듈.
 20. **`AdminAuthModal.tsx`**: 푸터 [Admin] 클릭 시 비밀번호 인증 팝업.
+21. **`BuilderCanvas.tsx`**: WYSIWYG 실물 렌더링 및 `1px indigo-500` 포커스 스타일 적용 캔버스.
+22. **`ViewportSwitcher.tsx`**: 모바일(375px), 태블릿(768px), 데스크톱(1200px) 디바이스 프레임 스위처 및 미리보기 모드 토글.
+23. **`SidePropertyPanel.tsx`**: 우측 슬라이드 오픈 듀얼 인풋 에디팅 사이드 컨트롤러 (폰트/색상/영상URL/폼수집항목 실시간 제어).
+24. **`FloatingQuickToolbar.tsx`**: 선택된 블록 상단에 표시되는 퀵 설정 바 (이동, 복제, 삭제, 인풋 설정).
 
 ---
 
