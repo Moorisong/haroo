@@ -1,6 +1,4 @@
-'use client'
-
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useRef } from 'react'
 import { useBuilderStore } from '@/stores/useBuilderStore'
 import type { ContainerWidth, PaddingYOption } from '@/types'
 
@@ -25,6 +23,8 @@ const PADDING_STEPS: { key: PaddingYOption; label: string }[] = [
   { key: 'extraSpacious', label: '특대' },
 ]
 
+type HandleType = 'left' | 'right' | 'top' | 'bottom' | 'tl' | 'tr' | 'bl' | 'br'
+
 export default function BlockResizeHandles({
   instanceId,
   containerWidth = 'wide',
@@ -35,15 +35,14 @@ export default function BlockResizeHandles({
   const containerRef = useRef<HTMLDivElement>(null)
 
   const [isResizing, setIsResizing] = useState(false)
-  const [activeHandle, setActiveHandle] = useState<'right' | 'bottom' | 'corner' | null>(null)
-  const [dragPxWidth, setDragPxWidth] = useState<number | null>(null)
+  const [activeHandle, setActiveHandle] = useState<HandleType | null>(null)
   const [currentWidthLabel, setCurrentWidthLabel] = useState<string>('')
   const [currentPaddingLabel, setCurrentPaddingLabel] = useState<string>('')
 
   // 마우스 드래그 핸들러
   const handlePointerDown = (
     e: React.PointerEvent<HTMLDivElement>,
-    handle: 'right' | 'bottom' | 'corner'
+    handle: HandleType
   ) => {
     e.stopPropagation()
     e.preventDefault()
@@ -59,18 +58,33 @@ export default function BlockResizeHandles({
     setActiveHandle(handle);
     (e.target as HTMLElement).setPointerCapture(e.pointerId)
 
-    let pendingWidthKey: ContainerWidth = containerWidth
-    let pendingPaddingKey: PaddingYOption = paddingY
+    let lastSavedWidth: ContainerWidth = containerWidth
+    let lastSavedPadding: PaddingYOption = paddingY
 
     const onPointerMove = (moveEv: PointerEvent) => {
-      const deltaX = (moveEv.clientX - startX) * 2 // 센터 정렬이므로 양방향 유효 폭 2배
-      const deltaY = moveEv.clientY - startY
+      // 좌측 핸들 드래그 시 왼쪽으로 이동한 거리만큼 너비가 증가함
+      let deltaX = 0
+      if (handle === 'right' || handle === 'tr' || handle === 'br') {
+        deltaX = (moveEv.clientX - startX) * 2
+      } else if (handle === 'left' || handle === 'tl' || handle === 'bl') {
+        deltaX = (startX - moveEv.clientX) * 2
+      }
 
-      if (handle === 'right' || handle === 'corner') {
+      // 상단 핸들 드래그 시 위로 이동한 거리만큼 높이가 증가함
+      let deltaY = 0
+      if (handle === 'bottom' || handle === 'bl' || handle === 'br') {
+        deltaY = moveEv.clientY - startY
+      } else if (handle === 'top' || handle === 'tl' || handle === 'tr') {
+        deltaY = startY - moveEv.clientY
+      }
+
+      let pendingWidthKey: ContainerWidth = lastSavedWidth
+      let pendingPaddingKey: PaddingYOption = lastSavedPadding
+
+      // 폭 실시간 반영 로직
+      if (handle.includes('left') || handle.includes('right') || handle.includes('t') || handle.includes('b')) {
         const newWidth = Math.max(320, Math.min(1400, startWidth + deltaX))
-        setDragPxWidth(newWidth)
 
-        // 가장 가까운 Width 단계 계산
         if (newWidth < 680) pendingWidthKey = 'narrow'
         else if (newWidth < 1000) pendingWidthKey = 'medium'
         else if (newWidth < 1280) pendingWidthKey = 'wide'
@@ -80,7 +94,8 @@ export default function BlockResizeHandles({
         setCurrentWidthLabel(`${Math.round(newWidth)}px (${step?.label || ''})`)
       }
 
-      if (handle === 'bottom' || handle === 'corner') {
+      // 높이/여백 실시간 반영 로직
+      if (handle.includes('top') || handle.includes('bottom') || handle.includes('l') || handle.includes('r')) {
         const newHeight = Math.max(100, startHeight + deltaY)
         if (newHeight < 150) pendingPaddingKey = 'compact'
         else if (newHeight < 250) pendingPaddingKey = 'normal'
@@ -90,29 +105,67 @@ export default function BlockResizeHandles({
         const pStep = PADDING_STEPS.find((p) => p.key === pendingPaddingKey)
         setCurrentPaddingLabel(`여백: ${pStep?.label || ''}`)
       }
+
+      // 상태 변경이 있을 경우에만 Zustand Store 라이브 업데이트 (성능 최적화)
+      if (pendingWidthKey !== lastSavedWidth || pendingPaddingKey !== lastSavedPadding) {
+        updateBlockInputData(instanceId, {
+          containerWidth: pendingWidthKey,
+          paddingY: pendingPaddingKey,
+        })
+        lastSavedWidth = pendingWidthKey
+        lastSavedPadding = pendingPaddingKey
+      }
     }
 
     const onPointerUp = (upEv: PointerEvent) => {
       setIsResizing(false)
       setActiveHandle(null)
-      setDragPxWidth(null)
       try {
         (upEv.target as HTMLElement).releasePointerCapture(upEv.pointerId)
       } catch (_) {}
 
       window.removeEventListener('pointermove', onPointerMove)
       window.removeEventListener('pointerup', onPointerUp)
-
-      // 드래그 완료 후 Zustand store에 최종 스냅 레이아웃 설정 반영
-      updateBlockInputData(instanceId, {
-        containerWidth: pendingWidthKey,
-        paddingY: pendingPaddingKey,
-      })
     }
 
     window.addEventListener('pointermove', onPointerMove)
     window.addEventListener('pointerup', onPointerUp)
   }
+
+  // 핸들 UI 컴포넌트 도우미
+  const VerticalHandle = ({ type, positionClass }: { type: HandleType, positionClass: string }) => (
+    <div
+      onPointerDown={(e) => handlePointerDown(e, type)}
+      className={`absolute ${positionClass} z-40 w-6 h-12 flex items-center justify-center cursor-ew-resize opacity-0 group-hover/resize:opacity-100 transition-opacity`}
+      title="가로 폭 리사이즈"
+    >
+      <div className="w-2.5 h-8 bg-white border-2 border-indigo-600 rounded-full shadow-md hover:scale-110 active:scale-125 transition-transform flex items-center justify-center">
+        <div className="w-0.5 h-3 bg-indigo-600 rounded-full" />
+      </div>
+    </div>
+  )
+
+  const HorizontalHandle = ({ type, positionClass }: { type: HandleType, positionClass: string }) => (
+    <div
+      onPointerDown={(e) => handlePointerDown(e, type)}
+      className={`absolute ${positionClass} z-40 w-12 h-6 flex items-center justify-center cursor-ns-resize opacity-0 group-hover/resize:opacity-100 transition-opacity`}
+      title="상하 여백 리사이즈"
+    >
+      <div className="h-2.5 w-8 bg-white border-2 border-indigo-600 rounded-full shadow-md hover:scale-110 active:scale-125 transition-transform flex items-center justify-center">
+        <div className="h-0.5 w-3 bg-indigo-600 rounded-full" />
+      </div>
+    </div>
+  )
+
+  const CornerHandle = ({ type, positionClass, cursor }: { type: HandleType, positionClass: string, cursor: string }) => (
+    <div
+      onPointerDown={(e) => handlePointerDown(e, type)}
+      className={`absolute ${positionClass} z-40 w-6 h-6 flex items-center justify-center ${cursor} opacity-0 group-hover/resize:opacity-100 transition-opacity`}
+      title="가로/세로 동시 리사이즈"
+    >
+      <div className="w-3.5 h-3.5 bg-indigo-600 border-2 border-white rounded-full shadow-md hover:scale-125 active:scale-150 transition-transform" />
+    </div>
+  )
 
   return (
     <div ref={containerRef} className="relative group/resize w-full">
@@ -133,40 +186,17 @@ export default function BlockResizeHandles({
       {/* 블록 콘텐츠 원본 */}
       {children}
 
-      {/* ─────────────────────────────────────────────────────────────
-          마우스 직접 드래그 리사이징 핸들 (우측 / 하단 / 코너)
-          ───────────────────────────────────────────────────────────── */}
+      {/* 상하좌우 및 모서리 핸들 */}
+      <VerticalHandle type="left" positionClass="top-1/2 -left-3 -translate-y-1/2" />
+      <VerticalHandle type="right" positionClass="top-1/2 -right-3 -translate-y-1/2" />
       
-      {/* 1. 우측 핸들 (가로 폭 조절) */}
-      <div
-        onPointerDown={(e) => handlePointerDown(e, 'right')}
-        className="absolute top-1/2 -right-3 -translate-y-1/2 z-40 w-6 h-12 flex items-center justify-center cursor-ew-resize opacity-0 group-hover/resize:opacity-100 transition-opacity"
-        title="드래그하여 가로 폭 리사이즈"
-      >
-        <div className="w-2.5 h-8 bg-white border-2 border-indigo-600 rounded-full shadow-md hover:scale-110 active:scale-125 transition-transform flex items-center justify-center">
-          <div className="w-0.5 h-3 bg-indigo-600 rounded-full" />
-        </div>
-      </div>
+      <HorizontalHandle type="top" positionClass="-top-3 left-1/2 -translate-x-1/2" />
+      <HorizontalHandle type="bottom" positionClass="-bottom-3 left-1/2 -translate-x-1/2" />
 
-      {/* 2. 하단 핸들 (상하 여백/높이 조절) */}
-      <div
-        onPointerDown={(e) => handlePointerDown(e, 'bottom')}
-        className="absolute -bottom-3 left-1/2 -translate-x-1/2 z-40 w-12 h-6 flex items-center justify-center cursor-ns-resize opacity-0 group-hover/resize:opacity-100 transition-opacity"
-        title="드래그하여 상하 여백 리사이즈"
-      >
-        <div className="h-2.5 w-8 bg-white border-2 border-indigo-600 rounded-full shadow-md hover:scale-110 active:scale-125 transition-transform flex items-center justify-center">
-          <div className="h-0.5 w-3 bg-indigo-600 rounded-full" />
-        </div>
-      </div>
-
-      {/* 3. 우측 하단 코너 핸들 (대각선 동시 조절) */}
-      <div
-        onPointerDown={(e) => handlePointerDown(e, 'corner')}
-        className="absolute -bottom-2 -right-2 z-40 w-6 h-6 flex items-center justify-center cursor-nwse-resize opacity-0 group-hover/resize:opacity-100 transition-opacity"
-        title="대각선 드래그하여 가로/세로 동시 리사이즈"
-      >
-        <div className="w-3.5 h-3.5 bg-indigo-600 border-2 border-white rounded-full shadow-md hover:scale-125 active:scale-150 transition-transform" />
-      </div>
+      <CornerHandle type="tl" positionClass="-top-2 -left-2" cursor="cursor-nwse-resize" />
+      <CornerHandle type="tr" positionClass="-top-2 -right-2" cursor="cursor-nesw-resize" />
+      <CornerHandle type="bl" positionClass="-bottom-2 -left-2" cursor="cursor-nesw-resize" />
+      <CornerHandle type="br" positionClass="-bottom-2 -right-2" cursor="cursor-nwse-resize" />
     </div>
   )
 }
