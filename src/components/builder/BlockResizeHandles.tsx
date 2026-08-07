@@ -232,7 +232,7 @@ export default function BlockResizeHandles({
       {isSelected && (
         <div
           data-resize-handle="true"
-          className="absolute -bottom-2 -right-2 z-50 flex items-center justify-center p-1.5 bg-slate-900 text-white rounded-md shadow-lg border border-slate-700 cursor-nwse-resize select-none hover:scale-110 transition-transform"
+          className="absolute bottom-2 right-2 z-50 flex items-center justify-center p-1.5 bg-slate-900 text-white rounded-md shadow-lg border border-slate-700 cursor-nwse-resize select-none hover:scale-110 transition-transform"
           onPointerDown={(e) => handlePointerDown(e, 'br')}
           title="드래그하여 크기 조절"
         >
