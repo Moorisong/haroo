@@ -42,22 +42,22 @@ export default function BlkCoupon01({ config }: Props) {
 
   return (
     <AtomCard01 noPadding className="w-full border-none rounded-none" style={{ backgroundColor, color: textColor }}>
-      <div className={`${layout.wrapperClass} px-6 ${layout.paddingClass}`}>
+      <div className={`${layout.wrapperClass} ${layout.paddingXClass} ${layout.paddingClass}`}>
         <div className={`${layout.innerClass} text-center`}>
           <AtomBadge01 variant="success" className="mb-4 mx-auto">🎫 쿠폰</AtomBadge01>
-          <AtomText01 as="h2" className="text-2xl font-bold mb-2">{title}</AtomText01>
-          <AtomText01 as="p" className="opacity-70 text-sm mb-8">{subtitle}</AtomText01>
+          <AtomText01 as="h2" className="text-2xl font-bold mb-2 break-keep">{title}</AtomText01>
+          <AtomText01 as="p" className="opacity-70 text-sm mb-8 break-keep">{subtitle}</AtomText01>
 
           {!issued ? (
             <AtomCard01 className="border-dashed border-2 border-slate-300 bg-slate-50 mb-6">
               <div className="text-6xl mb-3">🎁</div>
-              <AtomText01 as="p" className="text-3xl font-black text-slate-900 mb-1">{discountText}</AtomText01>
+              <AtomText01 as="p" className="text-3xl font-black text-slate-900 mb-1 break-keep">{discountText}</AtomText01>
               <AtomText01 as="p" className="text-xs text-slate-400">{expiryText}</AtomText01>
             </AtomCard01>
           ) : (
             <AtomCard01 className="border-2 border-emerald-400 bg-emerald-50 mb-6">
               <AtomBadge01 variant="success" className="mb-3 mx-auto">✓ 발급 완료</AtomBadge01>
-              <AtomText01 as="p" className="text-2xl font-black text-emerald-700 mb-2">{discountText}</AtomText01>
+              <AtomText01 as="p" className="text-2xl font-black text-emerald-700 mb-2 break-keep">{discountText}</AtomText01>
               <AtomDivider01 className="my-3 border-emerald-200" />
               <AtomLabel01 className="text-xs text-slate-400 block mb-1">쿠폰 코드</AtomLabel01>
               <AtomText01 as="p" className="font-mono text-base font-bold tracking-wider text-slate-800">{code}</AtomText01>

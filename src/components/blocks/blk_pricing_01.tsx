@@ -60,11 +60,11 @@ export default function BlkPricing01({ config }: Props) {
 
   return (
     <AtomCard01 noPadding className="w-full border-none rounded-none" style={{ backgroundColor, color: textColor }}>
-      <div className={`${layout.wrapperClass} px-6 ${layout.paddingClass}`}>
+      <div className={`${layout.wrapperClass} ${layout.paddingXClass} ${layout.paddingClass}`}>
         <div className={`${layout.innerClass}`}>
           <div className="text-center mb-12">
-            <AtomText01 as="h2" className="text-3xl font-black mb-3">{title}</AtomText01>
-            <AtomText01 as="p" className="opacity-70">{subtitle}</AtomText01>
+            <AtomText01 as="h2" className="text-3xl font-black mb-3 break-keep">{title}</AtomText01>
+            <AtomText01 as="p" className="opacity-70 break-keep">{subtitle}</AtomText01>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">

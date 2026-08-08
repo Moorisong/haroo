@@ -34,12 +34,12 @@ export default function BlkStampCard01({ config }: Props) {
 
   return (
     <AtomCard01 noPadding className="w-full border-none rounded-none" style={{ backgroundColor, color: textColor }}>
-      <div className={`${layout.wrapperClass} px-6 ${layout.paddingClass}`}>
+      <div className={`${layout.wrapperClass} ${layout.paddingXClass} ${layout.paddingClass}`}>
         <div className={`${layout.innerClass}`}>
           <div className="text-center mb-8">
             <AtomBadge01 variant="success" className="mb-3 mx-auto">🎯 스탬프</AtomBadge01>
-            <AtomText01 as="h2" className="text-2xl font-bold mb-2">{title}</AtomText01>
-            <AtomText01 as="p" className="opacity-70 text-sm">{subtitle}</AtomText01>
+            <AtomText01 as="h2" className="text-2xl font-bold mb-2 break-keep">{title}</AtomText01>
+            <AtomText01 as="p" className="opacity-70 text-sm break-keep">{subtitle}</AtomText01>
           </div>
 
           <AtomCard01 className="mb-6">

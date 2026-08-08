@@ -39,7 +39,7 @@ export default function BlkVideo01({ config }: Props) {
 
   return (
     <AtomCard01 noPadding className="w-full border-none rounded-none" style={{ backgroundColor, color: textColor }}>
-      <div className={`${layout.wrapperClass} px-6 ${layout.paddingClass}`}>
+      <div className={`${layout.wrapperClass} ${layout.paddingXClass} ${layout.paddingClass}`}>
         <div className={`${layout.innerClass}`}>
         <div className="text-center mb-8">
           <AtomText01 variant="h2" className="mb-2 font-bold">{title}</AtomText01>

@@ -33,12 +33,12 @@ export default function BlkStats01({ config }: Props) {
 
   return (
     <AtomCard01 noPadding className="w-full border-none rounded-none" style={{ backgroundColor, color: textColor }}>
-      <div className={`${layout.wrapperClass} px-6 ${layout.paddingClass}`}>
+      <div className={`${layout.wrapperClass} ${layout.paddingXClass} ${layout.paddingClass}`}>
         <div className={`${layout.innerClass}`}>
           <div className="flex items-center justify-between mb-8">
             <div>
               <AtomText01 as="h2" className="text-2xl font-bold">{title}</AtomText01>
-              <AtomText01 as="p" className="opacity-70 text-sm mt-1">{subtitle}</AtomText01>
+              <AtomText01 as="p" className="opacity-70 text-sm mt-1 break-keep">{subtitle}</AtomText01>
             </div>
             <AtomBadge01 variant="success" className="flex-shrink-0">● 실시간</AtomBadge01>
           </div>
@@ -47,7 +47,7 @@ export default function BlkStats01({ config }: Props) {
             {DEFAULT_STATS.map((stat) => (
               <AtomCard01 key={stat.label}>
                 <AtomText01 as="p" className="text-xs text-slate-400 mb-2">{stat.label}</AtomText01>
-                <AtomText01 as="p" className="text-2xl font-black mb-1">{stat.value}</AtomText01>
+                <AtomText01 as="p" className="text-2xl font-black mb-1 break-keep">{stat.value}</AtomText01>
                 <AtomBadge01
                   className={`text-xs ${stat.positive ? 'bg-emerald-50 text-emerald-600 border-emerald-100' : 'bg-red-50 text-red-500 border-red-100'}`}
                 >

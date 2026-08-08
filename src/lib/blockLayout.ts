@@ -14,10 +14,10 @@ export const CONTAINER_WIDTH_CLASS: Record<ContainerWidth, string> = {
 
 /** 상하 패딩 → Tailwind py 클래스 (데스크톱 넉넉한 비율 확장) */
 export const PADDING_Y_CLASS: Record<PaddingYOption, string> = {
-  compact:       'py-6 sm:py-8 md:py-10',
-  normal:        'py-10 sm:py-14 md:py-20 lg:py-24',
-  spacious:      'py-14 sm:py-20 md:py-28 lg:py-32',
-  extraSpacious: 'py-18 sm:py-28 md:py-36 lg:py-40',
+  compact:       'py-6 sm:py-8 lg:py-12',
+  normal:        'py-12 sm:py-16 lg:py-24',
+  spacious:      'py-16 sm:py-24 lg:py-32',
+  extraSpacious: 'py-24 sm:py-32 lg:py-40',
 }
 
 /**
@@ -34,6 +34,7 @@ export function getBlockLayout(
     wrapperClass: 'w-full flex justify-center',
     innerClass: `w-full ${CONTAINER_WIDTH_CLASS[containerWidth]}`,
     paddingClass: PADDING_Y_CLASS[paddingY],
+    paddingXClass: 'px-4 sm:px-6 lg:px-8',
   }
 }
 

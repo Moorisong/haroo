@@ -28,12 +28,12 @@ export default function BlkMap01({ config }: Props) {
 
   return (
     <AtomCard01 noPadding className="w-full border-none rounded-none" style={{ backgroundColor, color: textColor }}>
-      <div className={`${layout.wrapperClass} px-6 ${layout.paddingClass}`}>
+      <div className={`${layout.wrapperClass} ${layout.paddingXClass} ${layout.paddingClass}`}>
         <div className={`${layout.innerClass}`}>
           <div className="mb-8 text-center">
             <AtomBadge01 variant="info" className="mb-3 mx-auto">📍 위치 안내</AtomBadge01>
-            <AtomText01 as="h2" className="text-2xl font-bold mb-2">{title}</AtomText01>
-            <AtomText01 as="p" className="opacity-70 text-sm">{subtitle}</AtomText01>
+            <AtomText01 as="h2" className="text-2xl font-bold mb-2 break-keep">{title}</AtomText01>
+            <AtomText01 as="p" className="opacity-70 text-sm break-keep">{subtitle}</AtomText01>
           </div>
 
           {/* 지도 프레임 */}

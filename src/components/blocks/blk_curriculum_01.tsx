@@ -42,12 +42,12 @@ export default function BlkCurriculum01({ config }: Props) {
 
   return (
     <AtomCard01 noPadding className="w-full border-none rounded-none" style={{ backgroundColor, color: textColor }}>
-      <div className={`${layout.wrapperClass} px-6 ${layout.paddingClass}`}>
+      <div className={`${layout.wrapperClass} ${layout.paddingXClass} ${layout.paddingClass}`}>
         <div className={`${layout.innerClass}`}>
           <div className="text-center mb-8">
             <AtomBadge01 variant="info" className="mb-3 mx-auto">프로세스</AtomBadge01>
-            <AtomText01 as="h2" className="text-2xl font-bold mb-2">{title}</AtomText01>
-            <AtomText01 as="p" className="opacity-70 text-sm mb-6">{subtitle}</AtomText01>
+            <AtomText01 as="h2" className="text-2xl font-bold mb-2 break-keep">{title}</AtomText01>
+            <AtomText01 as="p" className="opacity-70 text-sm mb-6 break-keep">{subtitle}</AtomText01>
             <AtomProgress01 value={progress} max={100} showLabel size="md" />
           </div>
 

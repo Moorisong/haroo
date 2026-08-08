@@ -34,21 +34,21 @@ export default function BlkHero01({ config }: Props) {
     <AtomCard01 noPadding className="border-none rounded-none w-full">
       {/* 히어로는 배경 이미지가 전체 폭 — paddingY로 세로 크기 조절 */}
       <div className={`relative ${layout.paddingClass} ${layout.wrapperClass}`} style={{ minHeight: '16rem' }}>
-        <AtomImage01 src={imageUrl} alt="히어로 이미지" fill />
+        <AtomImage01 src={imageUrl} alt="히어로 이미지" fill className="absolute inset-0" />
         <div className="absolute inset-0 bg-slate-900/40" />
 
-        <div className={`relative z-10 flex flex-col items-center justify-center h-full text-center px-6 ${layout.innerClass}`}>
+        <div className={`relative z-10 flex flex-col items-center justify-center h-full text-center ${layout.paddingXClass} ${layout.innerClass}`}>
           {badgeText && (
             <AtomBadge01 variant="success" className="mb-4 shadow-sm border-none bg-emerald-500 text-white">
               {badgeText}
             </AtomBadge01>
           )}
 
-          <AtomText01 as="h1" className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-white mb-3 md:mb-4 leading-tight tracking-tight">
+          <AtomText01 as="h1" className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-white mb-3 md:mb-4 leading-tight tracking-tight break-keep">
             {title}
           </AtomText01>
 
-          <AtomText01 as="p" className="text-sm sm:text-lg md:text-xl text-slate-200 mb-6 md:mb-8 max-w-2xl font-normal leading-relaxed">
+          <AtomText01 as="p" className="text-sm sm:text-lg md:text-xl text-slate-200 mb-6 md:mb-8 max-w-2xl font-normal leading-relaxed break-keep">
             {subtitle}
           </AtomText01>
 

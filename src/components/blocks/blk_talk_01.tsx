@@ -31,11 +31,11 @@ export default function BlkTalk01({ config }: Props) {
 
   return (
     <AtomCard01 noPadding className="w-full border-none rounded-none" style={{ backgroundColor, color: textColor }}>
-      <div className={`${layout.wrapperClass} px-6 ${layout.paddingClass}`}>
+      <div className={`${layout.wrapperClass} ${layout.paddingXClass} ${layout.paddingClass}`}>
         <div className={`${layout.innerClass}`}>
           <AtomBadge01 className="mb-4 bg-black/10 text-black border-black/20">자동 메시지 알림</AtomBadge01>
-          <AtomText01 as="h2" className="text-2xl font-black mb-2">{title}</AtomText01>
-          <AtomText01 as="p" className="opacity-70 text-sm mb-8">{subtitle}</AtomText01>
+          <AtomText01 as="h2" className="text-2xl font-black mb-2 break-keep">{title}</AtomText01>
+          <AtomText01 as="p" className="opacity-70 text-sm mb-8 break-keep">{subtitle}</AtomText01>
 
           <AtomCard01 className="mb-6 border-black/10 bg-white/60">
             <ul className="space-y-4">

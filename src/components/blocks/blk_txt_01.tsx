@@ -22,7 +22,7 @@ export default function BlkTxt01({ config }: Props) {
 
   return (
     <AtomCard01 noPadding className="w-full border-none rounded-none" style={{ backgroundColor, color: textColor }}>
-      <div className={`${layout.wrapperClass} px-6 ${layout.paddingClass}`}>
+      <div className={`${layout.wrapperClass} ${layout.paddingXClass} ${layout.paddingClass}`}>
         <div className={`${layout.innerClass} text-center max-w-4xl mx-auto`}>
           <AtomText01 variant="h2" className="text-xl sm:text-2xl md:text-4xl lg:text-5xl mb-3 md:mb-5 font-black tracking-tight leading-tight">
             {title}

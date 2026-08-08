@@ -29,11 +29,11 @@ export default function BlkAuth01({ config }: Props) {
 
   return (
     <AtomCard01 noPadding className="w-full border-none rounded-none" style={{ backgroundColor, color: textColor }}>
-      <div className={`${layout.wrapperClass} px-6 ${layout.paddingClass}`}>
+      <div className={`${layout.wrapperClass} ${layout.paddingXClass} ${layout.paddingClass}`}>
         <div className={`${layout.innerClass} text-center`}>
           <AtomBadge01 variant="default" className="mb-4 mx-auto">🔑 소셜 로그인</AtomBadge01>
-          <AtomText01 as="h2" className="text-2xl font-bold mb-2">{title}</AtomText01>
-          <AtomText01 as="p" className="opacity-70 text-sm mb-8">{subtitle}</AtomText01>
+          <AtomText01 as="h2" className="text-2xl font-bold mb-2 break-keep">{title}</AtomText01>
+          <AtomText01 as="p" className="opacity-70 text-sm mb-8 break-keep">{subtitle}</AtomText01>
 
           <div className="flex flex-col gap-3 mb-6">
             {LOGIN_PROVIDERS.map((p) => (
