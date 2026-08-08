@@ -1,4 +1,5 @@
 import type { ContainerWidth, PaddingYOption } from '@/types'
+import { useBuilderStore } from '@/stores/useBuilderStore'
 
 // ─────────────────────────────────────────────────────────────────────────────
 // 이중 반응형 헬퍼: 영역 크기 조절 + 기기 맞춤형 반응형 Tailwind 클래스 도출
@@ -30,11 +31,31 @@ export function getBlockLayout(
   containerWidth: ContainerWidth = 'wide',
   paddingY: PaddingYOption = 'normal'
 ) {
+  let viewport = 'desktop'
+  try {
+    // SSR이나 빌더 외부 환경에서는 데스크톱으로 폴백, 빌더 내부에선 Zustand 값 동기적 읽기
+    viewport = useBuilderStore.getState().deviceViewport
+  } catch (e) {}
+
+  let pyClass = PADDING_Y_CLASS[paddingY]
+  let pxClass = 'px-4 sm:px-6 lg:px-8'
+
+  if (viewport === 'mobile') {
+    // 뷰포트가 mobile 강제 설정 시 (데스크톱 브라우저에서 볼 때도) 가장 좁은 패딩 사용
+    pyClass = pyClass.split(' ')[0]
+    pxClass = 'px-4'
+  } else if (viewport === 'tablet') {
+    // 태블릿 뷰포트 강제 시 sm: 패딩 사용
+    const parts = pyClass.split(' ')
+    pyClass = parts.length > 1 ? parts[1].replace('sm:', '') : parts[0]
+    pxClass = 'px-6'
+  }
+
   return {
     wrapperClass: 'w-full flex justify-center',
     innerClass: `w-full ${CONTAINER_WIDTH_CLASS[containerWidth]}`,
-    paddingClass: PADDING_Y_CLASS[paddingY],
-    paddingXClass: 'px-4 sm:px-6 lg:px-8',
+    paddingClass: pyClass,
+    paddingXClass: pxClass,
   }
 }
 
@@ -46,17 +67,29 @@ export function getResponsiveGridCols(containerWidth: ContainerWidth = 'wide'): 
   cols1: string
   cols2: string
   cols3: string
+  cols4: string
 } {
-  if (containerWidth === 'narrow') {
-    return { cols1: 'grid-cols-1', cols2: 'grid-cols-1', cols3: 'grid-cols-1' }
+  let viewport = 'desktop'
+  try {
+    viewport = useBuilderStore.getState().deviceViewport
+  } catch (e) {}
+
+  const isMobile = viewport === 'mobile'
+  const isTablet = viewport === 'tablet'
+
+  if (isMobile || containerWidth === 'narrow') {
+    return { cols1: 'grid-cols-1', cols2: 'grid-cols-1', cols3: 'grid-cols-1', cols4: 'grid-cols-1' }
   }
-  if (containerWidth === 'medium') {
-    return { cols1: 'grid-cols-1', cols2: 'grid-cols-2', cols3: 'grid-cols-2' }
+  
+  if (isTablet || containerWidth === 'medium') {
+    return { cols1: 'grid-cols-1', cols2: 'grid-cols-2', cols3: 'grid-cols-2', cols4: 'grid-cols-2' }
   }
-  // wide | full: 기기 반응형 브레이크포인트 적용
+
+  // wide | full (Desktop) - 기기 반응형 브레이크포인트 적용
   return {
     cols1: 'grid-cols-1',
     cols2: 'grid-cols-1 sm:grid-cols-2',
     cols3: 'grid-cols-1 sm:grid-cols-3',
+    cols4: 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4',
   }
 }
