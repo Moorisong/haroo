@@ -31,7 +31,6 @@ import BlkConsultingSlot01 from '@/components/blocks/blk_consulting_slot_01'
 import BlkProfileGrid01 from '@/components/blocks/blk_profile_grid_01'
 import BlkFeatureGrid01 from '@/components/blocks/blk_feature_grid_01'
 import BlkContentCardGrid01 from '@/components/blocks/blk_content_card_grid_01'
-import BlkInteractionBar01 from '@/components/blocks/blk_interaction_bar_01'
 
 // 23종 실제 배포 블록 컴포넌트 매핑 레지스트리
 const BlockRegistry: Record<string, React.FC<{ config: any }>> = {
@@ -57,7 +56,6 @@ const BlockRegistry: Record<string, React.FC<{ config: any }>> = {
   blk_profile_grid_01: BlkProfileGrid01,
   blk_feature_grid_01: BlkFeatureGrid01,
   blk_content_card_grid_01: BlkContentCardGrid01,
-  blk_interaction_bar_01: BlkInteractionBar01,
 }
 
 // 블록 렌더러 - 매핑된 컴포넌트가 있으면 렌더링, 없으면 Fallback
