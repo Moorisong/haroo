@@ -36,6 +36,8 @@ import BlkPay01 from '@/components/blocks/blk_pay_01'
 import BlkStats01 from '@/components/blocks/blk_stats_01'
 import BlkCoupon01 from '@/components/blocks/blk_coupon_01'
 import BlkConsultingSlot01 from '@/components/blocks/blk_consulting_slot_01'
+import BlkProfileGrid01 from '@/components/blocks/blk_profile_grid_01'
+import BlkFeatureGrid01 from '@/components/blocks/blk_feature_grid_01'
 
 const BlockRegistry: Record<string, React.FC<{ config: any }>> = {
   blk_hero_01: BlkHero01,
@@ -57,6 +59,8 @@ const BlockRegistry: Record<string, React.FC<{ config: any }>> = {
   blk_stats_01: BlkStats01,
   blk_coupon_01: BlkCoupon01,
   blk_consulting_slot_01: BlkConsultingSlot01,
+  blk_profile_grid_01: BlkProfileGrid01,
+  blk_feature_grid_01: BlkFeatureGrid01,
 }
 
 function BlockRenderer({ block, isPreviewMode }: { block: CanvasBlock; isPreviewMode: boolean }) {

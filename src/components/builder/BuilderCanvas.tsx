@@ -28,8 +28,10 @@ import BlkPay01 from '@/components/blocks/blk_pay_01'
 import BlkStats01 from '@/components/blocks/blk_stats_01'
 import BlkCoupon01 from '@/components/blocks/blk_coupon_01'
 import BlkConsultingSlot01 from '@/components/blocks/blk_consulting_slot_01'
+import BlkProfileGrid01 from '@/components/blocks/blk_profile_grid_01'
+import BlkFeatureGrid01 from '@/components/blocks/blk_feature_grid_01'
 
-// 19종 실제 배포 블록 컴포넌트 매핑 레지스트리
+// 21종 실제 배포 블록 컴포넌트 매핑 레지스트리
 const BlockRegistry: Record<string, React.FC<{ config: any }>> = {
   blk_hero_01: BlkHero01,
   blk_txt_01: BlkTxt01,
@@ -50,6 +52,8 @@ const BlockRegistry: Record<string, React.FC<{ config: any }>> = {
   blk_stats_01: BlkStats01,
   blk_coupon_01: BlkCoupon01,
   blk_consulting_slot_01: BlkConsultingSlot01,
+  blk_profile_grid_01: BlkProfileGrid01,
+  blk_feature_grid_01: BlkFeatureGrid01,
 }
 
 // 블록 렌더러 - 매핑된 컴포넌트가 있으면 렌더링, 없으면 Fallback

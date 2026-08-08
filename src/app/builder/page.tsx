@@ -5,7 +5,7 @@ import Link from 'next/link'
 import {
   Layout, Star, Map, Image, MessageSquare, Bell, CreditCard, BarChart2,
   Calendar, Users, Gift, BookOpen, Heart, Clock, Share2, FileText, Video,
-  ArrowRight,
+  ArrowRight, Grid, CheckSquare
 } from 'lucide-react'
 import type { BlockTier } from '@/types'
 import { useBuilderStore } from '@/stores/useBuilderStore'
@@ -39,6 +39,8 @@ const ALL_BLOCKS = [
   { id: 'blk_stats_01', name: '대시보드 / 통계 지표', tier: 'PROFESSIONAL' as BlockTier, icon: BarChart2, desc: '실시간 수치 지표 및 차트' },
   { id: 'blk_coupon_01', name: '쿠폰/코드 발급', tier: 'PROFESSIONAL' as BlockTier, icon: Gift, desc: '시리얼 난수 쿠폰 코드 생성' },
   { id: 'blk_consulting_slot_01', name: '타임 슬롯/일정 예약', tier: 'PROFESSIONAL' as BlockTier, icon: Calendar, desc: '날짜 및 시간대별 세션 예약' },
+  { id: 'blk_profile_grid_01', name: '프로필 카드 그리드', tier: 'STARTER' as BlockTier, icon: Users, desc: '다목적 인물/전문가 소개 그리드' },
+  { id: 'blk_feature_grid_01', name: '특징/아이콘 그리드', tier: 'STARTER' as BlockTier, icon: CheckSquare, desc: '핵심 장점 및 아이콘 설명 그리드' },
 ]
 
 const FILTER_TABS: { label: string; value: FilterTab }[] = [
