@@ -38,6 +38,8 @@ import BlkCoupon01 from '@/components/blocks/blk_coupon_01'
 import BlkConsultingSlot01 from '@/components/blocks/blk_consulting_slot_01'
 import BlkProfileGrid01 from '@/components/blocks/blk_profile_grid_01'
 import BlkFeatureGrid01 from '@/components/blocks/blk_feature_grid_01'
+import BlkContentCardGrid01 from '@/components/blocks/blk_content_card_grid_01'
+import BlkInteractionBar01 from '@/components/blocks/blk_interaction_bar_01'
 
 const BlockRegistry: Record<string, React.FC<{ config: any }>> = {
   blk_hero_01: BlkHero01,
@@ -61,6 +63,8 @@ const BlockRegistry: Record<string, React.FC<{ config: any }>> = {
   blk_consulting_slot_01: BlkConsultingSlot01,
   blk_profile_grid_01: BlkProfileGrid01,
   blk_feature_grid_01: BlkFeatureGrid01,
+  blk_content_card_grid_01: BlkContentCardGrid01,
+  blk_interaction_bar_01: BlkInteractionBar01,
 }
 
 function BlockRenderer({ block, isPreviewMode }: { block: CanvasBlock; isPreviewMode: boolean }) {
