@@ -3,6 +3,7 @@
 import React from 'react'
 import { useBuilderStore } from '@/stores/useBuilderStore'
 import type { DeviceViewport } from '@/types'
+import { Play, Pencil, Sparkles } from 'lucide-react'
 
 export default function ViewportSwitcher() {
   const {
@@ -49,16 +50,28 @@ export default function ViewportSwitcher() {
         )}
       </div>
       
-      <div className="flex items-center">
+      {/* 초보 유저 친화적 눈에 띄는 동작 테스트 / 편집 전환 버튼 */}
+      <div className="flex items-center gap-2">
         <button
           onClick={togglePreviewMode}
-          className={`px-3.5 py-1.5 text-xs font-bold rounded-md border transition-colors ${
+          className={`relative group flex items-center gap-2 px-4 py-1.5 text-xs font-extrabold rounded-xl transition-all duration-300 shadow-md transform hover:-translate-y-0.5 active:translate-y-0 ${
             isPreviewMode
-              ? 'bg-sky-600 border-sky-600 text-white shadow-sm'
-              : 'bg-white border-slate-300 text-slate-700 hover:bg-slate-50'
+              ? 'bg-emerald-600 hover:bg-emerald-700 text-white ring-2 ring-emerald-400/50'
+              : 'bg-gradient-to-r from-sky-500 via-indigo-500 to-indigo-600 hover:from-sky-600 hover:to-indigo-700 text-white ring-2 ring-indigo-300/50 animate-pulse hover:animate-none'
           }`}
         >
-          {isPreviewMode ? '편집 모드로 돌아가기' : '미리보기 모드'}
+          {isPreviewMode ? (
+            <>
+              <Pencil className="w-3.5 h-3.5" />
+              <span>다시 화면 편집하기</span>
+            </>
+          ) : (
+            <>
+              <Play className="w-3.5 h-3.5 fill-white" />
+              <span>사이트 동작 테스트 하기</span>
+              <Sparkles className="w-3 h-3 text-amber-300 animate-spin" />
+            </>
+          )}
         </button>
       </div>
     </div>
