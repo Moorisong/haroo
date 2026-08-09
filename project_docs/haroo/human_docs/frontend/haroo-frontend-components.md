@@ -18,7 +18,7 @@
 
 ## 🛒 2. Zustand 전역 상태 & Custom Hooks 명세
 
-1. **`stores/useBuilderStore.ts`**: `selectedBlocks`, `activeBlockId`, `globalFont`, `themeColor`, `isEditingMode`, `revisionDeltaAmount` 관리. 추가로 WYSIWYG 렌더링을 위한 `deviceViewport` ('mobile' | 'tablet' | 'desktop'), `isPreviewMode`, 및 0.01초 단방향 Zod 동기화 업데이트 메서드(`updateBlockInputData`)를 포함.
+1. **`stores/useBuilderStore.ts`**: `pages` (다중 페이지 구조), `activePageId` (현재 편집 중인 화면), `selectedBlocks`, `activeBlockId`, `globalFont`, `themeColor`, `isEditingMode`, `revisionDeltaAmount` 관리. 추가로 WYSIWYG 렌더링을 위한 `deviceViewport` ('mobile' | 'tablet' | 'desktop'), `isPreviewMode`, 및 0.01초 단방향 Zod 동기화 업데이트 메서드(`updateBlockInputData`)를 포함.
 2. **`hooks/useDraftAutoSave.ts`**: 500ms debounce 연동 Supabase DB 자동 저장 처리 (`UserProjectDraft`). `localStorage` 사용 전면 금지.
 3. **`hooks/useRevisionPriceCalculator.ts`**: 원본 config 대비 티어 차액 및 DB 수수료 실시간 연산.
 
@@ -48,8 +48,9 @@
 20. **`AdminAuthModal.tsx`**: 푸터 [Admin] 클릭 시 비밀번호 인증 팝업.
 21. **`BuilderCanvas.tsx`**: WYSIWYG 실물 렌더링 및 `1px indigo-500` 포커스 스타일 적용 캔버스.
 22. **`ViewportSwitcher.tsx`**: 확정된 프로젝트 모드(`WEB` vs `PWA`)를 상단에 표출. `WEB` 모드일 때 `데스크톱 (편집 메인)`, `태블릿 (미리보기)`, `모바일 (미리보기)` 라벨 스위처를 제공하고, `PWA` 모드일 때는 모바일 뷰포트 기반으로 직접 블록 조립/속성 편집 및 미리보기 스위칭을 지원.
-23. **`ProjectTypeSelectionModal.tsx`**: 빌더 신규 진입 시 반응형 웹 vs PWA 모바일 앱 선택 카드를 띄워 제작 목적을 확정하는 모달 컴포넌트.
-23. **`SidePropertyPanel.tsx`**: 우측 슬라이드 오픈 듀얼 인풋 에디팅 사이드 컨트롤러 (폰트/색상/영상URL/폼수집항목 실시간 제어).
+23. **`ProjectTypeSelectionModal.tsx`**: 빌더 신규 진입 시 반응형 웹 vs PWA 모바일 앱 선택 카드를 띄워 제작 목적을 확정하는 1단계 모달 컴포넌트.
+24. **`SiteTemplateSelectionModal.tsx`**: 1단계 선택 후 "어떤 사이트를 만드시나요?" 등 스타트 템플릿/목적을 선택하고 어드민 데이터로 저장하는 2단계 모달 컴포넌트.
+25. **`SidePropertyPanel.tsx`**: 우측 슬라이드 오픈 듀얼 인풋 에디팅 사이드 컨트롤러 (폰트/색상/영상URL/폼수집항목 실시간 제어).
 24. **`FloatingQuickToolbar.tsx`**: 선택된 블록 상단에 표시되는 퀵 설정 바 (위로 이동, 아래로 이동, 복제, 삭제).
 
 ---

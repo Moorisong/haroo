@@ -54,6 +54,9 @@ function calculateRefundAmount(totalPaidAmount, totalMonths, elapsedDays) {
 ### Caddy API 도메인 라우팅 & SSL Purge 프로토콜
 * 유저 중도 해지/환불 시 Caddy Admin API (`DELETE /config/apps/http/servers/srv0/routes/{route_id}`) 즉시 호출.
 * 도메인 라우팅 룰 및 SSL 인증서 무인 파기 ➔ 좀비 도메인 트래픽 누적 0%.
+* **다중 페이지(Multi-Page) 와일드카드 라우팅 (`/*`) 연동**:
+  * 유저가 추가한 모든 하위 화면 경로(예: `/about`, `/contact`)가 Caddy에서 해당 컨테이너 포트로 전량 투명 릴레이되도록 `/*` 와일드카드 매칭 적용.
+  * 컨테이너 내부(Next.js Standalone / Nginx)에 `try_files $uri $uri/ /index.html` (또는 Next.js `[...slug]` Catch-All) 라우팅을 보장하여 유저가 하위 페이지 URL로 직접 진입하거나 새로고침하더라도 404 에러 없이 정적/동적 라우트가 100% 렌더링되도록 보장.
 
 ### 무전단 롤링 업데이트 (Rolling Update)
 * 어드민 [전체 컨테이너 Rolling Update 트리거] 버튼 ➔ SSH 접속 후 순차적 `docker pull` ➔ `docker stop` ➔ `docker run` ➔ Healthcheck 후 다음 교체 진행 (무중단 롤링).
