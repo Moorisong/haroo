@@ -8,14 +8,18 @@ import AtomDivider01 from '../atoms/atom_divider_01'
 import { getBlockLayout } from '@/lib/blockLayout'
 import type { BlockInputConfig, ContainerWidth, PaddingYOption } from '@/types'
 
-interface Props { config: BlockInputConfig }
+interface Props {
+  config: BlockInputConfig
+  isPreview?: boolean
+  onAction?: (config: BlockInputConfig, formData?: Record<string, string>) => void
+}
 
 const LOGIN_PROVIDERS = [
   { key: 'kakao', label: '카카오로 시작하기', emoji: '💬', bg: '#FEE500', color: '#000000' },
   { key: 'google', label: 'Google로 시작하기', emoji: '🔵', bg: '#4285F4', color: '#ffffff' },
 ]
 
-export default function BlkAuth01({ config }: Props) {
+export default function BlkAuth01({ config, isPreview, onAction }: Props) {
   const {
     title = '로그인하고 혜택을 받으세요',
     subtitle = '간편하게 로그인하여 예약, 스탬프, 쿠폰을 관리하세요.',
@@ -41,6 +45,7 @@ export default function BlkAuth01({ config }: Props) {
                 key={p.key}
                 className="w-full flex items-center justify-center gap-3 py-3 font-bold rounded-xl"
                 style={{ backgroundColor: p.bg, color: p.color, border: 'none' }}
+                onClick={() => onAction?.({ ...config, actionType: config.actionType || 'OPEN_URL' })}
               >
                 <span>{p.emoji}</span>
                 {p.label}

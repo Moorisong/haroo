@@ -9,11 +9,15 @@ import AtomProgress01 from '../atoms/atom_progress_01'
 import { getBlockLayout } from '@/lib/blockLayout'
 import type { BlockInputConfig, ContainerWidth, PaddingYOption } from '@/types'
 
-interface Props { config: BlockInputConfig }
+interface Props {
+  config: BlockInputConfig
+  isPreview?: boolean
+  onAction?: (config: BlockInputConfig, formData?: Record<string, string>) => void
+}
 
 const TOTAL_STAMPS = 10
 
-export default function BlkStampCard01({ config }: Props) {
+export default function BlkStampCard01({ config, isPreview, onAction }: Props) {
   const [stamps, setStamps] = useState(3) // 미리보기용 기본값
   const {
     title = '스탬프 카드',
@@ -28,6 +32,7 @@ export default function BlkStampCard01({ config }: Props) {
 
   const handleStamp = () => {
     setStamps((s) => Math.min(s + 1, TOTAL_STAMPS))
+    onAction?.(config)
   }
 
   const layout = getBlockLayout(containerWidth as ContainerWidth, paddingY as PaddingYOption)

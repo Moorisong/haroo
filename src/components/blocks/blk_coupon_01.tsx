@@ -11,13 +11,17 @@ import AtomDivider01 from '../atoms/atom_divider_01'
 import { getBlockLayout } from '@/lib/blockLayout'
 import type { BlockInputConfig, ContainerWidth, PaddingYOption } from '@/types'
 
-interface Props { config: BlockInputConfig }
+interface Props {
+  config: BlockInputConfig
+  isPreview?: boolean
+  onAction?: (config: BlockInputConfig, formData?: Record<string, string>) => void
+}
 
 function generateCode() {
   return 'HAROO-' + Math.random().toString(36).toUpperCase().slice(2, 8)
 }
 
-export default function BlkCoupon01({ config }: Props) {
+export default function BlkCoupon01({ config, isPreview, onAction }: Props) {
   const [issued, setIssued] = useState(false)
   const [code, setCode] = useState('')
 
@@ -36,6 +40,7 @@ export default function BlkCoupon01({ config }: Props) {
   const handleIssue = () => {
     setCode(generateCode())
     setIssued(true)
+    onAction?.(config)
   }
 
   const layout = getBlockLayout(containerWidth as ContainerWidth, paddingY as PaddingYOption)

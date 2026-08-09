@@ -17,7 +17,11 @@ interface PricingPlan {
   highlight?: boolean
 }
 
-interface Props { config: BlockInputConfig }
+interface Props {
+  config: BlockInputConfig
+  isPreview?: boolean
+  onAction?: (config: BlockInputConfig, formData?: Record<string, string>) => void
+}
 
 const DEFAULT_PLANS: PricingPlan[] = [
   {
@@ -46,7 +50,7 @@ const DEFAULT_PLANS: PricingPlan[] = [
   },
 ]
 
-export default function BlkPricing01({ config }: Props) {
+export default function BlkPricing01({ config, isPreview, onAction }: Props) {
   const {
     title = '요금제를 선택하세요',
     subtitle = '당신의 비즈니스에 꼭 맞는 플랜을 골라보세요.',
@@ -95,6 +99,7 @@ export default function BlkPricing01({ config }: Props) {
                 <AtomBtn01
                   className="w-full"
                   variant={plan.highlight ? 'default' : 'outline'}
+                  onClick={() => onAction?.(config)}
                 >
                   {plan.cta}
                 </AtomBtn01>

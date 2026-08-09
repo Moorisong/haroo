@@ -8,11 +8,15 @@ import AtomDivider01 from '../atoms/atom_divider_01'
 import { getBlockLayout } from '@/lib/blockLayout'
 import type { BlockInputConfig, ContainerWidth, PaddingYOption } from '@/types'
 
-interface Props { config: BlockInputConfig }
+interface Props {
+  config: BlockInputConfig
+  isPreview?: boolean
+  onAction?: (config: BlockInputConfig, formData?: Record<string, string>) => void
+}
 
 const PAYMENT_METHODS = ['💳 신용카드', '📱 카카오페이', '🍎 애플페이', '🏦 실시간 계좌이체']
 
-export default function BlkPay01({ config }: Props) {
+export default function BlkPay01({ config, isPreview, onAction }: Props) {
   const {
     title = '안전하게 결제하세요',
     subtitle = '다양한 결제 수단을 지원합니다.',
@@ -59,7 +63,10 @@ export default function BlkPay01({ config }: Props) {
           </AtomCard01>
 
           <AtomDivider01 className="mb-6" />
-          <AtomBtn01 className="w-full py-4 text-base font-bold">
+          <AtomBtn01
+            className="w-full py-4 text-base font-bold"
+            onClick={() => onAction?.({ ...config, actionType: config.actionType || 'PG_CHECKOUT' })}
+          >
             {buttonText} · {price}원
           </AtomBtn01>
           <AtomText01 as="p" className="text-center text-xs text-slate-400 mt-3">

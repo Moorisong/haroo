@@ -21,9 +21,13 @@ const generateSlots = (): TimeSlot[] => [
   { time: '16:00', available: true },
 ]
 
-interface Props { config: BlockInputConfig }
+interface Props {
+  config: BlockInputConfig
+  isPreview?: boolean
+  onAction?: (config: BlockInputConfig, formData?: Record<string, string>) => void
+}
 
-export default function BlkConsultingSlot01({ config }: Props) {
+export default function BlkConsultingSlot01({ config, isPreview, onAction }: Props) {
   const [selectedTime, setSelectedTime] = useState<string | null>(null)
   const [booked, setBooked] = useState(false)
   const [name, setName] = useState('')
@@ -106,7 +110,10 @@ export default function BlkConsultingSlot01({ config }: Props) {
           <AtomBtn01
             className="w-full"
             disabled={!selectedTime || !name || !phone}
-            onClick={() => setBooked(true)}
+            onClick={() => {
+              setBooked(true)
+              onAction?.(config, { name, phone, selectedTime: selectedTime || '' })
+            }}
           >
             {selectedTime ? `${selectedTime} ${buttonText}` : '시간을 먼저 선택해 주세요'}
           </AtomBtn01>

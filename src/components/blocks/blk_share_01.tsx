@@ -7,7 +7,11 @@ import AtomBadge01 from '../atoms/atom_badge_01'
 import { getBlockLayout } from '@/lib/blockLayout'
 import type { BlockInputConfig, ContainerWidth, PaddingYOption } from '@/types'
 
-interface Props { config: BlockInputConfig }
+interface Props {
+  config: BlockInputConfig
+  isPreview?: boolean
+  onAction?: (config: BlockInputConfig, formData?: Record<string, string>) => void
+}
 
 const SHARE_CHANNELS = [
   { key: 'kakao', label: '카카오톡 공유', icon: '💬', color: '#FEE500', textColor: '#000000' },
@@ -15,7 +19,7 @@ const SHARE_CHANNELS = [
   { key: 'twitter', label: 'X (트위터)', icon: '✕', color: '#1D9BF0', textColor: '#ffffff' },
 ]
 
-export default function BlkShare01({ config }: Props) {
+export default function BlkShare01({ config, isPreview, onAction }: Props) {
   const {
     title = '이 페이지를 공유해 보세요',
     subtitle = '친구에게 소식을 알려보세요!',
@@ -42,6 +46,10 @@ export default function BlkShare01({ config }: Props) {
                   key={ch.key}
                   className="flex-1 min-w-[240px] flex items-center justify-center gap-1.5 md:gap-2 py-2.5 md:py-4 rounded-lg md:rounded-xl text-xs sm:text-sm md:text-base font-extrabold shadow-sm transition-all hover:scale-[1.02] whitespace-nowrap"
                   style={{ backgroundColor: ch.color, color: ch.textColor, border: 'none' }}
+                  onClick={() => {
+                    const fallbackType = ch.key === 'copy' ? 'COPY_TO_CLIPBOARD' : ch.key === 'kakao' ? 'OPEN_KAKAO' : 'OPEN_URL'
+                    onAction?.({ ...config, actionType: config.actionType || fallbackType })
+                  }}
                 >
                   <span className="text-sm md:text-lg">{ch.icon}</span>
                   {ch.label}

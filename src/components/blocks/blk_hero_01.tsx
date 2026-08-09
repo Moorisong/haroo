@@ -8,13 +8,15 @@ import type { BlockInputConfig, ContainerWidth, PaddingYOption } from '@/types'
 
 interface Props {
   config?: BlockInputConfig
+  isPreview?: boolean
+  onAction?: (config: BlockInputConfig, formData?: Record<string, string>) => void
 }
 
 /**
  * 45종 마스터 블록: blk_hero_01 (히어로 배너)
  * 원자 컴포넌트 100% 재사용 조합
  */
-export default function BlkHero01({ config }: Props) {
+export default function BlkHero01({ config, isPreview, onAction }: Props) {
   const safeConfig = config ?? {}
   const {
     title = '세상에서 가장 쉬운 매장 웹사이트',
@@ -52,7 +54,11 @@ export default function BlkHero01({ config }: Props) {
             {subtitle}
           </AtomText01>
 
-          <AtomBtn01 size="lg" className="px-8 md:px-10 py-3 md:py-4 bg-white text-slate-900 hover:bg-slate-100 font-bold text-sm md:text-base rounded-xl shadow-lg transition-all">
+          <AtomBtn01
+            size="lg"
+            className="px-8 md:px-10 py-3 md:py-4 bg-white text-slate-900 hover:bg-slate-100 font-bold text-sm md:text-base rounded-xl shadow-lg transition-all"
+            onClick={() => onAction?.(safeConfig as BlockInputConfig)}
+          >
             {buttonText}
           </AtomBtn01>
         </div>

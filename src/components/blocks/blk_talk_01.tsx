@@ -8,9 +8,13 @@ import AtomDivider01 from '../atoms/atom_divider_01'
 import { getBlockLayout } from '@/lib/blockLayout'
 import type { BlockInputConfig, ContainerWidth, PaddingYOption } from '@/types'
 
-interface Props { config: BlockInputConfig }
+interface Props {
+  config: BlockInputConfig
+  isPreview?: boolean
+  onAction?: (config: BlockInputConfig, formData?: Record<string, string>) => void
+}
 
-export default function BlkTalk01({ config }: Props) {
+export default function BlkTalk01({ config, isPreview, onAction }: Props) {
   const {
     title = '자동 메시지 및 알림 안내',
     subtitle = '중요 안내, 확인 연락, 주요 소식을 수신자에게 자동으로 전송해 드립니다.',
@@ -49,7 +53,10 @@ export default function BlkTalk01({ config }: Props) {
           </AtomCard01>
 
           <AtomDivider01 className="mb-6 border-black/20" />
-          <AtomBtn01 className="w-full bg-black text-yellow-400 font-bold hover:bg-black/90">
+          <AtomBtn01
+            className="w-full bg-black text-yellow-400 font-bold hover:bg-black/90"
+            onClick={() => onAction?.(config)}
+          >
             {buttonText}
           </AtomBtn01>
         </div>

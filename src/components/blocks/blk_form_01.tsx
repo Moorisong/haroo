@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import AtomText01 from '../atoms/atom_text_01'
 import AtomInput01 from '../atoms/atom_input_01'
 import AtomBtn01 from '../atoms/atom_btn_01'
@@ -11,9 +11,12 @@ import type { BlockInputConfig, ContainerWidth, PaddingYOption } from '@/types'
 
 interface Props {
   config: BlockInputConfig
+  isPreview?: boolean
+  onAction?: (config: BlockInputConfig, formData?: Record<string, string>) => void
 }
 
-export default function BlkForm01({ config }: Props) {
+export default function BlkForm01({ config, isPreview, onAction }: Props) {
+  const [formData, setFormData] = useState<Record<string, string>>({})
   const { 
     title = '문의하기', 
     subtitle = '궁금한 점을 남겨주시면 빠르게 답변해 드립니다.', 
@@ -40,7 +43,10 @@ export default function BlkForm01({ config }: Props) {
           <AtomText01 variant="p" className="opacity-80">{subtitle}</AtomText01>
         </div>
 
-        <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
+        <form className="space-y-4" onSubmit={(e) => {
+          e.preventDefault()
+          onAction?.(config, formData)
+        }}>
           {formFields.map((field) => (
             <div key={field.id} className="space-y-1.5">
               <AtomLabel01>
@@ -50,6 +56,9 @@ export default function BlkForm01({ config }: Props) {
                 <AtomTextarea01
                   placeholder={`${field.label}을(를) 입력해주세요`}
                   required={field.required}
+                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+                    setFormData((prev) => ({ ...prev, [field.id]: e.target.value }))
+                  }
                 />
               ) : field.type === 'checkbox' ? (
                 <div className="flex items-center gap-2">
@@ -63,6 +72,9 @@ export default function BlkForm01({ config }: Props) {
                   type={field.type} 
                   placeholder={`${field.label}을(를) 입력해주세요`}
                   required={field.required}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    setFormData((prev) => ({ ...prev, [field.id]: e.target.value }))
+                  }
                 />
               )}
             </div>
