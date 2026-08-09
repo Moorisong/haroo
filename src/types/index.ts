@@ -60,13 +60,26 @@ export type ProjectType = 'WEB' | 'PWA'
 // 뷰포트 기기 타입
 export type DeviceViewport = 'mobile' | 'tablet' | 'desktop'
 
+// 다중 페이지Item 타입 명세
+export interface PageItem {
+  id: string
+  title: string
+  slug: string
+  isHome?: boolean
+  blocks: CanvasBlock[]
+}
+
+// 2단계 스타트 템플릿 목적 선택 타입
+export type SiteTemplateCategory = 'BLANK' | 'COMPANY' | 'EVENT' | 'PORTFOLIO' | 'COMMERCE'
+
 // 드래프트 (임시 저장)
 export interface Draft {
   id: string
   name: string
-  selectedBlocks: CanvasBlock[]
+  selectedBlocks: CanvasBlock[] | { pages: PageItem[]; template?: SiteTemplateCategory }
   versionClock: number
   updatedAt: string
+  template?: SiteTemplateCategory
 }
 
 // 유저 프로젝트

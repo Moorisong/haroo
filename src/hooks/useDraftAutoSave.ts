@@ -9,7 +9,7 @@ import { AUTOSAVE_DEBOUNCE_MS } from '@/lib/constants'
  * - POST /api/drafts/save
  */
 export function useDraftAutoSave() {
-  const { canvasBlocks, draftName, draftId, versionClock, isDirty, markSaved } = useBuilderStore()
+  const { canvasBlocks, pages, siteTemplate, draftName, draftId, versionClock, isDirty, markSaved } = useBuilderStore()
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   useEffect(() => {
@@ -25,7 +25,11 @@ export function useDraftAutoSave() {
           body: JSON.stringify({
             draftId,
             name: draftName,
-            selectedBlocks: canvasBlocks,
+            selectedBlocks: {
+              pages,
+              template: siteTemplate,
+              canvasBlocks,
+            },
             versionClock,
           }),
         })

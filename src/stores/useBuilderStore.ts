@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { v4 as uuidv4 } from 'uuid'
-import type { CanvasBlock, Draft, BlockTier, DeviceViewport, BlockInputConfig, ProjectType } from '@/types'
+import type { CanvasBlock, Draft, BlockTier, DeviceViewport, BlockInputConfig, ProjectType, PageItem, SiteTemplateCategory } from '@/types'
 import { BlockInputConfigSchema } from '@/types'
 import { getNextBlockY, CANVAS_WIDTH, snapToGrid } from '@/lib/snapGrid'
 
@@ -11,8 +11,20 @@ interface BlockDefinition {
   icon?: React.ElementType
 }
 
+const DEFAULT_MAIN_PAGE: PageItem = {
+  id: 'page_main',
+  title: '메인 화면',
+  slug: '/',
+  isHome: true,
+  blocks: [],
+}
+
 interface BuilderState {
-  // 캔버스 상태
+  // 다중 페이지 상태
+  pages: PageItem[]
+  activePageId: string
+
+  // 캔버스 상태 (현재 activePage의 blocks와 하위호환 동기화)
   canvasBlocks: CanvasBlock[]
   selectedInstanceId: string | null
   draftName: string
@@ -20,16 +32,26 @@ interface BuilderState {
   versionClock: number
   isDirty: boolean
 
-  // WYSIWYG 및 프로젝트 모드 상태
+  // 2단계 스타트 템플릿 및 모드 확정 상태
   projectType: ProjectType
   projectTypeSelected: boolean
+  siteTemplate: SiteTemplateCategory | null
+  siteTemplateSelected: boolean
+
   deviceViewport: DeviceViewport
   isPreviewMode: boolean
 
   // 저장된 드래프트 목록
   drafts: Draft[]
 
-  // Actions
+  // 다중 페이지 Actions
+  setActivePage: (pageId: string) => void
+  addPage: (title: string) => string
+  removePage: (pageId: string) => void
+  updatePageTitle: (pageId: string, title: string) => void
+  confirmSiteTemplate: (template: SiteTemplateCategory) => void
+
+  // Block Actions
   addBlock: (def: BlockDefinition) => void
   removeBlock: (instanceId: string) => void
   moveBlock: (fromIndex: number, toIndex: number) => void
@@ -48,6 +70,8 @@ interface BuilderState {
 }
 
 const initialState = {
+  pages: [DEFAULT_MAIN_PAGE],
+  activePageId: 'page_main',
   canvasBlocks: [] as CanvasBlock[],
   selectedInstanceId: null,
   draftName: '새 프로젝트',
@@ -56,6 +80,8 @@ const initialState = {
   isDirty: false,
   projectType: 'WEB' as ProjectType,
   projectTypeSelected: false,
+  siteTemplate: null as SiteTemplateCategory | null,
+  siteTemplateSelected: false,
   deviceViewport: 'desktop' as DeviceViewport,
   isPreviewMode: false,
   drafts: [] as Draft[],
@@ -67,6 +93,80 @@ const initialState = {
  */
 export const useBuilderStore = create<BuilderState>((set, get) => ({
   ...initialState,
+
+  setActivePage: (pageId) => {
+    const { pages, canvasBlocks, activePageId } = get()
+    // 이전 페이지의 blocks 저장
+    const updatedPages = pages.map((p) => (p.id === activePageId ? { ...p, blocks: canvasBlocks } : p))
+    const targetPage = updatedPages.find((p) => p.id === pageId)
+    if (targetPage) {
+      set({
+        pages: updatedPages,
+        activePageId: pageId,
+        canvasBlocks: targetPage.blocks,
+        selectedInstanceId: null,
+      })
+    }
+  },
+
+  addPage: (title) => {
+    const { pages, canvasBlocks, activePageId } = get()
+    const updatedPages = pages.map((p) => (p.id === activePageId ? { ...p, blocks: canvasBlocks } : p))
+    const newId = `page_${uuidv4().slice(0, 8)}`
+    // 영문/숫자 슬러그 자동 생성 (비전문가는 슬러그 신경 쓰지 않아도 됨)
+    const slug = `/page-${updatedPages.length + 1}`
+    const newPage: PageItem = {
+      id: newId,
+      title: title || `새 화면 ${updatedPages.length + 1}`,
+      slug,
+      blocks: [],
+    }
+    const nextPages = [...updatedPages, newPage]
+    set({
+      pages: nextPages,
+      activePageId: newId,
+      canvasBlocks: [],
+      selectedInstanceId: null,
+      versionClock: get().versionClock + 1,
+      isDirty: true,
+    })
+    return newId
+  },
+
+  removePage: (pageId) => {
+    const { pages, activePageId } = get()
+    if (pages.length <= 1) return // 최소 1개 페이지 유지
+    const pageToRemove = pages.find((p) => p.id === pageId)
+    if (pageToRemove?.isHome) return // 메인 페이지는 삭제 불가
+
+    const nextPages = pages.filter((p) => p.id !== pageId)
+    const nextActiveId = activePageId === pageId ? nextPages[0].id : activePageId
+    const nextActivePage = nextPages.find((p) => p.id === nextActiveId)
+
+    set({
+      pages: nextPages,
+      activePageId: nextActiveId,
+      canvasBlocks: nextActivePage ? nextActivePage.blocks : [],
+      selectedInstanceId: null,
+      versionClock: get().versionClock + 1,
+      isDirty: true,
+    })
+  },
+
+  updatePageTitle: (pageId, title) => {
+    set((state) => ({
+      pages: state.pages.map((p) => (p.id === pageId ? { ...p, title } : p)),
+      isDirty: true,
+    }))
+  },
+
+  confirmSiteTemplate: (template) => {
+    set({
+      siteTemplate: template,
+      siteTemplateSelected: true,
+      isDirty: true,
+    })
+  },
 
   addBlock: (def) => {
     const currentBlocks = get().canvasBlocks
@@ -83,16 +183,26 @@ export const useBuilderStore = create<BuilderState>((set, get) => ({
         customWidthPx: CANVAS_WIDTH,
       },
     }
+    const updatedBlocks = [...currentBlocks, newBlock]
+    const { pages, activePageId } = get()
+    const updatedPages = pages.map((p) => (p.id === activePageId ? { ...p, blocks: updatedBlocks } : p))
+
     set((state) => ({
-      canvasBlocks: [...state.canvasBlocks, newBlock],
+      pages: updatedPages,
+      canvasBlocks: updatedBlocks,
       versionClock: state.versionClock + 1,
       isDirty: true,
     }))
   },
 
   removeBlock: (instanceId) => {
+    const nextBlocks = get().canvasBlocks.filter((b) => b.instanceId !== instanceId)
+    const { pages, activePageId } = get()
+    const updatedPages = pages.map((p) => (p.id === activePageId ? { ...p, blocks: nextBlocks } : p))
+
     set((state) => ({
-      canvasBlocks: state.canvasBlocks.filter((b) => b.instanceId !== instanceId),
+      pages: updatedPages,
+      canvasBlocks: nextBlocks,
       selectedInstanceId: state.selectedInstanceId === instanceId ? null : state.selectedInstanceId,
       versionClock: state.versionClock + 1,
       isDirty: true,
@@ -121,7 +231,10 @@ export const useBuilderStore = create<BuilderState>((set, get) => ({
       return updated
     })
 
-    set({ canvasBlocks: updatedBlocks, versionClock: get().versionClock + 1, isDirty: true })
+    const { pages, activePageId } = get()
+    const updatedPages = pages.map((p) => (p.id === activePageId ? { ...p, blocks: updatedBlocks } : p))
+
+    set({ pages: updatedPages, canvasBlocks: updatedBlocks, versionClock: get().versionClock + 1, isDirty: true })
   },
 
   selectBlock: (instanceId) => {
@@ -142,11 +255,13 @@ export const useBuilderStore = create<BuilderState>((set, get) => ({
           blocks[index].inputConfig = parsed.data
         } else {
           console.warn('Block input validation failed', parsed.error)
-          // Fallback으로 검증에 실패해도 업데이트를 강제할지는 결정 가능하나 안전하게 파싱된 값 또는 원본 값 활용
-          blocks[index].inputConfig = newConfig // 실시간 피드백을 위해 일단 병합 (엄격한 방어가 필요하면 생략)
+          blocks[index].inputConfig = newConfig
         }
       }
-      return { canvasBlocks: blocks, versionClock: state.versionClock + 1, isDirty: true }
+      const { pages, activePageId } = state
+      const updatedPages = pages.map((p) => (p.id === activePageId ? { ...p, blocks } : p))
+
+      return { pages: updatedPages, canvasBlocks: blocks, versionClock: state.versionClock + 1, isDirty: true }
     })
   },
 
