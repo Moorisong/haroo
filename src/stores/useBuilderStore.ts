@@ -310,8 +310,36 @@ export const useBuilderStore = create<BuilderState>((set, get) => ({
   },
 
   loadDraft: (draft) => {
+    const isMultiPageFormat = draft.selectedBlocks && !Array.isArray(draft.selectedBlocks) && 'pages' in (draft.selectedBlocks as any)
+    
+    let nextPages = get().pages
+    let nextCanvasBlocks = []
+    let nextTemplate = get().siteTemplate
+    
+    if (isMultiPageFormat) {
+      const data = draft.selectedBlocks as { pages: PageItem[]; template?: import('@/types').SiteTemplateCategory }
+      nextPages = data.pages || get().pages
+      nextTemplate = data.template || get().siteTemplate
+      // 활성 페이지의 블록 복원 (첫 번째 페이지로 기본 설정)
+      nextCanvasBlocks = nextPages.length > 0 ? nextPages[0].blocks : []
+    } else {
+      // 구버전 단일 페이지 배열 포맷
+      nextCanvasBlocks = (draft.selectedBlocks as CanvasBlock[]) || []
+      nextPages = [{
+        id: 'page_main',
+        title: '메인 화면',
+        slug: '/',
+        isHome: true,
+        blocks: nextCanvasBlocks,
+      }]
+    }
+
     set({
-      canvasBlocks: draft.selectedBlocks,
+      pages: nextPages,
+      activePageId: nextPages.length > 0 ? nextPages[0].id : 'page_main',
+      canvasBlocks: nextCanvasBlocks,
+      siteTemplate: nextTemplate,
+      siteTemplateSelected: !!nextTemplate,
       draftName: draft.name,
       draftId: draft.id,
       versionClock: draft.versionClock,

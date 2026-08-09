@@ -11,8 +11,8 @@ export async function POST(req: NextRequest) {
     const body = await req.json()
     const { draftId, name, selectedBlocks, versionClock } = body
 
-    // 유효성 검사
-    if (!name || !Array.isArray(selectedBlocks)) {
+    // 유효성 검사 (단일 블록 배열 또는 다중 페이지 { pages: [...] } 객체 형태 수용)
+    if (!name || (!Array.isArray(selectedBlocks) && typeof selectedBlocks !== 'object')) {
       return NextResponse.json({ error: '필수 필드 누락' }, { status: 400 })
     }
 
