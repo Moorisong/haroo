@@ -18,6 +18,7 @@ import SidePropertyPanel from '@/components/builder/SidePropertyPanel'
 import ProjectTypeSelectionModal from '@/components/builder/ProjectTypeSelectionModal'
 import SiteTemplateSelectionModal from '@/components/builder/SiteTemplateSelectionModal'
 import PageSwitcher from '@/components/builder/PageSwitcher'
+import ActionToast from '@/components/builder/ActionToast'
 
 type FilterTab = 'ALL' | BlockTier
 
@@ -186,6 +187,9 @@ export default function BuilderPage() {
         {/* 우측: 속성 패널 */}
         <SidePropertyPanel />
       </div>
+
+      {/* 액션 Toast 알림 - 미리보기/실제 공통 */}
+      <ActionToast />
     </div>
   )
 }

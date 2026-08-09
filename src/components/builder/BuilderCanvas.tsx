@@ -4,9 +4,10 @@ import React from 'react'
 import { CSS } from '@dnd-kit/utilities'
 import { DragOverlay, useDndContext, useDraggable } from '@dnd-kit/core'
 import { useBuilderStore } from '@/stores/useBuilderStore'
+import { useActionHandler, emitToast } from '@/hooks/useActionHandler'
 import FloatingQuickToolbar from './FloatingQuickToolbar'
 import BlockResizeHandles from './BlockResizeHandles'
-import type { CanvasBlock, ContainerWidth, PaddingYOption } from '@/types'
+import type { CanvasBlock, ContainerWidth, PaddingYOption, BlockInputConfig } from '@/types'
 import { cn } from '@/lib/utils'
 
 import BlkHero01 from '@/components/blocks/blk_hero_01'
@@ -33,7 +34,7 @@ import BlkFeatureGrid01 from '@/components/blocks/blk_feature_grid_01'
 import BlkContentCardGrid01 from '@/components/blocks/blk_content_card_grid_01'
 
 // 23종 실제 배포 블록 컴포넌트 매핑 레지스트리
-const BlockRegistry: Record<string, React.FC<{ config: any }>> = {
+const BlockRegistry: Record<string, React.FC<{ config: any, isPreview?: boolean, onAction?: any }>> = {
   blk_hero_01: BlkHero01,
   blk_txt_01: BlkTxt01,
   blk_share_01: BlkShare01,
@@ -59,12 +60,20 @@ const BlockRegistry: Record<string, React.FC<{ config: any }>> = {
 }
 
 // 블록 렌더러 - 매핑된 컴포넌트가 있으면 렌더링, 없으면 Fallback
-function BlockRenderer({ block, isPreviewMode }: { block: CanvasBlock; isPreviewMode: boolean }) {
+function BlockRenderer({
+  block,
+  isPreviewMode,
+  onAction,
+}: {
+  block: CanvasBlock
+  isPreviewMode: boolean
+  onAction: (config: BlockInputConfig, formData?: Record<string, string>) => void
+}) {
   const config = block.inputConfig || {}
   const Component = BlockRegistry[block.blockId]
   
   if (Component) {
-    return <Component config={config} />
+    return <Component config={config} isPreview={isPreviewMode} onAction={onAction} />
   }
 
   // 매핑되지 않은 블록들을 위한 Fallback
@@ -79,9 +88,29 @@ function BlockRenderer({ block, isPreviewMode }: { block: CanvasBlock; isPreview
 }
 
 function DraggableCanvasBlock({ block }: { block: CanvasBlock }) {
-  const { selectBlock, selectedInstanceId, isPreviewMode } = useBuilderStore()
+  const { selectBlock, selectedInstanceId, isPreviewMode, pages, setActivePage } = useBuilderStore()
   const isSelected = selectedInstanceId === block.instanceId
   const config = block.inputConfig || {}
+
+  const onNavigatePage = React.useCallback((slug: string) => {
+    const cleanSlug = slug.trim().toLowerCase().replace(/^\//, '')
+    const target = pages.find((p) => {
+      const pClean = p.slug.trim().toLowerCase().replace(/^\//, '')
+      return p.id === slug || p.slug === slug || pClean === cleanSlug
+    })
+    if (target) {
+      setActivePage(target.id)
+      emitToast(`📄 "${target.title}" (${target.slug}) 화면으로 이동했습니다.`, 'success')
+    } else {
+      emitToast(`📄 [테스트] "${slug}" 화면으로 이동합니다.`, 'info')
+    }
+  }, [pages, setActivePage])
+
+  const { handleAction } = useActionHandler({
+    isPreview: isPreviewMode,
+    pages,
+    onNavigatePage,
+  })
   const containerWidth = (config.containerWidth as ContainerWidth) || 'wide'
   const customWidthPx = config.customWidthPx as number | undefined
 
@@ -120,7 +149,7 @@ function DraggableCanvasBlock({ block }: { block: CanvasBlock }) {
   if (isPreviewMode) {
     return (
       <div id={`block-${block.instanceId}`} style={{ position: 'absolute', left: `${posX}px`, top: `${posY}px`, width: `${currentMaxPx}px`, maxWidth: '100%' }}>
-        <BlockRenderer block={block} isPreviewMode={true} />
+        <BlockRenderer block={block} isPreviewMode={true} onAction={handleAction} />
       </div>
     )
   }
@@ -160,14 +189,15 @@ function DraggableCanvasBlock({ block }: { block: CanvasBlock }) {
         customWidthPx={customWidthPx}
         customPaddingYPx={config.customPaddingYPx as number | undefined}
       >
-        <BlockRenderer block={block} isPreviewMode={false} />
+        <BlockRenderer block={block} isPreviewMode={false} onAction={handleAction} />
       </BlockResizeHandles>
     </div>
   )
 }
 
 export default function BuilderCanvas() {
-  const { canvasBlocks, deviceViewport, selectBlock } = useBuilderStore()
+  const { canvasBlocks, deviceViewport, selectBlock, isPreviewMode, pages, activePageId } = useBuilderStore()
+  const activePage = pages.find((p) => p.id === activePageId)
 
   // 뷰포트에 따른 Width 설정
   const getCanvasWidthClass = () => {
@@ -189,9 +219,16 @@ export default function BuilderCanvas() {
         getCanvasWidthClass()
       )}>
         {canvasBlocks.length === 0 ? (
-          <div className="absolute inset-0 flex flex-col items-center justify-center text-slate-400 pointer-events-none">
+          <div className="absolute inset-0 flex flex-col items-center justify-center text-slate-400 pointer-events-none p-6 text-center">
             <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="mb-4 opacity-50"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
-            <p className="font-medium text-sm">블록을 추가하여 실시간 라이브 캔버스를 채워보세요</p>
+            <p className="font-bold text-base text-slate-700 mb-1">
+              "{activePage?.title || '선택한 화면'}" ({activePage?.slug}) 에 아직 블록이 없습니다.
+            </p>
+            <p className="text-xs text-slate-500">
+              {isPreviewMode
+                ? '상단 [✏️ 다시 화면 편집하기] 버튼을 눌러 이 화면에 블록을 조립해 보세요.'
+                : '좌측 팔레트에서 블록을 추가하여 캔버스를 구성해 보세요.'}
+            </p>
           </div>
         ) : (
           canvasBlocks.map((block) => (

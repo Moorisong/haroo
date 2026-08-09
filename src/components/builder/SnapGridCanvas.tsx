@@ -13,6 +13,7 @@ import {
   type SmartGuide,
 } from '@/lib/snapGrid'
 import { cn } from '@/lib/utils'
+import { useActionHandler, emitToast } from '@/hooks/useActionHandler'
 
 // ──────────────────────────────────────────────────────────────
 // 블록 레지스트리 & 렌더러
@@ -65,10 +66,18 @@ const BlockRegistry: Record<string, React.FC<{ config: any }>> = {
   blk_content_card_grid_01: BlkContentCardGrid01,
 }
 
-function BlockRenderer({ block, isPreviewMode }: { block: CanvasBlock; isPreviewMode: boolean }) {
+function BlockRenderer({
+  block,
+  isPreviewMode,
+  onAction,
+}: {
+  block: CanvasBlock
+  isPreviewMode: boolean
+  onAction?: (config: any, formData?: any) => void
+}) {
   const config = block.inputConfig || {}
   const Component = BlockRegistry[block.blockId]
-  if (Component) return <Component config={config} />
+  if (Component) return <Component config={config} isPreview={isPreviewMode} onAction={onAction} />
   return (
     <div className="p-8 flex flex-col items-center justify-center min-h-[200px] border border-dashed border-slate-300 bg-slate-50 w-full">
       <h2 className="text-xl font-bold mb-2 text-slate-400">{block.name}</h2>
@@ -86,9 +95,10 @@ interface DraggableBlockProps {
   onDragStart: (id: string) => void
   onDragMove: (id: string, x: number, y: number) => void
   onDragEnd: () => void
+  onAction?: (config: any, formData?: any) => void
 }
 
-function DraggableBlock({ block, canvasRef, onDragStart, onDragMove, onDragEnd }: DraggableBlockProps) {
+function DraggableBlock({ block, canvasRef, onDragStart, onDragMove, onDragEnd, onAction }: DraggableBlockProps) {
   const { selectBlock, selectedInstanceId, isPreviewMode, updateBlockInputData } = useBuilderStore()
   const isSelected = selectedInstanceId === block.instanceId
   const config = block.inputConfig || {}
@@ -159,7 +169,7 @@ function DraggableBlock({ block, canvasRef, onDragStart, onDragMove, onDragEnd }
         style={{ position: 'absolute', left: posX, top: posY, width: blockWidth }}
         ref={blockRef}
       >
-        <BlockRenderer block={block} isPreviewMode={true} />
+        <BlockRenderer block={block} isPreviewMode={true} onAction={onAction} />
       </div>
     )
   }
@@ -188,7 +198,7 @@ function DraggableBlock({ block, canvasRef, onDragStart, onDragMove, onDragEnd }
           customWidthPx={config.customWidthPx as number | undefined}
           customPaddingYPx={config.customPaddingYPx as number | undefined}
         >
-          <BlockRenderer block={block} isPreviewMode={false} />
+          <BlockRenderer block={block} isPreviewMode={false} onAction={onAction} />
         </BlockResizeHandles>
       </div>
     </div>
@@ -199,10 +209,30 @@ function DraggableBlock({ block, canvasRef, onDragStart, onDragMove, onDragEnd }
 // 데스크톱 뷰 캔버스 (절대 좌표 + 스냅 그리드)
 // ──────────────────────────────────────────────────────────────
 function DesktopCanvas() {
-  const { canvasBlocks, selectBlock } = useBuilderStore()
+  const { canvasBlocks, selectBlock, pages, setActivePage, isPreviewMode } = useBuilderStore()
   const canvasRef = useRef<HTMLDivElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
   const [containerWidth, setContainerWidth] = useState(0)
+
+  const onNavigatePage = useCallback((slug: string) => {
+    const cleanSlug = slug.trim().toLowerCase().replace(/^\//, '')
+    const target = pages.find((p) => {
+      const pClean = p.slug.trim().toLowerCase().replace(/^\//, '')
+      return p.id === slug || p.slug === slug || pClean === cleanSlug
+    })
+    if (target) {
+      setActivePage(target.id)
+      emitToast(`📄 "${target.title}" (${target.slug}) 화면으로 이동했습니다.`, 'success')
+    } else {
+      emitToast(`📄 [테스트] "${slug}" 화면으로 이동합니다.`, 'info')
+    }
+  }, [pages, setActivePage])
+
+  const { handleAction } = useActionHandler({
+    isPreview: isPreviewMode,
+    pages,
+    onNavigatePage,
+  })
 
   const canvasHeight = Math.max(
     1200,
@@ -316,6 +346,7 @@ function DesktopCanvas() {
                 onDragStart={handleDragStart}
                 onDragMove={handleDragMove}
                 onDragEnd={handleDragEnd}
+                onAction={handleAction}
               />
             ))}
 
@@ -332,11 +363,31 @@ function DesktopCanvas() {
 // 반응형 모바일/태블릿 뷰 (세로 스택 모드 및 PWA 앱 스마트폰 프레임)
 // ──────────────────────────────────────────────────────────────
 function ResponsiveViewCanvas({ viewport }: { viewport: DeviceViewport }) {
-  const { canvasBlocks, selectBlock, selectedInstanceId, isPreviewMode, projectType } = useBuilderStore()
+  const { canvasBlocks, selectBlock, selectedInstanceId, isPreviewMode, projectType, pages, setActivePage } = useBuilderStore()
   
   const frameWidth = viewport === 'mobile' ? 375 : 768
   const isPwa = projectType === 'PWA'
   const isReadOnly = (projectType === 'WEB' && viewport !== 'desktop') || isPreviewMode
+
+  const onNavigatePage = useCallback((slug: string) => {
+    const cleanSlug = slug.trim().toLowerCase().replace(/^\//, '')
+    const target = pages.find((p) => {
+      const pClean = p.slug.trim().toLowerCase().replace(/^\//, '')
+      return p.id === slug || p.slug === slug || pClean === cleanSlug
+    })
+    if (target) {
+      setActivePage(target.id)
+      emitToast(`📄 "${target.title}" (${target.slug}) 화면으로 이동했습니다.`, 'success')
+    } else {
+      emitToast(`📄 [테스트] "${slug}" 화면으로 이동합니다.`, 'info')
+    }
+  }, [pages, setActivePage])
+
+  const { handleAction } = useActionHandler({
+    isPreview: isReadOnly, // Responsive 모달에서는 isReadOnly가 isPreview 역할을 함
+    pages,
+    onNavigatePage,
+  })
 
   // 모바일 뷰에서는 블록들을 posY 기준으로 정렬하여 차례대로 표시
   const sortedBlocks = useMemo(() => {
@@ -403,7 +454,7 @@ function ResponsiveViewCanvas({ viewport }: { viewport: DeviceViewport }) {
                     selectBlock(block.instanceId)
                   }}
                 >
-                  <BlockRenderer block={block} isPreviewMode={isReadOnly} />
+                  <BlockRenderer block={block} isPreviewMode={isReadOnly} onAction={handleAction} />
                 </div>
               )
             })
