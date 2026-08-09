@@ -35,16 +35,17 @@
    * Pure Clean White (`#FFFFFF`) / Slate Black (`#0F172A`) / Sky Cyan (`#0284C7`) / 1px Line (`border-slate-200`).
    * 이미지: `AtomImage01` 사용 (`object-fit: cover`, EXIF 회전 보정, `unoptimized` DataURL 지원).
 
-### 2.3 WYSIWYG & Zod 인풋 스펙 수칙 (`builder-wysiwyg-agent.md`, `types/index.ts`)
-1. 모든 블록은 `interface Props { config: BlockInputConfig }` 규격 준수.
+### 2.3 WYSIWYG, Zod 인풋 스펙 & 액션 핸들러 수칙 (`builder-wysiwyg-agent.md`, `types/index.ts`, `useActionHandler.ts`)
+1. 모든 블록은 `interface Props { config: BlockInputConfig; isPreview?: boolean; onAction?: (config: BlockInputConfig, formData?: Record<string, string>) => void }` 규격을 엄격 준수.
 2. `BlockInputConfigSchema` (`src/types/index.ts`) 규격과 100% 호환되는 Zod 데이터 모델링.
 3. 범용성 및 유연성이 확보된 톤앤매너 및 디폴트 옵션 구성.
+4. 미리보기 시 시뮬레이션(Mock Toast)과 배포 시 실제 동작은 `useActionHandler` 공통 액션 엔진을 이용하며, 배포 사이트에 목데이터가 노출되지 않도록 전적으로 엔진에 위임.
 ### 2.4 범용 다목적 블록(Versatile Block) 구현을 위한 5대 절대 수칙 (Guardrails)
 1. **데이터 스키마(Zod) 철저한 추상화**: 도메인 종속적 변수명 사용 엄격히 금지.
    * ❌ 지양: `trainerName`, `classTime`, `pricePerMonth`
    * ⭕ 지향: `title`, `subTitle`, `primaryValue`, `description`
 2. **블록 명명 규칙(Naming Convention) 강제**: 파일명 및 컴포넌트 명칭에 `fitness`, `salon`, `cafe` 등 도메인 단어 포함 절대 금지. 오직 형태나 범용 기능(`hero`, `grid`, `list`, `card`, `calendar` 등)으로만 명명.
-3. **순수 UI 컴포넌트(Dumb Block) 원칙**: 블록 내부에서 API(fetch 등) 직접 호출이나 특정 도메인 상태 관리 등 비즈니스 로직 처리 절대 금지. 오직 부모(Builder)로부터 전달받은 `config`를 렌더링하고, 범용 이벤트(예: `onClickAction`)만 방출(Emit)해야 함.
+3. **순수 UI 컴포넌트(Dumb Block) & 액션 방출(Emit) 원칙**: 블록 내부에서 API(fetch 등) 직접 호출이나 특정 도메인 상태 관리 등 비즈니스 로직 처리 절대 금지. 오직 부모로부터 전달받은 `config`를 렌더링하고, 버튼/폼 클릭 시 `onAction?.(config, formData)` 이벤트만 방출(Emit)해야 함.
 4. **컨테이너-슬롯(Slot) 조립 지향**: 복잡한 섹션 구성 시 거대한 단일 블록을 만들지 말고, 레이아웃(컨테이너) 블록 안에 텍스트 블록이나 이미지 블록을 중첩 배치할 수 있는 **컨테이너-슬롯 조립 방식**을 권장.
 5. **이중 반응형 렌더링 (Double-Responsive) 필수**: 하드코딩된 width나 padding 사용을 엄격히 금지. 반드시 `src/lib/blockLayout.ts`의 `getBlockLayout` 및 `getResponsiveGridCols` 헬퍼를 사용하여 유저 설정(`config.containerWidth`, `config.paddingY`)에 맞게 반응형 클래스가 자동 적용되도록 구현해야 함.
 

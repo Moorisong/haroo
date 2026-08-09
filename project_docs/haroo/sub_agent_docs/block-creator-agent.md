@@ -39,13 +39,17 @@
    * Pure Clean White (`#FFFFFF`) / Slate Black (`#0F172A`) / Sky Cyan (`#0284C7`) / 1px Line (`border-slate-200`).
    * 이미지: `AtomImage01` 사용 (EXIF 회전 보정, `object-fit: cover`, `aspect-video` / `aspect-square` 적용).
 
-### 2.3 WYSIWYG & Zod 인풋 스펙 수칙 (`builder-wysiwyg-agent.md`, `types/index.ts`)
-1. **Props 규격**:
-   * 모든 블록 컴포넌트는 `interface Props { config: BlockInputConfig }` 규격을 엄격 준수.
+### 2.3 WYSIWYG, Zod 인풋 스펙 & 액션 핸들러 수칙 (`builder-wysiwyg-agent.md`, `types/index.ts`, `useActionHandler.ts`)
+1. **Props 규격 (동작 액션 연동 필수)**:
+   * 모든 블록 컴포넌트는 `interface Props { config: BlockInputConfig; isPreview?: boolean; onAction?: (config: BlockInputConfig, formData?: Record<string, string>) => void }` 규격을 엄격 준수.
+   * 블록 내 모든 클릭/제출 가능 요소(버튼, 폼 제출, 결제 버튼 등)는 자체 비즈니스 로직을 하드코딩하지 않고 **`onAction?.(config, formData)`를 방출(Emit)**할 것.
    * `config`에서 `title`, `subtitle`, `buttonText`, `backgroundColor`, `textColor` 등 필요 옵션을 디폴트 값과 함께 안전하게 Destructuring하여 사용.
-2. **Zod Validation 통과**:
+2. **미리보기(Mock Data) vs 실제 배포 분기 수칙**:
+   * 미리보기 모드(`isPreview: true`)에서의 동작 테스트 시 시뮬레이션(Mock Toast)과 실제 배포(`isPreview: false`) 시의 실 API/SDK 실행은 공통 훅 `useActionHandler`를 통해 100% 분기 처리됨.
+   * **배포 환경에는 목데이터가 0% 노출**되도록 블록 자체에 가상 데이터를 하드코딩하지 않고 `useActionHandler` 엔진에 전적으로 위임할 것.
+3. **Zod Validation 통과**:
    * `BlockInputConfigSchema` (`src/types/index.ts`) 규격에 부합하도록 데이터를 구성하여 Zustand `updateBlockInputData` 0.01초 단방향 동기화와 100% 호환되게 제작.
-3. **네이밍 및 톤앤매너 통일성**:
+4. **네이밍 및 톤앤매너 통일성**:
    * 파일명: `src/components/blocks/blk_[기능명]_01.tsx` (예: `blk_review_01.tsx`)
    * 블록 ID: `blk_[기능명]_01`
    * 디폴트 문구 및 옵션 구성: 기존 블록(`blk_hero_01`, `blk_form_01` 등)과의 디자인 톤앤매너 및 통일성 유지.
