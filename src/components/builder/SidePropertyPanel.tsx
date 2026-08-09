@@ -7,7 +7,7 @@ import type { BlockInputConfig } from '@/types'
 import RevisionMeter from './RevisionMeter'
 
 export default function SidePropertyPanel() {
-  const { selectedInstanceId, canvasBlocks, updateBlockInputData, projectType, deviceViewport, isPreviewMode } = useBuilderStore()
+  const { selectedInstanceId, canvasBlocks, updateBlockInputData, projectType, deviceViewport, isPreviewMode, pages, addPage } = useBuilderStore()
   const fileInputRef = useRef<HTMLInputElement>(null)
   
   // WEB 모드의 모바일/태블릿 반응형 미리보기 중이거나, 미리보기 모드가 활성화되었을 때 속성 편집 패널 비활성화
@@ -124,6 +124,41 @@ export default function SidePropertyPanel() {
               className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500"
               placeholder="버튼 문구 입력"
             />
+          </div>
+
+          <div className="space-y-1.5">
+            <label className="text-sm font-medium text-slate-700">이 버튼을 누르면 어디로 가나요?</label>
+            <select
+              value={config.buttonLink || ''}
+              onChange={(e) => {
+                const val = e.target.value
+                if (val === '__CREATE_NEW__') {
+                  const title = prompt('새 화면의 이름을 입력해 주세요:')
+                  if (title && title.trim()) {
+                    const newId = addPage(title.trim())
+                    const createdPage = pages.find((p) => p.id === newId)
+                    if (createdPage) {
+                      handleChange('buttonLink', createdPage.slug)
+                    }
+                  }
+                } else {
+                  handleChange('buttonLink', val)
+                }
+              }}
+              className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm bg-white focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500"
+            >
+              <option value="">-- 이동할 곳 선택 --</option>
+              <optgroup label="📄 내 사이트 화면">
+                {pages.map((p) => (
+                  <option key={p.id} value={p.slug}>
+                    {p.title} ({p.slug})
+                  </option>
+                ))}
+              </optgroup>
+              <optgroup label="➕ 화면 생성">
+                <option value="__CREATE_NEW__">+ 새 화면 만들고 바로 연결</option>
+              </optgroup>
+            </select>
           </div>
         </div>
 

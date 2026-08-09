@@ -16,6 +16,8 @@ import RevisionMeter from '@/components/builder/RevisionMeter'
 import ViewportSwitcher from '@/components/builder/ViewportSwitcher'
 import SidePropertyPanel from '@/components/builder/SidePropertyPanel'
 import ProjectTypeSelectionModal from '@/components/builder/ProjectTypeSelectionModal'
+import SiteTemplateSelectionModal from '@/components/builder/SiteTemplateSelectionModal'
+import PageSwitcher from '@/components/builder/PageSwitcher'
 
 type FilterTab = 'ALL' | BlockTier
 
@@ -72,6 +74,8 @@ export default function BuilderPage() {
     <div className="h-screen flex flex-col bg-white overflow-hidden">
       {/* 진입 시 프로젝트 타입 선택 모달 */}
       <ProjectTypeSelectionModal />
+      {/* 2단계: 프로젝트 목적/템플릿 선택 모달 */}
+      <SiteTemplateSelectionModal />
 
       {/* 빌더 헤더 */}
       <header className="flex-shrink-0 h-14 border-b border-slate-200 bg-white flex items-center justify-between px-4 sm:px-5 z-20">
@@ -82,7 +86,8 @@ export default function BuilderPage() {
             </div>
           </Link>
           <span className="hidden sm:block text-xs text-slate-400">|</span>
-          <span className="hidden sm:block text-sm font-semibold text-slate-700">블록 조립 캔버스</span>
+          {/* 상단 다중 페이지 스위처 (비전문가 친화적) */}
+          <PageSwitcher />
           <span className="px-2 py-0.5 bg-emerald-100 text-emerald-700 text-xs font-bold rounded">
             {canvasBlocks.length}종 조립됨
           </span>
