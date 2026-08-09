@@ -22,6 +22,35 @@ export const BlockInputConfigSchema = z.object({
   videoUrl: z.string().url().optional(),
   buttonText: z.string().optional(),
   buttonLink: z.string().optional(),
+  // 버튼 액션의 모든 경우의 수를 담은 11가지 액션 타입
+  actionType: z.enum([
+    'NAVIGATE_PAGE',       // 내 사이트 화면 이동
+    'OPEN_URL',            // 외부 링크 열기
+    'CALL_PHONE',          // 전화 걸기
+    'OPEN_KAKAO',          // 오픈카톡/채널 열기
+    'SUBMIT_FORM',         // 문의/예약 제출
+    'PG_CHECKOUT',         // 결제창(포트원 등) 띄우기
+    'SHOW_MODAL',          // 안내 모달(팝업) 띄우기
+    'SCROLL_TO_BLOCK',     // 특정 화면 영역으로 스크롤
+    'DOWNLOAD_FILE',       // 안내장/카탈로그 파일 다운로드
+    'COPY_TO_CLIPBOARD',   // 주소나 텍스트 복사하기
+    'CUSTOM_INTERACTION'   // 커스텀 UI 애니메이션/이펙트
+  ]).optional(),
+  
+  // 액션 타입별 하위 상세 옵션 (Progressive Disclosure)
+  notifyKakao: z.boolean().optional(),
+  thankYouMessage: z.string().optional(),
+  paymentAmount: z.number().optional(),
+  paymentSuccessUrl: z.string().optional(),
+  downloadFileUrl: z.string().optional(),
+  copyTextPayload: z.string().optional(),
+  customTargetId: z.string().optional(),
+  customEffect: z.enum([
+    'COLOR_PRIMARY', 'COLOR_SECONDARY', 'COLOR_SUCCESS', 'COLOR_DANGER',
+    'TOGGLE_VISIBILITY', 'FADE_IN', 'FADE_OUT', 'SHAKE', 'BOUNCE'
+  ]).optional(),
+  customCode: z.string().optional(),
+
   formFields: z.array(z.object({
     id: z.string(),
     label: z.string(),
