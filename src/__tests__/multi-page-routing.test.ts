@@ -15,15 +15,16 @@ describe('다중 페이지(Multi-Page) 관리 및 2단계 템플릿 선택 테�
     assert.strictEqual(activePageId, pages[0].id)
   })
 
-  test('새 화면을 생성하고 활성화할 수 있다', () => {
+  test('새 화면을 생성하고 유저 지정 영문 주소(URL)로 활성화할 수 있다', () => {
     const store = useBuilderStore.getState()
-    const newId = store.addPage('회사 소개')
+    const newId = store.addPage('회사 소개', 'about-us')
 
     const updated = useBuilderStore.getState()
     assert.strictEqual(updated.pages.length, 2)
     assert.strictEqual(updated.activePageId, newId)
     const newPage = updated.pages.find((p) => p.id === newId)
     assert.strictEqual(newPage?.title, '회사 소개')
+    assert.strictEqual(newPage?.slug, '/about-us')
   })
 
   test('2단계 스타트 템플릿 목적 선택 시 siteTemplate 상태가 확정된다', () => {

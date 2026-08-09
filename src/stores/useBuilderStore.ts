@@ -46,7 +46,7 @@ interface BuilderState {
 
   // 다중 페이지 Actions
   setActivePage: (pageId: string) => void
-  addPage: (title: string) => string
+  addPage: (title: string, customSlug?: string) => string
   removePage: (pageId: string) => void
   updatePageTitle: (pageId: string, title: string) => void
   confirmSiteTemplate: (template: SiteTemplateCategory) => void
@@ -109,16 +109,24 @@ export const useBuilderStore = create<BuilderState>((set, get) => ({
     }
   },
 
-  addPage: (title) => {
+  addPage: (title, customSlug) => {
     const { pages, canvasBlocks, activePageId } = get()
     const updatedPages = pages.map((p) => (p.id === activePageId ? { ...p, blocks: canvasBlocks } : p))
     const newId = `page_${uuidv4().slice(0, 8)}`
-    // 영문/숫자 슬러그 자동 생성 (비전문가는 슬러그 신경 쓰지 않아도 됨)
-    const slug = `/page-${updatedPages.length + 1}`
+    
+    // 유저가 직접 입력한 영문 주소 정제 (소문자, 하이픈 정규화)
+    let formattedSlug = customSlug ? customSlug.toLowerCase().trim().replace(/[^a-z0-9-]/g, '') : ''
+    if (!formattedSlug) {
+      formattedSlug = `page-${updatedPages.length + 1}`
+    }
+    if (!formattedSlug.startsWith('/')) {
+      formattedSlug = `/${formattedSlug}`
+    }
+
     const newPage: PageItem = {
       id: newId,
       title: title || `새 화면 ${updatedPages.length + 1}`,
-      slug,
+      slug: formattedSlug,
       blocks: [],
     }
     const nextPages = [...updatedPages, newPage]

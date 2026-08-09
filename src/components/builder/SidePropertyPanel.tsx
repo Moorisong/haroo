@@ -133,12 +133,15 @@ export default function SidePropertyPanel() {
               onChange={(e) => {
                 const val = e.target.value
                 if (val === '__CREATE_NEW__') {
-                  const title = prompt('새 화면의 이름을 입력해 주세요:')
+                  const title = prompt('새 화면의 이름(한글 가능)을 입력해 주세요:')
                   if (title && title.trim()) {
-                    const newId = addPage(title.trim())
-                    const createdPage = pages.find((p) => p.id === newId)
-                    if (createdPage) {
-                      handleChange('buttonLink', createdPage.slug)
+                    const rawSlug = prompt('주소에 사용될 영문 주소(소문자/하이픈)를 입력해 주세요 (예: contact, about):')
+                    if (rawSlug && rawSlug.trim()) {
+                      const newId = addPage(title.trim(), rawSlug.trim())
+                      const createdPage = useBuilderStore.getState().pages.find((p) => p.id === newId)
+                      if (createdPage) {
+                        handleChange('buttonLink', createdPage.slug)
+                      }
                     }
                   }
                 } else {

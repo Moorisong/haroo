@@ -9,6 +9,7 @@ export default function PageSwitcher() {
   const [isOpen, setIsOpen] = useState(false)
   const [isAdding, setIsAdding] = useState(false)
   const [newTitle, setNewTitle] = useState('')
+  const [newSlug, setNewSlug] = useState('')
   const [showDimGuide, setShowDimGuide] = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
 
@@ -44,9 +45,13 @@ export default function PageSwitcher() {
 
   const handleAddSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    if (!newTitle.trim()) return
-    addPage(newTitle.trim())
+    if (!newTitle.trim() || !newSlug.trim()) {
+      alert('화면 이름과 영문 주소를 모두 입력해 주세요.')
+      return
+    }
+    addPage(newTitle.trim(), newSlug.trim())
     setNewTitle('')
+    setNewSlug('')
     setIsAdding(false)
     setIsOpen(false)
   }
@@ -146,21 +151,48 @@ export default function PageSwitcher() {
 
             <div className="border-t border-gray-100 dark:border-gray-800 mt-2 pt-2">
               {isAdding ? (
-                <form onSubmit={handleAddSubmit} className="flex gap-1.5 p-1">
-                  <input
-                    type="text"
-                    autoFocus
-                    placeholder="예: 회사 소개, 문의하기"
-                    value={newTitle}
-                    onChange={(e) => setNewTitle(e.target.value)}
-                    className="flex-1 px-2 py-1 text-xs border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
-                  />
-                  <button
-                    type="submit"
-                    className="px-2.5 py-1 text-xs bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 shrink-0"
-                  >
-                    추가
-                  </button>
+                <form onSubmit={handleAddSubmit} className="space-y-2 p-1">
+                  <div>
+                    <label className="block text-[10px] font-bold text-gray-500 mb-0.5">화면 이름</label>
+                    <input
+                      type="text"
+                      autoFocus
+                      placeholder="예: 회사 소개, 문의하기"
+                      value={newTitle}
+                      onChange={(e) => setNewTitle(e.target.value)}
+                      className="w-full px-2 py-1 text-xs border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[10px] font-bold text-gray-500 mb-0.5">영문 주소 (URL 경로)</label>
+                    <div className="flex items-center gap-1">
+                      <span className="text-[11px] text-gray-400 font-mono">/</span>
+                      <input
+                        type="text"
+                        placeholder="예: about, contact"
+                        value={newSlug}
+                        onChange={(e) => setNewSlug(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ''))}
+                        className="flex-1 px-2 py-1 text-xs font-mono border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex justify-end gap-1.5 pt-1">
+                    <button
+                      type="button"
+                      onClick={() => setIsAdding(false)}
+                      className="px-2 py-1 text-xs text-gray-500 hover:text-gray-700 font-medium"
+                    >
+                      취소
+                    </button>
+                    <button
+                      type="submit"
+                      className="px-3 py-1 text-xs bg-blue-600 text-white font-bold rounded-md hover:bg-blue-700"
+                    >
+                      생성
+                    </button>
+                  </div>
                 </form>
               ) : (
                 <button
