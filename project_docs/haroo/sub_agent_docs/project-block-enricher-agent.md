@@ -75,9 +75,11 @@ graph TD
 * **경로 A (기존 블록 수정/고도화)**: 기존 범용 블록(`blk_consulting_slot_01`, `blk_pricing_01` 등)의 Props/Variant(예: 테마 색상, 라벨 텍스트 변경 기능 등)를 보완하여 해결 가능한 경우, 우선적으로 기존 블록을 고도화하여 재사용성을 극대화.
 * **경로 B (신규 블록 생성)**: 기존 자산으로 구성 불가능한 경우 신규 블록을 생성하되, 특정 서비스에 국한되지 않도록 **가장 추상화된 형태의 최소 기능 범용 블록(`blk_[범용기능명]_01.tsx`)**으로 기획하고 `src/components/atoms/` 조합으로 구현.
 
-### 3단계: 빌더 시스템 2곳 연동
+### 3단계: 빌더 시스템 3곳 연동 등록
 1. `src/components/builder/BuilderCanvas.tsx` 내 `BlockRegistry`에 블록 컴포넌트 매핑 등록.
 2. `src/app/builder/page.tsx` 내 `ALL_BLOCKS` 팔레트 배열에 필수 메타데이터(`id`, `name`, `tier`, `icon`, `desc`)를 포함하여 완벽하게 등록.
+3. `src/components/builder/SidePropertyPanel.tsx` 내 `BLOCK_CAPABILITIES` 객체에 해당 `blockId` 지원 역량(`hasTitle`, `hasButton`, `hasButtonAction`, `hasImage`, `hasVideo`, `customFieldType` 등) 추가:
+   * **무관한 옵션 노출 차단 철칙**: 블록 특성과 관계없는 엉뚱한 옵션(예: 자유 텍스트 블록에 버튼 동작/이미지 업로드 옵션 등)이 속성 편집창에 노출되지 않도록 수명 및 플래그를 정밀하게 정의할 것.
 
 ---
 

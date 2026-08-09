@@ -80,12 +80,15 @@ graph TD
 * `export default function Blk[기능명]01({ config }: Props)` 형태로 작성.
 * HTML 생태그 없이 100% 원자 컴포넌트로만 구조 완성.
 
-### 3단계: 빌더 시스템 2곳 필수 등록
+### 3단계: 빌더 시스템 3곳 필수 연동 등록
 1. `src/components/builder/BuilderCanvas.tsx`:
    * `import Blk[기능명]01 from '@/components/blocks/blk_[기능명]_01'`
    * `BlockRegistry` 객체에 `blk_[기능명]_01: Blk[기능명]01` 추가 등록.
 2. `src/app/builder/page.tsx`:
    * `ALL_BLOCKS` 배열에 `{ id: 'blk_[기능명]_01', name: '[한글 블록명]', tier: '[STARTER|STANDARD|PROFESSIONAL]', icon: [LucideIcon], desc: '[설명 문구]' }` 등록.
+3. `src/components/builder/SidePropertyPanel.tsx` **(무관한 옵션 노출 0% 방지 필수)**:
+   * `BLOCK_CAPABILITIES` 맵에 `blk_[기능명]_01` 키를 추가하고, 해당 블록의 지원 범위(`hasTitle`, `hasSubtitle`, `hasButton`, `hasButtonAction`, `hasImage`, `hasVideo`, `customFieldType`)를 정밀하게 지정.
+   * **필수 준수**: 버튼이 없는 블록에 버튼 동작 옵션이 뜨거나, 미디어가 없는 블록에 이미지/비디오 업로드가 뜨는 등 **블록 기능과 무관한 엉뚱한 옵션이 속성창에 노출되는 것을 100% 차단**해야 함.
 
 ---
 
