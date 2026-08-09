@@ -7,6 +7,7 @@
 ## 🎨 1. 디자인 시스템 & UI UX 컨벤션 (Tailwind Plus Master Spec)
 
 ### 핵심 디자인 원칙 & 토큰
+
 * **Pure Clean White (`#FFFFFF`)**: 순백색 백그라운드 기본 적용 (과도한 글래스모피즘 전면 배제).
 * **Crisp 1px Line (`border-slate-200` / `border-slate-800`)**: 디바이스 및 구획 분리용 1px 단색 보더 라인.
 * **Primary Accent Slate Black (`#0F172A`)**: 메인 텍스트 및 대표 버튼 전용 Slate Black.
@@ -51,6 +52,11 @@
 23. **`ProjectTypeSelectionModal.tsx`**: 빌더 신규 진입 시 반응형 웹 vs PWA 모바일 앱 선택 카드를 띄워 제작 목적을 확정하는 1단계 모달 컴포넌트.
 24. **`SiteTemplateSelectionModal.tsx`**: 1단계 선택 후 "어떤 사이트를 만드시나요?" 등 스타트 템플릿/목적을 선택하고 어드민 데이터로 저장하는 2단계 모달 컴포넌트.
 25. **`SidePropertyPanel.tsx`**: 우측 슬라이드 오픈 듀얼 인풋 에디팅 사이드 컨트롤러 (폰트/색상/영상URL/폼수집항목 실시간 제어).
+    * **블록별 맞춤 속성 필터링 (`BLOCK_CAPABILITIES`)**: 자유 텍스트(`blk_txt_01`)는 버튼/이미지 업로드가 노출되지 않고, 동영상 블록(`blk_video_01`)은 비디오 URL만 노출되는 등 블록의 실제 기능 및 필요 속성만 스마트 렌더링.
+    * **버튼 스마트 액션 패널 (Progressive Disclosure)**:
+      * `actionType` 드롭다운 (11가지 다중 옵션 지원: 화면이동, 외부링크, 전화걸기, 폼제출, PG결제, 모달팝업, 스크롤, 파일다운로드, 주소복사, 커스텀인터랙션 등).
+      * 선택된 `actionType`에 따라 하위 세부 입력창이 단계적으로 노출됨 (예: 폼 제출 선택 시 카톡 알림 체크박스 노출).
+      * **고급 설정**: `CUSTOM_INTERACTION` 선택 시 캔버스 타겟 블록 지정 및 `customCode` (JS) 에디터 제공.
 24. **`FloatingQuickToolbar.tsx`**: 선택된 블록 상단에 표시되는 퀵 설정 바 (위로 이동, 아래로 이동, 복제, 삭제).
 
 ---
