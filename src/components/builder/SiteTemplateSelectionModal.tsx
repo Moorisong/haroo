@@ -2,94 +2,54 @@
 
 import React from 'react'
 import { useBuilderStore } from '@/stores/useBuilderStore'
+import { ArrowRight, Building2, ShoppingBag, Mail, Palette, Sparkles } from 'lucide-react'
 import type { SiteTemplateCategory } from '@/types'
-import { Building2, PartyPopper, UserCheck, ShoppingBag, LayoutTemplate } from 'lucide-react'
-
-interface TemplateOption {
-  id: SiteTemplateCategory
-  title: string
-  description: string
-  icon: React.ElementType
-  badge?: string
-}
-
-const TEMPLATE_OPTIONS: TemplateOption[] = [
-  {
-    id: 'COMPANY',
-    title: '회사 / 브랜드 소개',
-    description: '기업 정보, 주요 서비스, 팀원 및 오시는 길을 한눈에 전달합니다.',
-    icon: Building2,
-    badge: '가장 인기',
-  },
-  {
-    id: 'EVENT',
-    title: '모바일 이벤트 / 청첩장',
-    description: 'D-day 카운트다운, 갤러리, 방명록으로 특별한 소식을 전하세요.',
-    icon: PartyPopper,
-  },
-  {
-    id: 'PORTFOLIO',
-    title: '개인 포트폴리오',
-    description: '나만의 이력, 작품, 프로젝트 경력을 깔끔하게 선보입니다.',
-    icon: UserCheck,
-  },
-  {
-    id: 'COMMERCE',
-    title: '쇼핑몰 / 서비스 신청',
-    description: '상품 라인업, 서비스 신청 폼, 바로 결제 버튼을 조립합니다.',
-    icon: ShoppingBag,
-  },
-  {
-    id: 'BLANK',
-    title: '자유 구성 (빈 화면 시작)',
-    description: '어떠한 가이드 없이 원하는 블록을 자유롭게 배치합니다.',
-    icon: LayoutTemplate,
-  },
-]
 
 export default function SiteTemplateSelectionModal() {
   const { projectTypeSelected, siteTemplateSelected, confirmSiteTemplate } = useBuilderStore()
 
-  // 1단계(프로젝트 모드: 웹/PWA)가 선택되었고, 아직 2단계(템플릿)가 안 선택되었을 때 팝업
-  if (!projectTypeSelected || siteTemplateSelected) {
-    return null
-  }
+  if (!projectTypeSelected || siteTemplateSelected) return null
+
+  const templates: { id: SiteTemplateCategory; title: string; desc: string; icon: React.ElementType; iconColor: string }[] = [
+    { id: 'COMPANY', title: '회사 / 브랜드 소개', desc: '우리 회사를 소개하는 깔끔한 메인 홈페이지', icon: Building2, iconColor: 'text-blue-500' },
+    { id: 'COMMERCE', title: '매장 홍보 / 상품 판매', desc: '매장을 알리거나 상품을 판매하는 비즈니스 사이트', icon: ShoppingBag, iconColor: 'text-pink-500' },
+    { id: 'EVENT', title: '모바일 이벤트 / 청첩장', desc: '행사 안내나 모바일 청첩장 등 단기 목적 페이지', icon: Mail, iconColor: 'text-rose-500' },
+    { id: 'PORTFOLIO', title: '개인 프로필 / 포트폴리오', desc: '내 작업물과 이력을 보여주는 멋진 프로필', icon: Palette, iconColor: 'text-indigo-500' },
+    { id: 'BLANK', title: '빈 화면에서 시작', desc: '내가 원하는 대로 자유롭게 화면 구성하기', icon: Sparkles, iconColor: 'text-amber-500' },
+  ]
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in duration-200">
-      <div className="w-full max-w-2xl rounded-2xl bg-white p-6 md:p-8 shadow-2xl border border-gray-100 dark:bg-gray-900 dark:border-gray-800">
-        <div className="text-center mb-8">
-          <span className="inline-block px-3 py-1 text-xs font-semibold text-blue-600 bg-blue-50 dark:bg-blue-950 dark:text-blue-300 rounded-full mb-2">
-            2단계: 목적 선택
-          </span>
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">어떤 사이트를 만들고 싶으신가요?</h2>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-            원하시는 목적을 고르시면 꼭 필요한 화면 구성을 준비해 드립니다.
-          </p>
-        </div>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/75 backdrop-blur-md p-4 animate-in fade-in duration-300">
+      <div className="bg-white rounded-3xl shadow-2xl border border-slate-100 max-w-2xl w-full p-6 sm:p-8 text-center relative overflow-hidden">
+        <div className="absolute -top-16 -right-16 w-40 h-40 bg-indigo-50 rounded-full blur-3xl pointer-events-none opacity-70" />
+        
+        <h2 className="text-2xl sm:text-3xl font-black text-slate-900 mb-2 tracking-tight">
+          어떤 사이트를 만드시나요?
+        </h2>
+        <p className="text-xs sm:text-sm text-slate-500 mb-6 sm:mb-8 font-medium">
+          목적에 맞는 기본 화면(페이지)들이 자동으로 준비됩니다.
+        </p>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-[60vh] overflow-y-auto pr-1">
-          {TEMPLATE_OPTIONS.map((item) => {
-            const Icon = item.icon
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-left">
+          {templates.map((tpl) => {
+            const Icon = tpl.icon
             return (
               <button
-                key={item.id}
-                onClick={() => confirmSiteTemplate(item.id)}
-                className="group relative flex flex-col items-start p-4 text-left border-2 border-gray-100 rounded-xl hover:border-blue-500 hover:bg-blue-50/50 dark:border-gray-800 dark:hover:border-blue-500 dark:hover:bg-blue-950/30 transition-all"
+                key={tpl.id}
+                onClick={() => confirmSiteTemplate(tpl.id)}
+                className="group flex items-center gap-4 p-4 bg-slate-50 rounded-2xl border-2 border-slate-100 hover:border-slate-900 hover:bg-white hover:shadow-md transition-all duration-300 text-left"
               >
-                {item.badge && (
-                  <span className="absolute top-3 right-3 text-[10px] font-bold px-2 py-0.5 bg-blue-600 text-white rounded-full">
-                    {item.badge}
-                  </span>
-                )}
-                <div className="p-2.5 bg-blue-100 text-blue-600 rounded-lg dark:bg-blue-900 dark:text-blue-300 mb-3 group-hover:scale-110 transition-transform">
-                  <Icon className="w-5 h-5" />
+                <div className="w-12 h-12 flex-shrink-0 bg-white rounded-xl border border-slate-200 shadow-sm flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <Icon className={`w-5 h-5 ${tpl.iconColor}`} />
                 </div>
-                <h3 className="font-bold text-gray-900 dark:text-white text-base group-hover:text-blue-600 dark:group-hover:text-blue-400">
-                  {item.title}
-                </h3>
-                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 leading-relaxed">{item.description}</p>
-              </button>
+              <div className="flex-1">
+                <h3 className="text-sm font-black text-slate-900 mb-0.5">{tpl.title}</h3>
+                <p className="text-xs text-slate-500 font-medium leading-snug">{tpl.desc}</p>
+              </div>
+              <div className="w-6 h-6 rounded-full bg-slate-100 text-slate-400 group-hover:bg-slate-900 group-hover:text-white flex items-center justify-center transition-colors">
+                <ArrowRight size={14} />
+              </div>
+            </button>
             )
           })}
         </div>
