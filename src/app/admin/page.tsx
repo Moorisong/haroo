@@ -6,6 +6,7 @@ import AwsCostTracker from '@/components/admin/AwsCostTracker'
 import AdminFinancialPanel from '@/components/admin/AdminFinancialPanel'
 import AdminFunnelPanel from '@/components/admin/AdminFunnelPanel'
 import AdminInfraPanel from '@/components/admin/AdminInfraPanel'
+import AdminTemplateStatsPanel from '@/components/admin/AdminTemplateStatsPanel'
 
 // Mock Data
 const MOCK_STATS = {
@@ -67,9 +68,10 @@ export default function AdminPage() {
             />
           </div>
 
-          {/* 제어 & 비용 */}
+          {/* 제어 & 비용 & 템플릿 목적 통계 */}
           <div className="space-y-6">
             <AdminChoiceActionPanel />
+            <AdminTemplateStatsPanel />
             <WaitlistKakaoBroadcastBtn waitlistCount={MOCK_STATS.waitlistCount} />
             <AwsCostTracker
               ec2Cost={MOCK_STATS.ec2Cost}
