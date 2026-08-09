@@ -7,21 +7,25 @@ import type { BlockInputConfig } from '@/types'
 import RevisionMeter from './RevisionMeter'
 
 export default function SidePropertyPanel() {
-  const { selectedInstanceId, canvasBlocks, updateBlockInputData, projectType, deviceViewport } = useBuilderStore()
+  const { selectedInstanceId, canvasBlocks, updateBlockInputData, projectType, deviceViewport, isPreviewMode } = useBuilderStore()
   const fileInputRef = useRef<HTMLInputElement>(null)
   
-  // WEB 모드의 모바일/태블릿 반응형 미리보기 중에는 속성 편집 패널 비활성화
+  // WEB 모드의 모바일/태블릿 반응형 미리보기 중이거나, 미리보기 모드가 활성화되었을 때 속성 편집 패널 비활성화
   const isWebPreview = projectType === 'WEB' && deviceViewport !== 'desktop'
+  const isReadOnly = isWebPreview || isPreviewMode
 
-  if (isWebPreview) {
+  if (isReadOnly) {
     return (
       <div className="w-80 h-full bg-slate-50 border-l border-slate-200 p-6 flex flex-col justify-between overflow-y-auto">
         <div className="flex-1 flex flex-col items-center justify-center text-slate-400 text-sm text-center px-2">
           <span className="text-2xl mb-2">👁️</span>
-          <span className="font-bold text-slate-600 mb-1">반응형 미리보기 모드</span>
+          <span className="font-bold text-slate-600 mb-1">
+            {isPreviewMode ? '미리보기 모드' : '반응형 미리보기 모드'}
+          </span>
           <p className="text-xs text-slate-400 leading-relaxed">
-            태블릿/모바일 미리보기 화면에서는 속성을 편집할 수 없습니다.<br/>
-            데스크톱 모드에서 편집해 주세요.
+            {isWebPreview
+              ? '태블릿/모바일 미리보기 화면에서는 속성을 편집할 수 없습니다.\n데스크톱 모드에서 편집해 주세요.'
+              : '미리보기 모드 중에는 속성을 편집할 수 없습니다.\n편집 모드로 전환해 주세요.'}
           </p>
         </div>
         <RevisionMeter />

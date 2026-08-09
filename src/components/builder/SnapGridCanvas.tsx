@@ -336,6 +336,7 @@ function ResponsiveViewCanvas({ viewport }: { viewport: DeviceViewport }) {
   
   const frameWidth = viewport === 'mobile' ? 375 : 768
   const isPwa = projectType === 'PWA'
+  const isReadOnly = (projectType === 'WEB' && viewport !== 'desktop') || isPreviewMode
 
   // 모바일 뷰에서는 블록들을 posY 기준으로 정렬하여 차례대로 표시
   const sortedBlocks = useMemo(() => {
@@ -361,7 +362,7 @@ function ResponsiveViewCanvas({ viewport }: { viewport: DeviceViewport }) {
             {isPwa ? '📱 PWA App Frame (375px)' : viewport === 'mobile' ? 'Mobile View (375px)' : 'Tablet View (768px)'}
           </span>
           <span className="text-[11px] text-amber-400 font-bold">
-            {isPwa ? '홈 화면 앱 스타일' : '미리보기 전용 (수정 불가)'}
+            {isPwa ? (isReadOnly ? '미리보기 모드' : '편집 가능 모드') : '미리보기 전용 (수정 불가)'}
           </span>
         </div>
 
@@ -393,16 +394,16 @@ function ResponsiveViewCanvas({ viewport }: { viewport: DeviceViewport }) {
                   key={block.instanceId}
                   className={cn(
                     'w-full relative transition-all overflow-visible',
-                    !isPreviewMode && 'cursor-pointer hover:ring-1 hover:ring-inset hover:ring-slate-300',
-                    !isPreviewMode && isSelected && 'ring-2 ring-inset ring-sky-500 z-10'
+                    !isReadOnly && 'cursor-pointer hover:ring-1 hover:ring-inset hover:ring-slate-300',
+                    !isReadOnly && isSelected && 'ring-2 ring-inset ring-sky-500 z-10'
                   )}
                   onClick={(e) => {
-                    if (isPreviewMode) return
+                    if (isReadOnly) return
                     e.stopPropagation()
                     selectBlock(block.instanceId)
                   }}
                 >
-                  <BlockRenderer block={block} isPreviewMode={isPreviewMode} />
+                  <BlockRenderer block={block} isPreviewMode={isReadOnly} />
                 </div>
               )
             })

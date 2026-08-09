@@ -69,6 +69,16 @@ function runTests() {
       console.log('✅ WEB Mode confirmed & desktop viewport set')
     }
 
+    // PWA read-only calculation test
+    useBuilderStore.getState().confirmProjectType('PWA')
+    const pwaState = useBuilderStore.getState()
+    const pwaIsReadOnly = (pwaState.projectType === 'WEB' && pwaState.deviceViewport !== 'desktop') || pwaState.isPreviewMode
+    if (pwaState.projectType === 'PWA' && pwaState.deviceViewport === 'mobile' && !pwaIsReadOnly) {
+      console.log('✅ PWA Mode mobile viewport allows editing when isPreviewMode is false')
+    } else {
+      console.error('❌ PWA Mode mobile viewport editability test failed')
+    }
+
     // preview toggle
     useBuilderStore.getState().togglePreviewMode()
     if (useBuilderStore.getState().isPreviewMode === true) {
@@ -78,7 +88,7 @@ function runTests() {
     console.error('❌ Block was not added')
   }
 
-  console.log('\\n--- 🏁 Tests Complete ---')
+  console.log('\n--- 🏁 Tests Complete ---')
 }
 
 runTests()
