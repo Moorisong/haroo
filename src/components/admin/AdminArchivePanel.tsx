@@ -96,7 +96,7 @@ export default function AdminArchivePanel() {
       </div>
 
       {/* 연간 집계 요약 카드 */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         <div className="bg-white p-4 rounded-2xl border border-slate-200 space-y-1">
           <span className="text-xs font-semibold text-slate-500 flex items-center gap-1">
             <CalendarDays size={12} /> {selectedYear}년 총 결제액
@@ -127,28 +127,28 @@ export default function AdminArchivePanel() {
         <div className="p-5 border-b border-slate-100 bg-slate-50/50">
           <h3 className="text-sm font-bold text-slate-900">월별 상세 집계</h3>
         </div>
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
+        <div className="overflow-x-auto no-scrollbar">
+          <table className="w-full text-left text-xs min-w-[550px]">
             <thead className="bg-slate-50 border-b border-slate-100 text-slate-500">
               <tr>
-                <th className="py-3 px-5 font-bold">월 (Month)</th>
-                <th className="py-3 px-5 font-bold">승인 건수</th>
-                <th className="py-3 px-5 font-bold">월 매출액 (Gross)</th>
-                <th className="py-3 px-5 font-bold">PG 수수료</th>
-                <th className="py-3 px-5 font-bold text-slate-900">월 매출 총이익 (Profit)</th>
-                <th className="py-3 px-5 text-right font-bold">상세</th>
+                <th className="py-3 px-5 font-bold whitespace-nowrap">월 (Month)</th>
+                <th className="py-3 px-5 font-bold whitespace-nowrap">승인 건수</th>
+                <th className="py-3 px-5 font-bold whitespace-nowrap">월 매출액 (Gross)</th>
+                <th className="py-3 px-5 font-bold whitespace-nowrap">PG 수수료</th>
+                <th className="py-3 px-5 font-bold text-slate-900 whitespace-nowrap">월 매출 총이익 (Profit)</th>
+                <th className="py-3 px-5 text-right font-bold whitespace-nowrap">상세</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
               {data.monthlyRecords.length > 0 ? (
                 data.monthlyRecords.map((m) => (
                   <tr key={m.month} className="hover:bg-slate-50/50 transition-colors">
-                    <td className="py-3.5 px-5 font-black text-slate-700 text-sm">{selectedYear}년 {m.month}월</td>
-                    <td className="py-3.5 px-5 font-medium text-slate-600">{m.paidCount}건</td>
-                    <td className="py-3.5 px-5 font-semibold text-slate-900">₩{m.grossRevenue.toLocaleString()}</td>
-                    <td className="py-3.5 px-5 text-slate-500">-₩{m.pgFee.toLocaleString()}</td>
-                    <td className="py-3.5 px-5 font-black text-emerald-600">₩{m.grossProfit.toLocaleString()}</td>
-                    <td className="py-3.5 px-5 text-right">
+                    <td className="py-3.5 px-5 font-black text-slate-700 text-sm whitespace-nowrap">{selectedYear}년 {m.month}월</td>
+                    <td className="py-3.5 px-5 font-medium text-slate-600 whitespace-nowrap">{m.paidCount}건</td>
+                    <td className="py-3.5 px-5 font-semibold text-slate-900 whitespace-nowrap">₩{m.grossRevenue.toLocaleString()}</td>
+                    <td className="py-3.5 px-5 text-slate-500 whitespace-nowrap">-₩{m.pgFee.toLocaleString()}</td>
+                    <td className="py-3.5 px-5 font-black text-emerald-600 whitespace-nowrap">₩{m.grossProfit.toLocaleString()}</td>
+                    <td className="py-3.5 px-5 text-right whitespace-nowrap">
                       <button className="p-1 text-slate-400 hover:text-sky-500 transition-colors">
                         <ChevronRight size={16} />
                       </button>
