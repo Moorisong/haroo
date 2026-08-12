@@ -57,6 +57,61 @@ export const BlockInputConfigSchema = z.object({
     type: z.enum(['text', 'textarea', 'checkbox', 'image']),
     required: z.boolean()
   })).optional(),
+
+  // [NEW] 범용 데이터 스키마
+  pollOptions: z.array(z.object({
+    id: z.string(),
+    label: z.string(),
+    votes: z.number().optional(),
+    percentage: z.number().optional()
+  })).optional(),
+
+  actionItems: z.array(z.object({
+    id: z.string(),
+    title: z.string(),
+    description: z.string().optional(),
+    controlType: z.enum(['switch', 'button']),
+    buttonText: z.string().optional(),
+    defaultChecked: z.boolean().optional()
+  })).optional(),
+
+  calendarEvents: z.array(z.object({
+    id: z.string(),
+    date: z.string(), // YYYY-MM-DD
+    title: z.string(),
+    description: z.string().optional(),
+    isHighlighted: z.boolean().optional()
+  })).optional(),
+
+  tableColumns: z.array(z.object({
+    key: z.string(),
+    label: z.string()
+  })).optional(),
+  tableData: z.array(z.record(z.string(), z.any())).optional(),
+
+  timelineItems: z.array(z.object({
+    id: z.string(),
+    date: z.string().optional(),
+    title: z.string(),
+    description: z.string().optional(),
+    status: z.enum(['pending', 'in-progress', 'completed']).optional()
+  })).optional(),
+
+  fileItems: z.array(z.object({
+    id: z.string(),
+    name: z.string(),
+    size: z.string().optional(),
+    url: z.string().optional()
+  })).optional(),
+
+  mapPins: z.array(z.object({
+    id: z.string(),
+    lat: z.number(),
+    lng: z.number(),
+    title: z.string().optional(),
+    description: z.string().optional()
+  })).optional(),
+
   boardViewType: z.enum(['table', 'gallery', 'list']).optional(),
   backgroundColor: z.string().optional(),
   textColor: z.string().optional(),

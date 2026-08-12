@@ -50,6 +50,12 @@ const ALL_BLOCKS = [
   { id: 'blk_feed_01', name: '다목적 피드/코멘트', tier: 'STANDARD' as BlockTier, icon: MessageSquare, desc: '작성자 이름과 텍스트 리스트 피드' },
   { id: 'blk_progress_01', name: '목표 달성 진행률', tier: 'STANDARD' as BlockTier, icon: BarChart2, desc: '목표 수치 대비 현재 진행률 시각화' },
   { id: 'blk_chart_01', name: '커스텀 데이터 차트', tier: 'PROFESSIONAL' as BlockTier, icon: BarChart2, desc: '막대/점 차트 커스텀 생성' },
+  { id: 'blk_poll_01', name: '다목적 투표 보드', tier: 'STANDARD' as BlockTier, icon: CheckSquare, desc: '항목별 득표율 및 투표 참여' },
+  { id: 'blk_action_list_01', name: '상태 체크 액션 리스트', tier: 'STANDARD' as BlockTier, icon: CheckSquare, desc: '스위치/버튼 조작 다목적 리스트' },
+  { id: 'blk_calendar_01', name: '일정 캘린더', tier: 'STANDARD' as BlockTier, icon: Calendar, desc: '특정 일자 표시 및 일정 확인' },
+  { id: 'blk_table_01', name: '데이터 테이블', tier: 'PROFESSIONAL' as BlockTier, icon: LayoutGrid, desc: '표 형태의 다목적 데이터 뷰어' },
+  { id: 'blk_timeline_01', name: '진행 단계 타임라인', tier: 'STANDARD' as BlockTier, icon: Clock, desc: '단계별 진행 현황 및 타임라인' },
+  { id: 'blk_file_download_01', name: '자료 다운로드 리스트', tier: 'STANDARD' as BlockTier, icon: FileText, desc: '첨부파일 및 문서 다운로드 목록' },
 ]
 
 const FILTER_TABS: { label: string; value: FilterTab }[] = [

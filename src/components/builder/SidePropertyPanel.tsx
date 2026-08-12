@@ -13,7 +13,7 @@ interface BlockCapability {
   allowedActions?: string[]
   hasImage?: boolean
   hasVideo?: boolean
-  customFieldType?: 'MAP_ADDRESS' | 'DDAY_DATE' | 'COUPON' | 'STAMP' | 'PAYMENT' | 'BOARD_VIEW_TYPE' | 'PROGRESS' | 'CHART' | 'NONE'
+  customFieldType?: 'MAP_ADDRESS' | 'DDAY_DATE' | 'COUPON' | 'STAMP' | 'PAYMENT' | 'BOARD_VIEW_TYPE' | 'PROGRESS' | 'CHART' | 'NONE' | 'POLL_OPTIONS' | 'ACTION_ITEMS' | 'CALENDAR_EVENTS' | 'TABLE_DATA' | 'TIMELINE_ITEMS' | 'FILE_ITEMS'
 }
 
 const BLOCK_CAPABILITIES: Record<string, BlockCapability> = {
@@ -225,6 +225,55 @@ const BLOCK_CAPABILITIES: Record<string, BlockCapability> = {
     hasButton: false,
     hasImage: false,
     customFieldType: 'CHART',
+  },
+  blk_poll_01: {
+    hasTitle: true,
+    hasSubtitle: true,
+    hasButton: false,
+    hasImage: false,
+    hasVideo: false,
+    customFieldType: 'POLL_OPTIONS',
+  },
+  blk_action_list_01: {
+    hasTitle: true,
+    hasSubtitle: true,
+    hasButton: false,
+    hasImage: false,
+    hasVideo: false,
+    customFieldType: 'ACTION_ITEMS',
+  },
+  blk_calendar_01: {
+    hasTitle: true,
+    hasSubtitle: true,
+    hasButton: false,
+    hasImage: false,
+    hasVideo: false,
+    customFieldType: 'CALENDAR_EVENTS',
+  },
+  blk_table_01: {
+    hasTitle: true,
+    hasSubtitle: true,
+    hasButton: false,
+    hasImage: false,
+    hasVideo: false,
+    customFieldType: 'TABLE_DATA',
+  },
+  blk_timeline_01: {
+    hasTitle: true,
+    hasSubtitle: true,
+    hasButton: false,
+    hasImage: false,
+    hasVideo: false,
+    customFieldType: 'TIMELINE_ITEMS',
+  },
+  blk_file_download_01: {
+    hasTitle: true,
+    hasSubtitle: true,
+    hasButton: false,
+    hasButtonAction: false, // 다운로드 버튼이 리스트에 이미 포함됨
+    hasImage: false,
+    hasVideo: false,
+    customFieldType: 'FILE_ITEMS',
   },
 }
 
@@ -537,6 +586,72 @@ export default function SidePropertyPanel() {
                     className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm"
                   />
                 </div>
+              </div>
+            )}
+
+            {['POLL_OPTIONS', 'ACTION_ITEMS', 'CALENDAR_EVENTS', 'TABLE_DATA', 'TIMELINE_ITEMS', 'FILE_ITEMS'].includes(cap.customFieldType || '') && (
+              <div className="space-y-1.5 pt-2">
+                <label className="text-sm font-medium text-slate-700 flex items-center justify-between">
+                  <span>고급 데이터 편집 (JSON)</span>
+                </label>
+                <textarea 
+                  key={`${block.instanceId}-${cap.customFieldType}`}
+                  defaultValue={JSON.stringify(
+                    cap.customFieldType === 'POLL_OPTIONS' ? (config.pollOptions || [
+                      { id: '1', label: '제육볶음', votes: 15, percentage: 45 },
+                      { id: '2', label: '돈까스', votes: 12, percentage: 35 },
+                      { id: '3', label: '순대국', votes: 7, percentage: 20 },
+                    ]) :
+                    cap.customFieldType === 'ACTION_ITEMS' ? (config.actionItems || [
+                      { id: '1', title: '컨디션은 좋으신가요?', description: '어제 푹 주무셨는지 체크해주세요', controlType: 'switch', defaultChecked: true },
+                      { id: '2', title: '오늘 외출 약속이 있나요?', controlType: 'switch', defaultChecked: false },
+                      { id: '3', title: '긴급 연락처 등록', description: '응급 시 보호자에게 알림이 갑니다', controlType: 'button', buttonText: '등록하기' },
+                    ]) :
+                    cap.customFieldType === 'CALENDAR_EVENTS' ? (config.calendarEvents || [
+                      { id: '1', date: new Date().toISOString().split('T')[0], title: '오늘의 주요 일정', description: '중요한 미팅이 있습니다.', isHighlighted: true },
+                      { id: '2', date: '2026-08-15', title: '광복절 행사', isHighlighted: false },
+                    ]) :
+                    cap.customFieldType === 'TABLE_DATA' ? { 
+                      columns: config.tableColumns || [
+                        { key: 'name', label: '이름' },
+                        { key: 'amount', label: '금액' },
+                        { key: 'status', label: '상태' }
+                      ], 
+                      data: config.tableData || [
+                        { name: '김철수', amount: '50,000원', status: '완료' },
+                        { name: '이영희', amount: '35,000원', status: '대기' }
+                      ] 
+                    } :
+                    cap.customFieldType === 'TIMELINE_ITEMS' ? (config.timelineItems || [
+                      { id: '1', date: '2026.08.01', title: '프로젝트 시작', description: '킥오프 미팅 진행', status: 'completed' },
+                      { id: '2', date: '2026.08.15', title: '중간 점검', status: 'in-progress' },
+                      { id: '3', date: '2026.08.30', title: '최종 마감', status: 'pending' }
+                    ]) :
+                    (config.fileItems || [
+                      { id: '1', name: '이용가이드.pdf', size: '2.5MB' },
+                      { id: '2', name: '신청서_양식.docx', size: '1.1MB' }
+                    ]), null, 2
+                  )}
+                  onBlur={(e) => {
+                    try { 
+                      const parsed = JSON.parse(e.target.value)
+                      if (cap.customFieldType === 'POLL_OPTIONS') handleChange('pollOptions', parsed)
+                      if (cap.customFieldType === 'ACTION_ITEMS') handleChange('actionItems', parsed)
+                      if (cap.customFieldType === 'CALENDAR_EVENTS') handleChange('calendarEvents', parsed)
+                      if (cap.customFieldType === 'TABLE_DATA') {
+                        handleChange('tableColumns', parsed.columns || [])
+                        handleChange('tableData', parsed.data || [])
+                      }
+                      if (cap.customFieldType === 'TIMELINE_ITEMS') handleChange('timelineItems', parsed)
+                      if (cap.customFieldType === 'FILE_ITEMS') handleChange('fileItems', parsed)
+                    } catch (err) {
+                      // ignore parse errors while typing
+                    }
+                  }}
+                  className="w-full px-3 py-2 border border-slate-300 rounded-md text-xs font-mono h-48 bg-slate-900 text-green-400 focus:outline-none focus:ring-1 focus:ring-sky-500"
+                  placeholder="JSON 데이터를 입력하세요"
+                />
+                <p className="text-[10px] text-slate-400 leading-tight">주의: 유효한 JSON 형식으로 입력한 뒤 입력창 밖을 클릭하면 캔버스에 즉시 반영됩니다.</p>
               </div>
             )}
           </div>

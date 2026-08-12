@@ -44,6 +44,12 @@ import BlkBoardList01 from '@/components/blocks/blk_board_list_01'
 import BlkFeed01 from '@/components/blocks/blk_feed_01'
 import BlkProgress01 from '@/components/blocks/blk_progress_01'
 import BlkChart01 from '@/components/blocks/blk_chart_01'
+import BlkPoll01 from '@/components/blocks/blk_poll_01'
+import BlkActionList01 from '@/components/blocks/blk_action_list_01'
+import BlkCalendar01 from '@/components/blocks/blk_calendar_01'
+import BlkTable01 from '@/components/blocks/blk_table_01'
+import BlkTimeline01 from '@/components/blocks/blk_timeline_01'
+import BlkFileDownload01 from '@/components/blocks/blk_file_download_01'
 
 const BlockRegistry: Record<string, React.FC<{ config: any, isPreview?: boolean, onAction?: any }>> = {
   blk_hero_01: BlkHero01,
@@ -72,6 +78,12 @@ const BlockRegistry: Record<string, React.FC<{ config: any, isPreview?: boolean,
   blk_feed_01: BlkFeed01,
   blk_progress_01: BlkProgress01,
   blk_chart_01: BlkChart01,
+  blk_poll_01: BlkPoll01,
+  blk_action_list_01: BlkActionList01,
+  blk_calendar_01: BlkCalendar01,
+  blk_table_01: BlkTable01,
+  blk_timeline_01: BlkTimeline01,
+  blk_file_download_01: BlkFileDownload01,
 }
 
 function BlockRenderer({
