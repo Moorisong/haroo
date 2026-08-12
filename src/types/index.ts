@@ -104,6 +104,31 @@ export const BlockInputConfigSchema = z.object({
     url: z.string().optional()
   })).optional(),
 
+  reviewItems: z.array(z.object({
+    id: z.string(),
+    author: z.string(),
+    rating: z.number().min(1).max(5),
+    content: z.string(),
+    date: z.string().optional(),
+    avatarUrl: z.string().optional()
+  })).optional(),
+
+  rankingItems: z.array(z.object({
+    id: z.string(),
+    rank: z.number(),
+    title: z.string(),
+    subtitle: z.string().optional(),
+    score: z.string().optional(),
+    avatarUrl: z.string().optional()
+  })).optional(),
+
+  floatingButton: z.object({
+    icon: z.string().optional(),
+    text: z.string().optional(),
+    actionType: z.string().optional(),
+    url: z.string().optional()
+  }).optional(),
+
   mapPins: z.array(z.object({
     id: z.string(),
     lat: z.number(),

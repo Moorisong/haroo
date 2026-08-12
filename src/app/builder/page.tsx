@@ -5,7 +5,7 @@ import Link from 'next/link'
 import {
   Layout, Star, Map, Image, MessageSquare, Bell, CreditCard, BarChart2,
   Calendar, Users, Gift, BookOpen, Heart, Clock, Share2, FileText, Video,
-  ArrowRight, Grid, CheckSquare, LayoutGrid
+  ArrowRight, Grid, CheckSquare, LayoutGrid, Award
 } from 'lucide-react'
 import type { BlockTier } from '@/types'
 import { useBuilderStore } from '@/stores/useBuilderStore'
@@ -56,6 +56,9 @@ const ALL_BLOCKS = [
   { id: 'blk_table_01', name: '데이터 테이블', tier: 'PROFESSIONAL' as BlockTier, icon: LayoutGrid, desc: '표 형태의 다목적 데이터 뷰어' },
   { id: 'blk_timeline_01', name: '진행 단계 타임라인', tier: 'STANDARD' as BlockTier, icon: Clock, desc: '단계별 진행 현황 및 타임라인' },
   { id: 'blk_file_download_01', name: '자료 다운로드 리스트', tier: 'STANDARD' as BlockTier, icon: FileText, desc: '첨부파일 및 문서 다운로드 목록' },
+  { id: 'blk_review_01', name: '별점 리뷰 보드', tier: 'STANDARD' as BlockTier, icon: Star, desc: '별점과 함께 보여주는 수강생 후기 리스트' },
+  { id: 'blk_ranking_01', name: '랭킹 / 리더보드', tier: 'PROFESSIONAL' as BlockTier, icon: Award, desc: '인기순위, 최애곡 투표 순위 리스트' },
+  { id: 'blk_floating_button_01', name: '플로팅 액션 버튼', tier: 'PROFESSIONAL' as BlockTier, icon: MessageSquare, desc: '화면 우하단에 고정되는 빠른 상담 버튼' },
 ]
 
 const FILTER_TABS: { label: string; value: FilterTab }[] = [

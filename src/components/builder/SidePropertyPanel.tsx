@@ -13,7 +13,7 @@ interface BlockCapability {
   allowedActions?: string[]
   hasImage?: boolean
   hasVideo?: boolean
-  customFieldType?: 'MAP_ADDRESS' | 'DDAY_DATE' | 'COUPON' | 'STAMP' | 'PAYMENT' | 'BOARD_VIEW_TYPE' | 'PROGRESS' | 'CHART' | 'NONE' | 'POLL_OPTIONS' | 'ACTION_ITEMS' | 'CALENDAR_EVENTS' | 'TABLE_DATA' | 'TIMELINE_ITEMS' | 'FILE_ITEMS'
+  customFieldType?: 'MAP_ADDRESS' | 'DDAY_DATE' | 'COUPON' | 'STAMP' | 'PAYMENT' | 'BOARD_VIEW_TYPE' | 'PROGRESS' | 'CHART' | 'NONE' | 'POLL_OPTIONS' | 'ACTION_ITEMS' | 'CALENDAR_EVENTS' | 'TABLE_DATA' | 'TIMELINE_ITEMS' | 'FILE_ITEMS' | 'REVIEW_ITEMS' | 'RANKING_ITEMS' | 'FLOATING_BUTTON'
 }
 
 const BLOCK_CAPABILITIES: Record<string, BlockCapability> = {
@@ -274,6 +274,30 @@ const BLOCK_CAPABILITIES: Record<string, BlockCapability> = {
     hasImage: false,
     hasVideo: false,
     customFieldType: 'FILE_ITEMS',
+  },
+  blk_review_01: {
+    hasTitle: true,
+    hasSubtitle: true,
+    hasButton: false,
+    hasImage: false,
+    hasVideo: false,
+    customFieldType: 'REVIEW_ITEMS',
+  },
+  blk_ranking_01: {
+    hasTitle: true,
+    hasSubtitle: true,
+    hasButton: false,
+    hasImage: false,
+    hasVideo: false,
+    customFieldType: 'RANKING_ITEMS',
+  },
+  blk_floating_button_01: {
+    hasTitle: false,
+    hasSubtitle: false,
+    hasButton: false,
+    hasImage: false,
+    hasVideo: false,
+    customFieldType: 'FLOATING_BUTTON',
   },
 }
 
@@ -589,7 +613,7 @@ export default function SidePropertyPanel() {
               </div>
             )}
 
-            {['POLL_OPTIONS', 'ACTION_ITEMS', 'CALENDAR_EVENTS', 'TABLE_DATA', 'TIMELINE_ITEMS', 'FILE_ITEMS'].includes(cap.customFieldType || '') && (
+            {['POLL_OPTIONS', 'ACTION_ITEMS', 'CALENDAR_EVENTS', 'TABLE_DATA', 'TIMELINE_ITEMS', 'FILE_ITEMS', 'REVIEW_ITEMS', 'RANKING_ITEMS', 'FLOATING_BUTTON'].includes(cap.customFieldType || '') && (
               <div className="space-y-1.5 pt-2">
                 <label className="text-sm font-medium text-slate-700 flex items-center justify-between">
                   <span>고급 데이터 편집 (JSON)</span>
@@ -627,6 +651,23 @@ export default function SidePropertyPanel() {
                       { id: '2', date: '2026.08.15', title: '중간 점검', status: 'in-progress' },
                       { id: '3', date: '2026.08.30', title: '최종 마감', status: 'pending' }
                     ]) :
+                    cap.customFieldType === 'REVIEW_ITEMS' ? (config.reviewItems || [
+                      { id: '1', author: '김수강', rating: 5, content: '정말 유익한 강의였습니다. 실무에 바로 적용할 수 있었어요!', date: '2026.08.10' },
+                      { id: '2', author: '이초보', rating: 4, content: '기초부터 탄탄하게 알려주셔서 이해하기 쉬웠습니다.', date: '2026.08.05' },
+                      { id: '3', author: '박심화', rating: 5, content: '심화 과정까지 다뤄주셔서 제 실력이 한 단계 업그레이드 된 기분입니다.', date: '2026.08.01' },
+                    ]) :
+                    cap.customFieldType === 'RANKING_ITEMS' ? (config.rankingItems || [
+                      { id: '1', rank: 1, title: 'Supernova', subtitle: '투표수 12,450', score: '99.5' },
+                      { id: '2', rank: 2, title: 'How Sweet', subtitle: '투표수 10,200', score: '92.0' },
+                      { id: '3', rank: 3, title: 'Bubble Gum', subtitle: '투표수 8,500', score: '88.5' },
+                      { id: '4', rank: 4, title: 'Magnetic', subtitle: '투표수 6,300', score: '76.0' },
+                      { id: '5', rank: 5, title: '해야 (HEYA)', subtitle: '투표수 5,100', score: '72.5' },
+                    ]) :
+                    cap.customFieldType === 'FLOATING_BUTTON' ? (config.floatingButton || {
+                      icon: 'message',
+                      text: '빠른 상담',
+                      actionType: 'OPEN_MODAL',
+                    }) :
                     (config.fileItems || [
                       { id: '1', name: '이용가이드.pdf', size: '2.5MB' },
                       { id: '2', name: '신청서_양식.docx', size: '1.1MB' }
@@ -644,6 +685,9 @@ export default function SidePropertyPanel() {
                       }
                       if (cap.customFieldType === 'TIMELINE_ITEMS') handleChange('timelineItems', parsed)
                       if (cap.customFieldType === 'FILE_ITEMS') handleChange('fileItems', parsed)
+                      if (cap.customFieldType === 'REVIEW_ITEMS') handleChange('reviewItems', parsed)
+                      if (cap.customFieldType === 'RANKING_ITEMS') handleChange('rankingItems', parsed)
+                      if (cap.customFieldType === 'FLOATING_BUTTON') handleChange('floatingButton', parsed)
                     } catch (err) {
                       // ignore parse errors while typing
                     }

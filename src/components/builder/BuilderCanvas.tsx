@@ -42,6 +42,9 @@ import BlkCalendar01 from '@/components/blocks/blk_calendar_01'
 import BlkTable01 from '@/components/blocks/blk_table_01'
 import BlkTimeline01 from '@/components/blocks/blk_timeline_01'
 import BlkFileDownload01 from '@/components/blocks/blk_file_download_01'
+import BlkReview01 from '@/components/blocks/blk_review_01'
+import BlkRanking01 from '@/components/blocks/blk_ranking_01'
+import BlkFloatingButton01 from '@/components/blocks/blk_floating_button_01'
 
 // 실제 배포 블록 컴포넌트 매핑 레지스트리 (Hot reload 강제)
 const BlockRegistry: Record<string, React.FC<{ config: any, isPreview?: boolean, onAction?: any }>> = {
@@ -77,6 +80,9 @@ const BlockRegistry: Record<string, React.FC<{ config: any, isPreview?: boolean,
   blk_table_01: BlkTable01,
   blk_timeline_01: BlkTimeline01,
   blk_file_download_01: BlkFileDownload01,
+  blk_review_01: BlkReview01,
+  blk_ranking_01: BlkRanking01,
+  blk_floating_button_01: BlkFloatingButton01,
 }
 
 // 블록 렌더러 - 매핑된 컴포넌트가 있으면 렌더링, 없으면 Fallback
