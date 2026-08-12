@@ -26,27 +26,6 @@ const HAROO_LIST = [
   '완성: 단 5분',
 ]
 
-const BENEFIT_ITEMS = [
-  {
-    icon: Monitor,
-    iconClass: 'text-slate-700',
-    wrapperClass: 'border-slate-200 bg-white',
-    title: '일반 홍보 웹사이트',
-    titleClass: 'text-slate-900',
-    desc: 'PC·모바일 반응형으로 매장 정보, 위치, 예약을 완벽하게 안내합니다.',
-    descClass: 'text-slate-500',
-  },
-  {
-    icon: Smartphone,
-    iconClass: 'text-sky-600',
-    wrapperClass: 'border-sky-200 bg-sky-50',
-    title: '앱 감성 모바일 웹앱(PWA)',
-    titleClass: 'text-sky-800',
-    desc: '앱 아이콘 추가, 푸시 알림 등 네이티브 앱과 동일한 경험을 선사합니다.',
-    descClass: 'text-sky-700',
-  },
-]
-
 /**
  * 현실적 비용 비교 테이블
  * 외주 제작사 vs 하루 비교 카드
@@ -120,20 +99,46 @@ export default function RealisticCostComparisonTable() {
           </div>
         </div>
 
-        {/* 이원화 혜택 */}
-        <div className="mt-6 grid sm:grid-cols-2 gap-3 max-w-3xl mx-auto">
-          {BENEFIT_ITEMS.map((item) => {
-            const Icon = item.icon
-            return (
-              <div key={item.title} className={`flex items-start gap-2.5 p-3.5 rounded-xl border ${item.wrapperClass}`}>
-                <Icon size={18} className={`${item.iconClass} flex-shrink-0 mt-0.5`} />
-                <div>
-                  <div className={`text-xs sm:text-sm font-bold mb-0.5 ${item.titleClass}`}>{item.title}</div>
-                  <div className={`text-[11px] leading-relaxed ${item.descClass}`}>{item.desc}</div>
+        {/* 하루 통합 2가지 기본 제공 혜택 */}
+        <div className="mt-8 max-w-3xl mx-auto">
+          <div className="text-center mb-3">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-sky-100 border border-sky-200 text-sky-700 text-xs font-bold rounded-full">
+              <Check size={13} className="text-sky-600" />
+              하루 하나로 아래 2가지 서비스가 모두 무상 기본 제공됩니다
+            </span>
+          </div>
+
+          <div className="grid sm:grid-cols-2 gap-3">
+            <div className="flex items-start gap-3 p-4 rounded-xl border border-sky-200 bg-sky-50/70 shadow-xs">
+              <div className="w-8 h-8 rounded-lg bg-sky-600 text-white flex items-center justify-center flex-shrink-0 mt-0.5 font-black text-xs">
+                01
+              </div>
+              <div>
+                <div className="flex items-center gap-1.5 text-xs sm:text-sm font-bold text-slate-900 mb-1">
+                  <Monitor size={15} className="text-sky-600" />
+                  일반 웹사이트
+                </div>
+                <div className="text-[11px] leading-relaxed text-slate-600">
+                  PC와 모바일 브라우저 어디서나 접속되는 일반 대표 웹사이트가 완성됩니다.
                 </div>
               </div>
-            )
-          })}
+            </div>
+
+            <div className="flex items-start gap-3 p-4 rounded-xl border border-sky-200 bg-sky-50/70 shadow-xs">
+              <div className="w-8 h-8 rounded-lg bg-sky-600 text-white flex items-center justify-center flex-shrink-0 mt-0.5 font-black text-xs">
+                02
+              </div>
+              <div>
+                <div className="flex items-center gap-1.5 text-xs sm:text-sm font-bold text-slate-900 mb-1">
+                  <Smartphone size={15} className="text-sky-600" />
+                  PWA 모바일 웹앱
+                </div>
+                <div className="text-[11px] leading-relaxed text-slate-600">
+                  바탕화면 아이콘 설치, 카톡 알림 연동 등 스마트폰 앱 경험이 함께 100% 포함됩니다.
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>

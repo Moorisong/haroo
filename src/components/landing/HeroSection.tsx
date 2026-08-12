@@ -25,7 +25,7 @@ export default function HeroSection() {
         <div className="flex flex-wrap justify-center gap-2 mb-4">
           <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-sky-50 border border-sky-200 rounded-full text-xs font-medium text-sky-700">
             <Zap size={11} />
-            코딩 지식 0점도 5분 만에 완결
+            코딩 지식 없어도 5분 만에 완결
           </span>
           <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-slate-50 border border-slate-200 rounded-full text-xs font-medium text-slate-600">
             <Shield size={11} />

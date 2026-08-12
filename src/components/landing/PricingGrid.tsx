@@ -141,7 +141,7 @@ export default function PricingGrid() {
                 {SUBSCRIPTION_PLANS.map((plan) => (
                   <div key={plan.months} className={`flex items-center justify-between p-3.5 sm:p-4 ${plan.recommended ? 'bg-sky-50' : ''}`}>
                     <div className="flex items-center gap-3">
-                      <div className={`w-9 h-9 rounded-xl flex items-center justify-center font-black text-xs ${plan.recommended ? 'bg-sky-600 text-white' : 'bg-slate-100 text-slate-700'}`}>
+                      <div className={`w-10 h-10 rounded-xl flex items-center justify-center font-black text-[11px] sm:text-xs whitespace-nowrap flex-shrink-0 ${plan.recommended ? 'bg-sky-600 text-white' : 'bg-slate-100 text-slate-700'}`}>
                         {plan.months}개월
                       </div>
                       <div>
@@ -162,7 +162,7 @@ export default function PricingGrid() {
               </div>
               <div className="p-4 border-t border-slate-100 bg-slate-50">
                 <p className="text-[11px] text-slate-500 leading-relaxed text-center">
-                  구독 해지 시 <strong>Math.ceil(사용일수/30)</strong>개월로 정산 후 잔여 금액에서 10% 위약금을 차감한 금액이 자동 환불됩니다.
+                  중도 해지 시 이용하신 기간을 제외한 나머지 금액에서 10% 위약금을 뺀 후 즉시 환불해 드립니다.
                 </p>
               </div>
             </div>

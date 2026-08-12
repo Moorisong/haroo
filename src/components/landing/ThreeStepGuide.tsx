@@ -36,7 +36,7 @@ export default function ThreeStepGuide() {
             가장 쉬운 3단계 완성
           </span>
           <h2 className="text-xl sm:text-2xl md:text-3xl font-black text-slate-900 break-keep leading-snug">
-            개발 지식 0점도 5분 만에 만드는 법
+            개발 지식 없어도 5분 만에 만드는 법
           </h2>
           <p className="text-slate-500 text-xs sm:text-sm mt-2 max-w-lg mx-auto break-keep">
             복잡한 코딩이나 외주 맡길 필요 없이, 딱 3단계로 완성되는 나만의 스마트폰 앱
