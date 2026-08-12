@@ -22,7 +22,7 @@ export default function AdminFinancialPanel({ periodLabel = '이번 달', revenu
         <h2 className="text-sm font-bold text-slate-900">재무 지표 ({periodLabel})</h2>
       </div>
 
-      <div className="grid grid-cols-2 gap-4 mb-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-6">
         <div className="p-4 bg-slate-50 rounded-xl border border-slate-100">
           <div className="text-xs text-slate-500 mb-1">총 매출액</div>
           <div className="text-xl font-black text-slate-900">₩ {revenue.toLocaleString()}</div>

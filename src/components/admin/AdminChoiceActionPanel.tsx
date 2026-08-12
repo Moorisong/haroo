@@ -40,7 +40,7 @@ export default function AdminChoiceActionPanel() {
               </div>
 
               {/* 하단으로 표출되어 잘리지 않는 툴팁 팝업 */}
-              <div className="absolute left-0 top-full mt-2 w-72 sm:w-80 p-4 bg-slate-900 text-white rounded-2xl shadow-2xl text-xs z-[999] opacity-0 group-hover/tooltip:opacity-100 pointer-events-none group-hover/tooltip:pointer-events-auto transition-all duration-200 -translate-y-1 group-hover/tooltip:translate-y-0 border border-slate-700">
+              <div className="absolute left-0 top-full mt-2 w-[calc(100vw-3rem)] max-w-xs sm:max-w-none sm:w-80 p-4 bg-slate-900 text-white rounded-2xl shadow-2xl text-xs z-[999] opacity-0 group-hover/tooltip:opacity-100 pointer-events-none group-hover/tooltip:pointer-events-auto transition-all duration-200 -translate-y-1 group-hover/tooltip:translate-y-0 border border-slate-700">
                 {/* 툴팁 상단 화살표 */}
                 <div className="absolute left-6 -top-2 w-0 h-0 border-x-8 border-x-transparent border-b-8 border-b-slate-900" />
 
@@ -96,7 +96,7 @@ export default function AdminChoiceActionPanel() {
               </div>
 
               {/* 하단으로 표출되어 잘리지 않는 툴팁 팝업 */}
-              <div className="absolute left-0 top-full mt-2 w-72 sm:w-80 p-4 bg-slate-900 text-white rounded-2xl shadow-2xl text-xs z-[999] opacity-0 group-hover/tooltip:opacity-100 pointer-events-none group-hover/tooltip:pointer-events-auto transition-all duration-200 -translate-y-1 group-hover/tooltip:translate-y-0 border border-slate-700">
+              <div className="absolute left-0 top-full mt-2 w-[calc(100vw-3rem)] max-w-xs sm:max-w-none sm:w-80 p-4 bg-slate-900 text-white rounded-2xl shadow-2xl text-xs z-[999] opacity-0 group-hover/tooltip:opacity-100 pointer-events-none group-hover/tooltip:pointer-events-auto transition-all duration-200 -translate-y-1 group-hover/tooltip:translate-y-0 border border-slate-700">
                 {/* 툴팁 상단 화살표 */}
                 <div className="absolute left-6 -top-2 w-0 h-0 border-x-8 border-x-transparent border-b-8 border-b-slate-900" />
 

@@ -174,24 +174,24 @@ export default function AdminGrowthChartPanel({ period: controlledPeriod, onPeri
       </div>
 
       {/* 요약 델타 수치 카드 */}
-      <div className="grid grid-cols-2 gap-4">
-        <div className="bg-purple-50/60 p-4 rounded-xl border border-purple-100 flex justify-between items-end">
-          <div>
-            <p className="text-xs text-purple-700 font-semibold mb-1">무료 드래프트 생성 (Draft)</p>
-            <p className="text-2xl font-black text-purple-900">{data.totalDrafts.toLocaleString()}건</p>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+        <div className="bg-purple-50/60 p-3.5 sm:p-4 rounded-xl border border-purple-100 flex items-center justify-between">
+          <div className="space-y-0.5">
+            <p className="text-xs text-purple-700 font-semibold break-keep">무료 드래프트 생성 (Draft)</p>
+            <p className="text-xl sm:text-2xl font-black text-purple-900">{data.totalDrafts.toLocaleString()}건</p>
           </div>
-          <div className={`flex items-center gap-0.5 text-xs font-bold px-2 py-1 rounded ${data.draftDelta >= 0 ? 'bg-purple-200 text-purple-800' : 'bg-rose-100 text-rose-700'}`}>
+          <div className={`flex items-center gap-0.5 text-xs font-bold px-2 py-1 rounded shrink-0 ${data.draftDelta >= 0 ? 'bg-purple-200 text-purple-800' : 'bg-rose-100 text-rose-700'}`}>
             {data.draftDelta >= 0 ? <ArrowUpRight size={14} /> : <ArrowDownRight size={14} />}
             {Math.abs(data.draftDelta)}%
           </div>
         </div>
 
-        <div className="bg-sky-50/60 p-4 rounded-xl border border-sky-100 flex justify-between items-end">
-          <div>
-            <p className="text-xs text-sky-700 font-semibold mb-1">유료 결제 전환 (Paid)</p>
-            <p className="text-2xl font-black text-sky-900">{data.totalPaids.toLocaleString()}건</p>
+        <div className="bg-sky-50/60 p-3.5 sm:p-4 rounded-xl border border-sky-100 flex items-center justify-between">
+          <div className="space-y-0.5">
+            <p className="text-xs text-sky-700 font-semibold break-keep">유료 결제 전환 (Paid)</p>
+            <p className="text-xl sm:text-2xl font-black text-sky-900">{data.totalPaids.toLocaleString()}건</p>
           </div>
-          <div className={`flex items-center gap-0.5 text-xs font-bold px-2 py-1 rounded ${data.paidDelta >= 0 ? 'bg-sky-200 text-sky-800' : 'bg-rose-100 text-rose-700'}`}>
+          <div className={`flex items-center gap-0.5 text-xs font-bold px-2 py-1 rounded shrink-0 ${data.paidDelta >= 0 ? 'bg-sky-200 text-sky-800' : 'bg-rose-100 text-rose-700'}`}>
             {data.paidDelta >= 0 ? <ArrowUpRight size={14} /> : <ArrowDownRight size={14} />}
             {Math.abs(data.paidDelta)}%
           </div>
