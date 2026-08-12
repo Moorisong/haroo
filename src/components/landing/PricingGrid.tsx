@@ -57,26 +57,26 @@ export default function PricingGrid() {
   const [tab, setTab] = useState<PricingTab>('creation')
 
   return (
-    <section id="pricing" className="py-20 sm:py-24 px-4 sm:px-6 bg-slate-50">
+    <section id="pricing" className="py-12 sm:py-16 px-4 sm:px-6 bg-slate-50">
       <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-10">
-          <span className="inline-block px-3 py-1 bg-slate-100 border border-slate-200 text-slate-600 text-xs font-semibold rounded-full mb-4">
+        <div className="text-center mb-6">
+          <span className="inline-block px-3 py-0.5 bg-slate-100 border border-slate-200 text-slate-600 text-xs font-semibold rounded-full mb-3">
             가격 안내
           </span>
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-slate-900 text-balance">
             명확하고 투명한 가격
           </h2>
-          <p className="text-slate-500 text-sm sm:text-base mt-4">결제 전 무료로 조립하고, 마음에 들면 결제하세요.</p>
+          <p className="text-slate-500 text-sm mt-2">무료로 먼저 조립해보시고 결정하세요.</p>
         </div>
 
         {/* 탭 */}
-        <div className="flex justify-center mb-8">
-          <div className="inline-flex gap-1 p-1 bg-white border border-slate-200 rounded-xl">
+        <div className="flex justify-center mb-6 w-full">
+          <div className="grid grid-cols-2 gap-1 p-1 bg-white border border-slate-200 rounded-xl w-full max-w-sm">
             {(['creation', 'subscription'] as PricingTab[]).map((t) => (
               <button
                 key={t}
                 onClick={() => setTab(t)}
-                className={`px-5 py-2 text-sm font-semibold rounded-lg transition-all ${
+                className={`py-1.5 px-2 text-[11px] sm:text-xs font-semibold rounded-lg transition-all text-center whitespace-nowrap truncate ${
                   tab === t ? 'bg-slate-900 text-white' : 'text-slate-500 hover:text-slate-700'
                 }`}
               >
@@ -93,26 +93,26 @@ export default function PricingGrid() {
               return (
                 <div key={tier.name} className={`rounded-2xl border-2 bg-white overflow-hidden ${tier.color} ${tier.highlight ? 'shadow-lg' : ''}`}>
                   {tier.highlight && (
-                    <div className="bg-slate-900 text-center py-1.5">
+                    <div className="bg-slate-900 text-center py-1">
                       <span className="text-xs font-bold text-white">가장 인기 있는 플랜</span>
                     </div>
                   )}
-                  <div className="p-6">
-                    <div className="flex items-center gap-2 mb-4">
-                      <div className="w-9 h-9 rounded-lg bg-slate-50 border border-slate-200 flex items-center justify-center">
-                        <Icon size={16} className="text-slate-700" />
+                  <div className="p-5">
+                    <div className="flex items-center gap-2 mb-3">
+                      <div className="w-8 h-8 rounded-lg bg-slate-50 border border-slate-200 flex items-center justify-center">
+                        <Icon size={15} className="text-slate-700" />
                       </div>
                       <div>
                         <div className="text-xs font-bold text-slate-500">{tier.name}</div>
-                        <div className="text-xs text-slate-400">{tier.label}</div>
+                        <div className="text-[11px] text-slate-400">{tier.label}</div>
                       </div>
                     </div>
-                    <div className="mb-1">
-                      <span className="text-3xl font-black text-slate-900">{tier.price.toLocaleString()}</span>
-                      <span className="text-sm text-slate-500">원 일시불</span>
+                    <div className="mb-0.5">
+                      <span className="text-2xl sm:text-3xl font-black text-slate-900">{tier.price.toLocaleString()}</span>
+                      <span className="text-xs text-slate-500">원 일시불</span>
                     </div>
-                    <p className="text-xs text-slate-500 mb-5">{tier.blocks}</p>
-                    <div className="space-y-2 mb-6">
+                    <p className="text-[11px] text-slate-500 mb-4">{tier.blocks}</p>
+                    <div className="space-y-1.5 mb-5">
                       {tier.features.map((f, i) => (
                         <div key={i} className="flex items-start gap-2">
                           <Check size={13} className="text-sky-600 flex-shrink-0 mt-0.5" />
@@ -124,7 +124,7 @@ export default function PricingGrid() {
                         <span className="text-xs text-slate-600 font-medium">{tier.domain}</span>
                       </div>
                     </div>
-                    <Link href="/login" className={`block w-full py-3 text-center text-sm font-bold rounded-xl transition-colors ${tier.btnColor}`}>
+                    <Link href="/login" className={`block w-full py-2.5 text-center text-xs sm:text-sm font-bold rounded-xl transition-colors ${tier.btnColor}`}>
                       무료로 조립 시작
                     </Link>
                   </div>
@@ -139,29 +139,29 @@ export default function PricingGrid() {
             <div className="rounded-2xl border border-slate-200 bg-white overflow-hidden">
               <div className="divide-y divide-slate-100">
                 {SUBSCRIPTION_PLANS.map((plan) => (
-                  <div key={plan.months} className={`flex items-center justify-between p-4 sm:p-5 ${plan.recommended ? 'bg-sky-50' : ''}`}>
+                  <div key={plan.months} className={`flex items-center justify-between p-3.5 sm:p-4 ${plan.recommended ? 'bg-sky-50' : ''}`}>
                     <div className="flex items-center gap-3">
-                      <div className={`w-10 h-10 rounded-xl flex items-center justify-center font-black text-sm ${plan.recommended ? 'bg-sky-600 text-white' : 'bg-slate-100 text-slate-700'}`}>
+                      <div className={`w-9 h-9 rounded-xl flex items-center justify-center font-black text-xs ${plan.recommended ? 'bg-sky-600 text-white' : 'bg-slate-100 text-slate-700'}`}>
                         {plan.months}개월
                       </div>
                       <div>
-                        <div className="text-sm font-semibold text-slate-900">
+                        <div className="text-xs sm:text-sm font-semibold text-slate-900">
                           월 {plan.monthlyPrice.toLocaleString()}원
-                          {plan.discount > 0 && <span className="ml-2 text-xs font-bold text-sky-600">{plan.discount}% 할인</span>}
-                          {plan.recommended && <span className="ml-2 text-xs font-bold text-sky-700 bg-sky-100 px-1.5 py-0.5 rounded">추천</span>}
+                          {plan.discount > 0 && <span className="ml-2 text-[11px] font-bold text-sky-600">{plan.discount}% 할인</span>}
+                          {plan.recommended && <span className="ml-2 text-[11px] font-bold text-sky-700 bg-sky-100 px-1.5 py-0.5 rounded">추천</span>}
                         </div>
-                        <div className="text-xs text-slate-400">{plan.note}</div>
+                        <div className="text-[11px] text-slate-400">{plan.note}</div>
                       </div>
                     </div>
                     <div className="text-right">
-                      <div className="text-base font-black text-slate-900">{plan.total.toLocaleString()}원</div>
-                      <div className="text-xs text-slate-400">일시불 결제</div>
+                      <div className="text-sm sm:text-base font-black text-slate-900">{plan.total.toLocaleString()}원</div>
+                      <div className="text-[11px] text-slate-400">일시불 결제</div>
                     </div>
                   </div>
                 ))}
               </div>
-              <div className="p-5 border-t border-slate-100 bg-slate-50">
-                <p className="text-xs text-slate-500 leading-relaxed text-center">
+              <div className="p-4 border-t border-slate-100 bg-slate-50">
+                <p className="text-[11px] text-slate-500 leading-relaxed text-center">
                   구독 해지 시 <strong>Math.ceil(사용일수/30)</strong>개월로 정산 후 잔여 금액에서 10% 위약금을 차감한 금액이 자동 환불됩니다.
                 </p>
               </div>
@@ -170,19 +170,19 @@ export default function PricingGrid() {
         )}
 
         {/* 수정 요금 정책 */}
-        <div className="mt-10 rounded-2xl border border-slate-200 bg-white overflow-hidden">
-          <div className="px-5 py-4 border-b border-slate-100">
-            <h3 className="text-sm font-bold text-slate-900">수정 비용 정책</h3>
-            <p className="text-xs text-slate-500 mt-0.5">대부분의 수정은 완전 무료입니다</p>
+        <div className="mt-6 rounded-2xl border border-slate-200 bg-white overflow-hidden max-w-3xl mx-auto">
+          <div className="px-4 py-3 border-b border-slate-100">
+            <h3 className="text-xs sm:text-sm font-bold text-slate-900">수정 비용 정책</h3>
+            <p className="text-[11px] text-slate-500">대부분의 수정은 완전 무료입니다</p>
           </div>
           <div className="divide-y divide-slate-50">
             {REVISION_CASES.map((item) => (
-              <div key={item.case} className="flex items-center justify-between px-5 py-3">
-                <div className="flex items-center gap-3">
-                  <span className="w-5 h-5 rounded bg-slate-100 text-slate-600 text-xs font-bold flex items-center justify-center">{item.case}</span>
-                  <span className="text-sm text-slate-700">{item.label}</span>
+              <div key={item.case} className="flex items-center justify-between px-4 py-2.5">
+                <div className="flex items-center gap-2.5">
+                  <span className="w-4 h-4 rounded bg-slate-100 text-slate-600 text-[10px] font-bold flex items-center justify-center">{item.case}</span>
+                  <span className="text-xs sm:text-sm text-slate-700">{item.label}</span>
                 </div>
-                <span className={`px-2.5 py-1 text-xs font-bold rounded-full ${item.badge}`}>{item.cost}</span>
+                <span className={`px-2 py-0.5 text-[11px] font-bold rounded-full ${item.badge}`}>{item.cost}</span>
               </div>
             ))}
           </div>
