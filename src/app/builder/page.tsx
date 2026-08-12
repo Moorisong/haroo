@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import {
   Layout, Star, Map, Image, MessageSquare, Bell, CreditCard, BarChart2,
@@ -19,6 +19,7 @@ import ProjectTypeSelectionModal from '@/components/builder/ProjectTypeSelection
 import SiteTemplateSelectionModal from '@/components/builder/SiteTemplateSelectionModal'
 import PageSwitcher from '@/components/builder/PageSwitcher'
 import ActionToast from '@/components/builder/ActionToast'
+import MobileBlockerScreen from '@/components/builder/MobileBlockerScreen'
 
 type FilterTab = 'ALL' | BlockTier
 
@@ -63,16 +64,35 @@ const TIER_BADGE: Record<string, string> = {
 export default function BuilderPage() {
   const [activeTab, setActiveTab] = useState<FilterTab>('ALL')
 
-  const { canvasBlocks, addBlock, isDirty, deviceViewport, projectType, isPreviewMode: storeIsPreview } = useBuilderStore()
+  const { canvasBlocks, addBlock, isDirty, deviceViewport, projectType, isPreviewMode: storeIsPreview, setDeviceViewport } = useBuilderStore()
   const isReadOnlyPreview = (projectType === 'WEB' && deviceViewport !== 'desktop') || storeIsPreview
 
-  // 500ms debounce 자동 저장
-  useDraftAutoSave()
+  // 실제 모바일 디바이스 감지
+  const [isMobileDevice, setIsMobileDevice] = useState(false)
+  const [isMounted, setIsMounted] = useState(false)
+
+  useEffect(() => {
+    setIsMounted(true)
+    const checkMobile = () => {
+      const mobile = window.innerWidth < 768
+      setIsMobileDevice(mobile)
+      if (mobile && deviceViewport === 'desktop') {
+        setDeviceViewport('mobile')
+      }
+    }
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [deviceViewport, setDeviceViewport])
+
+  if (isMounted && isMobileDevice) {
+    return <MobileBlockerScreen />
+  }
 
   const filtered = activeTab === 'ALL' ? ALL_BLOCKS : ALL_BLOCKS.filter((b) => b.tier === activeTab)
 
   return (
-    <div className="h-screen flex flex-col bg-white overflow-hidden">
+    <div className="h-screen flex flex-col bg-white overflow-hidden relative">
       {/* 진입 시 프로젝트 타입 선택 모달 */}
       <ProjectTypeSelectionModal />
       {/* 2단계: 프로젝트 목적/템플릿 선택 모달 */}
@@ -160,32 +180,33 @@ export default function BuilderPage() {
           
           <SnapGridCanvas />
 
-          {/* 모바일용 블록 팔레트 (작은 화면에서만) */}
-          <div className="mt-4 md:hidden px-4 pb-4 relative">
-            {isReadOnlyPreview && (
-              <div className="absolute inset-0 bg-slate-100/60 backdrop-blur-[2px] z-10 rounded-xl mx-4 mb-4" />
-            )}
-            <div className="text-xs font-bold text-slate-700 mb-2 px-1">블록 추가하기</div>
-            <div className="grid grid-cols-3 gap-2">
-              {ALL_BLOCKS.map((block) => {
-                const Icon = block.icon
-                return (
-                  <button
-                    key={block.id}
-                    onClick={() => addBlock(block)}
-                    className="flex flex-col items-center gap-1 p-3 bg-white rounded-xl border border-slate-200 hover:border-slate-400 transition-all"
-                  >
-                    <Icon size={16} className="text-slate-600" />
-                    <span className="text-[10px] font-semibold text-slate-700 text-center leading-tight">{block.name}</span>
-                  </button>
-                )
-              })}
+          {/* 모바일용 블록 팔레트 (작은 화면에서 미리보기 아닐 때만) */}
+          {!isReadOnlyPreview && (
+            <div className="mt-4 md:hidden px-4 pb-4 relative">
+              <div className="text-xs font-bold text-slate-700 mb-2 px-1">블록 추가하기</div>
+              <div className="grid grid-cols-3 gap-2">
+                {ALL_BLOCKS.map((block) => {
+                  const Icon = block.icon
+                  return (
+                    <button
+                      key={block.id}
+                      onClick={() => addBlock(block)}
+                      className="flex flex-col items-center gap-1 p-3 bg-white rounded-xl border border-slate-200 hover:border-slate-400 transition-all"
+                    >
+                      <Icon size={16} className="text-slate-600" />
+                      <span className="text-[10px] font-semibold text-slate-700 text-center leading-tight">{block.name}</span>
+                    </button>
+                  )
+                })}
+              </div>
             </div>
-          </div>
+          )}
         </main>
 
-        {/* 우측: 속성 패널 */}
-        <SidePropertyPanel />
+        {/* 우측: 속성 패널 (데스크톱/큰 화면에서만 노출) */}
+        <div className="hidden lg:block h-full">
+          <SidePropertyPanel />
+        </div>
       </div>
 
       {/* 액션 Toast 알림 - 미리보기/실제 공통 */}
