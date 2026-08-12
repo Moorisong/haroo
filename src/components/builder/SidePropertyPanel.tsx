@@ -13,7 +13,7 @@ interface BlockCapability {
   allowedActions?: string[]
   hasImage?: boolean
   hasVideo?: boolean
-  customFieldType?: 'MAP_ADDRESS' | 'DDAY_DATE' | 'COUPON' | 'STAMP' | 'PAYMENT' | 'NONE'
+  customFieldType?: 'MAP_ADDRESS' | 'DDAY_DATE' | 'COUPON' | 'STAMP' | 'PAYMENT' | 'BOARD_VIEW_TYPE' | 'NONE'
 }
 
 const BLOCK_CAPABILITIES: Record<string, BlockCapability> = {
@@ -193,6 +193,16 @@ const BLOCK_CAPABILITIES: Record<string, BlockCapability> = {
     hasImage: true,
     hasVideo: false,
     allowedActions: ['NAVIGATE_PAGE', 'OPEN_URL', 'SHOW_MODAL'],
+  },
+  blk_board_list_01: {
+    hasTitle: true,
+    hasSubtitle: true,
+    hasButton: true,
+    hasButtonAction: true,
+    hasImage: false,
+    hasVideo: false,
+    allowedActions: ['NAVIGATE_PAGE', 'SHOW_MODAL'],
+    customFieldType: 'BOARD_VIEW_TYPE',
   },
 }
 
@@ -412,6 +422,21 @@ export default function SidePropertyPanel() {
                     placeholder="예: 29,000"
                   />
                 </div>
+              </div>
+            )}
+
+            {cap.customFieldType === 'BOARD_VIEW_TYPE' && (
+              <div className="space-y-1.5">
+                <label className="text-sm font-medium text-slate-700">게시판 뷰 타입</label>
+                <select
+                  value={config.boardViewType || 'table'}
+                  onChange={(e) => handleChange('boardViewType', e.target.value)}
+                  className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm bg-white"
+                >
+                  <option value="table">테이블형</option>
+                  <option value="gallery">갤러리형</option>
+                  <option value="list">리스트형</option>
+                </select>
               </div>
             )}
           </div>
