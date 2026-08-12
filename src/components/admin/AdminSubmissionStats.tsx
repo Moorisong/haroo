@@ -75,7 +75,7 @@ export default function AdminSubmissionStats() {
       </div>
 
       {/* 요약 카운트 */}
-      <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
         <div className="bg-white p-4 rounded-2xl border border-slate-200 space-y-1">
           <span className="text-xs font-semibold text-slate-500">누적 전체 제출건</span>
           <p className="text-2xl font-black text-slate-900">{s.totalSubmissions.toLocaleString()}건</p>
@@ -154,31 +154,31 @@ export default function AdminSubmissionStats() {
       {/* 실시간 최근 고객 제출 데이터 테이블 */}
       <div className="bg-white p-5 rounded-2xl border border-slate-200 space-y-4">
         <h3 className="text-sm font-bold text-slate-900">실시간 최신 제출 폼 데이터</h3>
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
+        <div className="overflow-x-auto no-scrollbar">
+          <table className="w-full text-left text-xs min-w-[550px]">
             <thead>
               <tr className="border-b border-slate-100 text-slate-400">
-                <th className="py-2 px-3 font-semibold">제출 ID</th>
-                <th className="py-2 px-3 font-semibold">프로젝트 사이트</th>
-                <th className="py-2 px-3 font-semibold">블록 ID (blockId)</th>
-                <th className="py-2 px-3 font-semibold">연락처 포함 여부</th>
-                <th className="py-2 px-3 font-semibold">제출 시각</th>
+                <th className="py-2 px-3 font-semibold whitespace-nowrap">제출 ID</th>
+                <th className="py-2 px-3 font-semibold whitespace-nowrap">프로젝트 사이트</th>
+                <th className="py-2 px-3 font-semibold whitespace-nowrap">블록 ID (blockId)</th>
+                <th className="py-2 px-3 font-semibold whitespace-nowrap">연락처 포함 여부</th>
+                <th className="py-2 px-3 font-semibold whitespace-nowrap">제출 시각</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
               {s.recentSubmissions.map((sub) => (
                 <tr key={sub.id} className="hover:bg-slate-50/80">
-                  <td className="py-2.5 px-3 font-mono text-slate-500">{sub.id}</td>
-                  <td className="py-2.5 px-3 font-bold text-slate-900">{sub.storeName}</td>
-                  <td className="py-2.5 px-3 font-mono text-indigo-600 font-semibold">{sub.blockId}</td>
-                  <td className="py-2.5 px-3">
+                  <td className="py-2.5 px-3 font-mono text-slate-500 whitespace-nowrap">{sub.id}</td>
+                  <td className="py-2.5 px-3 font-bold text-slate-900 whitespace-nowrap">{sub.storeName}</td>
+                  <td className="py-2.5 px-3 font-mono text-indigo-600 font-semibold whitespace-nowrap">{sub.blockId}</td>
+                  <td className="py-2.5 px-3 whitespace-nowrap">
                     {sub.hasPhone ? (
                       <span className="px-2 py-0.5 bg-emerald-100 text-emerald-700 rounded text-[10px] font-bold">O</span>
                     ) : (
                       <span className="px-2 py-0.5 bg-slate-100 text-slate-500 rounded text-[10px] font-bold">X</span>
                     )}
                   </td>
-                  <td className="py-2.5 px-3 text-slate-400">{sub.createdAt}</td>
+                  <td className="py-2.5 px-3 text-slate-400 whitespace-nowrap">{sub.createdAt}</td>
                 </tr>
               ))}
             </tbody>

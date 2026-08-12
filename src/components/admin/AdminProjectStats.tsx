@@ -102,7 +102,7 @@ export default function AdminProjectStats() {
       </div>
 
       {/* 4분할 프로젝트 상태 카운팅 */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         <div className="bg-emerald-50/70 border border-emerald-100 rounded-2xl p-4">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold text-emerald-700">정상 운영 (RUNNING)</span>

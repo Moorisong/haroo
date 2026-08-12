@@ -131,12 +131,12 @@ export default function AdminFinancialDetailed() {
         </div>
         
         {/* 기간 선택 탭 (Segmented Control) */}
-        <div className="flex bg-slate-100 p-1 rounded-xl">
+        <div className="flex bg-slate-100 p-1 rounded-xl overflow-x-auto no-scrollbar w-full sm:w-auto">
           {PERIODS.map((p) => (
             <button
               key={p.value}
               onClick={() => setPeriod(p.value)}
-              className={`px-4 py-2 text-xs font-bold rounded-lg transition-all ${
+              className={`px-3 sm:px-4 py-1.5 sm:py-2 text-xs font-bold rounded-lg transition-all whitespace-nowrap flex-1 sm:flex-none ${
                 period === p.value
                   ? 'bg-white text-emerald-600 shadow-sm'
                   : 'text-slate-500 hover:text-slate-700 hover:bg-slate-200/50'
@@ -149,7 +149,7 @@ export default function AdminFinancialDetailed() {
       </div>
 
       {/* 정산 재무 요약 카드 */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         <div className="bg-white p-4 rounded-2xl border border-slate-200 space-y-1">
           <span className="text-xs font-semibold text-slate-500">결제액 ({PERIODS.find(p => p.value === period)?.label})</span>
           <p className="text-2xl font-black text-slate-900">₩{f.grossRevenue.toLocaleString()}</p>
@@ -229,27 +229,27 @@ export default function AdminFinancialDetailed() {
       {/* 최근 트랜잭션 테이블 */}
       <div className="bg-white p-5 rounded-2xl border border-slate-200 space-y-4">
         <h3 className="text-sm font-bold text-slate-900">최신 결제 트랜잭션 내역</h3>
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
+        <div className="overflow-x-auto no-scrollbar">
+          <table className="w-full text-left text-xs min-w-[580px]">
             <thead>
               <tr className="border-b border-slate-100 text-slate-400">
-                <th className="py-2 px-3 font-semibold">주문 ID</th>
-                <th className="py-2 px-3 font-semibold">사용자(이메일)</th>
-                <th className="py-2 px-3 font-semibold">프로젝트명</th>
-                <th className="py-2 px-3 font-semibold">요금제 플랜</th>
-                <th className="py-2 px-3 font-semibold">결제액</th>
-                <th className="py-2 px-3 font-semibold">결제일</th>
+                <th className="py-2 px-3 font-semibold whitespace-nowrap">주문 ID</th>
+                <th className="py-2 px-3 font-semibold whitespace-nowrap">사용자(이메일)</th>
+                <th className="py-2 px-3 font-semibold whitespace-nowrap">프로젝트명</th>
+                <th className="py-2 px-3 font-semibold whitespace-nowrap">요금제 플랜</th>
+                <th className="py-2 px-3 font-semibold whitespace-nowrap">결제액</th>
+                <th className="py-2 px-3 font-semibold whitespace-nowrap">결제일</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
               {f.recentTransactions.map((tx) => (
                 <tr key={tx.id} className="hover:bg-slate-50/80">
-                  <td className="py-2.5 px-3 font-mono font-semibold text-slate-500">{tx.id}</td>
-                  <td className="py-2.5 px-3 text-slate-700 font-medium">{tx.user}</td>
-                  <td className="py-2.5 px-3 font-bold text-slate-900">{tx.project}</td>
-                  <td className="py-2.5 px-3 font-semibold text-sky-600">{tx.tier}</td>
-                  <td className="py-2.5 px-3 font-black text-emerald-600">₩{tx.amount.toLocaleString()}</td>
-                  <td className="py-2.5 px-3 text-slate-400">{tx.date}</td>
+                  <td className="py-2.5 px-3 font-mono font-semibold text-slate-500 whitespace-nowrap">{tx.id}</td>
+                  <td className="py-2.5 px-3 text-slate-700 font-medium whitespace-nowrap">{tx.user}</td>
+                  <td className="py-2.5 px-3 font-bold text-slate-900 whitespace-nowrap">{tx.project}</td>
+                  <td className="py-2.5 px-3 font-semibold text-sky-600 whitespace-nowrap">{tx.tier}</td>
+                  <td className="py-2.5 px-3 font-black text-emerald-600 whitespace-nowrap">₩{tx.amount.toLocaleString()}</td>
+                  <td className="py-2.5 px-3 text-slate-400 whitespace-nowrap">{tx.date}</td>
                 </tr>
               ))}
             </tbody>

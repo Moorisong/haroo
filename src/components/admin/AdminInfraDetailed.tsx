@@ -58,7 +58,7 @@ export default function AdminInfraDetailed() {
       </div>
 
       {/* 인프라 KPI 카드 */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         <div className="bg-white p-4 rounded-2xl border border-slate-200 space-y-1">
           <span className="text-xs font-semibold text-slate-500">평균 CPU 사용률 (AWS EC2)</span>
           <p className="text-2xl font-black text-slate-900">{i.avgCpuUsage}%</p>
