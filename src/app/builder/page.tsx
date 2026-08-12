@@ -45,8 +45,11 @@ const ALL_BLOCKS = [
   { id: 'blk_consulting_slot_01', name: '타임 슬롯/일정 예약', tier: 'PROFESSIONAL' as BlockTier, icon: Calendar, desc: '날짜 및 시간대별 세션 예약' },
   { id: 'blk_profile_grid_01', name: '프로필 카드 그리드', tier: 'STARTER' as BlockTier, icon: Users, desc: '다목적 인물/전문가 소개 그리드' },
   { id: 'blk_feature_grid_01', name: '특징/아이콘 그리드', tier: 'STARTER' as BlockTier, icon: CheckSquare, desc: '핵심 장점 및 아이콘 설명 그리드' },
-  { id: 'blk_content_card_grid_01', name: '콘텐츠 카드 그리드', tier: 'STANDARD' as BlockTier, icon: LayoutGrid, desc: '썸네일 및텍스트 뱃지 카드 리스트' },
+  { id: 'blk_content_card_grid_01', name: '콘텐츠 카드 그리드', tier: 'STANDARD' as BlockTier, icon: LayoutGrid, desc: '썸네일 및 텍스트 뱃지 카드 리스트' },
   { id: 'blk_board_list_01', name: '게시판 (통합)', tier: 'STANDARD' as BlockTier, icon: MessageSquare, desc: '게시물 목록 및 리스트 뷰' },
+  { id: 'blk_feed_01', name: '다목적 피드/코멘트', tier: 'STANDARD' as BlockTier, icon: MessageSquare, desc: '작성자 이름과 텍스트 리스트 피드' },
+  { id: 'blk_progress_01', name: '목표 달성 진행률', tier: 'STANDARD' as BlockTier, icon: BarChart2, desc: '목표 수치 대비 현재 진행률 시각화' },
+  { id: 'blk_chart_01', name: '커스텀 데이터 차트', tier: 'PROFESSIONAL' as BlockTier, icon: BarChart2, desc: '막대/점 차트 커스텀 생성' },
 ]
 
 const FILTER_TABS: { label: string; value: FilterTab }[] = [

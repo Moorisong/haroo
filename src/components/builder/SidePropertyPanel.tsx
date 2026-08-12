@@ -13,7 +13,7 @@ interface BlockCapability {
   allowedActions?: string[]
   hasImage?: boolean
   hasVideo?: boolean
-  customFieldType?: 'MAP_ADDRESS' | 'DDAY_DATE' | 'COUPON' | 'STAMP' | 'PAYMENT' | 'BOARD_VIEW_TYPE' | 'NONE'
+  customFieldType?: 'MAP_ADDRESS' | 'DDAY_DATE' | 'COUPON' | 'STAMP' | 'PAYMENT' | 'BOARD_VIEW_TYPE' | 'PROGRESS' | 'CHART' | 'NONE'
 }
 
 const BLOCK_CAPABILITIES: Record<string, BlockCapability> = {
@@ -203,6 +203,28 @@ const BLOCK_CAPABILITIES: Record<string, BlockCapability> = {
     hasVideo: false,
     allowedActions: ['NAVIGATE_PAGE', 'SHOW_MODAL'],
     customFieldType: 'BOARD_VIEW_TYPE',
+  },
+  blk_feed_01: {
+    hasTitle: true,
+    hasSubtitle: true,
+    hasButton: true,
+    hasButtonAction: true,
+    hasImage: false,
+    allowedActions: ['SHOW_MODAL', 'NAVIGATE_PAGE', 'OPEN_URL', 'SUBMIT_FORM'],
+  },
+  blk_progress_01: {
+    hasTitle: true,
+    hasSubtitle: true,
+    hasButton: false,
+    hasImage: false,
+    customFieldType: 'PROGRESS',
+  },
+  blk_chart_01: {
+    hasTitle: true,
+    hasSubtitle: true,
+    hasButton: false,
+    hasImage: false,
+    customFieldType: 'CHART',
   },
 }
 
@@ -433,10 +455,88 @@ export default function SidePropertyPanel() {
                   onChange={(e) => handleChange('boardViewType', e.target.value)}
                   className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm bg-white"
                 >
-                  <option value="table">테이블형</option>
-                  <option value="gallery">갤러리형</option>
-                  <option value="list">리스트형</option>
+                  <option value="table">테이블형 (목록)</option>
+                  <option value="gallery">갤러리형 (썸네일 위주)</option>
+                  <option value="list">리스트형 (블로그 스타일)</option>
                 </select>
+              </div>
+            )}
+
+            {cap.customFieldType === 'PROGRESS' && (
+              <div className="space-y-3">
+                <div className="space-y-1.5">
+                  <label className="text-sm font-medium text-slate-700">🔥 진행률 라벨</label>
+                  <input 
+                    type="text" 
+                    value={config.progressLabel || '진행률'} 
+                    onChange={(e) => handleChange('progressLabel', e.target.value)}
+                    className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm"
+                  />
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="space-y-1.5">
+                    <label className="text-sm font-medium text-slate-700">현재 수치</label>
+                    <input 
+                      type="number" 
+                      value={config.progressValue ?? 65} 
+                      onChange={(e) => handleChange('progressValue', Number(e.target.value))}
+                      className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm"
+                    />
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className="text-sm font-medium text-slate-700">목표 수치</label>
+                    <input 
+                      type="number" 
+                      value={config.progressTarget ?? 100} 
+                      onChange={(e) => handleChange('progressTarget', Number(e.target.value))}
+                      className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm"
+                    />
+                  </div>
+                </div>
+                <div className="space-y-1.5">
+                  <label className="text-sm font-medium text-slate-700">수치 단위</label>
+                  <input 
+                    type="text" 
+                    value={config.progressUnit || '%'} 
+                    onChange={(e) => handleChange('progressUnit', e.target.value)}
+                    className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm"
+                  />
+                </div>
+              </div>
+            )}
+
+            {cap.customFieldType === 'CHART' && (
+              <div className="space-y-3">
+                <div className="space-y-1.5">
+                  <label className="text-sm font-medium text-slate-700">📈 차트 타입</label>
+                  <select
+                    value={config.chartType || 'bar'}
+                    onChange={(e) => handleChange('chartType', e.target.value)}
+                    className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm bg-white"
+                  >
+                    <option value="bar">막대(Bar) 차트</option>
+                    <option value="dot">점(Dot) 차트</option>
+                    <option value="line">라인(Line) 차트</option>
+                  </select>
+                </div>
+                <div className="space-y-1.5">
+                  <label className="text-sm font-medium text-slate-700">🎨 차트 포인트 색상</label>
+                  <input 
+                    type="color" 
+                    value={config.chartColor || '#0284C7'} 
+                    onChange={(e) => handleChange('chartColor', e.target.value)}
+                    className="w-full h-10 border border-slate-300 rounded-md p-1"
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <label className="text-sm font-medium text-slate-700">🏷️ 범례 라벨</label>
+                  <input 
+                    type="text" 
+                    value={config.legendLabel || '수치'} 
+                    onChange={(e) => handleChange('legendLabel', e.target.value)}
+                    className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm"
+                  />
+                </div>
               </div>
             )}
           </div>

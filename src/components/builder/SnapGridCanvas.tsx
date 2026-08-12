@@ -41,6 +41,9 @@ import BlkProfileGrid01 from '@/components/blocks/blk_profile_grid_01'
 import BlkFeatureGrid01 from '@/components/blocks/blk_feature_grid_01'
 import BlkContentCardGrid01 from '@/components/blocks/blk_content_card_grid_01'
 import BlkBoardList01 from '@/components/blocks/blk_board_list_01'
+import BlkFeed01 from '@/components/blocks/blk_feed_01'
+import BlkProgress01 from '@/components/blocks/blk_progress_01'
+import BlkChart01 from '@/components/blocks/blk_chart_01'
 
 const BlockRegistry: Record<string, React.FC<{ config: any, isPreview?: boolean, onAction?: any }>> = {
   blk_hero_01: BlkHero01,
@@ -66,6 +69,9 @@ const BlockRegistry: Record<string, React.FC<{ config: any, isPreview?: boolean,
   blk_feature_grid_01: BlkFeatureGrid01,
   blk_content_card_grid_01: BlkContentCardGrid01,
   blk_board_list_01: BlkBoardList01,
+  blk_feed_01: BlkFeed01,
+  blk_progress_01: BlkProgress01,
+  blk_chart_01: BlkChart01,
 }
 
 function BlockRenderer({

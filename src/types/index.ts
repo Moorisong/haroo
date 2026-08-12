@@ -67,6 +67,17 @@ export const BlockInputConfigSchema = z.object({
   customPaddingYPx: z.number().optional(),
   // 스냅 그리드 캔버스 절대 위치 좌표
   posX: z.number().optional(),
+  // PROGRESS Block
+  progressValue: z.number().optional(),
+  progressTarget: z.number().optional(),
+  progressLabel: z.string().optional(),
+  progressUnit: z.string().optional(),
+
+  // CHART Block
+  chartType: z.string().optional(),
+  chartColor: z.string().optional(),
+  legendLabel: z.string().optional(),
+
   posY: z.number().optional(),
   // 블록의 실제 렌더링 높이 (스마트 가이드 계산용)
   blockHeight: z.number().optional(),
