@@ -1,9 +1,10 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { Smartphone, Monitor, ArrowRight, Shield, Zap } from 'lucide-react'
 import PwaInstallGuideModal from './PwaInstallGuideModal'
+import { getCurrentUser, type UserProfile } from '@/lib/auth'
 
 const STAT_ITEMS = [
   { value: '45종', label: '마스터 블록' },
@@ -17,6 +18,11 @@ const STAT_ITEMS = [
  */
 export default function HeroSection() {
   const [pwaModalOpen, setPwaModalOpen] = useState(false)
+  const [user, setUser] = useState<UserProfile | null>(null)
+
+  useEffect(() => {
+    getCurrentUser().then(setUser)
+  }, [])
 
   return (
     <section className="pt-28 pb-20 sm:pt-32 sm:pb-24 px-4 sm:px-6 bg-white">
@@ -54,7 +60,7 @@ export default function HeroSection() {
         {/* CTA 버튼 그룹 */}
         <div className="flex flex-col sm:flex-row gap-3 justify-center items-center mb-16">
           <Link
-            href="/login"
+            href={user ? '/builder' : '/login'}
             className="inline-flex items-center gap-2 px-7 py-3.5 bg-slate-900 text-white text-sm font-bold rounded-xl hover:bg-slate-800 transition-all hover:shadow-lg"
           >
             무료로 5분 만에 만들기

@@ -1,12 +1,22 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { signInWithProvider } from '@/lib/auth'
+import { useRouter } from 'next/navigation'
+import { getCurrentUser, signInWithProvider } from '@/lib/auth'
 
 export default function LoginPage() {
+  const router = useRouter()
   const [loading, setLoading] = useState<string | null>(null)
   const [errorMsg, setErrorMsg] = useState<string | null>(null)
+
+  useEffect(() => {
+    getCurrentUser().then((user) => {
+      if (user) {
+        router.replace('/dashboard')
+      }
+    })
+  }, [router])
 
   const handleOAuth = async (provider: 'kakao' | 'google') => {
     setLoading(provider)
