@@ -53,10 +53,10 @@ export default function BlockShowcase() {
   const filtered = activeTab === 'ALL' ? BLOCKS : BLOCKS.filter((b) => b.tier === activeTab)
 
   return (
-    <section id="blocks" className="py-20 sm:py-24 px-4 sm:px-6 bg-white">
+    <section id="blocks" className="py-12 sm:py-16 px-4 sm:px-6 bg-white">
       <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-10">
-          <span className="inline-block px-3 py-1 bg-slate-100 border border-slate-200 text-slate-600 text-xs font-semibold rounded-full mb-4">
+        <div className="text-center mb-6">
+          <span className="inline-block px-3 py-0.5 bg-slate-100 border border-slate-200 text-slate-600 text-xs font-semibold rounded-full mb-3">
             45종 마스터 블록
           </span>
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-slate-900 text-balance">
@@ -64,19 +64,19 @@ export default function BlockShowcase() {
             <br />
             레고처럼 조립하세요
           </h2>
-          <p className="text-slate-500 text-sm sm:text-base mt-4 max-w-xl mx-auto">
-            소상공인부터 강사, MVP 창업가까지 필요한 모든 기능이 블록으로 준비되어 있습니다.
+          <p className="text-slate-500 text-sm mt-2 max-w-xl mx-auto">
+            매장 홍보부터 예약·결제까지 필요한 기능만 골라 조립하세요.
           </p>
         </div>
 
         {/* 탭 필터 */}
-        <div className="flex justify-center mb-8">
-          <div className="inline-flex gap-1 p-1 bg-slate-100 rounded-xl">
+        <div className="flex justify-center mb-5 w-full">
+          <div className="grid grid-cols-4 gap-0.5 p-1 bg-slate-100 rounded-xl w-full max-w-md">
             {TABS.map((tab) => (
               <button
                 key={tab.value}
                 onClick={() => setActiveTab(tab.value)}
-                className={`px-4 py-2 text-xs font-semibold rounded-lg transition-all ${
+                className={`py-1.5 px-1 text-[10px] sm:text-xs font-semibold rounded-lg transition-all text-center whitespace-nowrap truncate ${
                   activeTab === tab.value
                     ? 'bg-white text-slate-900 shadow-sm'
                     : 'text-slate-500 hover:text-slate-700'
@@ -89,41 +89,41 @@ export default function BlockShowcase() {
         </div>
 
         {/* 블록 그리드 */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2.5">
           {filtered.map((block) => {
             const Icon = block.icon
             const tier = TIER_CONFIG[block.tier]
             return (
               <div
                 key={block.id}
-                className="group p-4 rounded-xl border border-slate-200 bg-white hover:border-slate-400 hover:shadow-sm transition-all cursor-pointer"
+                className="group p-3 rounded-xl border border-slate-200 bg-white hover:border-slate-400 hover:shadow-sm transition-all cursor-pointer"
               >
-                <div className="flex items-start justify-between mb-3">
-                  <div className="w-9 h-9 rounded-lg bg-slate-50 border border-slate-200 flex items-center justify-center group-hover:bg-slate-100 transition-colors">
-                    <Icon size={16} className="text-slate-700" />
+                <div className="flex items-start justify-between mb-2">
+                  <div className="w-8 h-8 rounded-lg bg-slate-50 border border-slate-200 flex items-center justify-center group-hover:bg-slate-100 transition-colors">
+                    <Icon size={15} className="text-slate-700" />
                   </div>
-                  <span className={`px-1.5 py-0.5 text-[10px] font-bold rounded border ${tier.color}`}>
+                  <span className={`px-1.5 py-0.5 text-[9px] font-bold rounded border ${tier.color}`}>
                     {tier.label}
                   </span>
                 </div>
-                <div className="text-sm font-semibold text-slate-900 leading-snug mb-1">{block.name}</div>
-                <div className="text-xs text-slate-500 leading-relaxed">{block.desc}</div>
+                <div className="text-xs sm:text-sm font-semibold text-slate-900 leading-snug mb-0.5">{block.name}</div>
+                <div className="text-[11px] text-slate-500 leading-relaxed">{block.desc}</div>
               </div>
             )
           })}
         </div>
 
         {/* 더 보기 */}
-        <div className="text-center mt-8">
-          <p className="text-sm text-slate-500 mb-4">
+        <div className="text-center mt-6">
+          <p className="text-xs text-slate-500 mb-3">
             현재 표시된 {filtered.length}종 외 총 45종 블록이 제공됩니다
           </p>
           <a
             href="/login"
-            className="inline-flex items-center gap-2 px-6 py-3 border border-slate-200 text-slate-700 text-sm font-semibold rounded-xl hover:bg-slate-50 transition-colors"
+            className="inline-flex items-center gap-1.5 px-5 py-2.5 border border-slate-200 text-slate-700 text-xs font-semibold rounded-xl hover:bg-slate-50 transition-colors"
           >
             전체 블록 조립 캔버스 체험하기
-            <ChevronRight size={15} />
+            <ChevronRight size={14} />
           </a>
         </div>
       </div>
