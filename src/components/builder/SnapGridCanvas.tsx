@@ -365,7 +365,6 @@ function DesktopCanvas() {
 function ResponsiveViewCanvas({ viewport }: { viewport: DeviceViewport }) {
   const { canvasBlocks, selectBlock, selectedInstanceId, isPreviewMode, projectType, pages, setActivePage } = useBuilderStore()
   
-  const frameWidth = viewport === 'mobile' ? 375 : 768
   const isPwa = projectType === 'PWA'
   const isReadOnly = (projectType === 'WEB' && viewport !== 'desktop') || isPreviewMode
 
@@ -384,7 +383,7 @@ function ResponsiveViewCanvas({ viewport }: { viewport: DeviceViewport }) {
   }, [pages, setActivePage])
 
   const { handleAction } = useActionHandler({
-    isPreview: isReadOnly, // Responsive 모달에서는 isReadOnly가 isPreview 역할을 함
+    isPreview: isReadOnly,
     pages,
     onNavigatePage,
   })
@@ -396,44 +395,33 @@ function ResponsiveViewCanvas({ viewport }: { viewport: DeviceViewport }) {
 
   return (
     <div 
-      className="flex-1 overflow-y-auto bg-slate-100 flex flex-col items-center py-6 px-4 min-h-0"
+      className="flex-1 overflow-y-auto bg-slate-50 flex flex-col items-center min-h-0 w-full"
       onClick={() => selectBlock(null)}
     >
+      {/* 실제 모바일 화면에서는 100% 폭, PC 목업 보기에서는 지정한 375px/768px 폭 유지 */}
       <div 
         className={cn(
-          'bg-white shadow-2xl rounded-[36px] border flex flex-col relative transition-all duration-300 my-4 h-fit shrink-0',
-          isPwa ? 'border-slate-800 ring-4 ring-slate-900/10' : 'border-slate-300'
+          'bg-white flex flex-col relative transition-all duration-300 w-full min-h-full',
+          viewport === 'mobile' ? 'max-w-md sm:my-4 sm:rounded-[32px] sm:shadow-2xl sm:border sm:border-slate-300' : 'max-w-2xl sm:my-4 sm:rounded-[32px] sm:shadow-2xl sm:border sm:border-slate-300',
+          isPwa && 'sm:border-slate-800 sm:ring-4 sm:ring-slate-900/10'
         )}
-        style={{ width: frameWidth, minHeight: 667 }}
       >
-        {/* PWA 앱 또는 모바일/태블릿 미리보기 프레임 상단 헤더 */}
-        <div className="bg-slate-900 text-slate-300 text-xs py-2 flex items-center justify-between px-4 font-medium shrink-0 border-b border-slate-800 rounded-t-[35px]">
+        {/* 상단 얇은 프리뷰 상태 안내 바 */}
+        <div className="bg-slate-900 text-slate-300 text-[11px] py-1.5 flex items-center justify-between px-4 font-medium shrink-0 border-b border-slate-800">
           <span className="flex items-center gap-1.5">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-            {isPwa ? '📱 PWA App Frame (375px)' : viewport === 'mobile' ? 'Mobile View (375px)' : 'Tablet View (768px)'}
+            {isPwa ? '📱 PWA 모바일 앱' : viewport === 'mobile' ? '📱 모바일 화면' : '💻 태블릿 화면'}
           </span>
-          <span className="text-[11px] text-amber-400 font-bold">
-            {isPwa ? (isReadOnly ? '미리보기 모드' : '편집 가능 모드') : '미리보기 전용 (수정 불가)'}
+          <span className="text-[10px] text-amber-400 font-bold">
+            모바일 미리보기 모드
           </span>
         </div>
 
-        {/* PWA 전용 디바이스 상단 노치 / 상태바 미러링 */}
-        {isPwa && (
-          <div className="bg-slate-900 text-white text-[11px] px-6 py-1 flex items-center justify-between font-semibold select-none border-b border-slate-800/50">
-            <span>9:41</span>
-            <div className="w-16 h-3.5 bg-black rounded-full mx-auto" />
-            <div className="flex items-center space-x-1.5 text-[10px]">
-              <span>5G</span>
-              <span>100%</span>
-            </div>
-          </div>
-        )}
-
         <div className="flex-1 flex flex-col w-full relative">
           {sortedBlocks.length === 0 ? (
-            <div className="flex-1 flex flex-col items-center justify-center text-slate-400 p-8 min-h-[400px]">
-              <p className="text-sm font-medium text-center">
-                {isPwa ? 'PWA 앱에 블록을 추가하여 메인 화면을 완성하세요' : '데스크톱 모드에서 블록을 추가해 보세요'}
+            <div className="flex-1 flex flex-col items-center justify-center text-slate-400 p-8 min-h-[300px]">
+              <p className="text-xs font-semibold text-center text-slate-500">
+                {isPwa ? 'PWA 앱 메인 화면에 블록이 없습니다' : '미리보기 할 작성된 블록이 없습니다'}
               </p>
             </div>
           ) : (
@@ -444,7 +432,7 @@ function ResponsiveViewCanvas({ viewport }: { viewport: DeviceViewport }) {
                 <div 
                   key={block.instanceId}
                   className={cn(
-                    'w-full relative transition-all overflow-visible',
+                    'w-full relative transition-all overflow-hidden',
                     !isReadOnly && 'cursor-pointer hover:ring-1 hover:ring-inset hover:ring-slate-300',
                     !isReadOnly && isSelected && 'ring-2 ring-inset ring-sky-500 z-10'
                   )}
@@ -460,13 +448,6 @@ function ResponsiveViewCanvas({ viewport }: { viewport: DeviceViewport }) {
             })
           )}
         </div>
-
-        {/* PWA 전용 스마트폰 하단 홈 바 (Home Indicator) 미러링 */}
-        {isPwa && (
-          <div className="bg-white py-2 flex justify-center shrink-0 border-t border-slate-100">
-            <div className="w-32 h-1 bg-slate-900 rounded-full opacity-60" />
-          </div>
-        )}
       </div>
     </div>
   )

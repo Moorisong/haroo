@@ -31,12 +31,12 @@ export default function ViewportSwitcher() {
 
         {/* 뷰포트 전환 (웹 모드일 때만 표출) */}
         {projectType === 'WEB' && (
-          <div className="hidden sm:flex items-center space-x-1 pl-2 border-l border-slate-200">
+          <div className="flex items-center space-x-1 pl-2 border-l border-slate-200">
             {viewports.map((vp) => (
               <button
                 key={vp.id}
                 onClick={() => setDeviceViewport(vp.id)}
-                className={`px-2.5 py-1 text-xs font-medium rounded-md transition-colors ${
+                className={`px-2 py-1 text-[11px] sm:text-xs font-medium rounded-md transition-colors ${
                   deviceViewport === vp.id
                     ? 'bg-sky-600 text-white font-bold'
                     : 'text-slate-600 hover:bg-slate-100'
