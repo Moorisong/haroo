@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { Smartphone, ArrowRight, Shield, Zap } from 'lucide-react'
+import { Smartphone, ArrowRight } from 'lucide-react'
 import PwaInstallGuideModal from './PwaInstallGuideModal'
 import BlockAssemblyAnimation from './BlockAssemblyAnimation'
 import { getCurrentUser, type UserProfile } from '@/lib/auth'
@@ -21,18 +21,6 @@ export default function HeroSection() {
   return (
     <section className="pt-20 pb-12 sm:pt-24 sm:pb-16 px-4 sm:px-6 bg-white">
       <div className="max-w-6xl mx-auto">
-        {/* 상단 뱃지 */}
-        <div className="flex flex-wrap justify-center gap-2 mb-4">
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-sky-50 border border-sky-200 rounded-full text-xs font-medium text-sky-700">
-            <Zap size={11} />
-            코딩 지식 없어도 5분 만에 완결
-          </span>
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-slate-50 border border-slate-200 rounded-full text-xs font-medium text-slate-600">
-            <Shield size={11} />
-            바탕화면 무상 앱 아이콘 생성
-          </span>
-        </div>
-
         {/* 메인 타이틀 */}
         <h1 className="text-center text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-slate-900 leading-tight tracking-tight break-keep mb-4">
           개발 몰라도 OK! 원하는 블록 톡톡 꽂으면
