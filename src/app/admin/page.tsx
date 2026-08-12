@@ -1,83 +1,73 @@
-import Link from 'next/link'
-import { Home } from 'lucide-react'
-import AdminChoiceActionPanel from '@/components/admin/AdminChoiceActionPanel'
-import WaitlistKakaoBroadcastBtn from '@/components/admin/WaitlistKakaoBroadcastBtn'
-import AwsCostTracker from '@/components/admin/AwsCostTracker'
-import AdminFinancialPanel from '@/components/admin/AdminFinancialPanel'
-import AdminFunnelPanel from '@/components/admin/AdminFunnelPanel'
-import AdminInfraPanel from '@/components/admin/AdminInfraPanel'
-import AdminTemplateStatsPanel from '@/components/admin/AdminTemplateStatsPanel'
+'use client'
 
-// Mock Data
-const MOCK_STATS = {
-  waitlistCount: 342,
-  ec2Cost: 45000,
-  s3Cost: 12000,
-  cfCost: 8000,
-  revenue: 8900000,
-  pgFee: 222500,
-  netProfit: 8612500,
-  totalVisitors: 15420,
-  draftUsers: 4210,
-  paidUsers: 142,
-  totalContainers: 142,
-  runningContainers: 135,
-  stoppedContainers: 7,
+import { useState } from 'react'
+import AdminNav from '@/components/admin/AdminNav'
+import AdminChoiceActionPanel from '@/components/admin/AdminChoiceActionPanel'
+import AdminFinancialPanel from '@/components/admin/AdminFinancialPanel'
+import AdminGrowthChartPanel, { GrowthPeriod } from '@/components/admin/AdminGrowthChartPanel'
+
+// 기간별 동적 데이터 맵핑
+const STATS_BY_PERIOD = {
+  WEEKLY: {
+    label: '이번 주',
+    draftUsers: 145,
+    paidUsers: 12,
+    revenue: 2840000,
+    pgFee: 71000,
+    awsCost: 15100,
+    netProfit: 2753900,
+  },
+  MONTHLY: {
+    label: '이번 달',
+    draftUsers: 580,
+    paidUsers: 45,
+    revenue: 8900000,
+    pgFee: 222500,
+    awsCost: 65000,
+    netProfit: 8612500,
+  },
+  YEARLY: {
+    label: '올해',
+    draftUsers: 4210,
+    paidUsers: 142,
+    revenue: 95400000,
+    pgFee: 2385000,
+    awsCost: 780000,
+    netProfit: 92235000,
+  },
 }
 
 export default function AdminPage() {
-  return (
-    <div className="min-h-screen bg-slate-50 pb-12">
-      <header className="bg-slate-900 px-4 sm:px-6 py-4 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center">
-            <span className="text-slate-900 text-sm font-black">H</span>
-          </div>
-          <div>
-            <h1 className="text-white font-bold text-base">어드민 대시보드</h1>
-            <p className="text-slate-400 text-[10px]">Haroo Administrator</p>
-          </div>
-        </div>
-        <Link href="/" className="p-2 bg-slate-800 text-slate-300 hover:text-white rounded-lg transition-colors">
-          <Home size={16} />
-        </Link>
-      </header>
+  const [period, setPeriod] = useState<GrowthPeriod>('MONTHLY')
+  const currentStats = STATS_BY_PERIOD[period]
 
-      <main className="max-w-6xl mx-auto px-4 sm:px-6 pt-8 space-y-6">
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {/* 퍼널 & 재무 */}
-          <div className="space-y-6 lg:col-span-2">
-            <div className="grid sm:grid-cols-2 gap-6">
-              <AdminFunnelPanel
-                totalVisitors={MOCK_STATS.totalVisitors}
-                draftUsers={MOCK_STATS.draftUsers}
-                paidUsers={MOCK_STATS.paidUsers}
-              />
-              <AdminFinancialPanel
-                revenue={MOCK_STATS.revenue}
-                pgFee={MOCK_STATS.pgFee}
-                awsCost={MOCK_STATS.ec2Cost + MOCK_STATS.s3Cost + MOCK_STATS.cfCost}
-                netProfit={MOCK_STATS.netProfit}
-              />
-            </div>
-            
-            <AdminInfraPanel
-              totalContainers={MOCK_STATS.totalContainers}
-              runningContainers={MOCK_STATS.runningContainers}
-              stoppedContainers={MOCK_STATS.stoppedContainers}
+  return (
+    <div className="min-h-screen bg-slate-50 pb-16">
+      {/* 상단 1클릭 카테고리 이동 네비게이션 */}
+      <AdminNav />
+
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 pt-6 sm:pt-8 space-y-6 sm:space-y-8">
+        {/* 기존 핵심 대시보드 컴포넌트 뷰 (반응형 1c -> 3c) */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-2 space-y-6">
+            {/* 상단 성장 차트 (기간 조절 컨트롤러) */}
+            <AdminGrowthChartPanel
+              period={period}
+              onPeriodChange={(newPeriod) => setPeriod(newPeriod)}
+            />
+
+            {/* 재무 패널 */}
+            <AdminFinancialPanel
+              periodLabel={currentStats.label}
+              revenue={currentStats.revenue}
+              pgFee={currentStats.pgFee}
+              awsCost={currentStats.awsCost}
+              netProfit={currentStats.netProfit}
             />
           </div>
 
-          {/* 제어 & 비용 & 템플릿 목적 통계 */}
           <div className="space-y-6">
             <AdminChoiceActionPanel />
-            <AdminTemplateStatsPanel />
-            <WaitlistKakaoBroadcastBtn waitlistCount={MOCK_STATS.waitlistCount} />
-            <AwsCostTracker
-              ec2Cost={MOCK_STATS.ec2Cost}
-              s3Cost={MOCK_STATS.s3Cost}
-              cfCost={MOCK_STATS.cfCost}
-            />
           </div>
         </div>
       </main>
