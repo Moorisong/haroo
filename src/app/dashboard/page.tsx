@@ -44,6 +44,8 @@ export default function DashboardPage() {
   const [drafts, setDrafts] = useState<DraftItem[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [deletingId, setDeletingId] = useState<string | null>(null)
+  const [selectedDraftIds, setSelectedDraftIds] = useState<string[]>([])
+  const [isBatchDeleting, setIsBatchDeleting] = useState(false)
 
   // DB 데이터 불러오기
   const fetchData = async () => {
@@ -78,7 +80,45 @@ export default function DashboardPage() {
     })
   }, [router])
 
-  // 드래프트 DB 삭제
+  // 모두 선택 / 해제
+  const handleToggleSelectAll = () => {
+    if (drafts.length > 0 && selectedDraftIds.length === drafts.length) {
+      setSelectedDraftIds([])
+    } else {
+      setSelectedDraftIds(drafts.map((d) => d.id))
+    }
+  }
+
+  // 개별 체크 토글
+  const handleToggleSelectDraft = (id: string) => {
+    setSelectedDraftIds((prev) =>
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+    )
+  }
+
+  // 일괄 삭제
+  const handleBatchDeleteDrafts = async () => {
+    if (selectedDraftIds.length === 0) return
+    if (!confirm(`선택한 ${selectedDraftIds.length}개의 임시 저장 내역을 일괄 삭제하시겠습니까?`)) return
+
+    setIsBatchDeleting(true)
+    try {
+      await Promise.all(
+        selectedDraftIds.map((id) =>
+          fetch(`/api/drafts/${id}`, { method: 'DELETE' })
+        )
+      )
+      setDrafts((prev) => prev.filter((d) => !selectedDraftIds.includes(d.id)))
+      setSelectedDraftIds([])
+    } catch (err) {
+      console.error('[Batch Delete Drafts Error]', err)
+      alert('일괄 삭제 중 오류가 발생했습니다.')
+    } finally {
+      setIsBatchDeleting(false)
+    }
+  }
+
+  // 드래프트 DB 단일 삭제
   const handleDeleteDraft = async (id: string) => {
     if (!confirm('이 임시 저장 내역을 완전히 삭제하시겠습니까?')) return
     setDeletingId(id)
@@ -86,6 +126,7 @@ export default function DashboardPage() {
       const res = await fetch(`/api/drafts/${id}`, { method: 'DELETE' })
       if (res.ok) {
         setDrafts((prev) => prev.filter((d) => d.id !== id))
+        setSelectedDraftIds((prev) => prev.filter((item) => item !== id))
       }
     } catch (err) {
       console.error('[Delete Draft Error]', err)
@@ -211,13 +252,39 @@ export default function DashboardPage() {
           })}
         </div>
 
-        {/* 임시 저장 드래프트 (DB 실시간 연동 & 삭제 기능) */}
+        {/* 임시 저장 드래프트 (DB 실시간 연동 & 다중 일괄 삭제 기능) */}
         <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden">
-          <div className="px-5 py-4 border-b border-slate-100 flex items-center justify-between">
-            <h2 className="text-sm font-bold text-slate-900">임시 저장 내역 ({drafts.length}/10)</h2>
-            <Link href="/builder" className="text-xs text-sky-600 hover:text-sky-800 font-semibold flex items-center gap-1">
-              새로 만들기 <ChevronRight size={13} />
-            </Link>
+          <div className="px-5 py-4 border-b border-slate-100 flex flex-wrap items-center justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <h2 className="text-sm font-bold text-slate-900">임시 저장 내역 ({drafts.length}/10)</h2>
+              {drafts.length > 0 && (
+                <label className="flex items-center gap-1.5 text-xs text-slate-600 font-medium cursor-pointer select-none">
+                  <input
+                    type="checkbox"
+                    checked={drafts.length > 0 && selectedDraftIds.length === drafts.length}
+                    onChange={handleToggleSelectAll}
+                    className="rounded border-slate-300 text-slate-900 focus:ring-slate-500 cursor-pointer"
+                  />
+                  <span>{drafts.length > 0 && selectedDraftIds.length === drafts.length ? '모두 해제' : '모두 선택'}</span>
+                </label>
+              )}
+            </div>
+
+            <div className="flex items-center gap-2">
+              {selectedDraftIds.length > 0 && (
+                <button
+                  onClick={handleBatchDeleteDrafts}
+                  disabled={isBatchDeleting}
+                  className="px-3 py-1.5 bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold rounded-lg transition-colors flex items-center gap-1.5 shadow-sm disabled:opacity-50 cursor-pointer"
+                >
+                  <Trash2 size={13} />
+                  <span>선택 삭제 ({selectedDraftIds.length})</span>
+                </button>
+              )}
+              <Link href="/builder" className="text-xs text-sky-600 hover:text-sky-800 font-semibold flex items-center gap-1">
+                새로 만들기 <ChevronRight size={13} />
+              </Link>
+            </div>
           </div>
 
           {isLoading ? (
@@ -226,33 +293,49 @@ export default function DashboardPage() {
             <div className="p-8 text-center text-xs text-slate-400">저장된 임시 내역이 없습니다.</div>
           ) : (
             <div className="divide-y divide-slate-50">
-              {drafts.map((draft) => (
-                <div key={draft.id} className="flex items-center justify-between px-5 py-3.5 hover:bg-slate-50/50 transition-colors">
-                  <div>
-                    <div className="text-sm font-semibold text-slate-900">{draft.name}</div>
-                    <div className="text-xs text-slate-400 mt-0.5">
-                      <Clock size={11} className="inline mr-1" />
-                      {draft.updatedAt} · {draft.blocksCount}종 블록
+              {drafts.map((draft) => {
+                const isSelected = selectedDraftIds.includes(draft.id)
+                return (
+                  <div
+                    key={draft.id}
+                    className={`flex items-center justify-between px-5 py-3.5 transition-colors ${
+                      isSelected ? 'bg-slate-50/80' : 'hover:bg-slate-50/50'
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <input
+                        type="checkbox"
+                        checked={isSelected}
+                        onChange={() => handleToggleSelectDraft(draft.id)}
+                        className="rounded border-slate-300 text-slate-900 focus:ring-slate-500 cursor-pointer"
+                      />
+                      <div>
+                        <div className="text-sm font-semibold text-slate-900">{draft.name}</div>
+                        <div className="text-xs text-slate-400 mt-0.5">
+                          <Clock size={11} className="inline mr-1" />
+                          {draft.updatedAt} · {draft.blocksCount}종 블록
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Link
+                        href={`/builder?draft=${draft.id}`}
+                        className="px-3 py-1.5 text-xs font-semibold text-slate-700 border border-slate-200 rounded-lg hover:bg-white transition-colors"
+                      >
+                        계속 수정
+                      </Link>
+                      <button
+                        onClick={() => handleDeleteDraft(draft.id)}
+                        disabled={deletingId === draft.id}
+                        className="p-1.5 text-slate-400 hover:text-rose-600 rounded-lg hover:bg-rose-50 transition-colors disabled:opacity-50 cursor-pointer"
+                        title="드래프트 삭제"
+                      >
+                        <Trash2 size={15} />
+                      </button>
                     </div>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <Link
-                      href={`/builder?draft=${draft.id}`}
-                      className="px-3 py-1.5 text-xs font-semibold text-slate-700 border border-slate-200 rounded-lg hover:bg-white transition-colors"
-                    >
-                      계속 수정
-                    </Link>
-                    <button
-                      onClick={() => handleDeleteDraft(draft.id)}
-                      disabled={deletingId === draft.id}
-                      className="p-1.5 text-slate-400 hover:text-rose-600 rounded-lg hover:bg-rose-50 transition-colors disabled:opacity-50"
-                      title="드래프트 삭제"
-                    >
-                      <Trash2 size={15} />
-                    </button>
-                  </div>
-                </div>
-              ))}
+                )
+              })}
             </div>
           )}
         </div>
