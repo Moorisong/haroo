@@ -73,12 +73,7 @@ export default function DashboardPage() {
       if (!user) {
         router.push('/login')
       } else {
-        const pendingDraft = sessionStorage.getItem('pending_builder_draft')
-        if (pendingDraft) {
-          router.replace('/builder')
-        } else {
-          fetchData()
-        }
+        fetchData()
       }
     })
   }, [router])

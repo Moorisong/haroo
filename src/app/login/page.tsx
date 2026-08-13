@@ -13,8 +13,10 @@ export default function LoginPage() {
   useEffect(() => {
     getCurrentUser().then((user) => {
       if (user) {
+        const params = new URLSearchParams(window.location.search)
+        const next = params.get('next')
         const pendingDraft = sessionStorage.getItem('pending_builder_draft')
-        if (pendingDraft) {
+        if (next === '/builder' || pendingDraft) {
           router.replace('/builder')
         } else {
           router.replace('/dashboard')
@@ -27,7 +29,9 @@ export default function LoginPage() {
     setLoading(provider)
     setErrorMsg(null)
     try {
-      const res = await signInWithProvider(provider)
+      const params = new URLSearchParams(window.location.search)
+      const next = params.get('next') || (sessionStorage.getItem('pending_builder_draft') ? '/builder' : '/dashboard')
+      const res = await signInWithProvider(provider, next)
       if (res.error) {
         setErrorMsg(res.error.message)
         setLoading(null)

@@ -11,9 +11,14 @@ export interface UserProfile {
 /**
  * 소셜 OAuth 로그인 (카카오, 구글)
  */
-export async function signInWithProvider(provider: 'kakao' | 'google') {
+export async function signInWithProvider(provider: 'kakao' | 'google', redirectToParam?: string) {
+  const callbackUrl = new URL(`${window.location.origin}/api/auth/callback/${provider}`)
+  if (redirectToParam) {
+    callbackUrl.searchParams.set('next', redirectToParam)
+  }
+
   const options: { redirectTo: string; scopes?: string } = {
-    redirectTo: `${window.location.origin}/api/auth/callback/${provider}`,
+    redirectTo: callbackUrl.toString(),
   }
 
   if (provider === 'kakao') {

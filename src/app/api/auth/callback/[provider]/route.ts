@@ -12,8 +12,11 @@ export async function GET(
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
   const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
+  const next = requestUrl.searchParams.get('next') || '/dashboard'
+  const targetPath = next.startsWith('/') ? next : '/dashboard'
+
   if (code && supabaseUrl && supabaseAnonKey) {
-    const response = NextResponse.redirect(new URL('/dashboard', req.url))
+    const response = NextResponse.redirect(new URL(targetPath, req.url))
     const supabase = createServerClient(supabaseUrl, supabaseAnonKey, {
       cookies: {
         getAll() {
@@ -34,6 +37,6 @@ export async function GET(
     console.error(`[OAuth Callback Error - ${provider}]`, error)
   }
 
-  // 코드 없거나 Supabase 미설정 시에도 대시보드로 이동
-  return NextResponse.redirect(new URL('/dashboard', req.url))
+  // 코드 없거나 Supabase 미설정 시에도 지정된 targetPath로 이동
+  return NextResponse.redirect(new URL(targetPath, req.url))
 }

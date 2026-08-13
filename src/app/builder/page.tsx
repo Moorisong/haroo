@@ -266,7 +266,7 @@ export default function BuilderPage() {
           projectType,
         })
       )
-      router.push('/login')
+      router.push('/login?next=/builder')
       return
     }
 
