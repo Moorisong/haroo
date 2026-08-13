@@ -1,15 +1,14 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import {
   Layout, Star, Map, Image, MessageSquare, Bell, CreditCard, BarChart2,
   Calendar, Users, Gift, BookOpen, Heart, Clock, Share2, FileText, Video,
-  ArrowRight, Grid, CheckSquare, LayoutGrid, Award
+  ArrowRight, Grid, CheckSquare, LayoutGrid, Award, Edit3, Folder
 } from 'lucide-react'
 import type { BlockTier } from '@/types'
 import { useBuilderStore } from '@/stores/useBuilderStore'
-import { useDraftAutoSave } from '@/hooks/useDraftAutoSave'
 import TouchDndProvider from '@/components/builder/TouchDndProvider'
 import SnapGridCanvas from '@/components/builder/SnapGridCanvas'
 import RevisionMeter from '@/components/builder/RevisionMeter'
@@ -74,34 +73,173 @@ const TIER_BADGE: Record<string, string> = {
   PROFESSIONAL: 'bg-slate-900 text-white border-slate-900',
 }
 
+import UnsavedLeaveWarningModal from '@/components/builder/UnsavedLeaveWarningModal'
+
 export default function BuilderPage() {
   const [activeTab, setActiveTab] = useState<FilterTab>('ALL')
+  const [isSaving, setIsSaving] = useState(false)
+  const [saveToast, setSaveToast] = useState(false)
+  const [nameError, setNameError] = useState(false)
+  const [nameToast, setNameToast] = useState(false)
+  const [pendingTargetId, setPendingTargetId] = useState<string | null>(null)
+  const [leaveModalOpen, setLeaveModalOpen] = useState(false)
+  const nameInputRef = useRef<HTMLInputElement>(null)
 
-  const { canvasBlocks, addBlock, isDirty, deviceViewport, projectType, isPreviewMode: storeIsPreview, setDeviceViewport, undo, redo, pastHistory, futureHistory } = useBuilderStore()
+  const {
+    canvasBlocks, pages, siteTemplate, draftName, draftId, versionClock, addBlock, isDirty,
+    deviceViewport, projectType, isPreviewMode: storeIsPreview, setDeviceViewport,
+    markSaved, loadDraft, setDraftName, reset
+  } = useBuilderStore()
   const isReadOnlyPreview = (projectType === 'WEB' && deviceViewport !== 'desktop') || storeIsPreview
 
-  // 키보드 단축키 (Ctrl+Z: Undo, Ctrl+Y / Ctrl+Shift+Z: Redo)
+  // 빌더 진입 시: URL에 ?draft=ID가 있으면 DB 복원, 없으면 새 프로젝트로 reset()
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    const params = new URLSearchParams(window.location.search)
+    const queryDraftId = params.get('draft')
+
+    if (queryDraftId) {
+      if (queryDraftId !== draftId) {
+        fetch(`/api/drafts/${queryDraftId}`)
+          .then((res) => res.json())
+          .then((data) => {
+            if (data.draft) {
+              loadDraft({
+                id: data.draft.id,
+                name: data.draft.name,
+                selectedBlocks: data.draft.selectedBlocks,
+                versionClock: data.draft.versionClock,
+                updatedAt: data.draft.updatedAt,
+              })
+            }
+          })
+          .catch((err) => console.error('[Draft load error]', err))
+      }
+    } else {
+      // 일반 /builder 진입 시 디폴트로 새 프로젝트 초기화
+      reset()
+    }
+  }, [])
+
+  const [savedDraftList, setSavedDraftList] = useState<{ id: string; name: string; blocksCount: number }[]>([])
+
+  // 저장된 프로젝트 목록 불러오기
+  const fetchDraftList = async () => {
+    try {
+      const res = await fetch('/api/drafts/list')
+      if (res.ok) {
+        const data = await res.json()
+        setSavedDraftList(data.drafts || [])
+      }
+    } catch (e) {
+      console.error('[Draft list error]', e)
+    }
+  }
+
+  useEffect(() => {
+    fetchDraftList()
+  }, [draftId])
+
+  // 실제 전환 실행 로직
+  const executeTargetSwitch = (targetId: string) => {
+    if (targetId === 'reload') {
+      window.location.reload()
+      return
+    }
+    if (targetId === 'home') {
+      window.location.href = '/'
+      return
+    }
+    if (targetId === 'new') {
+      reset()
+      if (typeof window !== 'undefined') {
+        window.history.pushState({}, '', '/builder')
+      }
+    } else {
+      fetch(`/api/drafts/${targetId}`)
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.draft) {
+            loadDraft({
+              id: data.draft.id,
+              name: data.draft.name,
+              selectedBlocks: data.draft.selectedBlocks,
+              versionClock: data.draft.versionClock,
+              updatedAt: data.draft.updatedAt,
+            })
+            if (typeof window !== 'undefined') {
+              window.history.pushState({}, '', `/builder?draft=${targetId}`)
+            }
+          }
+        })
+    }
+  }
+
+  // 드롭다운 프로젝트 선택 핸들러 (isDirty 체크 후 모달 팝업)
+  const handleSelectProject = (selectedId: string) => {
+    if (isDirty) {
+      setPendingTargetId(selectedId)
+      setLeaveModalOpen(true)
+    } else {
+      executeTargetSwitch(selectedId)
+    }
+  }
+
+  // 수동 DB 저장 핸들러
+  const handleManualSave = async () => {
+    if (!draftName || !draftName.trim()) {
+      setNameError(true)
+      setNameToast(true)
+      nameInputRef.current?.focus()
+      setTimeout(() => setNameToast(false), 3000)
+      return
+    }
+
+    setIsSaving(true)
+    try {
+      const res = await fetch('/api/drafts/save', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          draftId,
+          name: draftName,
+          selectedBlocks: { pages, template: siteTemplate, canvasBlocks, projectType },
+          versionClock,
+        }),
+      })
+      if (res.ok) {
+        const data = await res.json()
+        markSaved(data.draftId)
+        if (data.name && data.name !== draftName) {
+          setDraftName(data.name)
+        }
+        setSaveToast(true)
+        fetchDraftList()
+        setTimeout(() => setSaveToast(false), 2500)
+      } else {
+        const errData = await res.json()
+        alert(errData.error || '저장에 실패했습니다.')
+      }
+    } catch (err) {
+      console.error('[Manual Save Error]', err)
+    } finally {
+      setIsSaving(false)
+    }
+  }
+
+  // 새로고침 키(F5 / Cmd+R / Ctrl+R) 캡처하여 변경 내역(isDirty)이 있을 때만 커스텀 모달 노출
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Input이나 Textarea 타이핑 중일 땐 단축키 무시
-      if (['INPUT', 'TEXTAREA', 'SELECT'].includes((e.target as HTMLElement)?.tagName)) return
-
-      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'z') {
-        if (e.shiftKey) {
-          e.preventDefault()
-          redo()
-        } else {
-          e.preventDefault()
-          undo()
-        }
-      } else if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'y') {
+      const isReloadKey = e.key === 'F5' || ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'r')
+      if (isReloadKey && isDirty) {
         e.preventDefault()
-        redo()
+        setPendingTargetId('reload')
+        setLeaveModalOpen(true)
       }
     }
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [undo, redo])
+  }, [isDirty])
 
   // 실제 모바일 디바이스 감지
   const [isMobileDevice, setIsMobileDevice] = useState(false)
@@ -129,52 +267,100 @@ export default function BuilderPage() {
 
   return (
     <div className="h-screen flex flex-col bg-white overflow-hidden relative">
-      {/* 진입 시 프로젝트 타입 선택 모달 */}
-      <ProjectTypeSelectionModal />
-      {/* 2단계: 프로젝트 목적/템플릿 선택 모달 */}
-      <SiteTemplateSelectionModal />
+      {/* 신규 프로젝트 생성 시에만 1, 2단계 선택 모달 노출 (isMounted 시점 보장) */}
+      {isMounted && !draftId && <ProjectTypeSelectionModal />}
+      {isMounted && !draftId && <SiteTemplateSelectionModal />}
 
       {/* 빌더 헤더 */}
       <header className="flex-shrink-0 h-14 border-b border-slate-200 bg-white flex items-center justify-between px-4 sm:px-5 z-20">
         <div className="flex items-center gap-3">
-          <Link href="/" className="flex items-center gap-2 mr-2">
+          <a
+            href="/"
+            onClick={(e) => {
+              if (isDirty) {
+                e.preventDefault()
+                setPendingTargetId('home')
+                setLeaveModalOpen(true)
+              }
+            }}
+            className="flex items-center gap-2 mr-2"
+          >
             <div className="w-7 h-7 bg-slate-900 rounded-md flex items-center justify-center">
               <span className="text-white text-xs font-black">H</span>
             </div>
-          </Link>
+          </a>
           <span className="hidden sm:block text-xs text-slate-400">|</span>
+
           {/* 상단 다중 페이지 스위처 (비전문가 친화적) */}
           <PageSwitcher />
-          
-          {/* Undo / Redo 버튼 */}
-          <div className="flex items-center gap-1 bg-slate-100 p-0.5 rounded-lg border border-slate-200 ml-1">
-            <button
-              onClick={undo}
-              disabled={pastHistory.length === 0}
-              className="px-2 py-1 text-slate-700 hover:bg-white disabled:opacity-30 disabled:hover:bg-transparent rounded text-xs font-semibold flex items-center gap-1 transition-all"
-              title="실행 취소 (Ctrl+Z)"
-            >
-              <span>↩️</span>
-              <span className="hidden md:inline">실행 취소</span>
-            </button>
-            <button
-              onClick={redo}
-              disabled={futureHistory.length === 0}
-              className="px-2 py-1 text-slate-700 hover:bg-white disabled:opacity-30 disabled:hover:bg-transparent rounded text-xs font-semibold flex items-center gap-1 transition-all"
-              title="다시 실행 (Ctrl+Y)"
-            >
-              <span>↪️</span>
-              <span className="hidden md:inline">다시 실행</span>
-            </button>
-          </div>
 
+          <span className={`px-2 py-0.5 text-xs font-bold rounded ${
+            projectType === 'PWA' ? 'bg-sky-100 text-sky-700' : 'bg-slate-100 text-slate-700'
+          }`}>
+            {projectType === 'PWA' ? '📱 PWA 웹앱' : '🌐 반응형 웹'}
+          </span>
           <span className="px-2 py-0.5 bg-emerald-100 text-emerald-700 text-xs font-bold rounded">
             {canvasBlocks.length}종 조립됨
           </span>
           {isDirty && <span className="w-2 h-2 rounded-full bg-amber-400" title="저장 대기 중" />}
         </div>
         <div className="flex items-center gap-2">
-          {/* ViewportSwitcher 내부에서 미리보기를 토글하므로 헤더의 미리보기 버튼 제거 혹은 유지. 여기선 제거합니다. */}
+          {/* 저장된 프로젝트 선택 Select 드롭다운 (프로젝트명 인풋 바로 왼쪽) */}
+          <div className="flex items-center gap-1.5 bg-slate-100/90 px-2 py-1.5 rounded-lg border border-slate-200 text-xs hover:border-slate-300 transition-all">
+            <Folder size={13} className="text-slate-500 flex-shrink-0" />
+            <select
+              value={draftId || 'new'}
+              onChange={(e) => handleSelectProject(e.target.value)}
+              className="bg-transparent font-bold text-slate-800 focus:outline-none cursor-pointer max-w-[110px] sm:max-w-[140px] truncate"
+              title="저장된 프로젝트 불러오기"
+            >
+              <option value="new">+ 새 프로젝트</option>
+              {savedDraftList.map((d) => (
+                <option key={d.id} value={d.id}>
+                  {d.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* 프로젝트 이름 직접 입력 UI */}
+          <div className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border transition-all ${
+            nameError
+              ? 'bg-rose-50 border-rose-500 ring-2 ring-rose-200'
+              : 'bg-slate-100/80 border-slate-200 focus-within:border-slate-400 focus-within:bg-white'
+          }`}>
+            <Edit3 size={13} className={nameError ? 'text-rose-500' : 'text-slate-400'} />
+            <input
+              ref={nameInputRef}
+              type="text"
+              value={draftName}
+              onChange={(e) => {
+                setNameError(false)
+                setDraftName(e.target.value)
+              }}
+              placeholder="프로젝트 이름 (필수)"
+              className="bg-transparent text-xs font-bold text-slate-800 focus:outline-none w-28 sm:w-40 placeholder:text-slate-400"
+            />
+          </div>
+
+          {/* 수동 저장 버튼 & 경고 토스트 래퍼 */}
+          <div className="relative">
+            <button
+              onClick={handleManualSave}
+              disabled={isSaving}
+              className="flex items-center gap-1.5 px-3.5 py-1.5 bg-slate-900 text-white hover:bg-slate-800 text-xs font-bold rounded-lg transition-colors border border-slate-900 shadow-sm"
+            >
+              <span>{isSaving ? '⏳' : saveToast ? '✅' : '💾'}</span>
+              <span>{saveToast ? '저장됨' : '저장'}</span>
+            </button>
+
+            {/* 프로젝트 이름 미입력시 경고 토스트 (저장 버튼 바로 아래 플로팅) */}
+            {nameToast && (
+              <div className="absolute right-0 top-full mt-2 px-3 py-1.5 bg-rose-600 text-white text-xs font-bold rounded-lg shadow-lg animate-bounce whitespace-nowrap z-50">
+                <span>⚠️ 프로젝트 이름을 입력해 주세요!</span>
+              </div>
+            )}
+          </div>
           <Link
             href="/checkout"
             className="flex items-center gap-1.5 px-4 py-1.5 bg-slate-900 text-white text-xs font-bold rounded-lg hover:bg-slate-800 transition-colors"
@@ -270,6 +456,38 @@ export default function BuilderPage() {
 
       {/* 액션 Toast 알림 - 미리보기/실제 공통 */}
       <ActionToast />
+
+      {/* 저장되지 않은 변경사항 이탈 방지 커스텀 모달 */}
+      <UnsavedLeaveWarningModal
+        isOpen={leaveModalOpen}
+        onClose={() => {
+          setLeaveModalOpen(false)
+          setPendingTargetId(null)
+        }}
+        onConfirmLeaveWithoutSave={() => {
+          setLeaveModalOpen(false)
+          if (pendingTargetId) {
+            executeTargetSwitch(pendingTargetId)
+            setPendingTargetId(null)
+          }
+        }}
+        onSaveAndLeave={async () => {
+          if (!draftName || !draftName.trim()) {
+            setLeaveModalOpen(false)
+            setNameError(true)
+            setNameToast(true)
+            nameInputRef.current?.focus()
+            setTimeout(() => setNameToast(false), 3000)
+            return
+          }
+          await handleManualSave()
+          setLeaveModalOpen(false)
+          if (pendingTargetId) {
+            executeTargetSwitch(pendingTargetId)
+            setPendingTargetId(null)
+          }
+        }}
+      />
     </div>
   )
 }

@@ -1,13 +1,21 @@
 'use client'
 
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { useBuilderStore } from '@/stores/useBuilderStore'
-import { ArrowRight, CheckCircle2 } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
 
 export default function ProjectTypeSelectionModal() {
-  const { projectTypeSelected, confirmProjectType } = useBuilderStore()
+  const { projectTypeSelected, confirmProjectType, draftId } = useBuilderStore()
+  const [isMounted, setIsMounted] = useState(false)
 
-  if (projectTypeSelected) return null
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
+
+  if (!isMounted) return null
+
+  const params = new URLSearchParams(window.location.search)
+  if (params.get('draft') || draftId || projectTypeSelected) return null
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/75 backdrop-blur-md p-4 animate-in fade-in duration-300">

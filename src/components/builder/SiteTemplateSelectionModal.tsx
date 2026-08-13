@@ -1,14 +1,22 @@
 'use client'
 
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { useBuilderStore } from '@/stores/useBuilderStore'
 import { ArrowRight, Building2, ShoppingBag, Mail, Palette, Sparkles } from 'lucide-react'
 import type { SiteTemplateCategory } from '@/types'
 
 export default function SiteTemplateSelectionModal() {
-  const { projectTypeSelected, siteTemplateSelected, confirmSiteTemplate } = useBuilderStore()
+  const { projectTypeSelected, siteTemplateSelected, confirmSiteTemplate, draftId } = useBuilderStore()
+  const [isMounted, setIsMounted] = useState(false)
 
-  if (!projectTypeSelected || siteTemplateSelected) return null
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
+
+  if (!isMounted) return null
+
+  const params = new URLSearchParams(window.location.search)
+  if (params.get('draft') || draftId || !projectTypeSelected || siteTemplateSelected) return null
 
   const templates: { id: SiteTemplateCategory; title: string; desc: string; icon: React.ElementType; iconColor: string }[] = [
     { id: 'COMPANY', title: '회사 / 브랜드 소개', desc: '우리 회사를 소개하는 깔끔한 메인 홈페이지', icon: Building2, iconColor: 'text-blue-500' },

@@ -52,18 +52,12 @@ interface BuilderState {
   updatePageTitle: (pageId: string, title: string) => void
   confirmSiteTemplate: (template: SiteTemplateCategory) => void
 
-  // Undo / Redo 역사의 상태 스택
-  pastHistory: CanvasBlock[][]
-  futureHistory: CanvasBlock[][]
-  undo: () => void
-  redo: () => void
-
   // Block Actions
   addBlock: (def: BlockDefinition) => void
   removeBlock: (instanceId: string) => void
   moveBlock: (fromIndex: number, toIndex: number) => void
   selectBlock: (instanceId: string | null, elementKey?: string | null) => void
-  updateBlockInputData: (instanceId: string, data: Partial<BlockInputConfig>) => void
+  updateBlockInputData: (instanceId: string, data: Partial<BlockInputConfig>, skipDirty?: boolean) => void
   setProjectType: (type: ProjectType) => void
   confirmProjectType: (type: ProjectType) => void
   setDeviceViewport: (viewport: DeviceViewport) => void
@@ -82,7 +76,7 @@ const initialState = {
   canvasBlocks: [] as CanvasBlock[],
   selectedInstanceId: null,
   selectedElementKey: null,
-  draftName: '새 프로젝트',
+  draftName: '',
   draftId: null,
   versionClock: 0,
   isDirty: false,
@@ -93,8 +87,6 @@ const initialState = {
   deviceViewport: 'desktop' as DeviceViewport,
   isPreviewMode: false,
   drafts: [] as Draft[],
-  pastHistory: [] as CanvasBlock[][],
-  futureHistory: [] as CanvasBlock[][],
 }
 
 /**
@@ -103,40 +95,6 @@ const initialState = {
  */
 export const useBuilderStore = create<BuilderState>((set, get) => ({
   ...initialState,
-
-  undo: () => {
-    const { pastHistory, canvasBlocks, futureHistory, pages, activePageId } = get()
-    if (pastHistory.length === 0) return
-
-    const previous = pastHistory[pastHistory.length - 1]
-    const newPast = pastHistory.slice(0, pastHistory.length - 1)
-    const updatedPages = pages.map((p) => (p.id === activePageId ? { ...p, blocks: previous } : p))
-
-    set({
-      pastHistory: newPast,
-      canvasBlocks: previous,
-      futureHistory: [canvasBlocks, ...futureHistory],
-      pages: updatedPages,
-      isDirty: true
-    })
-  },
-
-  redo: () => {
-    const { futureHistory, canvasBlocks, pastHistory, pages, activePageId } = get()
-    if (futureHistory.length === 0) return
-
-    const next = futureHistory[0]
-    const newFuture = futureHistory.slice(1)
-    const updatedPages = pages.map((p) => (p.id === activePageId ? { ...p, blocks: next } : p))
-
-    set({
-      futureHistory: newFuture,
-      canvasBlocks: next,
-      pastHistory: [...pastHistory, canvasBlocks],
-      pages: updatedPages,
-      isDirty: true
-    })
-  },
 
   setActivePage: (pageId) => {
     const { pages, canvasBlocks, activePageId } = get()
@@ -239,12 +197,10 @@ export const useBuilderStore = create<BuilderState>((set, get) => ({
       },
     }
     const updatedBlocks = [...currentBlocks, newBlock]
-    const { pages, activePageId, pastHistory } = get()
+    const { pages, activePageId } = get()
     const updatedPages = pages.map((p) => (p.id === activePageId ? { ...p, blocks: updatedBlocks } : p))
 
     set((state) => ({
-      pastHistory: [...pastHistory, currentBlocks],
-      futureHistory: [],
       pages: updatedPages,
       canvasBlocks: updatedBlocks,
       versionClock: state.versionClock + 1,
@@ -255,12 +211,10 @@ export const useBuilderStore = create<BuilderState>((set, get) => ({
   removeBlock: (instanceId) => {
     const currentBlocks = get().canvasBlocks
     const nextBlocks = currentBlocks.filter((b) => b.instanceId !== instanceId)
-    const { pages, activePageId, pastHistory } = get()
+    const { pages, activePageId } = get()
     const updatedPages = pages.map((p) => (p.id === activePageId ? { ...p, blocks: nextBlocks } : p))
 
     set((state) => ({
-      pastHistory: [...pastHistory, currentBlocks],
-      futureHistory: [],
       pages: updatedPages,
       canvasBlocks: nextBlocks,
       selectedInstanceId: state.selectedInstanceId === instanceId ? null : state.selectedInstanceId,
@@ -292,12 +246,10 @@ export const useBuilderStore = create<BuilderState>((set, get) => ({
       return updated
     })
 
-    const { pages, activePageId, pastHistory } = get()
+    const { pages, activePageId } = get()
     const updatedPages = pages.map((p) => (p.id === activePageId ? { ...p, blocks: updatedBlocks } : p))
 
     set({ 
-      pastHistory: [...pastHistory, currentBlocks],
-      futureHistory: [],
       pages: updatedPages, 
       canvasBlocks: updatedBlocks, 
       versionClock: get().versionClock + 1, 
@@ -309,9 +261,8 @@ export const useBuilderStore = create<BuilderState>((set, get) => ({
     set({ selectedInstanceId: instanceId, selectedElementKey: elementKey })
   },
 
-  updateBlockInputData: (instanceId, data) => {
-    const currentBlocks = get().canvasBlocks
-    const { pages, activePageId, pastHistory } = get()
+  updateBlockInputData: (instanceId, data, skipDirty = false) => {
+    const { pages, activePageId } = get()
     
     set((state) => {
       const blocks = [...state.canvasBlocks]
@@ -331,12 +282,10 @@ export const useBuilderStore = create<BuilderState>((set, get) => ({
       const updatedPages = pages.map((p) => (p.id === activePageId ? { ...p, blocks } : p))
 
       return { 
-        pastHistory: [...pastHistory, currentBlocks],
-        futureHistory: [],
         pages: updatedPages, 
         canvasBlocks: blocks, 
-        versionClock: state.versionClock + 1, 
-        isDirty: true 
+        versionClock: state.versionClock + (skipDirty ? 0 : 1), 
+        isDirty: skipDirty ? state.isDirty : true 
       }
     })
   },
@@ -374,7 +323,7 @@ export const useBuilderStore = create<BuilderState>((set, get) => ({
   },
 
   markSaved: (draftId) => {
-    set({ draftId, isDirty: false })
+    set({ draftId, isDirty: false, projectTypeSelected: true, siteTemplateSelected: true })
   },
 
   loadDraft: (draft) => {
@@ -383,16 +332,29 @@ export const useBuilderStore = create<BuilderState>((set, get) => ({
     let nextPages = get().pages
     let nextCanvasBlocks = []
     let nextTemplate = get().siteTemplate
+    let nextProjectType: ProjectType = 'WEB'
     
     if (isMultiPageFormat) {
-      const data = draft.selectedBlocks as { pages: PageItem[]; template?: import('@/types').SiteTemplateCategory }
+      const data = draft.selectedBlocks as {
+        pages: PageItem[]
+        template?: import('@/types').SiteTemplateCategory
+        projectType?: ProjectType
+      }
       nextPages = data.pages || get().pages
       nextTemplate = data.template || get().siteTemplate
+      if (data.projectType) {
+        nextProjectType = data.projectType
+      } else if (draft.name && (draft.name.toLowerCase().includes('pwa') || draft.name.includes('앱') || draft.name.includes('모바일'))) {
+        nextProjectType = 'PWA'
+      }
       // 활성 페이지의 블록 복원 (첫 번째 페이지로 기본 설정)
       nextCanvasBlocks = nextPages.length > 0 ? nextPages[0].blocks : []
     } else {
       // 구버전 단일 페이지 배열 포맷
       nextCanvasBlocks = (draft.selectedBlocks as CanvasBlock[]) || []
+      if (draft.name && (draft.name.toLowerCase().includes('pwa') || draft.name.includes('앱') || draft.name.includes('모바일'))) {
+        nextProjectType = 'PWA'
+      }
       nextPages = [{
         id: 'page_main',
         title: '메인 화면',
@@ -402,12 +364,17 @@ export const useBuilderStore = create<BuilderState>((set, get) => ({
       }]
     }
 
+    const nextViewport: DeviceViewport = nextProjectType === 'PWA' ? 'mobile' : 'desktop'
+
     set({
       pages: nextPages,
       activePageId: nextPages.length > 0 ? nextPages[0].id : 'page_main',
       canvasBlocks: nextCanvasBlocks,
       siteTemplate: nextTemplate,
-      siteTemplateSelected: !!nextTemplate,
+      siteTemplateSelected: true,
+      projectType: nextProjectType,
+      projectTypeSelected: true,
+      deviceViewport: nextViewport,
       draftName: draft.name,
       draftId: draft.id,
       versionClock: draft.versionClock,

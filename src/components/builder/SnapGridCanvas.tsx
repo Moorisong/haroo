@@ -147,7 +147,7 @@ function DraggableBlock({ block, canvasRef, onDragStart, onDragMove, onDragEnd, 
     const observer = new ResizeObserver((entries) => {
       const h = Math.round(entries[0].contentRect.height)
       if (h > 0 && h !== config.blockHeight) {
-        updateBlockInputData(block.instanceId, { blockHeight: h })
+        updateBlockInputData(block.instanceId, { blockHeight: h }, true) // skipDirty = true
       }
     })
     observer.observe(blockRef.current)
