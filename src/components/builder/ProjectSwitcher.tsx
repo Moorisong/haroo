@@ -1,8 +1,10 @@
 'use client'
 
 import React, { useState, useRef, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import { useBuilderStore } from '@/stores/useBuilderStore'
-import { ChevronDown, Plus, Folder } from 'lucide-react'
+import { ChevronDown, Plus, Folder, Lock } from 'lucide-react'
+import { getCurrentUser, type UserProfile } from '@/lib/auth'
 
 interface SavedDraft {
   id: string
@@ -16,9 +18,15 @@ interface ProjectSwitcherProps {
 }
 
 export default function ProjectSwitcher({ savedDraftList, onSelectProject }: ProjectSwitcherProps) {
+  const router = useRouter()
   const { draftId, draftName } = useBuilderStore()
   const [isOpen, setIsOpen] = useState(false)
+  const [user, setUser] = useState<UserProfile | null>(null)
   const menuRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    getCurrentUser().then(setUser)
+  }, [])
 
   const currentProject = savedDraftList.find((d) => d.id === draftId)
   const displayName = currentProject ? currentProject.name : draftName.trim() || '프로젝트 선택'
@@ -50,54 +58,80 @@ export default function ProjectSwitcher({ savedDraftList, onSelectProject }: Pro
       {/* 드롭다운 메뉴 */}
       {isOpen && (
         <div className="absolute left-0 mt-2 w-64 rounded-xl bg-white dark:bg-gray-900 shadow-xl border border-gray-100 dark:border-gray-800 z-50 p-2 animate-in fade-in duration-150">
-          <div className="px-2 py-1.5 text-[11px] font-bold text-gray-400 uppercase tracking-wider">
-            내 프로젝트 목록 ({savedDraftList.length})
-          </div>
+          {!user ? (
+            <div className="p-3 text-center space-y-2">
+              <div className="w-8 h-8 bg-amber-50 dark:bg-amber-950 text-amber-600 rounded-full flex items-center justify-center mx-auto">
+                <Lock size={15} />
+              </div>
+              <div className="text-xs font-bold text-gray-800 dark:text-gray-200">
+                로그인이 필요합니다
+              </div>
+              <p className="text-[11px] text-gray-500 dark:text-gray-400 break-keep">
+                저장된 프로젝트 목록을 보시려면 먼저 로그인해 주세요.
+              </p>
+              <button
+                type="button"
+                onClick={() => {
+                  setIsOpen(false)
+                  router.push('/login?next=/builder')
+                }}
+                className="w-full mt-2 py-2 text-xs font-bold text-white bg-slate-900 hover:bg-slate-800 rounded-lg transition-colors shadow-sm"
+              >
+                로그인하러 가기
+              </button>
+            </div>
+          ) : (
+            <>
+              <div className="px-2 py-1.5 text-[11px] font-bold text-gray-400 uppercase tracking-wider">
+                내 프로젝트 목록 ({savedDraftList.length})
+              </div>
 
-          <div className="max-h-56 overflow-y-auto space-y-1">
-            {savedDraftList.map((draft) => {
-              const isActive = draft.id === draftId
-              return (
-                <div
-                  key={draft.id}
-                  className={`group flex items-center justify-between px-2.5 py-2 text-xs rounded-lg cursor-pointer transition-colors ${
-                    isActive
-                      ? 'bg-blue-50 text-blue-700 font-bold dark:bg-blue-950 dark:text-blue-300'
-                      : 'text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-800'
-                  }`}
+              <div className="max-h-56 overflow-y-auto space-y-1">
+                {savedDraftList.map((draft) => {
+                  const isActive = draft.id === draftId
+                  return (
+                    <div
+                      key={draft.id}
+                      className={`group flex items-center justify-between px-2.5 py-2 text-xs rounded-lg cursor-pointer transition-colors ${
+                        isActive
+                          ? 'bg-blue-50 text-blue-700 font-bold dark:bg-blue-950 dark:text-blue-300'
+                          : 'text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-800'
+                      }`}
+                      onClick={() => {
+                        onSelectProject(draft.id)
+                        setIsOpen(false)
+                      }}
+                    >
+                      <div className="flex items-center gap-2 truncate">
+                        <Folder className={`w-3.5 h-3.5 shrink-0 ${isActive ? 'text-blue-500' : 'text-gray-400'}`} />
+                        <span className="truncate">{draft.name}</span>
+                      </div>
+                    </div>
+                  )
+                })}
+
+                {savedDraftList.length === 0 && (
+                  <div className="px-2.5 py-3 text-xs text-gray-400 text-center">
+                    저장된 프로젝트가 없습니다.
+                  </div>
+                )}
+              </div>
+
+              <div className="border-t border-gray-100 dark:border-gray-800 mt-2 pt-2">
+                <button
+                  type="button"
                   onClick={() => {
-                    onSelectProject(draft.id)
+                    onSelectProject('new')
                     setIsOpen(false)
                   }}
+                  className="w-full flex items-center justify-center gap-1.5 py-1.5 text-xs font-semibold text-blue-600 bg-blue-50 hover:bg-blue-100 dark:bg-blue-950 dark:text-blue-300 dark:hover:bg-blue-900 rounded-lg transition-colors"
                 >
-                  <div className="flex items-center gap-2 truncate">
-                    <Folder className={`w-3.5 h-3.5 shrink-0 ${isActive ? 'text-blue-500' : 'text-gray-400'}`} />
-                    <span className="truncate">{draft.name}</span>
-                  </div>
-                </div>
-              )
-            })}
-
-            {savedDraftList.length === 0 && (
-              <div className="px-2.5 py-3 text-xs text-gray-400 text-center">
-                저장된 프로젝트가 없습니다.
+                  <Plus className="w-3.5 h-3.5" />
+                  <span>새 프로젝트 만들기</span>
+                </button>
               </div>
-            )}
-          </div>
-
-          <div className="border-t border-gray-100 dark:border-gray-800 mt-2 pt-2">
-            <button
-              type="button"
-              onClick={() => {
-                onSelectProject('new')
-                setIsOpen(false)
-              }}
-              className="w-full flex items-center justify-center gap-1.5 py-1.5 text-xs font-semibold text-blue-600 bg-blue-50 hover:bg-blue-100 dark:bg-blue-950 dark:text-blue-300 dark:hover:bg-blue-900 rounded-lg transition-colors"
-            >
-              <Plus className="w-3.5 h-3.5" />
-              <span>새 프로젝트 만들기</span>
-            </button>
-          </div>
+            </>
+          )}
         </div>
       )}
     </div>
