@@ -241,18 +241,26 @@ export default function BuilderPage() {
 
   // 수동 DB 저장 핸들러
   const handleManualSave = async () => {
+    // 1. 프로젝트 이름 미입력 시 비로그인/로그인 공통으로 이름 입력 예외 토스트 노출 및 포커스
+    if (!draftName || !draftName.trim()) {
+      setNameError(true)
+      setNameToast(true)
+      nameInputRef.current?.focus()
+      setTimeout(() => setNameToast(false), 3000)
+      return
+    }
+
     const user = await getCurrentUser()
     if (!user) {
-      // 비로그인 상태일 때: 얼럿창 없이 세션스토리지에 백업 후 바로 로그인 페이지로 이동
+      // 비로그인 상태일 때: 세션스토리지에 백업 후 얼럿창 없이 바로 로그인 페이지로 이동
       sessionStorage.setItem(
         'pending_builder_draft',
         JSON.stringify({
-          draftName: draftName || '나만의 프로젝트',
+          draftName: draftName.trim(),
           pages,
           siteTemplate,
           canvasBlocks,
           projectType,
-          autoSaveOnRestore: true,
         })
       )
       router.push('/login')
@@ -261,14 +269,6 @@ export default function BuilderPage() {
 
     // 로그인 상태로 저장 버튼 클릭 시 세션스토리지 제거
     sessionStorage.removeItem('pending_builder_draft')
-
-    if (!draftName || !draftName.trim()) {
-      setNameError(true)
-      setNameToast(true)
-      nameInputRef.current?.focus()
-      setTimeout(() => setNameToast(false), 3000)
-      return
-    }
 
     setIsSaving(true)
     try {
