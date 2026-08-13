@@ -77,8 +77,31 @@ const TIER_BADGE: Record<string, string> = {
 export default function BuilderPage() {
   const [activeTab, setActiveTab] = useState<FilterTab>('ALL')
 
-  const { canvasBlocks, addBlock, isDirty, deviceViewport, projectType, isPreviewMode: storeIsPreview, setDeviceViewport } = useBuilderStore()
+  const { canvasBlocks, addBlock, isDirty, deviceViewport, projectType, isPreviewMode: storeIsPreview, setDeviceViewport, undo, redo, pastHistory, futureHistory } = useBuilderStore()
   const isReadOnlyPreview = (projectType === 'WEB' && deviceViewport !== 'desktop') || storeIsPreview
+
+  // 키보드 단축키 (Ctrl+Z: Undo, Ctrl+Y / Ctrl+Shift+Z: Redo)
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Input이나 Textarea 타이핑 중일 땐 단축키 무시
+      if (['INPUT', 'TEXTAREA', 'SELECT'].includes((e.target as HTMLElement)?.tagName)) return
+
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'z') {
+        if (e.shiftKey) {
+          e.preventDefault()
+          redo()
+        } else {
+          e.preventDefault()
+          undo()
+        }
+      } else if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'y') {
+        e.preventDefault()
+        redo()
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [undo, redo])
 
   // 실제 모바일 디바이스 감지
   const [isMobileDevice, setIsMobileDevice] = useState(false)
@@ -122,6 +145,29 @@ export default function BuilderPage() {
           <span className="hidden sm:block text-xs text-slate-400">|</span>
           {/* 상단 다중 페이지 스위처 (비전문가 친화적) */}
           <PageSwitcher />
+          
+          {/* Undo / Redo 버튼 */}
+          <div className="flex items-center gap-1 bg-slate-100 p-0.5 rounded-lg border border-slate-200 ml-1">
+            <button
+              onClick={undo}
+              disabled={pastHistory.length === 0}
+              className="px-2 py-1 text-slate-700 hover:bg-white disabled:opacity-30 disabled:hover:bg-transparent rounded text-xs font-semibold flex items-center gap-1 transition-all"
+              title="실행 취소 (Ctrl+Z)"
+            >
+              <span>↩️</span>
+              <span className="hidden md:inline">실행 취소</span>
+            </button>
+            <button
+              onClick={redo}
+              disabled={futureHistory.length === 0}
+              className="px-2 py-1 text-slate-700 hover:bg-white disabled:opacity-30 disabled:hover:bg-transparent rounded text-xs font-semibold flex items-center gap-1 transition-all"
+              title="다시 실행 (Ctrl+Y)"
+            >
+              <span>↪️</span>
+              <span className="hidden md:inline">다시 실행</span>
+            </button>
+          </div>
+
           <span className="px-2 py-0.5 bg-emerald-100 text-emerald-700 text-xs font-bold rounded">
             {canvasBlocks.length}종 조립됨
           </span>

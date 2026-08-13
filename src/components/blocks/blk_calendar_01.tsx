@@ -3,8 +3,10 @@ import AtomText01 from '../atoms/atom_text_01'
 import AtomCard01 from '../atoms/atom_card_01'
 import AtomBtn01 from '../atoms/atom_btn_01'
 import { getBlockLayout } from '@/lib/blockLayout'
+import { useElementSelector } from '@/contexts/BlockContext'
 import type { BlockInputConfig, ContainerWidth, PaddingYOption } from '@/types'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { cn } from '@/lib/utils'
 
 interface Props {
   config: BlockInputConfig
@@ -23,10 +25,14 @@ export default function BlkCalendar01({ config, isPreview, onAction }: Props) {
     calendarEvents = [
       { id: '1', date: new Date().toISOString().split('T')[0], title: '오늘의 주요 일정', description: '중요한 미팅이 있습니다.', isHighlighted: true },
       { id: '2', date: '2026-08-15', title: '광복절 행사', isHighlighted: false },
-    ]
+    ],
+    titleStyle,
+    subtitleStyle,
+    backgroundStyle,
   } = config
 
   const layout = getBlockLayout(containerWidth as ContainerWidth, paddingY as PaddingYOption)
+  const selectElement = useElementSelector()
   
   const today = new Date()
   const [currentDate, setCurrentDate] = useState(today)
@@ -73,16 +79,48 @@ export default function BlkCalendar01({ config, isPreview, onAction }: Props) {
   const daysOfWeek = ['일', '월', '화', '수', '목', '금', '토']
 
   return (
-    <AtomCard01 noPadding className="w-full border-none rounded-none" style={{ backgroundColor, color: textColor }}>
+    <AtomCard01 
+      noPadding 
+      className="w-full border-none rounded-none" 
+      style={{ 
+        backgroundColor: backgroundStyle?.backgroundColor || backgroundColor, 
+        color: textColor,
+        opacity: backgroundStyle?.opacity,
+        backgroundImage: backgroundStyle?.backgroundImage ? `url(${backgroundStyle.backgroundImage})` : undefined,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center'
+      }}
+      onClick={(e) => selectElement('background', e)}
+    >
       <div className={`${layout.wrapperClass} ${layout.paddingXClass} ${layout.paddingClass}`}>
         <div className={`${layout.innerClass} max-w-4xl mx-auto flex flex-col gap-8`}>
           
           <div className="text-center space-y-2">
-            <AtomText01 variant="h3" className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight">
+            <AtomText01 
+              variant="h3" 
+              className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight cursor-pointer hover:ring-1 hover:ring-slate-300 p-1 rounded transition-all"
+              style={{
+                color: titleStyle?.color || textColor,
+                fontFamily: titleStyle?.fontFamily,
+                fontWeight: titleStyle?.fontWeight,
+                fontSize: titleStyle?.fontSize,
+              }}
+              onClick={(e) => selectElement('title', e)}
+            >
               {title}
             </AtomText01>
             {subtitle && (
-              <AtomText01 variant="p" className="text-sm sm:text-base opacity-80">
+              <AtomText01 
+                variant="p" 
+                className="text-sm sm:text-base opacity-80 cursor-pointer hover:ring-1 hover:ring-slate-300 p-1 rounded transition-all"
+                style={{
+                  color: subtitleStyle?.color || textColor,
+                  fontFamily: subtitleStyle?.fontFamily,
+                  fontWeight: subtitleStyle?.fontWeight,
+                  fontSize: subtitleStyle?.fontSize,
+                }}
+                onClick={(e) => selectElement('subtitle', e)}
+              >
                 {subtitle}
               </AtomText01>
             )}

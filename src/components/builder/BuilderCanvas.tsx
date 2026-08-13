@@ -9,6 +9,7 @@ import FloatingQuickToolbar from './FloatingQuickToolbar'
 import BlockResizeHandles from './BlockResizeHandles'
 import type { CanvasBlock, ContainerWidth, PaddingYOption, BlockInputConfig } from '@/types'
 import { cn } from '@/lib/utils'
+import { BlockProvider } from '@/contexts/BlockContext'
 
 import BlkHero01 from '@/components/blocks/blk_hero_01'
 import BlkTxt01 from '@/components/blocks/blk_txt_01'
@@ -99,7 +100,11 @@ function BlockRenderer({
   const Component = BlockRegistry[block.blockId]
   
   if (Component) {
-    return <Component config={config} isPreview={isPreviewMode} onAction={onAction} />
+    return (
+      <BlockProvider instanceId={block.instanceId} isPreviewMode={isPreviewMode}>
+        <Component config={config} isPreview={isPreviewMode} onAction={onAction} />
+      </BlockProvider>
+    )
   }
 
   // 매핑되지 않은 블록들을 위한 Fallback
@@ -187,15 +192,18 @@ function DraggableCanvasBlock({ block }: { block: CanvasBlock }) {
       data-sortable-block="true" // BlockResizeHandles에서 부모를 찾기 위한 속성
       onClick={(e) => {
         e.stopPropagation()
-        selectBlock(block.instanceId)
+        selectBlock(block.instanceId, 'background')
       }}
       className={cn(
         'group cursor-pointer shrink-0',
         isSelected ? 'ring-1 ring-indigo-500 ring-offset-0' : 'hover:ring-1 hover:ring-slate-300'
       )}
     >
-      {/* 1px 인디고 가이드라인 및 Floating Toolbar */}
-      {isSelected && <FloatingQuickToolbar />}
+      {/* 1px 인디고 가이드라인 및 Floating Toolbar (선택 시 혹은 호버 시 노출) */}
+      <FloatingQuickToolbar 
+        instanceId={block.instanceId} 
+        className={isSelected ? 'opacity-100' : 'opacity-0 group-hover:opacity-100 transition-opacity'} 
+      />
       
       {/* DnD Drag Handle */}
       <div 

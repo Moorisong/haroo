@@ -27,6 +27,7 @@ interface BuilderState {
   // 캔버스 상태 (현재 activePage의 blocks와 하위호환 동기화)
   canvasBlocks: CanvasBlock[]
   selectedInstanceId: string | null
+  selectedElementKey: string | null
   draftName: string
   draftId: string | null
   versionClock: number
@@ -51,11 +52,17 @@ interface BuilderState {
   updatePageTitle: (pageId: string, title: string) => void
   confirmSiteTemplate: (template: SiteTemplateCategory) => void
 
+  // Undo / Redo 역사의 상태 스택
+  pastHistory: CanvasBlock[][]
+  futureHistory: CanvasBlock[][]
+  undo: () => void
+  redo: () => void
+
   // Block Actions
   addBlock: (def: BlockDefinition) => void
   removeBlock: (instanceId: string) => void
   moveBlock: (fromIndex: number, toIndex: number) => void
-  selectBlock: (instanceId: string | null) => void
+  selectBlock: (instanceId: string | null, elementKey?: string | null) => void
   updateBlockInputData: (instanceId: string, data: Partial<BlockInputConfig>) => void
   setProjectType: (type: ProjectType) => void
   confirmProjectType: (type: ProjectType) => void
@@ -74,6 +81,7 @@ const initialState = {
   activePageId: 'page_main',
   canvasBlocks: [] as CanvasBlock[],
   selectedInstanceId: null,
+  selectedElementKey: null,
   draftName: '새 프로젝트',
   draftId: null,
   versionClock: 0,
@@ -85,6 +93,8 @@ const initialState = {
   deviceViewport: 'desktop' as DeviceViewport,
   isPreviewMode: false,
   drafts: [] as Draft[],
+  pastHistory: [] as CanvasBlock[][],
+  futureHistory: [] as CanvasBlock[][],
 }
 
 /**
@@ -93,6 +103,40 @@ const initialState = {
  */
 export const useBuilderStore = create<BuilderState>((set, get) => ({
   ...initialState,
+
+  undo: () => {
+    const { pastHistory, canvasBlocks, futureHistory, pages, activePageId } = get()
+    if (pastHistory.length === 0) return
+
+    const previous = pastHistory[pastHistory.length - 1]
+    const newPast = pastHistory.slice(0, pastHistory.length - 1)
+    const updatedPages = pages.map((p) => (p.id === activePageId ? { ...p, blocks: previous } : p))
+
+    set({
+      pastHistory: newPast,
+      canvasBlocks: previous,
+      futureHistory: [canvasBlocks, ...futureHistory],
+      pages: updatedPages,
+      isDirty: true
+    })
+  },
+
+  redo: () => {
+    const { futureHistory, canvasBlocks, pastHistory, pages, activePageId } = get()
+    if (futureHistory.length === 0) return
+
+    const next = futureHistory[0]
+    const newFuture = futureHistory.slice(1)
+    const updatedPages = pages.map((p) => (p.id === activePageId ? { ...p, blocks: next } : p))
+
+    set({
+      futureHistory: newFuture,
+      canvasBlocks: next,
+      pastHistory: [...pastHistory, canvasBlocks],
+      pages: updatedPages,
+      isDirty: true
+    })
+  },
 
   setActivePage: (pageId) => {
     const { pages, canvasBlocks, activePageId } = get()
@@ -105,6 +149,7 @@ export const useBuilderStore = create<BuilderState>((set, get) => ({
         activePageId: pageId,
         canvasBlocks: targetPage.blocks,
         selectedInstanceId: null,
+        selectedElementKey: null,
       })
     }
   },
@@ -135,6 +180,7 @@ export const useBuilderStore = create<BuilderState>((set, get) => ({
       activePageId: newId,
       canvasBlocks: [],
       selectedInstanceId: null,
+      selectedElementKey: null,
       versionClock: get().versionClock + 1,
       isDirty: true,
     })
@@ -156,6 +202,7 @@ export const useBuilderStore = create<BuilderState>((set, get) => ({
       activePageId: nextActiveId,
       canvasBlocks: nextActivePage ? nextActivePage.blocks : [],
       selectedInstanceId: null,
+      selectedElementKey: null,
       versionClock: get().versionClock + 1,
       isDirty: true,
     })
@@ -192,10 +239,12 @@ export const useBuilderStore = create<BuilderState>((set, get) => ({
       },
     }
     const updatedBlocks = [...currentBlocks, newBlock]
-    const { pages, activePageId } = get()
+    const { pages, activePageId, pastHistory } = get()
     const updatedPages = pages.map((p) => (p.id === activePageId ? { ...p, blocks: updatedBlocks } : p))
 
     set((state) => ({
+      pastHistory: [...pastHistory, currentBlocks],
+      futureHistory: [],
       pages: updatedPages,
       canvasBlocks: updatedBlocks,
       versionClock: state.versionClock + 1,
@@ -204,27 +253,31 @@ export const useBuilderStore = create<BuilderState>((set, get) => ({
   },
 
   removeBlock: (instanceId) => {
-    const nextBlocks = get().canvasBlocks.filter((b) => b.instanceId !== instanceId)
-    const { pages, activePageId } = get()
+    const currentBlocks = get().canvasBlocks
+    const nextBlocks = currentBlocks.filter((b) => b.instanceId !== instanceId)
+    const { pages, activePageId, pastHistory } = get()
     const updatedPages = pages.map((p) => (p.id === activePageId ? { ...p, blocks: nextBlocks } : p))
 
     set((state) => ({
+      pastHistory: [...pastHistory, currentBlocks],
+      futureHistory: [],
       pages: updatedPages,
       canvasBlocks: nextBlocks,
       selectedInstanceId: state.selectedInstanceId === instanceId ? null : state.selectedInstanceId,
+      selectedElementKey: state.selectedInstanceId === instanceId ? null : state.selectedElementKey,
       versionClock: state.versionClock + 1,
       isDirty: true,
     }))
   },
 
   moveBlock: (fromIndex, toIndex) => {
-    const blocks = [...get().canvasBlocks]
+    const currentBlocks = get().canvasBlocks
+    const blocks = [...currentBlocks]
     if (fromIndex < 0 || fromIndex >= blocks.length || toIndex < 0 || toIndex >= blocks.length) return
 
     const [moved] = blocks.splice(fromIndex, 1)
     blocks.splice(toIndex, 0, moved)
 
-    // posY 기준 스냅 그리드 좌표 재계산 (데스크톱 및 PWA 캔버스 모두 동기화)
     let currentY = 16
     const updatedBlocks = blocks.map((b) => {
       const h = b.inputConfig?.blockHeight || 200
@@ -239,17 +292,27 @@ export const useBuilderStore = create<BuilderState>((set, get) => ({
       return updated
     })
 
-    const { pages, activePageId } = get()
+    const { pages, activePageId, pastHistory } = get()
     const updatedPages = pages.map((p) => (p.id === activePageId ? { ...p, blocks: updatedBlocks } : p))
 
-    set({ pages: updatedPages, canvasBlocks: updatedBlocks, versionClock: get().versionClock + 1, isDirty: true })
+    set({ 
+      pastHistory: [...pastHistory, currentBlocks],
+      futureHistory: [],
+      pages: updatedPages, 
+      canvasBlocks: updatedBlocks, 
+      versionClock: get().versionClock + 1, 
+      isDirty: true 
+    })
   },
 
-  selectBlock: (instanceId) => {
-    set({ selectedInstanceId: instanceId })
+  selectBlock: (instanceId, elementKey = null) => {
+    set({ selectedInstanceId: instanceId, selectedElementKey: elementKey })
   },
 
   updateBlockInputData: (instanceId, data) => {
+    const currentBlocks = get().canvasBlocks
+    const { pages, activePageId, pastHistory } = get()
+    
     set((state) => {
       const blocks = [...state.canvasBlocks]
       const index = blocks.findIndex((b) => b.instanceId === instanceId)
@@ -257,7 +320,6 @@ export const useBuilderStore = create<BuilderState>((set, get) => ({
         const currentConfig = blocks[index].inputConfig || {}
         const newConfig = { ...currentConfig, ...data }
         
-        // Zod validation 방어 로직 (0.01초 내 단방향 갱신)
         const parsed = BlockInputConfigSchema.safeParse(newConfig)
         if (parsed.success) {
           blocks[index].inputConfig = parsed.data
@@ -266,10 +328,16 @@ export const useBuilderStore = create<BuilderState>((set, get) => ({
           blocks[index].inputConfig = newConfig
         }
       }
-      const { pages, activePageId } = state
       const updatedPages = pages.map((p) => (p.id === activePageId ? { ...p, blocks } : p))
 
-      return { pages: updatedPages, canvasBlocks: blocks, versionClock: state.versionClock + 1, isDirty: true }
+      return { 
+        pastHistory: [...pastHistory, currentBlocks],
+        futureHistory: [],
+        pages: updatedPages, 
+        canvasBlocks: blocks, 
+        versionClock: state.versionClock + 1, 
+        isDirty: true 
+      }
     })
   },
 
@@ -294,7 +362,7 @@ export const useBuilderStore = create<BuilderState>((set, get) => ({
   },
 
   togglePreviewMode: () => {
-    set((state) => ({ isPreviewMode: !state.isPreviewMode, selectedInstanceId: null }))
+    set((state) => ({ isPreviewMode: !state.isPreviewMode, selectedInstanceId: null, selectedElementKey: null }))
   },
 
   setDraftName: (name) => {

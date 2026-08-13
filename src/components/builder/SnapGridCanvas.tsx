@@ -14,6 +14,7 @@ import {
 } from '@/lib/snapGrid'
 import { cn } from '@/lib/utils'
 import { useActionHandler, emitToast } from '@/hooks/useActionHandler'
+import { BlockProvider } from '@/contexts/BlockContext'
 
 // ──────────────────────────────────────────────────────────────
 // 블록 레지스트리 & 렌더러
@@ -103,7 +104,13 @@ function BlockRenderer({
 }) {
   const config = block.inputConfig || {}
   const Component = BlockRegistry[block.blockId]
-  if (Component) return <Component config={config} isPreview={isPreviewMode} onAction={onAction} />
+  if (Component) {
+    return (
+      <BlockProvider instanceId={block.instanceId} isPreviewMode={isPreviewMode}>
+        <Component config={config} isPreview={isPreviewMode} onAction={onAction} />
+      </BlockProvider>
+    )
+  }
   return (
     <div className="p-8 flex flex-col items-center justify-center min-h-[200px] border border-dashed border-slate-300 bg-slate-50 w-full">
       <h2 className="text-xl font-bold mb-2 text-slate-400">{block.name}</h2>
@@ -210,7 +217,7 @@ function DraggableBlock({ block, canvasRef, onDragStart, onDragMove, onDragEnd, 
         isSelected ? 'ring-1 ring-inset ring-indigo-500 z-10' : 'hover:ring-1 hover:ring-inset hover:ring-slate-300'
       )}
       onPointerDown={handlePointerDown}
-      onClick={(e) => { e.stopPropagation(); selectBlock(block.instanceId) }}
+      onClick={(e) => { e.stopPropagation(); selectBlock(block.instanceId, 'background') }}
     >
       {isSelected && <FloatingQuickToolbar />}
 
@@ -465,7 +472,7 @@ function ResponsiveViewCanvas({ viewport }: { viewport: DeviceViewport }) {
                   onClick={(e) => {
                     if (isReadOnly) return
                     e.stopPropagation()
-                    selectBlock(block.instanceId)
+                    selectBlock(block.instanceId, 'background')
                   }}
                 >
                   <BlockRenderer block={block} isPreviewMode={isReadOnly} onAction={handleAction} />

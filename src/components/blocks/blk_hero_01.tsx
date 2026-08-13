@@ -4,7 +4,9 @@ import AtomBtn01 from '../atoms/atom_btn_01'
 import AtomImage01 from '../atoms/atom_image_01'
 import AtomBadge01 from '../atoms/atom_badge_01'
 import { getBlockLayout } from '@/lib/blockLayout'
+import { useElementSelector } from '@/contexts/BlockContext'
 import type { BlockInputConfig, ContainerWidth, PaddingYOption } from '@/types'
+import { cn } from '@/lib/utils'
 
 interface Props {
   config?: BlockInputConfig
@@ -25,9 +27,14 @@ export default function BlkHero01({ config, isPreview, onAction }: Props) {
     buttonText = '지금 바로 예약하기',
     containerWidth = 'full',
     paddingY = 'normal',
+    titleStyle,
+    subtitleStyle,
+    buttonStyle,
+    backgroundStyle,
   } = safeConfig as BlockInputConfig
 
   const layout = getBlockLayout(containerWidth as ContainerWidth, paddingY as PaddingYOption)
+  const selectElement = useElementSelector()
 
   // 임시 badge (config 스키마 확장에 따라 추가 가능)
   const badgeText = 'NEW'
@@ -35,8 +42,16 @@ export default function BlkHero01({ config, isPreview, onAction }: Props) {
   return (
     <AtomCard01 noPadding className="border-none rounded-none w-full">
       {/* 히어로는 배경 이미지가 전체 폭 — paddingY로 세로 크기 조절 */}
-      <div className={`relative ${layout.paddingClass} ${layout.wrapperClass}`} style={{ minHeight: '16rem' }}>
-        <AtomImage01 src={imageUrl} alt="히어로 이미지" fill className="absolute inset-0" />
+      <div 
+        className={cn(`relative ${layout.paddingClass} ${layout.wrapperClass}`)} 
+        style={{ 
+          minHeight: '16rem',
+          backgroundColor: backgroundStyle?.backgroundColor,
+          opacity: backgroundStyle?.opacity,
+        }}
+        onClick={(e) => selectElement('background', e)}
+      >
+        <AtomImage01 src={backgroundStyle?.backgroundImage || imageUrl} alt="히어로 이미지" fill className="absolute inset-0" />
         <div className="absolute inset-0 bg-slate-900/40" />
 
         <div className={`relative z-10 flex flex-col items-center justify-center h-full text-center ${layout.paddingXClass} ${layout.innerClass}`}>
@@ -46,18 +61,47 @@ export default function BlkHero01({ config, isPreview, onAction }: Props) {
             </AtomBadge01>
           )}
 
-          <AtomText01 as="h1" className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-white mb-3 md:mb-4 leading-tight tracking-tight break-keep">
+          <AtomText01 
+            as="h1" 
+            className="mb-3 md:mb-4 leading-tight tracking-tight break-keep cursor-pointer hover:ring-1 hover:ring-white/50 p-1 rounded"
+            style={{
+              color: titleStyle?.color || 'white',
+              fontFamily: titleStyle?.fontFamily,
+              fontWeight: titleStyle?.fontWeight || '900',
+              fontSize: titleStyle?.fontSize || '3rem',
+            }}
+            onClick={(e) => selectElement('title', e)}
+          >
             {title}
           </AtomText01>
 
-          <AtomText01 as="p" className="text-sm sm:text-lg md:text-xl text-slate-200 mb-6 md:mb-8 max-w-2xl font-normal leading-relaxed break-keep">
+          <AtomText01 
+            as="p" 
+            className="mb-6 md:mb-8 max-w-2xl font-normal leading-relaxed break-keep cursor-pointer hover:ring-1 hover:ring-white/50 p-1 rounded"
+            style={{
+              color: subtitleStyle?.color || '#e2e8f0',
+              fontFamily: subtitleStyle?.fontFamily,
+              fontWeight: subtitleStyle?.fontWeight || '400',
+              fontSize: subtitleStyle?.fontSize || '1.125rem',
+            }}
+            onClick={(e) => selectElement('subtitle', e)}
+          >
             {subtitle}
           </AtomText01>
 
           <AtomBtn01
             size="lg"
-            className="px-8 md:px-10 py-3 md:py-4 bg-white text-slate-900 hover:bg-slate-100 font-bold text-sm md:text-base rounded-xl shadow-lg transition-all"
-            onClick={() => onAction?.(safeConfig as BlockInputConfig)}
+            className="px-8 md:px-10 py-3 md:py-4 shadow-lg transition-all"
+            style={{
+              backgroundColor: buttonStyle?.backgroundColor || 'white',
+              color: buttonStyle?.textColor || '#0f172a',
+              borderRadius: buttonStyle?.borderRadius || '0.75rem',
+              fontWeight: buttonStyle?.fontWeight || 'bold',
+            }}
+            onClick={(e) => {
+              selectElement('button', e)
+              onAction?.(safeConfig as BlockInputConfig)
+            }}
           >
             {buttonText}
           </AtomBtn01>

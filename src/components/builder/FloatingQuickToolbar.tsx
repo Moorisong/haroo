@@ -3,19 +3,23 @@
 import React from 'react'
 import { useBuilderStore } from '@/stores/useBuilderStore'
 
-export default function FloatingQuickToolbar() {
+interface FloatingQuickToolbarProps {
+  instanceId?: string
+  className?: string
+}
+
+export default function FloatingQuickToolbar({ instanceId, className }: FloatingQuickToolbarProps) {
   const { selectedInstanceId, canvasBlocks, moveBlock, removeBlock, addBlock } = useBuilderStore()
   
-  if (!selectedInstanceId) return null
+  const targetId = instanceId || selectedInstanceId
+  if (!targetId) return null
   
-  const blockIndex = canvasBlocks.findIndex(b => b.instanceId === selectedInstanceId)
+  const blockIndex = canvasBlocks.findIndex(b => b.instanceId === targetId)
   if (blockIndex === -1) return null
 
   const currentBlock = canvasBlocks[blockIndex]
 
   const handleDuplicate = () => {
-    // 딥카피 개념이 필요하지만, 여기선 store addBlock을 활용해 동일한 blockId로 새 블록 추가
-    // (완전한 인풋 복제는 store addBlock을 확장해야 함. 기본 기능 제공)
     addBlock({
       id: currentBlock.blockId,
       name: currentBlock.name,
@@ -31,7 +35,7 @@ export default function FloatingQuickToolbar() {
   const isLast = blockIndex === canvasBlocks.length - 1
 
   return (
-    <div className={`absolute ${positionClass} z-50 flex items-center space-x-1 p-1 bg-slate-800 rounded-lg shadow-xl animate-in fade-in zoom-in duration-200`}>
+    <div className={`absolute ${positionClass} z-50 flex items-center space-x-1 p-1 bg-slate-800/95 backdrop-blur-sm text-white rounded-lg shadow-xl border border-slate-700 animate-in fade-in zoom-in duration-200 ${className || ''}`}>
       {/* 위로 이동 */}
       <button
         onClick={(e) => {
@@ -66,7 +70,7 @@ export default function FloatingQuickToolbar() {
       </button>
 
       {/* 삭제 */}
-      <button onClick={(e) => { e.stopPropagation(); removeBlock(selectedInstanceId) }} className="p-1.5 text-red-400 hover:bg-slate-700 hover:text-red-300 rounded transition-colors" title="삭제">
+      <button onClick={(e) => { e.stopPropagation(); removeBlock(targetId) }} className="p-1.5 text-red-400 hover:bg-slate-700 hover:text-red-300 rounded transition-colors" title="삭제">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>
       </button>
     </div>

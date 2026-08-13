@@ -22,6 +22,19 @@ export const BlockInputConfigSchema = z.object({
   videoUrl: z.string().url().optional(),
   buttonText: z.string().optional(),
   buttonLink: z.string().optional(),
+  buttons: z.array(z.object({
+    id: z.string(),
+    text: z.string(),
+    variant: z.enum(['primary', 'secondary', 'outline', 'ghost']).optional(),
+    actionType: z.string().optional(),
+    buttonLink: z.string().optional(),
+    notifyKakao: z.boolean().optional(),
+    thankYouMessage: z.string().optional(),
+    paymentAmount: z.number().optional(),
+    paymentSuccessUrl: z.string().optional(),
+    customTargetId: z.string().optional(),
+    customEffect: z.string().optional()
+  })).optional(),
   // 버튼 액션의 모든 경우의 수를 담은 11가지 액션 타입
   actionType: z.enum([
     'NAVIGATE_PAGE',       // 내 사이트 화면 이동
@@ -161,6 +174,31 @@ export const BlockInputConfigSchema = z.object({
   posY: z.number().optional(),
   // 블록의 실제 렌더링 높이 (스마트 가이드 계산용)
   blockHeight: z.number().optional(),
+  
+  // 개별 요소 스타일링 (Contextual Property Inspector)
+  titleStyle: z.object({
+    color: z.string().optional(),
+    fontFamily: z.string().optional(),
+    fontWeight: z.string().optional(),
+    fontSize: z.string().optional(),
+  }).optional(),
+  subtitleStyle: z.object({
+    color: z.string().optional(),
+    fontFamily: z.string().optional(),
+    fontWeight: z.string().optional(),
+    fontSize: z.string().optional(),
+  }).optional(),
+  buttonStyle: z.object({
+    backgroundColor: z.string().optional(),
+    textColor: z.string().optional(),
+    borderRadius: z.string().optional(),
+    fontWeight: z.string().optional(),
+  }).optional(),
+  backgroundStyle: z.object({
+    backgroundColor: z.string().optional(),
+    backgroundImage: z.string().optional(),
+    opacity: z.number().optional(),
+  }).optional(),
 }).catchall(z.any())
 
 export type BlockInputConfig = z.infer<typeof BlockInputConfigSchema>
