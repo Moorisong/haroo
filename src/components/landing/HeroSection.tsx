@@ -38,7 +38,7 @@ export default function HeroSection() {
         {/* CTA 버튼 그룹 */}
         <div className="flex flex-col sm:flex-row gap-3 justify-center items-center mb-6">
           <Link
-            href={user ? '/builder' : '/login'}
+            href="/builder"
             className="inline-flex items-center gap-2 px-6 py-3.5 bg-slate-900 text-white text-xs sm:text-sm font-bold rounded-xl hover:bg-slate-800 transition-all hover:shadow-lg"
           >
             무료로 내 템플릿 조립하기

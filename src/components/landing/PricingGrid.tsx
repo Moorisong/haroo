@@ -124,7 +124,7 @@ export default function PricingGrid() {
                         <span className="text-xs text-slate-600 font-medium">{tier.domain}</span>
                       </div>
                     </div>
-                    <Link href="/login" className={`block w-full py-2.5 text-center text-xs sm:text-sm font-bold rounded-xl transition-colors ${tier.btnColor}`}>
+                    <Link href="/builder" className={`block w-full py-2.5 text-center text-xs sm:text-sm font-bold rounded-xl transition-colors ${tier.btnColor}`}>
                       무료로 조립 시작
                     </Link>
                   </div>

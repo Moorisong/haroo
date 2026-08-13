@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Link from 'next/link'
 import {
   Layout, Star, Zap, Map, Image, MessageSquare, Bell, CreditCard, BarChart2,
   Calendar, Users, Gift, BookOpen, Heart, Clock, Megaphone, Share2,
@@ -111,13 +112,13 @@ export default function BlockShowcase() {
           <p className="text-xs text-slate-500 mb-3">
             현재 표시된 {filtered.length}종 외 총 45종 블록이 제공됩니다
           </p>
-          <a
-            href="/login"
+          <Link
+            href="/builder"
             className="inline-flex items-center gap-1.5 px-5 py-2.5 border border-slate-200 text-slate-700 text-xs font-semibold rounded-xl hover:bg-slate-50 transition-colors"
           >
             전체 블록 조립 캔버스 체험하기
             <ChevronRight size={14} />
-          </a>
+          </Link>
         </div>
       </div>
     </section>
