@@ -47,7 +47,7 @@ export default function HeaderNav() {
                 {link.label}
               </a>
             ))}
-            <Link href="/dashboard" className="text-sm text-slate-600 hover:text-slate-900 transition-colors">
+            <Link href={user ? '/dashboard' : '/login'} className="text-sm text-slate-600 hover:text-slate-900 transition-colors">
               내 저장소
             </Link>
           </nav>
@@ -113,7 +113,7 @@ export default function HeaderNav() {
               </a>
             ))}
             <Link
-              href="/dashboard"
+              href={user ? '/dashboard' : '/login'}
               onClick={() => setIsOpen(false)}
               className="px-3 py-2.5 text-sm text-slate-700 hover:bg-slate-50 rounded-lg transition-colors"
             >

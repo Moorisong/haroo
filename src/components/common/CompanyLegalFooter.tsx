@@ -1,7 +1,8 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { getCurrentUser, type UserProfile } from '@/lib/auth'
 import AdminAuthModal from '@/components/admin/AdminAuthModal'
 
 const LEGAL_INFO = [
@@ -29,6 +30,11 @@ const LEGAL_LINKS = [
  */
 export default function CompanyLegalFooter() {
   const [adminModalOpen, setAdminModalOpen] = useState(false)
+  const [user, setUser] = useState<UserProfile | null>(null)
+
+  useEffect(() => {
+    getCurrentUser().then((u) => setUser(u))
+  }, [])
 
   return (
     <>
@@ -56,7 +62,7 @@ export default function CompanyLegalFooter() {
                       {link.label}
                     </a>
                   ))}
-                  <Link href="/dashboard" className="block text-sm text-slate-500 hover:text-slate-900 transition-colors">
+                  <Link href={user ? '/dashboard' : '/login'} className="block text-sm text-slate-500 hover:text-slate-900 transition-colors">
                     내 저장소
                   </Link>
                 </div>

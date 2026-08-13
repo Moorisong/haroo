@@ -2,11 +2,13 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import {
   Globe, Settings, Edit3, ExternalLink, Copy, Check, Clock,
   Plus, BarChart2, Bell, Smartphone, ChevronRight, Trash2, FolderPlus,
 } from 'lucide-react'
 import CustomDomainDrawer from '@/components/dashboard/CustomDomainDrawer'
+import { getCurrentUser } from '@/lib/auth'
 
 interface ProjectItem {
   id: string
@@ -35,6 +37,7 @@ const QUICK_ACTIONS = [
 ]
 
 export default function DashboardPage() {
+  const router = useRouter()
   const [copied, setCopied] = useState(false)
   const [domainDrawerOpen, setDomainDrawerOpen] = useState(false)
   const [projects, setProjects] = useState<ProjectItem[]>([])
@@ -66,8 +69,14 @@ export default function DashboardPage() {
   }
 
   useEffect(() => {
-    fetchData()
-  }, [])
+    getCurrentUser().then((user) => {
+      if (!user) {
+        router.push('/login')
+      } else {
+        fetchData()
+      }
+    })
+  }, [router])
 
   // 드래프트 DB 삭제
   const handleDeleteDraft = async (id: string) => {
