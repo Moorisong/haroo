@@ -31,12 +31,17 @@
 * **응답**: `200 OK` (`{ userId: string, email: string }`).
 
 ### 7. `POST /api/drafts/save`
-* **설명**: 500ms debounce JSONB 업서트 (`UserProjectDraft` 테이블, 유저당 10개 한도).
+* **설명**: 500ms debounce JSONB 업서트 (`UserProjectDraft` 테이블, 유저당 10개 한도, 브라우저 메모리 보관 배제).
 * **응답**: `200 OK` (`{ draftId: string, updatedAt: string }`).
 
 ### 8. `GET /api/drafts/list`
-* **설명**: 로그인 유저 드래프트 목록 (최대 10개) 반환.
+* **설명**: 로그인 유저 드래프트 목록 DB 조회 (최대 10개) 반환.
 * **응답**: `200 OK` (`{ drafts: Draft[] }`).
+
+### 8.1. `DELETE /api/drafts/[id]`
+* **설명**: 특정 드래프트 ID 항목을 `UserProjectDraft` DB에서 완전히 삭제.
+* **응답**: `200 OK` (`{ success: true, deletedId: string }`).
+
 
 ### 9. `GET /api/domains/check?name=`
 * **설명**: 서브도메인 정규식 및 중복 검사.
