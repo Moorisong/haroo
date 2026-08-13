@@ -62,7 +62,7 @@ export default function CompanyLegalFooter() {
                       {link.label}
                     </a>
                   ))}
-                  <Link href={user ? '/dashboard' : '/login'} className="block text-sm text-slate-500 hover:text-slate-900 transition-colors">
+                  <Link href={user ? '/dashboard' : '/login?next=/dashboard'} className="block text-sm text-slate-500 hover:text-slate-900 transition-colors">
                     내 저장소
                   </Link>
                 </div>

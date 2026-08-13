@@ -26,8 +26,8 @@ export default function HeaderNav() {
       setUser(u)
       if (u) {
         const target = consumeAuthRedirectTarget()
-        if (target === '/builder') {
-          router.replace('/builder')
+        if (target && target !== '/') {
+          router.replace(target)
         }
       }
     })
@@ -58,7 +58,7 @@ export default function HeaderNav() {
                 {link.label}
               </a>
             ))}
-            <Link href={user ? '/dashboard' : '/login'} className="text-sm text-slate-600 hover:text-slate-900 transition-colors">
+            <Link href={user ? '/dashboard' : '/login?next=/dashboard'} className="text-sm text-slate-600 hover:text-slate-900 transition-colors">
               내 저장소
             </Link>
           </nav>
@@ -124,7 +124,7 @@ export default function HeaderNav() {
               </a>
             ))}
             <Link
-              href={user ? '/dashboard' : '/login'}
+              href={user ? '/dashboard' : '/login?next=/dashboard'}
               onClick={() => setIsOpen(false)}
               className="px-3 py-2.5 text-sm text-slate-700 hover:bg-slate-50 rounded-lg transition-colors"
             >

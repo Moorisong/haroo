@@ -54,7 +54,16 @@ export function runAuthRedirectTests() {
     throw new Error('❌ [FAIL] 4. 타겟 재이용 방지 검증 실패')
   }
 
-  console.log('✨ [ALL PASS] 비로그인 저장 -> 로그인 후 /builder 1회성 리다이렉트 검증 완벽 통과!\n')
+  // 5. 비로그인 상태에서 '내 저장소' 클릭 시 타겟('/dashboard') 설정 및 로그인 후 마이페이지 이동 검증
+  setAuthRedirectTarget('/dashboard')
+  const dashboardTarget = consumeAuthRedirectTarget()
+  if (dashboardTarget === '/dashboard') {
+    console.log('✅ [PASS] 5. 비로그인 내 저장소 클릭 시 setAuthRedirectTarget("/dashboard") 설정 및 로그인 후 마이페이지 이동 성공')
+  } else {
+    throw new Error('❌ [FAIL] 5. 내 저장소 마이페이지 리다이렉트 검증 실패')
+  }
+
+  console.log('✨ [ALL PASS] 비로그인 저장/내 저장소 -> 로그인 후 1회성 리다이렉트 검증 완벽 통과!\n')
 }
 
 // 스크립트 직접 실행 시 테스트 구동

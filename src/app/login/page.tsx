@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { getCurrentUser, signInWithProvider } from '@/lib/auth'
+import { setAuthRedirectTarget, consumeAuthRedirectTarget } from '@/lib/authRedirectHelper'
 
 export default function LoginPage() {
   const router = useRouter()
@@ -15,12 +16,8 @@ export default function LoginPage() {
       if (user) {
         const params = new URLSearchParams(window.location.search)
         const next = params.get('next')
-        const pendingDraft = sessionStorage.getItem('pending_builder_draft')
-        if (next === '/builder' || pendingDraft) {
-          router.replace('/builder')
-        } else {
-          router.replace('/dashboard')
-        }
+        const target = consumeAuthRedirectTarget() || next || '/dashboard'
+        router.replace(target)
       }
     })
   }, [router])
@@ -30,7 +27,8 @@ export default function LoginPage() {
     setErrorMsg(null)
     try {
       const params = new URLSearchParams(window.location.search)
-      const next = params.get('next') || (sessionStorage.getItem('pending_builder_draft') ? '/builder' : '/dashboard')
+      const next = params.get('next') || '/dashboard'
+      setAuthRedirectTarget(next)
       const res = await signInWithProvider(provider, next)
       if (res.error) {
         setErrorMsg(res.error.message)
