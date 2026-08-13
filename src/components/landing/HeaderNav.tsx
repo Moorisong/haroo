@@ -21,16 +21,8 @@ export default function HeaderNav() {
   const [user, setUser] = useState<UserProfile | null>(null)
 
   useEffect(() => {
-    getCurrentUser().then((u) => {
-      setUser(u)
-      if (u) {
-        const pendingDraft = sessionStorage.getItem('pending_builder_draft')
-        if (pendingDraft) {
-          router.replace('/builder')
-        }
-      }
-    })
-  }, [router])
+    getCurrentUser().then(setUser)
+  }, [])
 
   const handleLogout = async () => {
     await signOut()

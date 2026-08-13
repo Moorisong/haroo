@@ -199,6 +199,9 @@ export default function BuilderPage() {
       return
     }
     if (targetId === 'home') {
+      if (typeof window !== 'undefined') {
+        sessionStorage.removeItem('pending_builder_draft')
+      }
       window.location.href = '/'
       return
     }
