@@ -2,10 +2,11 @@
 
 import React, { useState, useRef, useEffect } from 'react'
 import { useBuilderStore } from '@/stores/useBuilderStore'
+import { TIER_PAGE_LIMITS } from '@/types'
 import { ChevronDown, Plus, FileText, Home, Trash2 } from 'lucide-react'
 
 export default function PageSwitcher() {
-  const { pages, activePageId, setActivePage, addPage, removePage, siteTemplateSelected } = useBuilderStore()
+  const { pages, activePageId, setActivePage, addPage, removePage, siteTemplateSelected, userTier } = useBuilderStore()
   const [isOpen, setIsOpen] = useState(false)
   const [isAdding, setIsAdding] = useState(false)
   const [newTitle, setNewTitle] = useState('')
@@ -49,7 +50,8 @@ export default function PageSwitcher() {
       alert('화면 이름과 영문 주소를 모두 입력해 주세요.')
       return
     }
-    addPage(newTitle.trim(), newSlug.trim())
+    const createdId = addPage(newTitle.trim(), newSlug.trim())
+    if (!createdId) return
     setNewTitle('')
     setNewSlug('')
     setIsAdding(false)
@@ -197,7 +199,14 @@ export default function PageSwitcher() {
               ) : (
                 <button
                   type="button"
-                  onClick={() => setIsAdding(true)}
+                  onClick={() => {
+                    const limit = TIER_PAGE_LIMITS[userTier || 'STARTER'] || 3
+                    if (pages.length >= limit) {
+                      addPage('', '') // triggers toast via store
+                      return
+                    }
+                    setIsAdding(true)
+                  }}
                   className="w-full flex items-center justify-center gap-1.5 py-1.5 text-xs font-semibold text-blue-600 bg-blue-50 hover:bg-blue-100 dark:bg-blue-950 dark:text-blue-300 dark:hover:bg-blue-900 rounded-lg transition-colors"
                 >
                   <Plus className="w-3.5 h-3.5" />

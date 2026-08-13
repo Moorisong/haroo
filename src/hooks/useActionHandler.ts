@@ -19,6 +19,7 @@ import type { BlockInputConfig } from '@/types'
 export type ToastLevel = 'success' | 'info' | 'warning' | 'error'
 
 export function emitToast(message: string, level: ToastLevel = 'info', durationMs = 3500) {
+  if (typeof window === 'undefined') return
   const event = new CustomEvent('haroo:toast', {
     detail: { message, level, durationMs },
   })

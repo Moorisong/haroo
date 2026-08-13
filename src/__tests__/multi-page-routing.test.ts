@@ -59,4 +59,52 @@ describe('다중 페이지(Multi-Page) 관리 및 2단계 템플릿 선택 테�
     assert.strictEqual(useBuilderStore.getState().canvasBlocks.length, 1)
     assert.strictEqual(useBuilderStore.getState().canvasBlocks[0].blockId, 'blk_hero_01')
   })
+
+  // STARTER 티어 최대 3개 화면 생성 제한 및 초과 차단 검증
+  test('STARTER 티어에서는 최대 3개 화면만 생성할 수 있고 초과 시 차단된다', () => {
+    const store = useBuilderStore.getState()
+    store.setUserTier('STARTER')
+
+    const page2 = store.addPage('화면 2', 'page-2')
+    const page3 = store.addPage('화면 3', 'page-3')
+    assert.ok(page2)
+    assert.ok(page3)
+    assert.strictEqual(useBuilderStore.getState().pages.length, 3)
+
+    const page4 = store.addPage('화면 4', 'page-4')
+    assert.strictEqual(page4, null)
+    assert.strictEqual(useBuilderStore.getState().pages.length, 3)
+  })
+
+  // STANDARD 티어 최대 10개 화면 생성 제한 검증
+  test('STANDARD 티어에서는 최대 10개 화면 생성을 허용하고 11번째는 차단된다', () => {
+    const store = useBuilderStore.getState()
+    store.setUserTier('STANDARD')
+
+    for (let i = 2; i <= 10; i++) {
+      const added = store.addPage(`화면 ${i}`, `page-${i}`)
+      assert.ok(added)
+    }
+    assert.strictEqual(useBuilderStore.getState().pages.length, 10)
+
+    const page11 = store.addPage('화면 11', 'page-11')
+    assert.strictEqual(page11, null)
+    assert.strictEqual(useBuilderStore.getState().pages.length, 10)
+  })
+
+  // PROFESSIONAL 티어 최대 20개 화면 생성 제한 검증
+  test('PROFESSIONAL 티어에서는 최대 20개 화면 생성을 허용한다', () => {
+    const store = useBuilderStore.getState()
+    store.setUserTier('PROFESSIONAL')
+
+    for (let i = 2; i <= 20; i++) {
+      const added = store.addPage(`화면 ${i}`, `page-${i}`)
+      assert.ok(added)
+    }
+    assert.strictEqual(useBuilderStore.getState().pages.length, 20)
+
+    const page21 = store.addPage('화면 21', 'page-21')
+    assert.strictEqual(page21, null)
+    assert.strictEqual(useBuilderStore.getState().pages.length, 20)
+  })
 })

@@ -1,8 +1,9 @@
 import { create } from 'zustand'
 import { v4 as uuidv4 } from 'uuid'
 import type { CanvasBlock, Draft, BlockTier, DeviceViewport, BlockInputConfig, ProjectType, PageItem, SiteTemplateCategory } from '@/types'
-import { BlockInputConfigSchema } from '@/types'
+import { BlockInputConfigSchema, TIER_PAGE_LIMITS } from '@/types'
 import { getNextBlockY, CANVAS_WIDTH, snapToGrid } from '@/lib/snapGrid'
+import { emitToast } from '@/hooks/useActionHandler'
 
 interface BlockDefinition {
   id: string
@@ -20,6 +21,9 @@ const DEFAULT_MAIN_PAGE: PageItem = {
 }
 
 interface BuilderState {
+  // 프로젝트 티어 상태
+  userTier: BlockTier
+
   // 다중 페이지 상태
   pages: PageItem[]
   activePageId: string
@@ -46,8 +50,9 @@ interface BuilderState {
   drafts: Draft[]
 
   // 다중 페이지 Actions
+  setUserTier: (tier: BlockTier) => void
   setActivePage: (pageId: string) => void
-  addPage: (title: string, customSlug?: string) => string
+  addPage: (title: string, customSlug?: string) => string | null
   removePage: (pageId: string) => void
   updatePageTitle: (pageId: string, title: string) => void
   confirmSiteTemplate: (template: SiteTemplateCategory) => void
@@ -71,6 +76,7 @@ interface BuilderState {
 }
 
 const initialState = {
+  userTier: 'STARTER' as BlockTier,
   pages: [DEFAULT_MAIN_PAGE],
   activePageId: 'page_main',
   canvasBlocks: [] as CanvasBlock[],
@@ -96,6 +102,10 @@ const initialState = {
 export const useBuilderStore = create<BuilderState>((set, get) => ({
   ...initialState,
 
+  setUserTier: (tier) => {
+    set({ userTier: tier })
+  },
+
   setActivePage: (pageId) => {
     const { pages, canvasBlocks, activePageId } = get()
     // 이전 페이지의 blocks 저장
@@ -113,7 +123,13 @@ export const useBuilderStore = create<BuilderState>((set, get) => ({
   },
 
   addPage: (title, customSlug) => {
-    const { pages, canvasBlocks, activePageId } = get()
+    const { pages, canvasBlocks, activePageId, userTier } = get()
+    const limit = TIER_PAGE_LIMITS[userTier] || 3
+    if (pages.length >= limit) {
+      emitToast(`⚠️ 현재 플랜(${userTier})의 최대 화면 수(${limit}개)에 도달했습니다. 추가 화면 작성을 원하시면 플랜을 업그레이드해 주세요.`, 'warning')
+      return null
+    }
+
     const updatedPages = pages.map((p) => (p.id === activePageId ? { ...p, blocks: canvasBlocks } : p))
     const newId = `page_${uuidv4().slice(0, 8)}`
     

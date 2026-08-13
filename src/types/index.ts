@@ -6,6 +6,13 @@ import { z } from 'zod'
 // 블록 티어
 export type BlockTier = 'STARTER' | 'STANDARD' | 'PROFESSIONAL'
 
+// 티어별 최대 생성 가능 화면(페이지) 수 리밋
+export const TIER_PAGE_LIMITS: Record<BlockTier, number> = {
+  STARTER: 3,
+  STANDARD: 10,
+  PROFESSIONAL: 20,
+}
+
 // 블록 컨테이너 폭 옵션
 export const CONTAINER_WIDTHS = ['full', 'wide', 'medium', 'narrow'] as const
 export type ContainerWidth = typeof CONTAINER_WIDTHS[number]
