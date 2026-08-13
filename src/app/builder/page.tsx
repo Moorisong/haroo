@@ -139,39 +139,6 @@ export default function BuilderPage() {
             updatedAt: new Date().toISOString(),
           })
 
-          // 로그인 된 상태로 진입한 경우 자동 DB 저장 수행 및 세션스토리지 비우기
-          getCurrentUser().then(async (user) => {
-            if (user) {
-              sessionStorage.removeItem('pending_builder_draft')
-              if (pending.autoSaveOnRestore) {
-                try {
-                  const res = await fetch('/api/drafts/save', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                      draftId: '',
-                      name: pending.draftName || '나만의 프로젝트',
-                      selectedBlocks: {
-                        pages: pending.pages,
-                        template: pending.siteTemplate,
-                        canvasBlocks: pending.canvasBlocks,
-                        projectType: pending.projectType,
-                      },
-                    }),
-                  })
-                  if (res.ok) {
-                    const data = await res.json()
-                    markSaved(data.draftId)
-                    setSaveToast(true)
-                    fetchDraftList()
-                    setTimeout(() => setSaveToast(false), 2500)
-                  }
-                } catch (e) {
-                  console.error('[Auto save restore error]', e)
-                }
-              }
-            }
-          })
           return
         }
       } catch (e) {
