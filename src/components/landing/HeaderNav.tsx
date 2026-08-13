@@ -76,7 +76,7 @@ export default function HeaderNav() {
                 </Link>
                 <button
                   onClick={handleLogout}
-                  className="text-xs text-slate-500 hover:text-slate-800 transition-colors flex items-center gap-1"
+                  className="text-xs text-slate-500 hover:text-slate-800 transition-colors flex items-center gap-1 cursor-pointer"
                   title="로그아웃"
                 >
                   <LogOut size={13} />
@@ -143,7 +143,7 @@ export default function HeaderNav() {
                       handleLogout()
                       setIsOpen(false)
                     }}
-                    className="text-xs text-red-600 font-semibold flex items-center gap-1"
+                    className="text-xs text-red-600 font-semibold flex items-center gap-1 cursor-pointer"
                   >
                     <LogOut size={12} /> 로그아웃
                   </button>
