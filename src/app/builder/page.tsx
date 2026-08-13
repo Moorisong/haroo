@@ -17,6 +17,7 @@ import SidePropertyPanel from '@/components/builder/SidePropertyPanel'
 import ProjectTypeSelectionModal from '@/components/builder/ProjectTypeSelectionModal'
 import SiteTemplateSelectionModal from '@/components/builder/SiteTemplateSelectionModal'
 import PageSwitcher from '@/components/builder/PageSwitcher'
+import ProjectSwitcher from '@/components/builder/ProjectSwitcher'
 import ActionToast from '@/components/builder/ActionToast'
 import MobileBlockerScreen from '@/components/builder/MobileBlockerScreen'
 
@@ -305,23 +306,11 @@ export default function BuilderPage() {
           {isDirty && <span className="w-2 h-2 rounded-full bg-amber-400" title="저장 대기 중" />}
         </div>
         <div className="flex items-center gap-2">
-          {/* 저장된 프로젝트 선택 Select 드롭다운 (프로젝트명 인풋 바로 왼쪽) */}
-          <div className="flex items-center gap-1.5 bg-slate-100/90 px-2 py-1.5 rounded-lg border border-slate-200 text-xs hover:border-slate-300 transition-all">
-            <Folder size={13} className="text-slate-500 flex-shrink-0" />
-            <select
-              value={draftId || 'new'}
-              onChange={(e) => handleSelectProject(e.target.value)}
-              className="bg-transparent font-bold text-slate-800 focus:outline-none cursor-pointer max-w-[110px] sm:max-w-[140px] truncate"
-              title="저장된 프로젝트 불러오기"
-            >
-              <option value="new">+ 새 프로젝트</option>
-              {savedDraftList.map((d) => (
-                <option key={d.id} value={d.id}>
-                  {d.name}
-                </option>
-              ))}
-            </select>
-          </div>
+          {/* 저장된 프로젝트 선택 ProjectSwitcher 커스텀 드롭다운 */}
+          <ProjectSwitcher
+            savedDraftList={savedDraftList}
+            onSelectProject={handleSelectProject}
+          />
 
           {/* 프로젝트 이름 직접 입력 UI */}
           <div className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border transition-all ${
