@@ -13,7 +13,12 @@ export default function LoginPage() {
   useEffect(() => {
     getCurrentUser().then((user) => {
       if (user) {
-        router.replace('/dashboard')
+        const pendingDraft = sessionStorage.getItem('pending_builder_draft')
+        if (pendingDraft) {
+          router.replace('/builder')
+        } else {
+          router.replace('/dashboard')
+        }
       }
     })
   }, [router])

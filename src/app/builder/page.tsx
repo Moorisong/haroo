@@ -95,9 +95,91 @@ export default function BuilderPage() {
   } = useBuilderStore()
   const isReadOnlyPreview = (projectType === 'WEB' && deviceViewport !== 'desktop') || storeIsPreview
 
-  // 빌더 진입 시: URL에 ?draft=ID가 있으면 DB 복원, 없으면 새 프로젝트로 reset()
+  // 비로그인 상태 유저가 블록을 조립할 때 sessionStorage에 임시 백업
   useEffect(() => {
     if (typeof window === 'undefined') return
+    if (!canvasBlocks || canvasBlocks.length === 0) return
+
+    getCurrentUser().then((user) => {
+      if (!user) {
+        sessionStorage.setItem(
+          'pending_builder_draft',
+          JSON.stringify({
+            draftName,
+            pages,
+            siteTemplate,
+            canvasBlocks,
+            projectType,
+          })
+        )
+      }
+    })
+  }, [canvasBlocks, pages, siteTemplate, draftName, projectType])
+
+  // 빌더 진입 시: 임시 세션스토리지 데이터 복원 또는 URL ?draft=ID 복원 처리
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+
+    // 1. 임시 조립 데이터(sessionStorage) 복원 체크
+    const pendingRaw = sessionStorage.getItem('pending_builder_draft')
+    if (pendingRaw) {
+      try {
+        const pending = JSON.parse(pendingRaw)
+        if (pending.canvasBlocks && pending.canvasBlocks.length > 0) {
+          loadDraft({
+            id: pending.draftId || '',
+            name: pending.draftName || '나만의 프로젝트',
+            selectedBlocks: {
+              pages: pending.pages,
+              template: pending.siteTemplate,
+              canvasBlocks: pending.canvasBlocks,
+              projectType: pending.projectType,
+            },
+            versionClock: 1,
+            updatedAt: new Date().toISOString(),
+          })
+
+          // 로그인 된 상태로 진입한 경우 자동 DB 저장 수행 및 세션스토리지 비우기
+          getCurrentUser().then(async (user) => {
+            if (user) {
+              sessionStorage.removeItem('pending_builder_draft')
+              if (pending.autoSaveOnRestore) {
+                try {
+                  const res = await fetch('/api/drafts/save', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                      draftId: '',
+                      name: pending.draftName || '나만의 프로젝트',
+                      selectedBlocks: {
+                        pages: pending.pages,
+                        template: pending.siteTemplate,
+                        canvasBlocks: pending.canvasBlocks,
+                        projectType: pending.projectType,
+                      },
+                    }),
+                  })
+                  if (res.ok) {
+                    const data = await res.json()
+                    markSaved(data.draftId)
+                    setSaveToast(true)
+                    fetchDraftList()
+                    setTimeout(() => setSaveToast(false), 2500)
+                  }
+                } catch (e) {
+                  console.error('[Auto save restore error]', e)
+                }
+              }
+            }
+          })
+          return
+        }
+      } catch (e) {
+        console.error('[Pending draft parse error]', e)
+      }
+    }
+
+    // 2. URL ?draft=ID 지원
     const params = new URLSearchParams(window.location.search)
     const queryDraftId = params.get('draft')
 
@@ -192,13 +274,26 @@ export default function BuilderPage() {
 
   // 수동 DB 저장 핸들러
   const handleManualSave = async () => {
-    // 비로그인 유저는 저장 불가 (로그인 화면으로 이동)
     const user = await getCurrentUser()
     if (!user) {
-      alert('저장은 로그인 후 이용 가능합니다. 로그인 페이지로 이동합니다.')
+      // 비로그인 상태일 때: 얼럿창 없이 세션스토리지에 백업 후 바로 로그인 페이지로 이동
+      sessionStorage.setItem(
+        'pending_builder_draft',
+        JSON.stringify({
+          draftName: draftName || '나만의 프로젝트',
+          pages,
+          siteTemplate,
+          canvasBlocks,
+          projectType,
+          autoSaveOnRestore: true,
+        })
+      )
       router.push('/login')
       return
     }
+
+    // 로그인 상태로 저장 버튼 클릭 시 세션스토리지 제거
+    sessionStorage.removeItem('pending_builder_draft')
 
     if (!draftName || !draftName.trim()) {
       setNameError(true)
@@ -232,7 +327,6 @@ export default function BuilderPage() {
       } else {
         const errData = await res.json()
         if (res.status === 401) {
-          alert(errData.error || '저장은 로그인 후 이용 가능합니다. 로그인 페이지로 이동합니다.')
           router.push('/login')
           return
         }

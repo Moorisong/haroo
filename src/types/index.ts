@@ -235,7 +235,7 @@ export type SiteTemplateCategory = 'BLANK' | 'COMPANY' | 'EVENT' | 'PORTFOLIO' |
 export interface Draft {
   id: string
   name: string
-  selectedBlocks: CanvasBlock[] | { pages: PageItem[]; template?: SiteTemplateCategory }
+  selectedBlocks: CanvasBlock[] | { pages: PageItem[]; template?: SiteTemplateCategory; canvasBlocks?: CanvasBlock[]; projectType?: ProjectType }
   versionClock: number
   updatedAt: string
   template?: SiteTemplateCategory
