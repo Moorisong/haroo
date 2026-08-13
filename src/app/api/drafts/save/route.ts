@@ -49,7 +49,14 @@ function resolveUniqueDraftName(rawName: string, targetDraftId: string, existing
 export async function POST(req: NextRequest) {
   try {
     const tempRes = new NextResponse()
-    const userId = await getAuthenticatedUserId(req, tempRes)
+    const supabase = createSupabaseServerClient(req, tempRes)
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) {
+      const errRes = NextResponse.json({ error: '저장은 로그인 상태에서만 가능합니다.' }, { status: 401 })
+      return copyCookies(tempRes, errRes)
+    }
+
+    const userId = user.id
     const body = await req.json()
     const { draftId, name, selectedBlocks, versionClock } = body
 
@@ -58,7 +65,6 @@ export async function POST(req: NextRequest) {
       return copyCookies(tempRes, errRes)
     }
 
-    const supabase = createSupabaseServerClient(req, tempRes)
     const targetDraftId = draftId || `draft_${uuidv4().slice(0, 12)}`
     const nowIso = new Date().toISOString()
 

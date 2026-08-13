@@ -2,6 +2,8 @@
 
 import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { getCurrentUser } from '@/lib/auth'
 import {
   Layout, Star, Map, Image, MessageSquare, Bell, CreditCard, BarChart2,
   Calendar, Users, Gift, BookOpen, Heart, Clock, Share2, FileText, Video,
@@ -186,8 +188,18 @@ export default function BuilderPage() {
     }
   }
 
+  const router = useRouter()
+
   // 수동 DB 저장 핸들러
   const handleManualSave = async () => {
+    // 비로그인 유저는 저장 불가 (로그인 화면으로 이동)
+    const user = await getCurrentUser()
+    if (!user) {
+      alert('저장은 로그인 후 이용 가능합니다. 로그인 페이지로 이동합니다.')
+      router.push('/login')
+      return
+    }
+
     if (!draftName || !draftName.trim()) {
       setNameError(true)
       setNameToast(true)
@@ -219,6 +231,11 @@ export default function BuilderPage() {
         setTimeout(() => setSaveToast(false), 2500)
       } else {
         const errData = await res.json()
+        if (res.status === 401) {
+          alert(errData.error || '저장은 로그인 후 이용 가능합니다. 로그인 페이지로 이동합니다.')
+          router.push('/login')
+          return
+        }
         alert(errData.error || '저장에 실패했습니다.')
       }
     } catch (err) {
