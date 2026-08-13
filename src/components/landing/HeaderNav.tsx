@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { Menu, X, Layers, User, LogOut } from 'lucide-react'
 import { getCurrentUser, signOut, type UserProfile } from '@/lib/auth'
 
@@ -15,12 +16,21 @@ const NAV_LINKS = [
  * 로그인 상태 감지 & 모바일/데스크톱 대응
  */
 export default function HeaderNav() {
+  const router = useRouter()
   const [isOpen, setIsOpen] = useState(false)
   const [user, setUser] = useState<UserProfile | null>(null)
 
   useEffect(() => {
-    getCurrentUser().then(setUser)
-  }, [])
+    getCurrentUser().then((u) => {
+      setUser(u)
+      if (u) {
+        const pendingDraft = sessionStorage.getItem('pending_builder_draft')
+        if (pendingDraft) {
+          router.replace('/builder')
+        }
+      }
+    })
+  }, [router])
 
   const handleLogout = async () => {
     await signOut()
