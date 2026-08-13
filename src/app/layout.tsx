@@ -1,11 +1,5 @@
 import type { Metadata, Viewport } from 'next'
-import { Noto_Sans_KR } from 'next/font/google'
 import './globals.css'
-
-const notoSansKR = Noto_Sans_KR({
-  subsets: ['latin'],
-  weight: ['300', '400', '500', '600', '700', '900'],
-})
 
 export const metadata: Metadata = {
   title: '하루(Haroo) - 5분 만에 완성하는 나만의 웹사이트 & 모바일 웹앱',
@@ -35,7 +29,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko" className="bg-white">
-      <body className={`${notoSansKR.className} antialiased bg-white text-slate-900`}>
+      <body className="font-pretendard antialiased bg-white text-slate-900">
         {children}
       </body>
     </html>
