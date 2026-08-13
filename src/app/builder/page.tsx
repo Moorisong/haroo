@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { getCurrentUser } from '@/lib/auth'
+import { setAuthRedirectTarget } from '@/lib/authRedirectHelper'
 import {
   Layout, Star, Map, Image, MessageSquare, Bell, CreditCard, BarChart2,
   Calendar, Users, Gift, BookOpen, Heart, Clock, Share2, FileText, Video,
@@ -256,7 +257,8 @@ export default function BuilderPage() {
 
     const user = await getCurrentUser()
     if (!user) {
-      // 비로그인 상태일 때: 세션스토리지에 백업 후 얼럿창 없이 바로 로그인 페이지로 이동
+      // 비로그인 상태일 때: 세션스토리지에 백업 후 타겟 리다이렉트 경로 설정 및 로그인 페이지로 이동
+      setAuthRedirectTarget('/builder')
       sessionStorage.setItem(
         'pending_builder_draft',
         JSON.stringify({

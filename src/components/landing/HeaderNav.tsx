@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Menu, X, Layers, User, LogOut } from 'lucide-react'
 import { getCurrentUser, signOut, type UserProfile } from '@/lib/auth'
+import { consumeAuthRedirectTarget } from '@/lib/authRedirectHelper'
 
 const NAV_LINKS = [
   { label: '45종 블록', href: '#blocks' },
@@ -21,8 +22,16 @@ export default function HeaderNav() {
   const [user, setUser] = useState<UserProfile | null>(null)
 
   useEffect(() => {
-    getCurrentUser().then(setUser)
-  }, [])
+    getCurrentUser().then((u) => {
+      setUser(u)
+      if (u) {
+        const target = consumeAuthRedirectTarget()
+        if (target === '/builder') {
+          router.replace('/builder')
+        }
+      }
+    })
+  }, [router])
 
   const handleLogout = async () => {
     await signOut()
