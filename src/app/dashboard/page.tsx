@@ -254,38 +254,41 @@ export default function DashboardPage() {
 
         {/* 임시 저장 드래프트 (DB 실시간 연동 & 다중 일괄 삭제 기능) */}
         <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden">
-          <div className="px-5 py-4 border-b border-slate-100 flex flex-wrap items-center justify-between gap-3">
-            <div className="flex items-center gap-3">
-              <h2 className="text-sm font-bold text-slate-900">임시 저장 내역 ({drafts.length}/10)</h2>
-              {drafts.length > 0 && (
-                <label className="flex items-center gap-1.5 text-xs text-slate-600 font-medium cursor-pointer select-none">
-                  <input
-                    type="checkbox"
-                    checked={drafts.length > 0 && selectedDraftIds.length === drafts.length}
-                    onChange={handleToggleSelectAll}
-                    className="rounded border-slate-300 text-slate-900 focus:ring-slate-500 cursor-pointer"
-                  />
-                  <span>{drafts.length > 0 && selectedDraftIds.length === drafts.length ? '모두 해제' : '모두 선택'}</span>
-                </label>
-              )}
-            </div>
+          {/* 상단 메인 헤더 */}
+          <div className="px-5 py-4 border-b border-slate-100 flex items-center justify-between">
+            <h2 className="text-sm font-bold text-slate-900">임시 저장 내역 ({drafts.length}/10)</h2>
+            <Link href="/builder" className="text-xs text-sky-600 hover:text-sky-800 font-semibold flex items-center gap-1">
+              새로 만들기 <ChevronRight size={13} />
+            </Link>
+          </div>
 
-            <div className="flex items-center gap-2">
-              {selectedDraftIds.length > 0 && (
+          {/* 서브 툴바 (목록 체크박스와 수직 정렬되는 전용 바) */}
+          {drafts.length > 0 && (
+            <div className="px-5 py-2.5 bg-slate-50/80 border-b border-slate-100 flex items-center justify-between text-xs">
+              <label className="flex items-center gap-2.5 text-slate-600 font-medium cursor-pointer select-none">
+                <input
+                  type="checkbox"
+                  checked={drafts.length > 0 && selectedDraftIds.length === drafts.length}
+                  onChange={handleToggleSelectAll}
+                  className="rounded border-slate-300 text-slate-900 focus:ring-slate-500 cursor-pointer"
+                />
+                <span>{drafts.length > 0 && selectedDraftIds.length === drafts.length ? '전체 해제' : '전체 선택'}</span>
+              </label>
+
+              {selectedDraftIds.length > 0 ? (
                 <button
                   onClick={handleBatchDeleteDrafts}
                   disabled={isBatchDeleting}
-                  className="px-3 py-1.5 bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold rounded-lg transition-colors flex items-center gap-1.5 shadow-sm disabled:opacity-50 cursor-pointer"
+                  className="px-2.5 py-1 bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold rounded-md transition-colors flex items-center gap-1 shadow-sm disabled:opacity-50 cursor-pointer"
                 >
-                  <Trash2 size={13} />
+                  <Trash2 size={12} />
                   <span>선택 삭제 ({selectedDraftIds.length})</span>
                 </button>
+              ) : (
+                <span className="text-[11px] text-slate-400">항목을 체크하여 삭제할 수 있습니다</span>
               )}
-              <Link href="/builder" className="text-xs text-sky-600 hover:text-sky-800 font-semibold flex items-center gap-1">
-                새로 만들기 <ChevronRight size={13} />
-              </Link>
             </div>
-          </div>
+          )}
 
           {isLoading ? (
             <div className="p-8 text-center text-xs text-slate-400">데이터를 불러오는 중입니다...</div>
