@@ -57,7 +57,12 @@
       * `actionType` 드롭다운 (11가지 다중 옵션 지원: 화면이동, 외부링크, 전화걸기, 폼제출, PG결제, 모달팝업, 스크롤, 파일다운로드, 주소복사, 커스텀인터랙션 등).
       * 선택된 `actionType`에 따라 하위 세부 입력창이 단계적으로 노출됨 (예: 폼 제출 선택 시 카톡 알림 체크박스 노출).
       * **고급 설정**: `CUSTOM_INTERACTION` 선택 시 캔버스 타겟 블록 지정 및 `customCode` (JS) 에디터 제공.
-24. **`FloatingQuickToolbar.tsx`**: 선택된 블록 상단에 표시되는 퀵 설정 바 (위로 이동, 아래로 이동, 복제, 삭제).
+    * **패널 세부 서브 모듈**: `PanelContentTab`, `PanelStyleTab`, `PanelActionTab`, `TextPropertyPanel`, `ButtonPropertyPanel`, `BackgroundPropertyPanel`, `PanelRepeaterField`.
+26. **`FloatingQuickToolbar.tsx`**: 선택된 블록 상단에 표시되는 퀵 설정 바 (위로 이동, 아래로 이동, 복제, 삭제).
+27. **`UnsavedLeaveWarningModal.tsx`**: 미저장 변경사항 존재 시 페이지 이탈 방지 경고 모달.
+28. **`SmartGuide.tsx` & `SnapGridCanvas.tsx`**: 캔버스 내 스마트 스냅 가이드라인 및 그리드 시스템 모듈.
+29. **`BlockResizeHandles.tsx`**: 블록 드래그/리사이즈 조작 핸들러 모듈.
+30. **`PageSwitcher.tsx` & `ProjectSwitcher.tsx`**: 다중 페이지 및 멀티 프로젝트 전환 컨트롤러.
 
 ---
 
