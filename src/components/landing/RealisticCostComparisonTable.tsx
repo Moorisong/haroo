@@ -1,144 +1,91 @@
-import { Check, X, Smartphone, Monitor } from 'lucide-react'
+import { Zap, Edit3, Smartphone, MessageSquare } from 'lucide-react'
 
-const COMPARISON_ROWS = [
-  { feature: '기본 홍보 웹사이트', haroo: true, agency: true },
-  { feature: 'PWA 모바일 웹앱', haroo: true, agency: false },
-  { feature: '바탕화면 앱 아이콘', haroo: true, agency: false },
-  { feature: '카카오 알림톡 연동', haroo: true, agency: false },
-  { feature: '무제한 무료 수정', haroo: true, agency: false },
-]
-
-const AGENCY_LIST = [
-  { label: '기본 홍보 웹사이트', ok: true },
-  { label: 'PWA 모바일 웹앱', ok: false },
-  { label: '바탕화면 앱 아이콘', ok: false },
-  { label: '카카오 알림톡 연동', ok: false },
-  { label: '무제한 무료 수정', ok: false },
-  { label: '완성: 2~4주 소요', ok: null },
-]
-
-const HAROO_LIST = [
-  '기본 홍보 웹사이트',
-  'PWA 모바일 웹앱 통합',
-  '바탕화면 앱 아이콘 자동 생성',
-  '카카오 알림톡 연동',
-  '무제한 무료 수정',
-  '완성: 단 5분',
+const VALUE_PROPOSITIONS = [
+  {
+    icon: Zap,
+    title: '5분 원클릭 완성 & 압도적 가성비',
+    price: '99,000원~',
+    description: '코딩이나 외주 개발 필요 없이 45종 전문 블록 조립으로 오늘 바로 브랜드 웹사이트와 앱을 오픈하세요.',
+    badge: '초스피드 구축',
+  },
+  {
+    icon: Edit3,
+    title: '실시간 셀프 수정 (수정 공임비 0원)',
+    price: '언제든 직접 수정',
+    description: '문구나 이미지 변경 시 외주 업체에 매번 비용을 지불할 필요 없이 마우스 클릭 몇 번으로 즉시 반영됩니다.',
+    badge: '유지보수 자유',
+  },
+  {
+    icon: Smartphone,
+    title: '웹 & PWA 모바일 앱 자동 통합',
+    price: '추가금 없음',
+    description: '일반 대표 웹사이트는 물론, 스마트폰 바탕화면 앱 아이콘 설치와 모바일 앱 경험이 기본 탑재됩니다.',
+    badge: '웹+앱 통합',
+  },
+  {
+    icon: MessageSquare,
+    title: '카카오 알림톡 & 결제 연동 지원',
+    price: '원클릭 즉시 탑재',
+    description: '고객 신청 및 문의 발생 시 카카오톡 실시간 알림 수신부터 신용카드/카카오페이 결제창까지 클릭 한 번으로 연동하세요.',
+    badge: '마케팅/결제 포함',
+  },
 ]
 
 /**
- * 현실적 비용 비교 테이블
- * 외주 제작사 vs 하루 비교 카드
+ * 하루(HAROO) 핵심 강점 어필 영역
+ * (비교표 대신 자사 핵심 어필 카드 배치)
  */
 export default function RealisticCostComparisonTable() {
   return (
-    <section className="py-12 sm:py-16 px-4 sm:px-6 bg-slate-50">
+    <section className="py-16 px-4 sm:px-6 bg-slate-50 border-y border-slate-200/60">
       <div className="max-w-6xl mx-auto">
         {/* 섹션 타이틀 */}
-        <div className="text-center mb-8">
-          <span className="inline-block px-3 py-0.5 bg-sky-50 border border-sky-200 text-sky-700 text-xs font-semibold rounded-full mb-3">
-            현실적인 비교
+        <div className="text-center mb-12">
+          <span className="inline-block px-3 py-1 bg-sky-100 border border-sky-200 text-sky-700 text-xs font-bold rounded-full mb-3">
+            Why Haroo?
           </span>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-slate-900 text-balance">
-            외주 제작 300~500만원,
-            <br />
-            하루는 <span className="text-sky-600">99,000원</span>부터
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-slate-900 tracking-tight text-balance">
+            복잡하고 비싼 외주 없이, <br className="sm:hidden" />
+            <span className="text-sky-600">하루 하나로</span> 완벽 해결
           </h2>
-          <p className="text-slate-500 text-sm mt-2 max-w-xl mx-auto">
-            홍보 웹사이트와 PWA 웹앱을 하나로 통합 제공합니다.
+          <p className="text-slate-500 text-sm mt-3 max-w-xl mx-auto leading-relaxed">
+            비용 부담부터 유지보수 스트레스까지 한 번에 줄여주는 하루만의 핵심 가치
           </p>
         </div>
 
-        {/* 비교 카드 */}
-        <div className="grid md:grid-cols-2 gap-5 max-w-3xl mx-auto">
-          {/* 외주 제작사 */}
-          <div className="rounded-2xl border border-slate-200 bg-white overflow-hidden">
-            <div className="px-5 py-4 border-b border-slate-100">
-              <div className="flex items-center gap-2 mb-1">
-                <Monitor size={15} className="text-slate-400" />
-                <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">일반 외주 제작사</span>
-              </div>
-              <div className="text-2xl sm:text-3xl font-black text-slate-900">300~500<span className="text-lg">만원</span></div>
-              <div className="text-xs text-slate-500 mt-0.5">일시불 + 유지보수 월 5~15만원</div>
-            </div>
-            <div className="px-5 py-3.5 space-y-2">
-              {AGENCY_LIST.map((item, i) => (
-                <div key={i} className="flex items-center gap-2.5">
-                  {item.ok === true && <Check size={14} className="text-emerald-500 flex-shrink-0" />}
-                  {item.ok === false && <X size={14} className="text-red-400 flex-shrink-0" />}
-                  {item.ok === null && <span className="w-3.5 h-3.5 text-slate-300 flex-shrink-0">—</span>}
-                  <span className={`text-xs sm:text-sm ${item.ok === false ? 'text-slate-400 line-through' : 'text-slate-700'}`}>
-                    {item.label}
-                  </span>
+        {/* 4대 핵심 어필 카드 */}
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          {VALUE_PROPOSITIONS.map((item, idx) => {
+            const Icon = item.icon
+            return (
+              <div
+                key={idx}
+                className="bg-white rounded-2xl p-6 border border-slate-200 shadow-xs hover:shadow-md transition-all flex flex-col justify-between group"
+              >
+                <div>
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="w-10 h-10 rounded-xl bg-sky-50 border border-sky-100 text-sky-600 flex items-center justify-center group-hover:bg-sky-600 group-hover:text-white transition-colors">
+                      <Icon size={20} />
+                    </div>
+                    <span className="text-[11px] font-semibold text-slate-400 bg-slate-100 px-2 py-0.5 rounded-full">
+                      {item.badge}
+                    </span>
+                  </div>
+                  <h3 className="text-base font-bold text-slate-900 mb-2 leading-snug">
+                    {item.title}
+                  </h3>
+                  <p className="text-xs text-slate-500 leading-relaxed">
+                    {item.description}
+                  </p>
                 </div>
-              ))}
-            </div>
-          </div>
 
-          {/* 하루 */}
-          <div className="rounded-2xl border-2 border-slate-900 bg-white overflow-hidden relative">
-            <div className="absolute top-3.5 right-4">
-              <span className="px-2.5 py-0.5 bg-sky-600 text-white text-[11px] font-bold rounded-full">90% 절감</span>
-            </div>
-            <div className="px-5 py-4 border-b border-slate-100">
-              <div className="flex items-center gap-2 mb-1">
-                <Smartphone size={15} className="text-sky-600" />
-                <span className="text-[11px] font-semibold text-sky-600 uppercase tracking-wider">하루(Haroo)</span>
-              </div>
-              <div className="text-2xl sm:text-3xl font-black text-slate-900">99,000<span className="text-lg">원~</span></div>
-              <div className="text-xs text-slate-500 mt-0.5">일시불 + 구독 월 29,000원</div>
-            </div>
-            <div className="px-5 py-3.5 space-y-2">
-              {HAROO_LIST.map((label, i) => (
-                <div key={i} className="flex items-center gap-2.5">
-                  <Check size={14} className="text-sky-600 flex-shrink-0" />
-                  <span className="text-xs sm:text-sm text-slate-800 font-medium">{label}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* 하루 통합 2가지 기본 제공 혜택 */}
-        <div className="mt-8 max-w-3xl mx-auto">
-          <div className="text-center mb-3">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-sky-100 border border-sky-200 text-sky-700 text-xs font-bold rounded-full">
-              <Check size={13} className="text-sky-600" />
-              하루 하나로 아래 2가지 서비스가 모두 무상 기본 제공됩니다
-            </span>
-          </div>
-
-          <div className="grid sm:grid-cols-2 gap-3">
-            <div className="flex items-start gap-3 p-4 rounded-xl border border-sky-200 bg-sky-50/70 shadow-xs">
-              <div className="w-8 h-8 rounded-lg bg-sky-600 text-white flex items-center justify-center flex-shrink-0 mt-0.5 font-black text-xs">
-                01
-              </div>
-              <div>
-                <div className="flex items-center gap-1.5 text-xs sm:text-sm font-bold text-slate-900 mb-1">
-                  <Monitor size={15} className="text-sky-600" />
-                  일반 웹사이트
-                </div>
-                <div className="text-[11px] leading-relaxed text-slate-600">
-                  PC와 모바일 브라우저 어디서나 접속되는 일반 대표 웹사이트가 완성됩니다.
+                <div className="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between">
+                  <span className="text-[11px] text-slate-400 font-medium">제공 혜택</span>
+                  <span className="text-xs font-extrabold text-sky-600">{item.price}</span>
                 </div>
               </div>
-            </div>
-
-            <div className="flex items-start gap-3 p-4 rounded-xl border border-sky-200 bg-sky-50/70 shadow-xs">
-              <div className="w-8 h-8 rounded-lg bg-sky-600 text-white flex items-center justify-center flex-shrink-0 mt-0.5 font-black text-xs">
-                02
-              </div>
-              <div>
-                <div className="flex items-center gap-1.5 text-xs sm:text-sm font-bold text-slate-900 mb-1">
-                  <Smartphone size={15} className="text-sky-600" />
-                  PWA 모바일 웹앱
-                </div>
-                <div className="text-[11px] leading-relaxed text-slate-600">
-                  바탕화면 아이콘 설치, 카톡 알림 연동 등 스마트폰 앱 경험이 함께 100% 포함됩니다.
-                </div>
-              </div>
-            </div>
-          </div>
+            )
+          })}
         </div>
       </div>
     </section>
