@@ -196,10 +196,20 @@ function DraggableBlock({ block, canvasRef, onDragStart, onDragMove, onDragEnd, 
     window.addEventListener('pointerup', onUp)
   }, [block.instanceId, posX, posY, blockWidth, canvasRef, onDragStart, onDragMove, onDragEnd, updateBlockInputData])
 
+  const isFloating = block.blockId === 'blk_floating_button_01'
+  const wrapperStyle = isFloating 
+    ? undefined 
+    : { position: 'absolute', left: posX, top: posY, width: blockWidth }
+  
+  const floatingClass = isFloating 
+    ? 'fixed bottom-6 right-6 lg:right-[344px] z-50 w-auto pointer-events-none' 
+    : ''
+
   if (isPreviewMode) {
     return (
       <div
-        style={{ position: 'absolute', left: posX, top: posY, width: blockWidth }}
+        style={wrapperStyle as React.CSSProperties}
+        className={floatingClass}
         ref={blockRef}
       >
         <BlockRenderer block={block} isPreviewMode={true} onAction={onAction} />
@@ -211,16 +221,15 @@ function DraggableBlock({ block, canvasRef, onDragStart, onDragMove, onDragEnd, 
     <div
       id={`snap-block-${block.instanceId}`}
       data-sortable-block="true"
-      style={{ position: 'absolute', left: posX, top: posY, width: blockWidth }}
+      style={wrapperStyle as React.CSSProperties}
       className={cn(
-        'group overflow-visible cursor-grab active:cursor-grabbing select-none',
-        isSelected ? 'ring-1 ring-inset ring-indigo-500 z-10' : 'hover:ring-1 hover:ring-inset hover:ring-slate-300'
+        'group overflow-visible select-none',
+        isFloating ? floatingClass : 'cursor-grab active:cursor-grabbing',
+        isSelected ? 'ring-2 ring-inset ring-sky-500 z-10' : 'hover:ring-1 hover:ring-inset hover:ring-slate-300'
       )}
-      onPointerDown={handlePointerDown}
+      onPointerDown={isFloating ? undefined : handlePointerDown}
       onClick={(e) => { e.stopPropagation(); selectBlock(block.instanceId, 'background') }}
     >
-      {isSelected && <FloatingQuickToolbar />}
-
       {/* overflow-visible 필수: 리사이즈 핸들이 부모 경계 밖으로 나와야 함 */}
       <div ref={blockRef} className="overflow-visible">
         <BlockResizeHandles
@@ -234,6 +243,8 @@ function DraggableBlock({ block, canvasRef, onDragStart, onDragMove, onDragEnd, 
           <BlockRenderer block={block} isPreviewMode={false} onAction={onAction} />
         </BlockResizeHandles>
       </div>
+
+      {isSelected && <FloatingQuickToolbar />}
     </div>
   )
 }
@@ -428,13 +439,13 @@ function ResponsiveViewCanvas({ viewport }: { viewport: DeviceViewport }) {
 
   return (
     <div 
-      className="flex-1 overflow-y-auto bg-slate-50 flex flex-col items-center min-h-0 w-full"
+      className="flex-1 bg-slate-50 flex flex-col items-center min-h-0 w-full"
       onClick={() => selectBlock(null)}
     >
       {/* 실제 모바일 화면에서는 100% 폭, PC 목업 보기에서는 지정한 375px/768px 폭 유지 */}
       <div 
         className={cn(
-          'bg-white flex flex-col relative transition-all duration-300 w-full min-h-full',
+          'bg-white flex flex-col relative transition-all duration-300 w-full flex-1 min-h-0 transform-gpu overflow-hidden',
           viewport === 'mobile' ? 'max-w-md sm:my-4 sm:rounded-[32px] sm:shadow-2xl sm:border sm:border-slate-300' : 'max-w-2xl sm:my-4 sm:rounded-[32px] sm:shadow-2xl sm:border sm:border-slate-300',
           isPwa && 'sm:border-slate-800 sm:ring-4 sm:ring-slate-900/10'
         )}
@@ -450,7 +461,7 @@ function ResponsiveViewCanvas({ viewport }: { viewport: DeviceViewport }) {
           </span>
         </div>
 
-        <div className="flex-1 flex flex-col w-full relative">
+        <div className="flex-1 flex flex-col w-full relative overflow-y-auto min-h-0 pt-3 pb-16">
           {sortedBlocks.length === 0 ? (
             <div className="flex-1 flex flex-col items-center justify-center text-slate-400 p-8 min-h-[300px]">
               <p className="text-xs font-semibold text-center text-slate-500">
@@ -458,16 +469,20 @@ function ResponsiveViewCanvas({ viewport }: { viewport: DeviceViewport }) {
               </p>
             </div>
           ) : (
-            sortedBlocks.map((block) => {
+            sortedBlocks.map((block, index) => {
               const isSelected = selectedInstanceId === block.instanceId
+
+              const isFloating = block.blockId === 'blk_floating_button_01'
 
               return (
                 <div 
                   key={block.instanceId}
                   className={cn(
-                    'w-full relative transition-all overflow-hidden',
-                    !isReadOnly && 'cursor-pointer hover:ring-1 hover:ring-inset hover:ring-slate-300',
-                    !isReadOnly && isSelected && 'ring-2 ring-inset ring-sky-500 z-10'
+                    'relative transition-all shrink-0',
+                    isFloating ? 'fixed bottom-6 right-6 z-50 w-auto' : 'w-full overflow-visible',
+                    !isReadOnly && !isFloating && 'cursor-pointer hover:ring-1 hover:ring-inset hover:ring-slate-300',
+                    !isReadOnly && isSelected && !isFloating && 'ring-2 ring-inset ring-sky-500 z-20',
+                    !isReadOnly && isSelected && isFloating && '[&>div]:ring-2 [&>div]:ring-sky-500 [&>div]:rounded-full [&>div]:ring-offset-2 z-20'
                   )}
                   onClick={(e) => {
                     if (isReadOnly) return
@@ -476,6 +491,13 @@ function ResponsiveViewCanvas({ viewport }: { viewport: DeviceViewport }) {
                   }}
                 >
                   <BlockRenderer block={block} isPreviewMode={isReadOnly} onAction={handleAction} />
+                  {!isReadOnly && isSelected && (
+                    <FloatingQuickToolbar 
+                      instanceId={block.instanceId} 
+                      isTopEdge={index === 0}
+                      insideBlock={true}
+                    />
+                  )}
                 </div>
               )
             })

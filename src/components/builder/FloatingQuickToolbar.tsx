@@ -6,9 +6,11 @@ import { useBuilderStore } from '@/stores/useBuilderStore'
 interface FloatingQuickToolbarProps {
   instanceId?: string
   className?: string
+  isTopEdge?: boolean
+  insideBlock?: boolean
 }
 
-export default function FloatingQuickToolbar({ instanceId, className }: FloatingQuickToolbarProps) {
+export default function FloatingQuickToolbar({ instanceId, className, isTopEdge: propIsTopEdge, insideBlock }: FloatingQuickToolbarProps) {
   const { selectedInstanceId, canvasBlocks, moveBlock, removeBlock, addBlock } = useBuilderStore()
   
   const targetId = instanceId || selectedInstanceId
@@ -28,8 +30,8 @@ export default function FloatingQuickToolbar({ instanceId, className }: Floating
     })
   }
 
-  const isTopEdge = (currentBlock.inputConfig?.posY ?? 0) < 50 || blockIndex === 0
-  const positionClass = isTopEdge ? 'top-3 left-1/2 -translate-x-1/2' : '-top-12 left-1/2 -translate-x-1/2'
+  const isTopEdge = propIsTopEdge ?? ((currentBlock.inputConfig?.posY ?? 0) < 50 || blockIndex === 0)
+  const positionClass = (insideBlock || isTopEdge) ? 'top-4 left-1/2 -translate-x-1/2' : '-top-12 left-1/2 -translate-x-1/2'
 
   const isFirst = blockIndex === 0
   const isLast = blockIndex === canvasBlocks.length - 1

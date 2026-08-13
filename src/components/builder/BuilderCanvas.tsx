@@ -166,20 +166,25 @@ function DraggableCanvasBlock({ block }: { block: CanvasBlock }) {
     isDragging,
   } = useDraggable({ id: block.instanceId })
 
-  // 드래그 중 실시간 변환
-  const style: React.CSSProperties = {
-    position: 'absolute',
-    left: `${posX}px`,
-    top: `${posY}px`,
-    width: `${currentMaxPx}px`,
-    maxWidth: '100%',
-    zIndex: isDragging ? 50 : (isSelected ? 10 : 1),
-    transform: CSS.Translate.toString(transform),
-  }
+  const isFloating = block.blockId === 'blk_floating_button_01'
+
+  const style: React.CSSProperties = isFloating
+    ? { zIndex: isDragging ? 50 : (isSelected ? 10 : 50) }
+    : {
+        position: 'absolute',
+        left: `${posX}px`,
+        top: `${posY}px`,
+        width: `${currentMaxPx}px`,
+        maxWidth: '100%',
+        zIndex: isDragging ? 50 : (isSelected ? 10 : 1),
+        transform: CSS.Translate.toString(transform),
+      }
+
+  const floatingClass = isFloating ? 'fixed bottom-6 right-6 lg:right-[344px] z-50 w-auto pointer-events-none' : ''
 
   if (isPreviewMode) {
     return (
-      <div id={`block-${block.instanceId}`} style={{ position: 'absolute', left: `${posX}px`, top: `${posY}px`, width: `${currentMaxPx}px`, maxWidth: '100%' }}>
+      <div id={`block-${block.instanceId}`} style={isFloating ? undefined : { position: 'absolute', left: `${posX}px`, top: `${posY}px`, width: `${currentMaxPx}px`, maxWidth: '100%' }} className={floatingClass}>
         <BlockRenderer block={block} isPreviewMode={true} onAction={handleAction} />
       </div>
     )
@@ -196,6 +201,7 @@ function DraggableCanvasBlock({ block }: { block: CanvasBlock }) {
       }}
       className={cn(
         'group cursor-pointer shrink-0',
+        floatingClass,
         isSelected ? 'ring-1 ring-indigo-500 ring-offset-0' : 'hover:ring-1 hover:ring-slate-300'
       )}
     >
