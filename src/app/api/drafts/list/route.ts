@@ -59,7 +59,7 @@ export async function GET(req: NextRequest) {
 
       return {
         id: (row.id || row.draft_id) as string,
-        name: (row.name || row.draft_name || '나만의 프로젝트') as string,
+        name: (row.name || row.draft_name || '') as string,
         selectedBlocks: selectedBlocksData,
         versionClock: (row.versionClock || row.version_clock || 0) as number,
         updatedAt: formattedDate,
@@ -82,7 +82,7 @@ export async function GET(req: NextRequest) {
 
       return {
         id: d.id,
-        name: d.name || '나만의 프로젝트',
+        name: d.name || '',
         selectedBlocks: d.selectedBlocks,
         versionClock: d.versionClock || 0,
         updatedAt: typeof d.updatedAt === 'string' ? d.updatedAt.split('T')[0] : new Date().toISOString().split('T')[0],

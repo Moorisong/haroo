@@ -15,7 +15,7 @@ const serverStore = global.globalDraftStore
  * 동일 이름 존재 시 (n) 번호를 붙여 유일한 프로젝트 이름을 만들어주는 헬퍼
  */
 function resolveUniqueDraftName(rawName: string, targetDraftId: string, existingDrafts: any[]): string {
-  const trimmed = rawName.trim() || '나만의 프로젝트'
+  const trimmed = rawName ? rawName.trim() : ''
   
   // 자기 자신의 기존 이름과 동일하면 유지
   const selfDraft = existingDrafts.find((d) => d.id === targetDraftId)

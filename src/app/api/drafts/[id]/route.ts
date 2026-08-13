@@ -47,7 +47,7 @@ export async function GET(
 
     const draft = {
       id: data.id || data.draft_id,
-      name: data.name || data.draft_name || '나만의 프로젝트',
+      name: data.name || data.draft_name || '',
       selectedBlocks: data.selectedBlocks || data.block_config_json || [],
       versionClock: data.versionClock || data.version_clock || 0,
       updatedAt: data.updatedAt || data.updated_at,

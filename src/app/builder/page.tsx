@@ -126,9 +126,10 @@ export default function BuilderPage() {
       try {
         const pending = JSON.parse(pendingRaw)
         if (pending.canvasBlocks && pending.canvasBlocks.length > 0) {
+          const cleanName = (pending.draftName === '나만의 프로젝트' ? '' : pending.draftName) || ''
           loadDraft({
             id: pending.draftId || '',
-            name: pending.draftName || '',
+            name: cleanName,
             selectedBlocks: {
               pages: pending.pages,
               template: pending.siteTemplate,
