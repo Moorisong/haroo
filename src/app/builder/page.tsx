@@ -128,7 +128,7 @@ export default function BuilderPage() {
         if (pending.canvasBlocks && pending.canvasBlocks.length > 0) {
           loadDraft({
             id: pending.draftId || '',
-            name: pending.draftName || '나만의 프로젝트',
+            name: pending.draftName || '',
             selectedBlocks: {
               pages: pending.pages,
               template: pending.siteTemplate,
