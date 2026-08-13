@@ -62,6 +62,9 @@ const ALL_BLOCKS = [
   { id: 'blk_review_01', name: '별점 리뷰 보드', tier: 'STANDARD' as BlockTier, icon: Star, desc: '별점과 함께 보여주는 수강생 후기 리스트' },
   { id: 'blk_ranking_01', name: '랭킹 / 리더보드', tier: 'PROFESSIONAL' as BlockTier, icon: Award, desc: '인기순위, 최애곡 투표 순위 리스트' },
   { id: 'blk_floating_button_01', name: '플로팅 액션 버튼', tier: 'PROFESSIONAL' as BlockTier, icon: MessageSquare, desc: '화면 우하단에 고정되는 빠른 상담 버튼' },
+  { id: 'blk_roulette_01', name: '인터랙티브 룰렛', tier: 'STANDARD' as BlockTier, icon: Gift, desc: '돌려서 당첨 항목을 뽑는 룰렛 위젯' },
+  { id: 'blk_scratch_01', name: '스크래치 복권', tier: 'STANDARD' as BlockTier, icon: Gift, desc: '문질러서 숨은 쿠폰을 확인하는 스크래치 카드' },
+  { id: 'blk_fortune_01', name: '오늘의 운세 포춘쿠키', tier: 'STANDARD' as BlockTier, icon: Star, desc: '터치하여 운세 메시지를 확인하는 포춘쿠키' },
 ]
 
 const FILTER_TABS: { label: string; value: FilterTab }[] = [

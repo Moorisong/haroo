@@ -54,6 +54,9 @@ import BlkFileDownload01 from '@/components/blocks/blk_file_download_01'
 import BlkReview01 from '@/components/blocks/blk_review_01'
 import BlkRanking01 from '@/components/blocks/blk_ranking_01'
 import BlkFloatingButton01 from '@/components/blocks/blk_floating_button_01'
+import BlkRoulette01 from '@/components/blocks/blk_roulette_01'
+import BlkScratch01 from '@/components/blocks/blk_scratch_01'
+import BlkFortune01 from '@/components/blocks/blk_fortune_01'
 
 const BlockRegistry: Record<string, React.FC<{ config: any, isPreview?: boolean, onAction?: any }>> = {
   blk_hero_01: BlkHero01,
@@ -91,6 +94,9 @@ const BlockRegistry: Record<string, React.FC<{ config: any, isPreview?: boolean,
   blk_review_01: BlkReview01,
   blk_ranking_01: BlkRanking01,
   blk_floating_button_01: BlkFloatingButton01,
+  blk_roulette_01: BlkRoulette01,
+  blk_scratch_01: BlkScratch01,
+  blk_fortune_01: BlkFortune01,
 }
 
 function BlockRenderer({
