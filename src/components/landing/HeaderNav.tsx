@@ -8,7 +8,9 @@ import { getCurrentUser, signOut, type UserProfile } from '@/lib/auth'
 import { consumeAuthRedirectTarget } from '@/lib/authRedirectHelper'
 
 const NAV_LINKS = [
-  { label: '45종 블록', href: '#blocks' },
+  { label: '이용 방법', href: '#guide' },
+  { label: '서비스 특징', href: '#why' },
+  { label: '활용 사례', href: '#usecases' },
   { label: '가격 안내', href: '#pricing' },
 ]
 
@@ -54,11 +56,11 @@ export default function HeaderNav() {
           {/* 데스크톱 메뉴 */}
           <nav className="hidden md:flex items-center gap-8">
             {NAV_LINKS.map((link) => (
-              <a key={link.href} href={link.href} className="text-sm text-slate-600 hover:text-slate-900 transition-colors">
+              <a key={link.href} href={link.href} className="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors">
                 {link.label}
               </a>
             ))}
-            <Link href={user ? '/dashboard' : '/login?next=/dashboard'} className="text-sm text-slate-600 hover:text-slate-900 transition-colors">
+            <Link href={user ? '/dashboard' : '/login?next=/dashboard'} className="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors">
               내 저장소
             </Link>
           </nav>
@@ -66,26 +68,30 @@ export default function HeaderNav() {
           {/* CTA / 로그인 상태 */}
           <div className="hidden md:flex items-center gap-3">
             {user ? (
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2">
                 <Link
                   href="/dashboard"
-                  className="flex items-center gap-1.5 text-xs font-semibold text-slate-700 bg-slate-100 px-3 py-1.5 rounded-lg hover:bg-slate-200 transition-colors"
+                  className="px-3 py-1.5 text-xs font-bold text-slate-800 bg-slate-100 hover:bg-slate-200 border border-slate-200/80 rounded-lg transition-all shadow-2xs flex items-center gap-1.5"
                 >
-                  <User size={13} />
+                  <User size={13} className="text-slate-600" />
                   <span>{user.name}</span>
                 </Link>
                 <button
                   onClick={handleLogout}
-                  className="text-xs text-slate-500 hover:text-slate-800 transition-colors flex items-center gap-1 cursor-pointer"
+                  className="px-3 py-1.5 text-xs font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 border border-slate-200/80 rounded-lg transition-all shadow-2xs flex items-center gap-1.5 cursor-pointer"
                   title="로그아웃"
                 >
-                  <LogOut size={13} />
+                  <LogOut size={13} className="text-slate-600" />
                   <span>로그아웃</span>
                 </button>
               </div>
             ) : (
-              <Link href="/login" className="text-sm text-slate-600 hover:text-slate-900 transition-colors">
-                로그인
+              <Link
+                href="/login"
+                className="px-3.5 py-1.5 text-xs font-bold text-slate-800 bg-slate-100 hover:bg-slate-200 border border-slate-200/80 rounded-lg transition-all shadow-2xs flex items-center gap-1"
+              >
+                <User size={13} className="text-slate-600" />
+                <span>로그인</span>
               </Link>
             )}
 
@@ -143,9 +149,10 @@ export default function HeaderNav() {
                       handleLogout()
                       setIsOpen(false)
                     }}
-                    className="text-xs text-red-600 font-semibold flex items-center gap-1 cursor-pointer"
+                    className="px-2.5 py-1 text-xs font-bold text-slate-700 bg-white border border-slate-200 rounded-md hover:bg-slate-100 transition-colors flex items-center gap-1 cursor-pointer"
                   >
-                    <LogOut size={12} /> 로그아웃
+                    <LogOut size={12} className="text-slate-600" />
+                    <span>로그아웃</span>
                   </button>
                 </div>
               ) : (

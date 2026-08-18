@@ -49,7 +49,7 @@ const USE_CASES = [
  */
 export default function UseCasesSection() {
   return (
-    <section className="py-12 sm:py-16 px-4 sm:px-6 bg-white">
+    <section id="usecases" className="py-12 sm:py-16 px-4 sm:px-6 bg-white">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-10">
           <span className="inline-block px-3 py-0.5 bg-slate-100 border border-slate-200 text-slate-600 text-xs font-semibold rounded-full mb-2.5 whitespace-nowrap">

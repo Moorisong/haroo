@@ -29,7 +29,7 @@ const STEPS = [
  */
 export default function ThreeStepGuide() {
   return (
-    <section className="py-12 sm:py-16 px-4 sm:px-6 bg-slate-50 border-y border-slate-200/60">
+    <section id="guide" className="py-12 sm:py-16 px-4 sm:px-6 bg-slate-50 border-y border-slate-200/60">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-10">
           <span className="inline-block px-3 py-0.5 bg-sky-100 border border-sky-200 text-sky-700 text-xs font-semibold rounded-full mb-2.5 whitespace-nowrap">

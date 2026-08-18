@@ -15,7 +15,9 @@ const LEGAL_INFO = [
 ]
 
 const SERVICE_LINKS = [
-  { label: '45종 블록', href: '#blocks' },
+  { label: '이용 방법', href: '#guide' },
+  { label: '서비스 특징', href: '#why' },
+  { label: '활용 사례', href: '#usecases' },
   { label: '가격 안내', href: '#pricing' },
 ]
 
@@ -50,7 +52,7 @@ export default function CompanyLegalFooter() {
                 <span className="text-slate-900 font-bold text-lg">하루</span>
               </div>
               <p className="text-sm text-slate-500 leading-relaxed max-w-xs">
-                소상공인부터 지식창업가까지, 45종 블록으로 5분 만에 나만의 웹사이트와 PWA 앱을 완성하세요.
+                커플 추억·모임 초대장부터 매장 홍보까지, 필요한 블록만 톡톡 조립해서 5분 만에 우리만의 스마트폰 웹 & 앱을 완성해보세요.
               </p>
             </div>
             <div className="flex flex-col sm:flex-row gap-8">
