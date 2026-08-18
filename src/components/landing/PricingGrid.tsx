@@ -11,37 +11,51 @@ const CREATION_TIER_META = [
   {
     name: 'STARTER',
     price: 99000,
-    label: '소상공인 매장',
+    label: '소상공인 & 대표 프로필',
     icon: Zap,
     color: 'border-slate-200',
     btnColor: 'bg-slate-900 text-white hover:bg-slate-800',
-    blocks: '15종 블록 (히어로, 텍스트, 지도, 갤러리)',
-    domain: 'haroo.site 서브도메인 기본 제공',
-    features: ['히어로 배너, 메뉴판, 지도', '갤러리, D-Day, 소셜 공유', '무제한 무료 수정', 'haroo.site 서브도메인'],
+    summary: '기본 브랜드 홍보 사이트',
+    domain: 'haroo.site 서브도메인 제공',
+    features: [
+      '대표 배너, 메뉴판, 지도, 갤러리',
+      '무제한 셀프 무료 수정',
+      'haroo.site 전용 주소 제공',
+    ],
     highlight: false,
   },
   {
     name: 'STANDARD',
     price: 199000,
-    label: '예약·문의 수집',
+    label: '예약 · 고객 문의 수집',
     icon: Globe,
     color: 'border-slate-900',
     btnColor: 'bg-slate-900 text-white hover:bg-slate-800',
-    blocks: '25종 블록 (예약/문의 폼, 알림톡/LMS)',
-    domain: '[신규] 커스텀 도메인 무상 매핑',
-    features: ['STARTER 15종 블록 포함', '예약/문의 폼 + 엑셀 다운로드', '카카오 알림톡/LMS 자동 발송', '커스텀 도메인 무상 매핑'],
+    summary: '고객 예약 및 알림톡 연동',
+    domain: '개인 커스텀 도메인 무상 연결',
+    features: [
+      'STARTER 기능 전체 포함',
+      '예약·문의 폼 & 엑셀 다운로드',
+      '카카오 알림톡 자동 발송',
+      '개인 커스텀 도메인 무상 연결',
+    ],
     highlight: true,
   },
   {
     name: 'PROFESSIONAL',
     price: 299000,
-    label: '지식창업가·강사·MVP',
+    label: '결제 & 지식창업 · MVP',
     icon: Shield,
     color: 'border-slate-200',
     btnColor: 'bg-sky-600 text-white hover:bg-sky-700',
-    blocks: '전체 45종 블록 (소셜로그인, PG결제, 통계)',
-    domain: '[신규] 커스텀 도메인 + 무제한 SSL 자동 발급',
-    features: ['STANDARD 25종 블록 포함', '소셜 로그인 + 전자결제(PG)', '맞춤형 통계 + 차트', '무제한 SSL 자동 발급'],
+    summary: '온라인 결제 및 회원 관리',
+    domain: '커스텀 도메인 & 보안 인증서',
+    features: [
+      'STANDARD 기능 전체 포함',
+      '카카오/구글 소셜 로그인',
+      '신용카드 & 카카오페이 결제',
+      '실시간 방문자 통계 분석',
+    ],
     highlight: false,
   },
 ]
@@ -111,7 +125,7 @@ export default function PricingGrid() {
                       <span className="text-2xl sm:text-3xl font-black text-slate-900">{tier.price.toLocaleString()}</span>
                       <span className="text-xs text-slate-500">원 일시불</span>
                     </div>
-                    <p className="text-[11px] text-slate-500 mb-4">{tier.blocks}</p>
+                    <p className="text-xs font-semibold text-sky-600 mb-4">{tier.summary}</p>
                     <div className="space-y-1.5 mb-5">
                       {tier.features.map((f, i) => (
                         <div key={i} className="flex items-start gap-2">
@@ -119,7 +133,7 @@ export default function PricingGrid() {
                           <span className="text-xs text-slate-700">{f}</span>
                         </div>
                       ))}
-                      <div className="flex items-start gap-2 pt-1 border-t border-slate-100">
+                      <div className="flex items-start gap-2 pt-1.5 border-t border-slate-100">
                         <Star size={13} className="text-amber-500 flex-shrink-0 mt-0.5" />
                         <span className="text-xs text-slate-600 font-medium">{tier.domain}</span>
                       </div>

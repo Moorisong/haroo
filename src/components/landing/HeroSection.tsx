@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { Smartphone, ArrowRight } from 'lucide-react'
 import PwaInstallGuideModal from './PwaInstallGuideModal'
 import BlockAssemblyAnimation from './BlockAssemblyAnimation'
+import MandatoryPwaTransparencyNotice from './MandatoryPwaTransparencyNotice'
 import { getCurrentUser, type UserProfile } from '@/lib/auth'
 
 /**
@@ -19,7 +20,7 @@ export default function HeroSection() {
   }, [])
 
   return (
-    <section className="pt-20 pb-12 sm:pt-24 sm:pb-16 px-4 sm:px-6 bg-white">
+    <section className="pt-28 pb-16 sm:pt-36 sm:pb-20 md:pt-40 md:pb-24 px-4 sm:px-6 bg-white">
       <div className="max-w-6xl mx-auto">
         {/* 메인 타이틀 */}
         <h1 className="text-center text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-slate-900 leading-tight tracking-tight break-keep mb-4">
@@ -29,14 +30,14 @@ export default function HeroSection() {
         </h1>
 
         {/* 서브 카피 */}
-        <p className="text-center text-xs sm:text-base text-slate-500 leading-relaxed max-w-2xl mx-auto mb-6 break-keep">
+        <p className="text-center text-xs sm:text-base text-slate-500 leading-relaxed max-w-2xl mx-auto mb-8 sm:mb-10 break-keep">
           커플·동호회·개인 프로필부터 매장 홍보까지, 필요한 기능만 레고처럼 조립하세요.
           <br className="hidden sm:block" />
           스마트폰 바탕화면에 앱 아이콘이 생기고 카톡 1초 공유가 가능해집니다.
         </p>
 
         {/* CTA 버튼 그룹 */}
-        <div className="flex flex-col sm:flex-row gap-3 justify-center items-center mb-6">
+        <div className="flex flex-col sm:flex-row gap-3 justify-center items-center my-8 sm:my-10">
           <Link
             href="/builder"
             className="inline-flex items-center gap-2 px-6 py-3.5 bg-slate-900 text-white text-xs sm:text-sm font-bold rounded-xl hover:bg-slate-800 transition-all hover:shadow-lg"
@@ -51,6 +52,11 @@ export default function HeroSection() {
             <Smartphone size={15} />
             바탕화면 앱 아이콘 안내
           </button>
+        </div>
+
+        {/* PWA 기술 투명 고지 뱃지 (시뮬레이터와 동일한 max-w-4xl 가로 폭 적용) */}
+        <div className="w-full max-w-4xl mx-auto my-8 sm:my-10">
+          <MandatoryPwaTransparencyNotice />
         </div>
 
         {/* 실시간 블록 조립 모션 시뮬레이터 */}
