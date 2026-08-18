@@ -7,7 +7,6 @@ const FONT_OPTIONS = [
   { label: '기본 폰트 (상속)', value: '' },
   { label: 'Pretendard (깔끔한 고딕)', value: 'Pretendard, sans-serif' },
   { label: 'Noto Sans KR (기본 고딕)', value: '"Noto Sans KR", sans-serif' },
-  { label: 'Gmarket Sans (특징 있는 고딕)', value: '"Gmarket Sans", sans-serif' },
   { label: 'Noto Serif KR (기본 명조)', value: '"Noto Serif KR", serif' },
   { label: 'Nanum Myeongjo (나눔 명조)', value: '"Nanum Myeongjo", serif' },
 ]
@@ -40,6 +39,67 @@ export default function TextPropertyPanel({ elementKey, config, handleChange }: 
 
   return (
     <div className="flex flex-col gap-5">
+      {isTitle && (
+        <div className="flex flex-col gap-3 bg-slate-50 p-3 rounded-lg border border-slate-200">
+          <div className="flex flex-col gap-1.5">
+            <label className="text-xs font-semibold text-slate-700">상단 알약 뱃지 선택</label>
+            <select
+              value={config.badgeText ?? 'NEW'}
+              onChange={(e) => handleChange('badgeText', e.target.value)}
+              className="w-full text-sm border border-slate-300 rounded-md p-2 bg-white font-medium"
+            >
+              <option value="none">없음 (뱃지 미노출)</option>
+              <option value="NEW">NEW (신규 추천)</option>
+              <option value="HOT">HOT (인기 폭발)</option>
+              <option value="BEST">BEST (최고 추천)</option>
+              <option value="EVENT">EVENT (특별 이벤트)</option>
+            </select>
+          </div>
+
+          {config.badgeText !== 'none' && config.badgeText !== '없음' && (
+            <div className="grid grid-cols-2 gap-3 pt-1 border-t border-slate-200/60">
+              <div className="flex flex-col gap-1.5">
+                <label className="text-[11px] font-medium text-slate-600">뱃지 배경 색상</label>
+                <div className="flex gap-2 items-center">
+                  <input
+                    type="color"
+                    value={config.badgeColor || '#10b981'}
+                    onChange={(e) => handleChange('badgeColor', e.target.value)}
+                    className="w-7 h-7 rounded border-none cursor-pointer p-0"
+                  />
+                  <input
+                    type="text"
+                    value={config.badgeColor || ''}
+                    onChange={(e) => handleChange('badgeColor', e.target.value)}
+                    className="flex-1 text-xs border border-slate-300 rounded p-1.5 uppercase"
+                    placeholder="#10B981"
+                  />
+                </div>
+              </div>
+
+              <div className="flex flex-col gap-1.5">
+                <label className="text-[11px] font-medium text-slate-600">뱃지 글씨 색상</label>
+                <div className="flex gap-2 items-center">
+                  <input
+                    type="color"
+                    value={config.badgeTextColor || '#ffffff'}
+                    onChange={(e) => handleChange('badgeTextColor', e.target.value)}
+                    className="w-7 h-7 rounded border-none cursor-pointer p-0"
+                  />
+                  <input
+                    type="text"
+                    value={config.badgeTextColor || ''}
+                    onChange={(e) => handleChange('badgeTextColor', e.target.value)}
+                    className="flex-1 text-xs border border-slate-300 rounded p-1.5 uppercase"
+                    placeholder="#FFFFFF"
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
       <div className="flex flex-col gap-2">
         <label className="text-xs font-semibold text-slate-700">{isTitle ? '제목 내용' : '부제목 내용'}</label>
         <textarea

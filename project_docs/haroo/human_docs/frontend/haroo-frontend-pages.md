@@ -24,17 +24,16 @@
 ## 🖥️ 2. 페이지별 세부 UI/UX 구성 명세
 
 ### 1. 메인 랜딩 페이지 (`/`)
-* **HeaderNav & Footer**: 로고, 45종 블록 소개, 가격 안내, 내 저장소 버튼, [5분 만에 만들기] CTA, 푸터 최하단 copyright 옆 [Admin] 텍스트 링크, [이용약관], [개인정보 처리방침] 링크 및 `CompanyLegalFooter` (상호명, 대표자, 사업자번호, 통신판매신고, 주소 명시로 PG 결제 심사 100% 통과).
-* **HeroSection**: '일반 웹사이트부터 앱처럼 묵직하게 구동되는 모바일 웹앱(PWA)까지 5분 만에 완성!' 메인 타이틀 + '스마트폰 바탕화면에 내 매장 바로가기 앱 아이콘이 쏙 생기고, 카톡 알림까지 연동됩니다' 서브 카피.
+* **HeaderNav & Footer**: 로고, 이용 방법(#guide), 서비스 특징(#why), 활용 사례(#usecases), 가격 안내(#pricing), 내 저장소 버튼, 세련된 뱃지 스타일 로그인 버튼, [5분 만에 만들기] CTA, 푸터 최하단 copyright 옆 [Admin] 텍스트 링크, [이용약관], [개인정보 처리방침] 링크 및 `CompanyLegalFooter` (상호명, 대표자, 사업자번호, 통신판매신고, 주소 명시로 PG 결제 심사 100% 통과).
+* **HeroSection**: '개발 몰라도 OK! 원하는 블록 톡톡 꽂으면 나만의 스마트폰 웹 & 앱 완성' 메인 타이틀 + CTA 버튼 + 하단 `MandatoryPwaTransparencyNotice` (PWA 기술 투명 고지 뱃지) & `BlockAssemblyAnimation` 통합 디스플레이.
 * **PwaInstallGuideModal**: 이원화 PWA 3초 바탕화면 설치 안내 모달.
   * **대상 A (사장님)**: haroo.site 자체를 스마트폰 바탕화면에 설치하여 1초 만에 마이페이지/캔버스 진입 유도.
   * **대상 B (매장 고객)**: mybrand.haroo.site 매장 사이트를 스마트폰 바탕화면에 설치하여 1초 만에 예약 진입 유도 (iOS Safari 공유 버튼 & Android Chrome 1초 추가 팝업).
 * **RealisticCostComparisonTable**: 외주 300~500만 원 vs 하루 99,000원 비교표 및 PWA 통합 혜택 단가 비교표.
-* **MandatoryPwaTransparencyNotice**: '하루(Haroo) 서비스로 제작되는 결과물은 네이티브 앱이 아닌 최신 PWA 모바일 웹앱 기술로 제작됩니다' 투명 고지 뱃지.
-* **BlockShowcase & PricingGrid**: 45종 마스터 블록 카테고리별 데모 & 제작비/구독료 카드 디스플레이.
+* **PricingGrid**: 직관적 3대 제작비(STARTER/STANDARD/PROFESSIONAL) 플랜 카드 & 구독료 안내 & 수정 비용 정책 명세.
 
 ### 2. 소셜 로그인 페이지 (`/login`)
-* **SocialLoginCard**: 카카오 1초 간편 로그인 및 구글 로그인 버튼. Supabase OAuth 연동.
+* **SocialLoginCard**: 카카오 1초 간편 로그인 및 구글 로그인 버튼. Supabase OAuth 연동. 일반 로그인 시 메인 페이지(`/`)로 이동하며, '내 저장소' 클릭 로그인 시에만 마이페이지(`/dashboard`)로 핀포인트 이동.
 
 ### 3. 블록 조립 캔버스 모드 (`/builder`)
 * **프로젝트 생성 및 모드 확정 (`ProjectTypeSelectionModal` & `SiteTemplateSelectionModal`)**:

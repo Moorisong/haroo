@@ -4,13 +4,15 @@ interface Props {
   children: React.ReactNode
   variant?: 'default' | 'success' | 'warning' | 'error' | 'outline' | 'info'
   className?: string
+  onClick?: (e: React.MouseEvent) => void
+  style?: React.CSSProperties
 }
 
 /**
  * 20종 원자 컴포넌트: atom_badge_01
  * 상태 표시 뱃지
  */
-export default function AtomBadge01({ children, variant = 'default', className }: Props) {
+export default function AtomBadge01({ children, variant = 'default', className, onClick, style }: Props) {
   const variants = {
     default: 'bg-slate-100 text-slate-700 border-transparent',
     success: 'bg-emerald-100 text-emerald-700 border-transparent',
@@ -22,6 +24,8 @@ export default function AtomBadge01({ children, variant = 'default', className }
 
   return (
     <span
+      onClick={onClick}
+      style={style}
       className={cn(
         'inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold border uppercase tracking-wider',
         variants[variant],

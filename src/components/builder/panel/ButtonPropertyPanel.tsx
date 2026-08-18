@@ -86,6 +86,20 @@ export default function ButtonPropertyPanel({ cap, config, handleChange }: Props
       </div>
 
       <div className="flex flex-col gap-2">
+        <label className="text-xs font-semibold text-slate-700">버튼 크기 (폰트 크기 비례)</label>
+        <select
+          value={styleData.size || 'lg'}
+          onChange={(e) => updateStyle('size', e.target.value)}
+          className="w-full text-sm border border-slate-300 rounded-md p-2"
+        >
+          <option value="sm">작게 (Small - 13pt)</option>
+          <option value="md">보통 (Medium - 15pt)</option>
+          <option value="lg">크게 (Large - 18pt)</option>
+          <option value="xl">아주 크게 (Extra Large - 22pt)</option>
+        </select>
+      </div>
+
+      <div className="flex flex-col gap-2">
         <label className="text-xs font-semibold text-slate-700">모서리 둥글기</label>
         <select
           value={styleData.borderRadius || ''}

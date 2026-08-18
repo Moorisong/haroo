@@ -230,10 +230,8 @@ function DraggableBlock({ block, canvasRef, onDragStart, onDragMove, onDragEnd, 
       style={wrapperStyle as React.CSSProperties}
       className={cn(
         'group overflow-visible select-none',
-        isFloating ? floatingClass : 'cursor-grab active:cursor-grabbing',
         isSelected ? 'ring-2 ring-inset ring-sky-500 z-10' : 'hover:ring-1 hover:ring-inset hover:ring-slate-300'
       )}
-      onPointerDown={isFloating ? undefined : handlePointerDown}
       onClick={(e) => { e.stopPropagation(); selectBlock(block.instanceId, 'background') }}
     >
       {/* overflow-visible 필수: 리사이즈 핸들이 부모 경계 밖으로 나와야 함 */}
@@ -250,7 +248,11 @@ function DraggableBlock({ block, canvasRef, onDragStart, onDragMove, onDragEnd, 
         </BlockResizeHandles>
       </div>
 
-      {isSelected && <FloatingQuickToolbar />}
+      {/* 선택 시 혹은 호버 시 블록 이동 핸들 툴바 표출 */}
+      <FloatingQuickToolbar 
+        instanceId={block.instanceId}
+        onPointerDown={isFloating ? undefined : handlePointerDown}
+      />
     </div>
   )
 }

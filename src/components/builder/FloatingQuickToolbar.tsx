@@ -8,9 +8,10 @@ interface FloatingQuickToolbarProps {
   className?: string
   isTopEdge?: boolean
   insideBlock?: boolean
+  onPointerDown?: (e: React.PointerEvent<any>) => void
 }
 
-export default function FloatingQuickToolbar({ instanceId, className, isTopEdge: propIsTopEdge, insideBlock }: FloatingQuickToolbarProps) {
+export default function FloatingQuickToolbar({ instanceId, className, isTopEdge: propIsTopEdge, insideBlock, onPointerDown }: FloatingQuickToolbarProps) {
   const { selectedInstanceId, canvasBlocks, moveBlock, removeBlock, addBlock } = useBuilderStore()
   
   const targetId = instanceId || selectedInstanceId
@@ -38,6 +39,21 @@ export default function FloatingQuickToolbar({ instanceId, className, isTopEdge:
 
   return (
     <div className={`absolute ${positionClass} z-50 flex items-center space-x-1 p-1 bg-slate-800/95 backdrop-blur-sm text-white rounded-lg shadow-xl border border-slate-700 animate-in fade-in zoom-in duration-200 ${className || ''}`}>
+      {/* 0. 블록 드래그 핸들 (위치 이동 전용) */}
+      {onPointerDown && (
+        <>
+          <button
+            type="button"
+            onPointerDown={onPointerDown}
+            className="p-1.5 text-amber-400 hover:text-amber-300 hover:bg-slate-700 rounded transition-colors cursor-grab active:cursor-grabbing flex items-center justify-center"
+            title="드래그하여 블록 위치 이동"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="9" cy="12" r="1"/><circle cx="9" cy="5" r="1"/><circle cx="9" cy="19" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="5" r="1"/><circle cx="15" cy="19" r="1"/></svg>
+          </button>
+          <div className="w-[1px] h-4 bg-slate-700 mx-0.5" />
+        </>
+      )}
+
       {/* 위로 이동 */}
       <button
         onClick={(e) => {

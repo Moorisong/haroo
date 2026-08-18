@@ -1,3 +1,6 @@
+'use client'
+
+import React, { useRef, useState } from 'react'
 import AtomCard01 from '../atoms/atom_card_01'
 import AtomText01 from '../atoms/atom_text_01'
 import AtomBtn01 from '../atoms/atom_btn_01'
@@ -5,7 +8,8 @@ import AtomImage01 from '../atoms/atom_image_01'
 import AtomBadge01 from '../atoms/atom_badge_01'
 import { getBlockLayout } from '@/lib/blockLayout'
 import { useElementSelector } from '@/contexts/BlockContext'
-import type { BlockInputConfig, ContainerWidth, PaddingYOption } from '@/types'
+import { useBuilderStore } from '@/stores/useBuilderStore'
+import type { BlockInputConfig, PaddingYOption } from '@/types'
 import { cn } from '@/lib/utils'
 
 interface Props {
@@ -15,8 +19,12 @@ interface Props {
 }
 
 /**
- * 45종 마스터 블록: blk_hero_01 (히어로 배너)
- * 원자 컴포넌트 100% 재사용 조합
+ * 마스터 블록: blk_hero_01 (히어로 배너 고도화 버전)
+ * - 원자 컴포넌트 100% 재사용
+ * - 배경 모드 분기 (단색 색상 vs 배경 사진)
+ * - 사진 모드 캔버스 클릭 시 파일 업로드 / 단색 모드 클릭 시 색상 변경
+ * - 배경 사진 마우스 드래그 이미지 위치(Position X/Y) 조율
+ * - 콘텐츠 가로폭 옵션 제거 (전폭 레이아웃)
  */
 export default function BlkHero01({ config, isPreview, onAction }: Props) {
   const safeConfig = config ?? {}
@@ -25,7 +33,6 @@ export default function BlkHero01({ config, isPreview, onAction }: Props) {
     subtitle = '5분 만에 만들고 오늘부터 고객을 받아보세요.',
     imageUrl = 'https://images.unsplash.com/photo-1556740738-b6a63e27c4df?q=80&w=1200&auto=format&fit=crop',
     buttonText = '지금 바로 예약하기',
-    containerWidth = 'full',
     paddingY = 'normal',
     titleStyle,
     subtitleStyle,
@@ -33,72 +40,241 @@ export default function BlkHero01({ config, isPreview, onAction }: Props) {
     backgroundStyle,
   } = safeConfig as BlockInputConfig
 
-  const layout = getBlockLayout(containerWidth as ContainerWidth, paddingY as PaddingYOption)
   const selectElement = useElementSelector()
+  const selectedInstanceId = useBuilderStore((state) => state.selectedInstanceId)
+  const updateBlockInputData = useBuilderStore((state) => state.updateBlockInputData)
 
-  // 임시 badge (config 스키마 확장에 따라 추가 가능)
-  const badgeText = 'NEW'
+  const fileInputRef = useRef<HTMLInputElement>(null)
+
+  // 배경 설정 데이터 파싱
+  const bgType = backgroundStyle?.bgType || (backgroundStyle?.backgroundImage ? 'image' : 'color')
+  const bgImage = backgroundStyle?.backgroundImage || imageUrl
+  const bgColor = backgroundStyle?.backgroundColor || '#0f172a'
+  const bgOpacity = backgroundStyle?.opacity ?? 1
+  const imagePos = backgroundStyle?.imagePosition || { x: 50, y: 50 }
+  const btnSize = buttonStyle?.size || 'lg'
+
+  // 드래그 위치 이동 상태
+  const [isDragging, setIsDragging] = useState(false)
+  const dragStartRef = useRef<{ startX: number; startY: number; startPosX: number; startPosY: number; moved: boolean } | null>(null)
+
+  // 상하 여백 레이아웃 (가로폭 옵션 제거하고 full 레이아웃 사용)
+  const layout = getBlockLayout('full', paddingY as PaddingYOption)
+
+  // 뱃지 설정 파싱 (없음, NEW, HOT, BEST, EVENT)
+  const rawBadge = safeConfig.badgeText ?? 'NEW'
+  const isBadgeVisible = rawBadge && rawBadge !== 'none' && rawBadge !== '없음'
+
+  const BADGE_CONFIG: Record<string, { label: string; className: string }> = {
+    NEW: { label: 'NEW', className: 'bg-emerald-500 text-white' },
+    HOT: { label: 'HOT', className: 'bg-rose-500 text-white' },
+    BEST: { label: 'BEST', className: 'bg-purple-600 text-white' },
+    EVENT: { label: 'EVENT', className: 'bg-amber-500 text-white' },
+  }
+  const currentBadge = BADGE_CONFIG[rawBadge] || { label: rawBadge, className: 'bg-emerald-500 text-white' }
+  const customBadgeStyle: React.CSSProperties = {
+    ...(safeConfig.badgeColor ? { backgroundColor: safeConfig.badgeColor } : {}),
+    ...(safeConfig.badgeTextColor ? { color: safeConfig.badgeTextColor } : {}),
+  }
+
+  // 히어로 배경 클릭 시 동작 분기
+  const handleBackgroundClick = (e: React.MouseEvent) => {
+    selectElement('background', e)
+    // 드래그를 하지 않고 단순히 사진 영역을 클릭한 경우에만 사진 선택창 열림
+    if (!isPreview && bgType === 'image' && dragStartRef.current && !dragStartRef.current.moved) {
+      fileInputRef.current?.click()
+    }
+  }
+
+  // 이미지 업로드 핸들러
+  const handleImageFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (file && selectedInstanceId) {
+      const reader = new FileReader()
+      reader.onload = (event) => {
+        const result = event.target?.result as string
+        if (result) {
+          updateBlockInputData(selectedInstanceId, {
+            backgroundStyle: {
+              ...backgroundStyle,
+              bgType: 'image',
+              backgroundImage: result,
+            },
+          })
+        }
+      }
+      reader.readAsDataURL(file)
+    }
+  }
+
+  // 이미지 100% 마우스 직접 드래그 위치 제어 (블록 이동 DND와 100% 분리됨)
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (isPreview || bgType !== 'image') return
+    // 버튼이나 텍스트 요소를 누른 경우 드래그 미발동
+    if ((e.target as HTMLElement).closest('button, h1, p, span')) return
+
+    setIsDragging(true)
+    dragStartRef.current = {
+      startX: e.clientX,
+      startY: e.clientY,
+      startPosX: imagePos.x,
+      startPosY: imagePos.y,
+      moved: false,
+    }
+  }
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging || !dragStartRef.current || !selectedInstanceId) return
+
+    const deltaX = e.clientX - dragStartRef.current.startX
+    const deltaY = e.clientY - dragStartRef.current.startY
+
+    // 마우스 5px 이상 이동 시 단순 클릭이 아닌 드래그 이동으로 인정
+    if (Math.abs(deltaX) > 5 || Math.abs(deltaY) > 5) {
+      dragStartRef.current.moved = true
+    }
+
+    // 마우스 이동거리를 % 비율로 환산
+    const newX = Math.min(100, Math.max(0, dragStartRef.current.startPosX - deltaX * 0.15))
+    const newY = Math.min(100, Math.max(0, dragStartRef.current.startPosY - deltaY * 0.15))
+
+    updateBlockInputData(selectedInstanceId, {
+      backgroundStyle: {
+        ...backgroundStyle,
+        imagePosition: { x: Math.round(newX), y: Math.round(newY) },
+      },
+    })
+  }
+
+  const handleMouseUp = () => {
+    if (isDragging) {
+      setIsDragging(false)
+    }
+  }
 
   return (
-    <AtomCard01 noPadding className="border-none rounded-none w-full">
-      {/* 히어로는 배경 이미지가 전체 폭 — paddingY로 세로 크기 조절 */}
-      <div 
-        className={cn(`relative ${layout.paddingClass} ${layout.wrapperClass}`)} 
-        style={{ 
-          minHeight: '16rem',
-          backgroundColor: backgroundStyle?.backgroundColor,
-          opacity: backgroundStyle?.opacity,
-        }}
-        onClick={(e) => selectElement('background', e)}
-      >
-        <AtomImage01 src={backgroundStyle?.backgroundImage || imageUrl} alt="히어로 이미지" fill className="absolute inset-0" />
-        <div className="absolute inset-0 bg-slate-900/40" />
+    <AtomCard01 noPadding className="border-none rounded-none w-full overflow-hidden">
+      {/* Hidden File Input for Background Image Upload */}
+      <input
+        type="file"
+        ref={fileInputRef}
+        accept="image/*"
+        className="hidden"
+        onChange={handleImageFileChange}
+      />
 
-        <div className={`relative z-10 flex flex-col items-center justify-center h-full text-center ${layout.paddingXClass} ${layout.innerClass}`}>
-          {badgeText && (
-            <AtomBadge01 variant="success" className="mb-4 shadow-sm border-none bg-emerald-500 text-white">
-              {badgeText}
+      <div
+        className={cn(
+          `relative ${layout.paddingClass} w-full transition-colors select-none`,
+          bgType === 'image' && !isPreview && 'cursor-grab active:cursor-grabbing'
+        )}
+        style={{
+          minHeight: '20rem',
+          backgroundColor: bgColor,
+        }}
+        onClick={handleBackgroundClick}
+        onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
+        onMouseLeave={handleMouseUp}
+      >
+        {/* 1. 이미지 배경 모드 */}
+        {bgType === 'image' && (
+          <>
+            <AtomImage01
+              src={bgImage}
+              alt="히어로 배경 이미지"
+              fill
+              className="absolute inset-0 transition-all duration-75 pointer-events-none"
+              style={{
+                objectFit: 'cover',
+                objectPosition: `${imagePos.x}% ${imagePos.y}%`,
+                opacity: bgOpacity,
+              }}
+            />
+            <div className="absolute inset-0 bg-slate-900/40 pointer-events-none" />
+
+            {/* 배경 위치 조절 & 사진 교체 힌트 뱃지 (빌더 편집 모드에서만 표출) */}
+            {!isPreview && (
+              <div className="absolute top-3 right-3 z-20 flex gap-2 pointer-events-none">
+                <span className="bg-slate-900/80 text-white text-[11px] px-2.5 py-1 rounded-full shadow border border-white/20 backdrop-blur-sm flex items-center gap-1 font-medium">
+                  🖱️ 드래그로 사진 위치 조절 / 클릭 시 사진 교체
+                </span>
+              </div>
+            )}
+          </>
+        )}
+
+        {/* 2. 콘텐츠 컨테이너 (100% 원자 컴포넌트 조합) */}
+        <div className={`relative z-10 flex flex-col items-center justify-center h-full text-center max-w-5xl mx-auto ${layout.paddingXClass}`}>
+          {isBadgeVisible && (
+            <AtomBadge01
+              style={customBadgeStyle}
+              className={cn('mb-4 shadow-sm border-none pointer-events-auto cursor-pointer hover:opacity-90 transition-opacity', currentBadge.className)}
+              onClick={(e: React.MouseEvent) => {
+                e.stopPropagation()
+                selectElement('title', e)
+              }}
+            >
+              {currentBadge.label}
             </AtomBadge01>
           )}
 
-          <AtomText01 
-            as="h1" 
-            className="mb-3 md:mb-4 leading-tight tracking-tight break-keep cursor-pointer hover:ring-1 hover:ring-white/50 p-1 rounded"
+          <AtomText01
+            as="h1"
+            className="mb-3 md:mb-4 leading-tight tracking-tight break-keep cursor-pointer hover:ring-1 hover:ring-white/50 p-1 rounded pointer-events-auto"
             style={{
-              color: titleStyle?.color || 'white',
+              color: titleStyle?.color || (bgType === 'image' ? 'white' : '#ffffff'),
               fontFamily: titleStyle?.fontFamily,
               fontWeight: titleStyle?.fontWeight || '900',
               fontSize: titleStyle?.fontSize || '3rem',
             }}
-            onClick={(e) => selectElement('title', e)}
+            onClick={(e) => {
+              e.stopPropagation()
+              selectElement('title', e)
+            }}
           >
             {title}
           </AtomText01>
 
-          <AtomText01 
-            as="p" 
-            className="mb-6 md:mb-8 max-w-2xl font-normal leading-relaxed break-keep cursor-pointer hover:ring-1 hover:ring-white/50 p-1 rounded"
+          <AtomText01
+            as="p"
+            className="mb-6 md:mb-8 max-w-2xl font-normal leading-relaxed break-keep cursor-pointer hover:ring-1 hover:ring-white/50 p-1 rounded pointer-events-auto"
             style={{
-              color: subtitleStyle?.color || '#e2e8f0',
+              color: subtitleStyle?.color || (bgType === 'image' ? '#e2e8f0' : '#94a3b8'),
               fontFamily: subtitleStyle?.fontFamily,
               fontWeight: subtitleStyle?.fontWeight || '400',
               fontSize: subtitleStyle?.fontSize || '1.125rem',
             }}
-            onClick={(e) => selectElement('subtitle', e)}
+            onClick={(e) => {
+              e.stopPropagation()
+              selectElement('subtitle', e)
+            }}
           >
             {subtitle}
           </AtomText01>
 
           <AtomBtn01
-            size="lg"
-            className="px-8 md:px-10 py-3 md:py-4 shadow-lg transition-all"
+            className={cn(
+              'h-auto shadow-lg transition-all pointer-events-auto font-semibold',
+              btnSize === 'sm' && 'px-4 py-2',
+              btnSize === 'md' && 'px-6 py-3',
+              (btnSize === 'lg' || !btnSize) && 'px-8 py-4',
+              btnSize === 'xl' && 'px-10 py-5'
+            )}
             style={{
-              backgroundColor: buttonStyle?.backgroundColor || 'white',
+              backgroundColor: buttonStyle?.backgroundColor || '#ffffff',
               color: buttonStyle?.textColor || '#0f172a',
               borderRadius: buttonStyle?.borderRadius || '0.75rem',
               fontWeight: buttonStyle?.fontWeight || 'bold',
+              fontSize: buttonStyle?.fontSize || (
+                btnSize === 'sm' ? '0.8125rem' :
+                btnSize === 'md' ? '0.9375rem' :
+                btnSize === 'xl' ? '1.25rem' : '1.0625rem'
+              ),
             }}
             onClick={(e) => {
+              e.stopPropagation()
               selectElement('button', e)
               onAction?.(safeConfig as BlockInputConfig)
             }}

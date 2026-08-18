@@ -23,6 +23,9 @@ export type PaddingYOption = typeof PADDING_Y_OPTIONS[number]
 
 // 블록 인풋 Zod 스키마
 export const BlockInputConfigSchema = z.object({
+  badgeText: z.string().optional(),
+  badgeColor: z.string().optional(),
+  badgeTextColor: z.string().optional(),
   title: z.string().optional(),
   subtitle: z.string().optional(),
   imageUrl: z.string().url().optional(),
@@ -196,15 +199,22 @@ export const BlockInputConfigSchema = z.object({
     fontSize: z.string().optional(),
   }).optional(),
   buttonStyle: z.object({
+    size: z.enum(['sm', 'md', 'lg', 'xl']).optional(),
+    fontSize: z.string().optional(),
     backgroundColor: z.string().optional(),
     textColor: z.string().optional(),
     borderRadius: z.string().optional(),
     fontWeight: z.string().optional(),
   }).optional(),
   backgroundStyle: z.object({
+    bgType: z.enum(['color', 'image']).optional(),
     backgroundColor: z.string().optional(),
     backgroundImage: z.string().optional(),
     opacity: z.number().optional(),
+    imagePosition: z.object({
+      x: z.number(),
+      y: z.number(),
+    }).optional(),
   }).optional(),
 }).catchall(z.any())
 
