@@ -16,7 +16,7 @@ export default function LoginPage() {
       if (user) {
         const params = new URLSearchParams(window.location.search)
         const next = params.get('next')
-        const target = consumeAuthRedirectTarget() || next || '/dashboard'
+        const target = consumeAuthRedirectTarget() || next || '/'
         router.replace(target)
       }
     })
@@ -27,7 +27,7 @@ export default function LoginPage() {
     setErrorMsg(null)
     try {
       const params = new URLSearchParams(window.location.search)
-      const next = params.get('next') || '/dashboard'
+      const next = params.get('next') || '/'
       setAuthRedirectTarget(next)
       const res = await signInWithProvider(provider, next)
       if (res.error) {

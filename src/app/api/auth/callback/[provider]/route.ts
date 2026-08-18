@@ -12,8 +12,8 @@ export async function GET(
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
   const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
-  const next = requestUrl.searchParams.get('next') || '/dashboard'
-  const targetPath = next.startsWith('/') ? next : '/dashboard'
+  const next = requestUrl.searchParams.get('next') || '/'
+  const targetPath = next.startsWith('/') ? next : '/'
 
   if (code && supabaseUrl && supabaseAnonKey) {
     const response = NextResponse.redirect(new URL(targetPath, req.url))
