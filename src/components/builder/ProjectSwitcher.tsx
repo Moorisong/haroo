@@ -25,8 +25,10 @@ export default function ProjectSwitcher({ savedDraftList, onSelectProject }: Pro
   const menuRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    getCurrentUser().then(setUser)
-  }, [])
+    if (isOpen) {
+      getCurrentUser().then(setUser)
+    }
+  }, [isOpen])
 
   const currentProject = savedDraftList.find((d) => d.id === draftId)
   const displayName = currentProject ? currentProject.name : draftName.trim() || '프로젝트 선택'

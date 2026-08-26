@@ -8,7 +8,7 @@ import { setAuthRedirectTarget } from '@/lib/authRedirectHelper'
 import {
   Layout, Star, Map, Image, MessageSquare, Bell, CreditCard, BarChart2,
   Calendar, Users, Gift, BookOpen, Heart, Clock, Share2, FileText, Video,
-  ArrowRight, Grid, CheckSquare, LayoutGrid, Award, Edit3, Folder
+  ArrowRight, Grid, CheckSquare, LayoutGrid, Award, Edit3, Folder, Save, Check, Loader2
 } from 'lucide-react'
 import type { BlockTier } from '@/types'
 import { useBuilderStore } from '@/stores/useBuilderStore'
@@ -99,16 +99,20 @@ export default function BuilderPage() {
   } = useBuilderStore()
   const isReadOnlyPreview = (projectType === 'WEB' && deviceViewport !== 'desktop') || storeIsPreview
 
-  // 비로그인 상태 유저가 블록을 조립할 때 sessionStorage에 임시 백업
   useEffect(() => {
     if (typeof window === 'undefined') return
-    if (!canvasBlocks || canvasBlocks.length === 0) return
+    // 백업이 필요없는 상태(빈 캔버스이거나, 이미 DB 저장되어 draftId가 존재하는 경우)면 중단
+    const { shouldAutoBackup } = useBuilderStore.getState()
+    if (!shouldAutoBackup()) return
+    // 이미 draftId가 부여된 프로젝트는 임시 세션스토리지 백업이 불필요하므로 생략 (찰나의 세션 유실로 인한 덮어쓰기 방지)
+    if (draftId) return
 
     getCurrentUser().then((user) => {
       if (!user) {
         sessionStorage.setItem(
           'pending_builder_draft',
           JSON.stringify({
+            draftId,
             draftName,
             pages,
             siteTemplate,
@@ -118,7 +122,7 @@ export default function BuilderPage() {
         )
       }
     })
-  }, [canvasBlocks, pages, siteTemplate, draftName, projectType])
+  }, [canvasBlocks, pages, siteTemplate, draftName, projectType, draftId])
 
   // 빌더 진입 시: 임시 세션스토리지 데이터 복원 또는 URL ?draft=ID 복원 처리
   useEffect(() => {
@@ -129,20 +133,43 @@ export default function BuilderPage() {
     if (pendingRaw) {
       try {
         const pending = JSON.parse(pendingRaw)
-        if (pending.canvasBlocks && pending.canvasBlocks.length > 0) {
-          const cleanName = (pending.draftName === '나만의 프로젝트' ? '' : pending.draftName) || ''
+        if (pending && (pending.projectType || pending.pages || pending.canvasBlocks)) {
+          sessionStorage.removeItem('pending_builder_draft')
+          const restoreDraftId = pending.draftId || `draft_${Date.now()}`
+          const restoreData = {
+            pages: pending.pages || [],
+            template: pending.siteTemplate || '',
+            canvasBlocks: pending.canvasBlocks || [],
+            projectType: pending.projectType || 'WEB',
+          }
+          
           loadDraft({
-            id: pending.draftId || '',
-            name: cleanName,
-            selectedBlocks: {
-              pages: pending.pages,
-              template: pending.siteTemplate,
-              canvasBlocks: pending.canvasBlocks,
-              projectType: pending.projectType,
-            },
+            id: restoreDraftId,
+            name: pending.draftName || '나만의 프로젝트',
+            selectedBlocks: restoreData,
             versionClock: 1,
             updatedAt: new Date().toISOString(),
           })
+
+          // 비로그인 상태에서 [저장]을 눌러 로그인 후 돌아온 케이스이므로 서버 DB에 자동 저장 수행
+          fetch('/api/drafts/save', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              draftId: restoreDraftId,
+              name: pending.draftName || '나만의 프로젝트',
+              selectedBlocks: restoreData,
+              versionClock: 1,
+            }),
+          })
+            .then(res => res.json())
+            .then(data => {
+              if (data.draftId) {
+                markSaved(data.draftId)
+                window.history.replaceState({}, '', `/builder?draft=${data.draftId}`)
+              }
+            })
+            .catch(err => console.error('[Auto-save error]', err))
 
           return
         }
@@ -173,8 +200,11 @@ export default function BuilderPage() {
           .catch((err) => console.error('[Draft load error]', err))
       }
     } else {
-      // 일반 /builder 진입 시 디폴트로 새 프로젝트 초기화
-      reset()
+      // 일반 /builder 진입 시 디폴트로 새 프로젝트 초기화 (단, 이미 스토어가 복원되어 사용중이라면 리셋 방지 - StrictMode 대응)
+      const currentStore = useBuilderStore.getState()
+      if (!currentStore.projectTypeSelected) {
+        reset()
+      }
     }
   }, [])
 
@@ -197,8 +227,12 @@ export default function BuilderPage() {
     fetchDraftList()
   }, [draftId])
 
+  const skipBeforeUnload = useRef(false)
+
   // 실제 전환 실행 로직
   const executeTargetSwitch = (targetId: string) => {
+    skipBeforeUnload.current = true
+    
     if (targetId === 'reload') {
       window.location.reload()
       return
@@ -208,6 +242,10 @@ export default function BuilderPage() {
         sessionStorage.removeItem('pending_builder_draft')
       }
       window.location.href = '/'
+      return
+    }
+    if (targetId === 'checkout') {
+      window.location.href = '/checkout'
       return
     }
     if (targetId === 'new') {
@@ -247,9 +285,22 @@ export default function BuilderPage() {
 
   const router = useRouter()
 
+  // 브라우저 새로고침 및 외부 이탈 시 경고
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      const { shouldPreventUnload } = useBuilderStore.getState()
+      if (shouldPreventUnload(skipBeforeUnload.current)) {
+        e.preventDefault()
+        e.returnValue = ''
+      }
+    }
+    window.addEventListener('beforeunload', handleBeforeUnload)
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload)
+  }, [isDirty])
+
   // 수동 DB 저장 핸들러
   const handleManualSave = async () => {
-    // 1. 프로젝트 이름 미입력 시 비로그인/로그인 공통으로 이름 입력 예외 토스트 노출 및 포커스
+    // 1. 프로젝트 이름 미입력 시 이름 입력 예외 토스트 노출 및 포커스
     if (!draftName || !draftName.trim()) {
       setNameError(true)
       setNameToast(true)
@@ -260,7 +311,7 @@ export default function BuilderPage() {
 
     const user = await getCurrentUser()
     if (!user) {
-      // 비로그인 상태일 때: 세션스토리지에 백업 후 타겟 리다이렉트 경로 설정 및 로그인 페이지로 이동
+      // 비로그인 상태: 세션스토리지 백업 후 로그인 유도 페이지로 이동
       setAuthRedirectTarget('/builder')
       sessionStorage.setItem(
         'pending_builder_draft',
@@ -276,7 +327,7 @@ export default function BuilderPage() {
       return
     }
 
-    // 로그인 상태로 저장 버튼 클릭 시 세션스토리지 제거
+    // 로그인 된 상태: 세션스토리지 임시 데이터 삭제 후 수동 DB 저장
     sessionStorage.removeItem('pending_builder_draft')
 
     setIsSaving(true)
@@ -302,10 +353,6 @@ export default function BuilderPage() {
         setTimeout(() => setSaveToast(false), 2500)
       } else {
         const errData = await res.json()
-        if (res.status === 401) {
-          router.push('/login')
-          return
-        }
         alert(errData.error || '저장에 실패했습니다.')
       }
     } catch (err) {
@@ -332,6 +379,14 @@ export default function BuilderPage() {
   // 실제 모바일 디바이스 감지
   const [isMobileDevice, setIsMobileDevice] = useState(false)
   const [isMounted, setIsMounted] = useState(false)
+  
+  // 첫 렌더링 시점에 세션스토리지를 바로 체크하여 모달 번쩍임 현상 방지
+  const [hasPendingDraft, setHasPendingDraft] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return !!sessionStorage.getItem('pending_builder_draft')
+    }
+    return false
+  })
 
   useEffect(() => {
     setIsMounted(true)
@@ -355,9 +410,9 @@ export default function BuilderPage() {
 
   return (
     <div className="h-screen flex flex-col bg-white overflow-hidden relative">
-      {/* 신규 프로젝트 생성 시에만 1, 2단계 선택 모달 노출 (isMounted 시점 보장) */}
-      {isMounted && !draftId && <ProjectTypeSelectionModal />}
-      {isMounted && !draftId && <SiteTemplateSelectionModal />}
+      {/* 신규 프로젝트 생성 시에만 1, 2단계 선택 모달 노출 (isMounted 시점 보장, 백업 복원 중엔 미노출) */}
+      {isMounted && !draftId && !hasPendingDraft && <ProjectTypeSelectionModal />}
+      {isMounted && !draftId && !hasPendingDraft && <SiteTemplateSelectionModal />}
 
       {/* 빌더 헤더 */}
       <header className="flex-shrink-0 h-14 border-b border-slate-200 bg-white flex items-center justify-between px-4 sm:px-5 z-20">
@@ -365,6 +420,9 @@ export default function BuilderPage() {
           <a
             href="/"
             onClick={(e) => {
+              if (typeof window !== 'undefined') {
+                sessionStorage.removeItem('pending_builder_draft')
+              }
               if (isDirty) {
                 e.preventDefault()
                 setPendingTargetId('home')
@@ -379,18 +437,10 @@ export default function BuilderPage() {
           </a>
           <span className="hidden sm:block text-xs text-slate-400">|</span>
 
-          {/* 상단 다중 페이지 스위처 (비전문가 친화적) */}
+          {/* 상단 다중 페이지 스위처 */}
           <PageSwitcher />
 
-          <span className={`px-2 py-0.5 text-xs font-bold rounded ${
-            projectType === 'PWA' ? 'bg-sky-100 text-sky-700' : 'bg-slate-100 text-slate-700'
-          }`}>
-            {projectType === 'PWA' ? '📱 PWA 웹앱' : '🌐 반응형 웹'}
-          </span>
-          <span className="px-2 py-0.5 bg-emerald-100 text-emerald-700 text-xs font-bold rounded">
-            {canvasBlocks.length}종 조립됨
-          </span>
-          {isDirty && <span className="w-2 h-2 rounded-full bg-amber-400" title="저장 대기 중" />}
+
         </div>
         <div className="flex items-center gap-2">
           {/* 저장된 프로젝트 선택 ProjectSwitcher 커스텀 드롭다운 */}
@@ -426,7 +476,7 @@ export default function BuilderPage() {
               disabled={isSaving}
               className="flex items-center gap-1.5 px-3.5 py-1.5 bg-slate-900 text-white hover:bg-slate-800 text-xs font-bold rounded-lg transition-colors border border-slate-900 shadow-sm"
             >
-              <span>{isSaving ? '⏳' : saveToast ? '✅' : '💾'}</span>
+              {isSaving ? <Loader2 size={13} className="animate-spin" /> : saveToast ? <Check size={13} className="text-emerald-400" /> : <Save size={13} />}
               <span>{saveToast ? '저장됨' : '저장'}</span>
             </button>
 
@@ -437,13 +487,20 @@ export default function BuilderPage() {
               </div>
             )}
           </div>
-          <Link
+          <a
             href="/checkout"
+            onClick={(e) => {
+              if (isDirty) {
+                e.preventDefault()
+                setPendingTargetId('checkout')
+                setLeaveModalOpen(true)
+              }
+            }}
             className="flex items-center gap-1.5 px-4 py-1.5 bg-slate-900 text-white text-xs font-bold rounded-lg hover:bg-slate-800 transition-colors"
           >
             결제하기
             <ArrowRight size={13} />
-          </Link>
+          </a>
         </div>
       </header>
 

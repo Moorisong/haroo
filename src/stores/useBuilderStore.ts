@@ -73,6 +73,10 @@ interface BuilderState {
   loadDraft: (draft: Draft) => void
   setDrafts: (drafts: Draft[]) => void
   reset: () => void
+
+  // 방어 로직 헬퍼 (테스트 내 가짜 구현 방지 목적)
+  shouldAutoBackup: () => boolean
+  shouldPreventUnload: (skipBeforeUnload: boolean) => boolean
 }
 
 const initialState = {
@@ -104,6 +108,16 @@ export const useBuilderStore = create<BuilderState>((set, get) => ({
 
   setUserTier: (tier) => {
     set({ userTier: tier })
+  },
+
+  shouldAutoBackup: () => {
+    const state = get()
+    return state.canvasBlocks.length > 0 && !state.draftId
+  },
+
+  shouldPreventUnload: (skipBeforeUnload: boolean) => {
+    const state = get()
+    return state.isDirty && !skipBeforeUnload
   },
 
   setActivePage: (pageId) => {
@@ -355,6 +369,7 @@ export const useBuilderStore = create<BuilderState>((set, get) => ({
         pages: PageItem[]
         template?: import('@/types').SiteTemplateCategory
         projectType?: ProjectType
+        canvasBlocks?: CanvasBlock[]
       }
       nextPages = data.pages || get().pages
       nextTemplate = data.template || get().siteTemplate
@@ -363,8 +378,12 @@ export const useBuilderStore = create<BuilderState>((set, get) => ({
       } else if (draft.name && (draft.name.toLowerCase().includes('pwa') || draft.name.includes('앱') || draft.name.includes('모바일'))) {
         nextProjectType = 'PWA'
       }
-      // 활성 페이지의 블록 복원 (첫 번째 페이지로 기본 설정)
-      nextCanvasBlocks = nextPages.length > 0 ? nextPages[0].blocks : []
+      // 활성 페이지의 블록 복원 (canvasBlocks 직접 지정 시 우선 적용)
+      if (Array.isArray(data.canvasBlocks) && data.canvasBlocks.length > 0) {
+        nextCanvasBlocks = data.canvasBlocks
+      } else {
+        nextCanvasBlocks = nextPages.length > 0 ? (nextPages[0].blocks || []) : []
+      }
     } else {
       // 구버전 단일 페이지 배열 포맷
       nextCanvasBlocks = (draft.selectedBlocks as CanvasBlock[]) || []

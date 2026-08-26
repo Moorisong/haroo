@@ -83,7 +83,7 @@ export default function PageSwitcher() {
         {showDimGuide && (
           <div className="absolute top-11 left-0 z-50 w-64 p-3 bg-blue-600 text-white rounded-xl shadow-2xl text-xs animate-bounce">
             <div className="font-bold flex items-center gap-1.5 text-sm mb-1">
-              <span>👉</span> 화면 추가 & 이동은 여기서!
+              <span>화면 추가 & 이동 안내</span>
             </div>
             <p className="text-[11px] text-blue-100 leading-relaxed">
               클릭하시면 <strong className="underline decoration-blue-300">소개, 오시는길 등 새로운 화면</strong>을 만들고 오갈 수 있어요!
