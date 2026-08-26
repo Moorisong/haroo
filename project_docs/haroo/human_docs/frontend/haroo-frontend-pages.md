@@ -25,7 +25,7 @@
 
 ### 1. 메인 랜딩 페이지 (`/`)
 * **HeaderNav & Footer**: 로고, 이용 방법(#guide), 서비스 특징(#why), 활용 사례(#usecases), 가격 안내(#pricing), 내 저장소 버튼, 세련된 뱃지 스타일 로그인 버튼, [5분 만에 만들기] CTA, 푸터 최하단 copyright 옆 [Admin] 텍스트 링크, [이용약관], [개인정보 처리방침] 링크 및 `CompanyLegalFooter` (상호명, 대표자, 사업자번호, 통신판매신고, 주소 명시로 PG 결제 심사 100% 통과).
-* **HeroSection**: '개발 몰라도 OK! 원하는 블록 톡톡 꽂으면 나만의 스마트폰 웹 & 앱 완성' 메인 타이틀 + CTA 버튼 + 하단 `MandatoryPwaTransparencyNotice` (PWA 기술 투명 고지 뱃지) & `BlockAssemblyAnimation` 통합 디스플레이.
+* **HeroSection**: '원하는 블록 톡톡 꽂으면 나만의 스마트폰 웹 & 앱 5분 완성' 메인 타이틀 + CTA 버튼 + 하단 `MandatoryPwaTransparencyNotice` (PWA 기술 1줄 요약 고지 뱃지) & `BlockAssemblyAnimation` 통합 디스플레이.
 * **PwaInstallGuideModal**: 이원화 PWA 3초 바탕화면 설치 안내 모달.
   * **대상 A (사장님)**: haroo.site 자체를 스마트폰 바탕화면에 설치하여 1초 만에 마이페이지/캔버스 진입 유도.
   * **대상 B (매장 고객)**: mybrand.haroo.site 매장 사이트를 스마트폰 바탕화면에 설치하여 1초 만에 예약 진입 유도 (iOS Safari 공유 버튼 & Android Chrome 1초 추가 팝업).
