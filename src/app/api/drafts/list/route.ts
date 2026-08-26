@@ -113,7 +113,7 @@ export async function GET(req: NextRequest) {
 
     const mergedDrafts = Array.from(draftMap.values()).slice(0, 10)
 
-    const jsonRes = NextResponse.json({ drafts: mergedDrafts })
+    const jsonRes = NextResponse.json({ drafts: mergedDrafts, userId })
     return copyCookies(tempRes, jsonRes)
   } catch (error) {
     console.error('[api/drafts/list error]', error)

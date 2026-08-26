@@ -5,10 +5,12 @@ import RealisticCostComparisonTable from '@/components/landing/RealisticCostComp
 import UseCasesSection from '@/components/landing/UseCasesSection'
 import PricingGrid from '@/components/landing/PricingGrid'
 import CompanyLegalFooter from '@/components/common/CompanyLegalFooter'
+import PendingAuthRedirectHandler from '@/components/common/PendingAuthRedirectHandler'
 
 export default function Page() {
   return (
     <main className="min-h-screen bg-white">
+      <PendingAuthRedirectHandler />
       <HeaderNav />
       <HeroSection />
       <ThreeStepGuide />
