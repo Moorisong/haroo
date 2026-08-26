@@ -24,16 +24,14 @@ export default function HeroSection() {
       <div className="max-w-6xl mx-auto">
         {/* 메인 타이틀 */}
         <h1 className="text-center text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-slate-900 leading-tight tracking-tight break-keep mb-4">
-          개발 몰라도 OK! 원하는 블록 톡톡 꽂으면
+          원하는 블록 톡톡 꽂으면
           <br />
-          <span className="text-sky-600">나만의 스마트폰 웹 & 앱 완성</span>
+          <span className="text-sky-600">나만의 스마트폰 웹 & 앱 5분 완성</span>
         </h1>
 
         {/* 서브 카피 */}
-        <p className="text-center text-xs sm:text-base text-slate-500 leading-relaxed max-w-2xl mx-auto mb-8 sm:mb-10 break-keep">
-          커플·동호회·개인 프로필부터 매장 홍보까지, 필요한 기능만 레고처럼 조립하세요.
-          <br className="hidden sm:block" />
-          스마트폰 바탕화면에 앱 아이콘이 생기고 카톡 1초 공유가 가능해집니다.
+        <p className="text-center text-xs sm:text-base text-slate-500 leading-relaxed max-w-xl mx-auto mb-8 sm:mb-10 break-keep">
+          청첩장·프로필부터 매장 홍보까지, 필요한 기능만 레고처럼 조립하세요.
         </p>
 
         {/* CTA 버튼 그룹 */}
@@ -42,7 +40,7 @@ export default function HeroSection() {
             href="/builder"
             className="inline-flex items-center gap-2 px-6 py-3.5 bg-slate-900 text-white text-xs sm:text-sm font-bold rounded-xl hover:bg-slate-800 transition-all hover:shadow-lg"
           >
-            무료로 내 템플릿 조립하기
+            무료로 조립 시작하기
             <ArrowRight size={16} />
           </Link>
           <button
@@ -50,7 +48,7 @@ export default function HeroSection() {
             className="inline-flex items-center gap-2 px-6 py-3.5 bg-white border border-slate-200 text-slate-700 text-xs sm:text-sm font-semibold rounded-xl hover:bg-slate-50 transition-colors"
           >
             <Smartphone size={15} />
-            바탕화면 앱 아이콘 안내
+            바탕화면 앱 안내
           </button>
         </div>
 

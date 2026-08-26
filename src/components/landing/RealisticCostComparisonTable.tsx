@@ -3,30 +3,30 @@ import { Zap, Edit3, Smartphone, MessageSquare } from 'lucide-react'
 const VALUE_PROPOSITIONS = [
   {
     icon: Zap,
-    title: '5분 만에 쉬운 홈페이지 완성',
+    title: '5분 셀프 홈페이지 완성',
     price: '99,000원부터',
-    description: '어려운 코딩 없이 원하는 화면을 마우스로 차곡차곡 모아 오늘 바로 브랜드 사이트를 만들어 보세요.',
+    description: '어려운 코딩 없이 블록을 조립하여 오늘 바로 서비스를 시작하세요.',
     badge: '쉬운 제작',
   },
   {
     icon: Edit3,
-    title: '언제든 내 손으로 직접 수정',
+    title: '무제한 셀프 무료 수정',
     price: '수정비 0원',
-    description: '사진이나 글자를 바꿀 때마다 외주업체에 매번 돈 낼 필요 없이, 클릭 몇 번으로 즉시 바꾸면 돼요.',
+    description: '글이나 사진을 바꿀 때 외주비 걱정 없이 클릭 몇 번으로 즉시 변경하세요.',
     badge: '무료 수정',
   },
   {
     icon: Smartphone,
-    title: '스마트폰 바로가기 앱 기능',
+    title: '스마트폰 바로가기 앱',
     price: '추가금 없음',
-    description: '일반 인터넷 홈페이지는 물론, 고객 스마트폰 홈 화면에 내 매장 아이콘을 쏙 설치해 드려요.',
+    description: '고객의 스마트폰 바탕화면에 내 브랜드 아이콘을 손쉽게 설치해 드립니다.',
     badge: '스마트폰 연결',
   },
   {
     icon: MessageSquare,
-    title: '카톡 알림 & 카드 결제 자동 탑재',
+    title: '알림톡 & 카드 결제 지원',
     price: '원클릭 연동',
-    description: '고객 예약 및 문의가 오면 카카오톡으로 실시간 알림을 받고, 신용카드 결제까지 손쉽게 연결해요.',
+    description: '고객 예약 알림톡부터 신용카드 결제까지 손쉽게 연결합니다.',
     badge: '고객/결제 관리',
   },
 ]
@@ -44,11 +44,10 @@ export default function RealisticCostComparisonTable() {
             Why Haroo?
           </span>
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-slate-900 tracking-tight text-balance">
-            비싼 외주나 복잡한 코딩 없이, <br className="sm:hidden" />
-            <span className="text-sky-600">하루 하나로</span> 쉽고 빠르게
+            외주 부담 없이, <span className="text-sky-600">하루 하나로</span> 쉽고 빠르게
           </h2>
           <p className="text-slate-500 text-sm mt-3 max-w-xl mx-auto leading-relaxed">
-            비싼 제작비부터 매번 드는 수정 비용까지, 초보자도 쉽게 해결할 수 있는 하루의 혜택입니다.
+            비싼 외주비와 매번 드는 수정 비용 부담을 깔끔하게 해결해 드립니다.
           </p>
         </div>
 
@@ -63,7 +62,7 @@ export default function RealisticCostComparisonTable() {
               >
                 <div>
                   <div className="flex items-center justify-between mb-4">
-                    <div className="w-10 h-10 rounded-xl bg-sky-50 border border-sky-100 text-sky-600 flex items-center justify-center group-hover:bg-sky-600 group-hover:text-white transition-colors">
+                    <div className="w-10 h-10 rounded-xl bg-sky-50 border border-sky-100 text-sky-600 flex items-center justify-center">
                       <Icon size={20} />
                     </div>
                     <span className="text-[11px] font-semibold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-full">
@@ -73,7 +72,7 @@ export default function RealisticCostComparisonTable() {
                   <h3 className="text-base font-bold text-slate-900 mb-2 leading-snug">
                     {item.title}
                   </h3>
-                  <p className="text-xs text-slate-500 leading-relaxed">
+                  <p className="text-xs text-slate-500 leading-relaxed break-keep">
                     {item.description}
                   </p>
                 </div>

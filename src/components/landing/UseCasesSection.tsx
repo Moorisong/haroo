@@ -6,7 +6,7 @@ const USE_CASES = [
     icon: Heart,
     title: '커플 & 웨딩 모바일 청첩장',
     badge: '데이트 & 결혼',
-    desc: '우리만의 첫 만남 이야기, 시술/예식 갤러리, 계좌번호 및 방명록까지 예쁘게 담으세요.',
+    desc: '첫 만남 이야기부터 갤러리, 계좌번호, 방명록까지 예쁘게 담아보세요.',
     color: 'bg-rose-50 text-rose-600 border-rose-200',
     hoverBorder: 'hover:border-rose-400',
   },
@@ -14,7 +14,7 @@ const USE_CASES = [
     icon: Users,
     title: '동호회 & 소모임 회원 명부',
     badge: '모임 & 취미',
-    desc: '러닝 크루, 독서 모임, 운동 동호회 일정 및 회비 안내, 회원 소통 공간을 5분 만에 열어보세요.',
+    desc: '모임 일정, 회비 안내, 회원 소통 공간을 5분 만에 개설하세요.',
     color: 'bg-emerald-50 text-emerald-600 border-emerald-200',
     hoverBorder: 'hover:border-emerald-400',
   },
@@ -22,15 +22,15 @@ const USE_CASES = [
     icon: User,
     title: '개인 포트폴리오 & 이력서',
     badge: '프리랜서 & 프로필',
-    desc: '인스타그램 바이오에 넣을 1초 링크! 내 작품 갤러리, 이력, 1:1 상담 예약 폼을 한곳에.',
+    desc: '인스타 바이오 링크용 프로필, 작품 갤러리, 상담 폼을 한곳에 구축하세요.',
     color: 'bg-indigo-50 text-indigo-600 border-indigo-200',
     hoverBorder: 'hover:border-indigo-400',
   },
   {
     icon: Store,
-    title: '매장 홍보 & 카톡 예약받기',
+    title: '매장 홍보 & 카톡 예약',
     badge: '소상공인 & 1인 기업',
-    desc: '카페, 미용실, 꽃집 메뉴판 및 오시는 길, 카카오 알림톡 자동 예약 시스템을 손쉽게 연결하세요.',
+    desc: '매장 메뉴판, 오시는 길, 카카오 알림톡 자동 예약을 연결하세요.',
     color: 'bg-sky-50 text-sky-600 border-sky-200',
     hoverBorder: 'hover:border-sky-400',
   },
@@ -38,7 +38,7 @@ const USE_CASES = [
     icon: Calendar,
     title: '가족 행사 & 칠순·돌잔치',
     badge: '가족 & 추억',
-    desc: '부모님 칠순 잔치, 아기 돌잔치 초청장과 사진 앨범을 스마트폰 바탕화면 앱으로 전하세요.',
+    desc: '칠순 잔치·돌잔치 모바일 초청장과 사진 앨범을 스마트폰으로 전하세요.',
     color: 'bg-amber-50 text-amber-600 border-amber-200',
     hoverBorder: 'hover:border-amber-400',
   },
@@ -59,7 +59,7 @@ export default function UseCasesSection() {
             누구나 만드는 나만의 스마트폰 웹 & 앱
           </h2>
           <p className="text-slate-500 text-xs sm:text-sm mt-2 max-w-xl mx-auto break-keep">
-            전문 개발자가 아니어도 괜찮습니다. 내 목적에 맞춰 마음껏 서비스를 완성해보세요.
+            목적에 맞는 템플릿으로 자유롭게 시작해보세요.
           </p>
         </div>
 
@@ -81,7 +81,7 @@ export default function UseCasesSection() {
                     </span>
                   </div>
                   <h3 className="text-sm font-bold text-slate-900 mb-1.5">{item.title}</h3>
-                  <p className="text-xs text-slate-500 leading-relaxed">{item.desc}</p>
+                  <p className="text-xs text-slate-500 leading-relaxed break-keep">{item.desc}</p>
                 </div>
                 <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-sky-600">
                   <span>미리 조립해보기</span>

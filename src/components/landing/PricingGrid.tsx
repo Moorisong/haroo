@@ -15,12 +15,11 @@ const CREATION_TIER_META = [
     icon: Zap,
     color: 'border-slate-200',
     btnColor: 'bg-slate-900 text-white hover:bg-slate-800',
-    summary: '기본 브랜드 홍보 사이트',
-    domain: 'haroo.site 서브도메인 제공',
+    summary: '기본 브랜드 홍보',
+    domain: 'haroo.site 서브도메인 무료 제공',
     features: [
       '대표 배너, 메뉴판, 지도, 갤러리',
       '무제한 셀프 무료 수정',
-      'haroo.site 전용 주소 제공',
     ],
     highlight: false,
   },
@@ -30,14 +29,13 @@ const CREATION_TIER_META = [
     label: '예약 · 고객 문의 수집',
     icon: Globe,
     color: 'border-slate-900',
-    btnColor: 'bg-slate-900 text-white hover:bg-slate-800',
-    summary: '고객 예약 및 알림톡 연동',
+    btnColor: 'bg-sky-600 text-white hover:bg-sky-700 shadow-md',
+    summary: '예약 및 알림톡 연동',
     domain: '개인 커스텀 도메인 무상 연결',
     features: [
       'STARTER 기능 전체 포함',
       '예약·문의 폼 & 엑셀 다운로드',
       '카카오 알림톡 자동 발송',
-      '개인 커스텀 도메인 무상 연결',
     ],
     highlight: true,
   },
@@ -47,9 +45,9 @@ const CREATION_TIER_META = [
     label: '결제 & 지식창업 · MVP',
     icon: Shield,
     color: 'border-slate-200',
-    btnColor: 'bg-sky-600 text-white hover:bg-sky-700',
-    summary: '온라인 결제 및 회원 관리',
-    domain: '커스텀 도메인 & 보안 인증서',
+    btnColor: 'bg-slate-900 text-white hover:bg-slate-800',
+    summary: '온라인 결제 & 회원 관리',
+    domain: '커스텀 도메인 & 보안 인증서(SSL)',
     features: [
       'STANDARD 기능 전체 포함',
       '카카오/구글 소셜 로그인',
@@ -101,43 +99,49 @@ export default function PricingGrid() {
         </div>
 
         {tab === 'creation' && (
-          <div className="grid md:grid-cols-3 gap-4">
+          <div className="grid md:grid-cols-3 gap-4 items-stretch">
             {CREATION_TIER_META.map((tier) => {
               const Icon = tier.icon
               return (
-                <div key={tier.name} className={`rounded-2xl border-2 bg-white overflow-hidden ${tier.color} ${tier.highlight ? 'shadow-lg' : ''}`}>
-                  {tier.highlight && (
-                    <div className="bg-slate-900 text-center py-1">
-                      <span className="text-xs font-bold text-white">가장 인기 있는 플랜</span>
-                    </div>
-                  )}
-                  <div className="p-5">
-                    <div className="flex items-center gap-2 mb-3">
-                      <div className="w-8 h-8 rounded-lg bg-slate-50 border border-slate-200 flex items-center justify-center">
-                        <Icon size={15} className="text-slate-700" />
+                <div key={tier.name} className={`rounded-2xl border-2 bg-white overflow-hidden flex flex-col justify-between ${tier.color} ${tier.highlight ? 'shadow-lg' : ''}`}>
+                  <div>
+                    {tier.highlight ? (
+                      <div className="bg-slate-900 text-center py-1">
+                        <span className="text-xs font-bold text-white">가장 인기 있는 플랜</span>
                       </div>
-                      <div>
-                        <div className="text-xs font-bold text-slate-500">{tier.name}</div>
-                        <div className="text-[11px] text-slate-400">{tier.label}</div>
-                      </div>
-                    </div>
-                    <div className="mb-0.5">
-                      <span className="text-2xl sm:text-3xl font-black text-slate-900">{tier.price.toLocaleString()}</span>
-                      <span className="text-xs text-slate-500">원 일시불</span>
-                    </div>
-                    <p className="text-xs font-semibold text-sky-600 mb-4">{tier.summary}</p>
-                    <div className="space-y-1.5 mb-5">
-                      {tier.features.map((f, i) => (
-                        <div key={i} className="flex items-start gap-2">
-                          <Check size={13} className="text-sky-600 flex-shrink-0 mt-0.5" />
-                          <span className="text-xs text-slate-700">{f}</span>
+                    ) : (
+                      <div className="h-6 invisible bg-transparent" />
+                    )}
+                    <div className="p-5">
+                      <div className="flex items-center gap-2 mb-3">
+                        <div className="w-8 h-8 rounded-lg bg-slate-50 border border-slate-200 flex items-center justify-center">
+                          <Icon size={15} className="text-slate-700" />
                         </div>
-                      ))}
-                      <div className="flex items-start gap-2 pt-1.5 border-t border-slate-100">
-                        <Star size={13} className="text-amber-500 flex-shrink-0 mt-0.5" />
-                        <span className="text-xs text-slate-600 font-medium">{tier.domain}</span>
+                        <div>
+                          <div className="text-xs font-bold text-slate-500">{tier.name}</div>
+                          <div className="text-[11px] text-slate-400">{tier.label}</div>
+                        </div>
+                      </div>
+                      <div className="mb-0.5">
+                        <span className="text-2xl sm:text-3xl font-black text-slate-900">{tier.price.toLocaleString()}</span>
+                        <span className="text-xs text-slate-500">원 일시불</span>
+                      </div>
+                      <p className="text-xs font-semibold text-sky-600 mb-4">{tier.summary}</p>
+                      <div className="space-y-1.5 mb-5">
+                        {tier.features.map((f, i) => (
+                          <div key={i} className="flex items-start gap-2">
+                            <Check size={13} className="text-sky-600 flex-shrink-0 mt-0.5" />
+                            <span className="text-xs text-slate-700">{f}</span>
+                          </div>
+                        ))}
+                        <div className="flex items-start gap-2 pt-1.5 border-t border-slate-100">
+                          <Star size={13} className="text-amber-500 flex-shrink-0 mt-0.5" />
+                          <span className="text-xs text-slate-600 font-medium">{tier.domain}</span>
+                        </div>
                       </div>
                     </div>
+                  </div>
+                  <div className="p-5 pt-0 mt-auto">
                     <Link href="/builder" className={`block w-full py-2.5 text-center text-xs sm:text-sm font-bold rounded-xl transition-colors ${tier.btnColor}`}>
                       무료로 조립 시작
                     </Link>
