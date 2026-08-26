@@ -6,10 +6,12 @@ declare global {
   // eslint-disable-next-line no-var
   var globalDraftStore: Map<string, any[]> | undefined
 }
-if (!global.globalDraftStore) {
-  global.globalDraftStore = new Map()
+function getServerStore() {
+  if (!global.globalDraftStore) {
+    global.globalDraftStore = new Map()
+  }
+  return global.globalDraftStore
 }
-const serverStore = global.globalDraftStore
 
 /**
  * 동일 이름 존재 시 (n) 번호를 붙여 유일한 프로젝트 이름을 만들어주는 헬퍼
@@ -48,6 +50,7 @@ function resolveUniqueDraftName(rawName: string, targetDraftId: string, existing
  */
 export async function POST(req: NextRequest) {
   try {
+    const serverStore = getServerStore()
     const tempRes = new NextResponse()
     const supabase = createSupabaseServerClient(req, tempRes)
     const { data: { user } } = await supabase.auth.getUser()

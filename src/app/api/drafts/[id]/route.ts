@@ -5,13 +5,19 @@ declare global {
   // eslint-disable-next-line no-var
   var globalDraftStore: Map<string, any[]> | undefined
 }
-const serverStore = global.globalDraftStore || new Map()
+function getServerStore() {
+  if (!global.globalDraftStore) {
+    global.globalDraftStore = new Map()
+  }
+  return global.globalDraftStore
+}
 
 export async function GET(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const serverStore = getServerStore()
     const { id } = await params
     const tempRes = new NextResponse()
     const userId = await getAuthenticatedUserId(req, tempRes)
@@ -66,6 +72,7 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const serverStore = getServerStore()
     const { id } = await params
     const tempRes = new NextResponse()
     const userId = await getAuthenticatedUserId(req, tempRes)

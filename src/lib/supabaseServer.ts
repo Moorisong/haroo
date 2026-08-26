@@ -31,7 +31,13 @@ export function createSupabaseServerClient(req: NextRequest, res?: NextResponse)
 export async function getAuthenticatedUserId(req: NextRequest, res?: NextResponse): Promise<string> {
   const supabase = createSupabaseServerClient(req, res)
   try {
-    const { data: { user } } = await supabase.auth.getUser()
+    // Supabase 접속 타임아웃 1.5초 설정 (네트워크 미연동 또는 DNS 실패 시 65초 대기 방지)
+    const timeoutPromise = new Promise<{ data: { user: null } }>((resolve) =>
+      setTimeout(() => resolve({ data: { user: null } }), 1500)
+    )
+    const authPromise = supabase.auth.getUser()
+    const { data: { user } } = await Promise.race([authPromise, timeoutPromise])
+
     if (user?.id) {
       return user.id
     }

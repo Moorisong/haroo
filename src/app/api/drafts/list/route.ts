@@ -5,7 +5,12 @@ declare global {
   // eslint-disable-next-line no-var
   var globalDraftStore: Map<string, any[]> | undefined
 }
-const serverStore = global.globalDraftStore || new Map()
+function getServerStore() {
+  if (!global.globalDraftStore) {
+    global.globalDraftStore = new Map()
+  }
+  return global.globalDraftStore
+}
 
 /**
  * GET /api/drafts/list
@@ -13,9 +18,20 @@ const serverStore = global.globalDraftStore || new Map()
  */
 export async function GET(req: NextRequest) {
   try {
+    const serverStore = getServerStore()
     const tempRes = new NextResponse()
-    const userId = await getAuthenticatedUserId(req, tempRes)
     const supabase = createSupabaseServerClient(req, tempRes)
+    
+    let userId = ''
+    try {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (user?.id) userId = user.id
+    } catch (e) {
+      // ignore
+    }
+    if (!userId) {
+      userId = await getAuthenticatedUserId(req, tempRes)
+    }
 
     // 1. Supabase DB 조회 시도
     let dbData: any[] = []
