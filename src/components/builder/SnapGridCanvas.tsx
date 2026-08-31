@@ -216,6 +216,7 @@ function DraggableBlock({ block, canvasRef, onDragStart, onDragMove, onDragEnd, 
   if (isReadOnly) {
     return (
       <div
+        id={`snap-block-${block.instanceId}`}
         style={wrapperStyle as React.CSSProperties}
         className={floatingClass}
         ref={blockRef}

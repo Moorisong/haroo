@@ -208,6 +208,7 @@ function DraggableCanvasBlock({ block }: { block: CanvasBlock }) {
 
   return (
     <div
+      id={`block-${block.instanceId}`}
       ref={setNodeRef}
       style={style}
       data-sortable-block="true" // BlockResizeHandles에서 부모를 찾기 위한 속성
