@@ -98,28 +98,40 @@ export default function BlkCalendar01({ config, isPreview, onAction }: Props) {
           <div className="text-center space-y-2">
             <AtomText01 
               variant="h3" 
-              className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight cursor-pointer hover:ring-1 hover:ring-slate-300 p-1 rounded transition-all"
+              className={cn(
+                'text-xl sm:text-2xl md:text-3xl font-bold tracking-tight p-1 rounded transition-all',
+                !isPreview && 'cursor-pointer hover:ring-1 hover:ring-slate-300'
+              )}
               style={{
                 color: titleStyle?.color || textColor,
                 fontFamily: titleStyle?.fontFamily,
                 fontWeight: titleStyle?.fontWeight,
                 fontSize: titleStyle?.fontSize,
               }}
-              onClick={(e) => selectElement('title', e)}
+              onClick={(e) => {
+                if (isPreview) return
+                selectElement('title', e)
+              }}
             >
               {title}
             </AtomText01>
             {subtitle && (
               <AtomText01 
                 variant="p" 
-                className="text-sm sm:text-base opacity-80 cursor-pointer hover:ring-1 hover:ring-slate-300 p-1 rounded transition-all"
+                className={cn(
+                  'text-sm sm:text-base opacity-80 p-1 rounded transition-all',
+                  !isPreview && 'cursor-pointer hover:ring-1 hover:ring-slate-300'
+                )}
                 style={{
                   color: subtitleStyle?.color || textColor,
                   fontFamily: subtitleStyle?.fontFamily,
                   fontWeight: subtitleStyle?.fontWeight,
                   fontSize: subtitleStyle?.fontSize,
                 }}
-                onClick={(e) => selectElement('subtitle', e)}
+                onClick={(e) => {
+                  if (isPreview) return
+                  selectElement('subtitle', e)
+                }}
               >
                 {subtitle}
               </AtomText01>

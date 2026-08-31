@@ -44,8 +44,6 @@ export default function BlkHero01({ config, isPreview, onAction }: Props) {
   const selectedInstanceId = useBuilderStore((state) => state.selectedInstanceId)
   const updateBlockInputData = useBuilderStore((state) => state.updateBlockInputData)
 
-  const fileInputRef = useRef<HTMLInputElement>(null)
-
   // 배경 설정 데이터 파싱
   const bgType = backgroundStyle?.bgType || (backgroundStyle?.backgroundImage ? 'image' : 'color')
   const bgImage = backgroundStyle?.backgroundImage || imageUrl
@@ -77,34 +75,9 @@ export default function BlkHero01({ config, isPreview, onAction }: Props) {
     ...(safeConfig.badgeTextColor ? { color: safeConfig.badgeTextColor } : {}),
   }
 
-  // 히어로 배경 클릭 시 동작 분기
+  // 히어로 배경 클릭 시 속성 패널 선택만 수행
   const handleBackgroundClick = (e: React.MouseEvent) => {
     selectElement('background', e)
-    // 드래그를 하지 않고 단순히 사진 영역을 클릭한 경우에만 사진 선택창 열림
-    if (!isPreview && bgType === 'image' && dragStartRef.current && !dragStartRef.current.moved) {
-      fileInputRef.current?.click()
-    }
-  }
-
-  // 이미지 업로드 핸들러
-  const handleImageFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (file && selectedInstanceId) {
-      const reader = new FileReader()
-      reader.onload = (event) => {
-        const result = event.target?.result as string
-        if (result) {
-          updateBlockInputData(selectedInstanceId, {
-            backgroundStyle: {
-              ...backgroundStyle,
-              bgType: 'image',
-              backgroundImage: result,
-            },
-          })
-        }
-      }
-      reader.readAsDataURL(file)
-    }
   }
 
   // 이미지 100% 마우스 직접 드래그 위치 제어 (블록 이동 DND와 100% 분리됨)
@@ -154,15 +127,6 @@ export default function BlkHero01({ config, isPreview, onAction }: Props) {
 
   return (
     <AtomCard01 noPadding className="border-none rounded-none w-full overflow-hidden">
-      {/* Hidden File Input for Background Image Upload */}
-      <input
-        type="file"
-        ref={fileInputRef}
-        accept="image/*"
-        className="hidden"
-        onChange={handleImageFileChange}
-      />
-
       <div
         className={cn(
           `relative ${layout.paddingClass} w-full transition-colors select-none`,
@@ -193,15 +157,6 @@ export default function BlkHero01({ config, isPreview, onAction }: Props) {
               }}
             />
             <div className="absolute inset-0 bg-slate-900/40 pointer-events-none" />
-
-            {/* 배경 위치 조절 & 사진 교체 힌트 뱃지 (빌더 편집 모드에서만 표출) */}
-            {!isPreview && (
-              <div className="absolute top-3 right-3 z-20 flex gap-2 pointer-events-none">
-                <span className="bg-slate-900/80 text-white text-[11px] px-2.5 py-1 rounded-full shadow border border-white/20 backdrop-blur-sm flex items-center gap-1 font-medium">
-                  🖱️ 드래그로 사진 위치 조절 / 클릭 시 사진 교체
-                </span>
-              </div>
-            )}
           </>
         )}
 
@@ -210,10 +165,15 @@ export default function BlkHero01({ config, isPreview, onAction }: Props) {
           {isBadgeVisible && (
             <AtomBadge01
               style={customBadgeStyle}
-              className={cn('mb-4 shadow-sm border-none pointer-events-auto cursor-pointer hover:opacity-90 transition-opacity', currentBadge.className)}
+              className={cn(
+                'mb-4 shadow-sm border-none pointer-events-auto transition-opacity',
+                currentBadge.className,
+                !isPreview && 'cursor-pointer hover:opacity-90'
+              )}
               onClick={(e: React.MouseEvent) => {
+                if (isPreview) return
                 e.stopPropagation()
-                selectElement('title', e)
+                selectElement('badge', e)
               }}
             >
               {currentBadge.label}
@@ -222,7 +182,10 @@ export default function BlkHero01({ config, isPreview, onAction }: Props) {
 
           <AtomText01
             as="h1"
-            className="mb-3 md:mb-4 leading-tight tracking-tight break-keep cursor-pointer hover:ring-1 hover:ring-white/50 p-1 rounded pointer-events-auto"
+            className={cn(
+              'mb-3 md:mb-4 leading-tight tracking-tight break-keep p-1 rounded pointer-events-auto',
+              !isPreview && 'cursor-pointer hover:ring-1 hover:ring-white/50'
+            )}
             style={{
               color: titleStyle?.color || (bgType === 'image' ? 'white' : '#ffffff'),
               fontFamily: titleStyle?.fontFamily,
@@ -230,6 +193,7 @@ export default function BlkHero01({ config, isPreview, onAction }: Props) {
               fontSize: titleStyle?.fontSize || '3rem',
             }}
             onClick={(e) => {
+              if (isPreview) return
               e.stopPropagation()
               selectElement('title', e)
             }}
@@ -239,7 +203,10 @@ export default function BlkHero01({ config, isPreview, onAction }: Props) {
 
           <AtomText01
             as="p"
-            className="mb-6 md:mb-8 max-w-2xl font-normal leading-relaxed break-keep cursor-pointer hover:ring-1 hover:ring-white/50 p-1 rounded pointer-events-auto"
+            className={cn(
+              'mb-6 md:mb-8 max-w-2xl font-normal leading-relaxed break-keep p-1 rounded pointer-events-auto',
+              !isPreview && 'cursor-pointer hover:ring-1 hover:ring-white/50'
+            )}
             style={{
               color: subtitleStyle?.color || (bgType === 'image' ? '#e2e8f0' : '#94a3b8'),
               fontFamily: subtitleStyle?.fontFamily,
@@ -247,6 +214,7 @@ export default function BlkHero01({ config, isPreview, onAction }: Props) {
               fontSize: subtitleStyle?.fontSize || '1.125rem',
             }}
             onClick={(e) => {
+              if (isPreview) return
               e.stopPropagation()
               selectElement('subtitle', e)
             }}
@@ -275,8 +243,11 @@ export default function BlkHero01({ config, isPreview, onAction }: Props) {
             }}
             onClick={(e) => {
               e.stopPropagation()
-              selectElement('button', e)
-              onAction?.(safeConfig as BlockInputConfig)
+              if (!isPreview) {
+                selectElement('button', e)
+              } else {
+                onAction?.(safeConfig as BlockInputConfig)
+              }
             }}
           >
             {buttonText}

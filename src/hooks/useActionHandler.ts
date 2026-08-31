@@ -52,7 +52,7 @@ export function useActionHandler({ isPreview, onNavigatePage }: UseActionHandler
       if (actionType === 'NAVIGATE_PAGE') {
         const slug = config.buttonLink
         if (!slug) {
-          emitToast('⚠️ 이동할 화면이 선택되지 않았습니다. 우측 속성창에서 화면을 선택해 주세요.', 'warning')
+          if (isPreview) emitToast('⚠️ 이동할 화면이 선택되지 않았습니다. 우측 속성창에서 화면을 선택해 주세요.', 'warning')
           return
         }
         if (isPreview) {
@@ -61,36 +61,44 @@ export function useActionHandler({ isPreview, onNavigatePage }: UseActionHandler
           } else {
             emitToast(`📄 [테스트] "${slug}" 화면으로 이동합니다.`, 'info')
           }
-        } else {
-          window.location.href = slug
         }
+        // 편집 모드(!isPreview)일 때는 빌더 도메인 이동 방지를 위해 절대 window.location.href를 실행하지 않음
         return
       }
 
       // 2. OPEN_URL
       if (actionType === 'OPEN_URL') {
         const url = config.buttonLink
-        if (!url) { emitToast('⚠️ 연결할 URL이 설정되지 않았습니다.', 'warning'); return }
+        if (!url) {
+          if (isPreview) emitToast('⚠️ 연결할 URL이 설정되지 않았습니다.', 'warning')
+          return
+        }
         if (isPreview) emitToast(`🔗 [테스트] 새 창으로 "${url}" 이 열립니다.`, 'info')
-        else window.open(url, '_blank', 'noopener,noreferrer')
+        else if (!onNavigatePage) window.open(url, '_blank', 'noopener,noreferrer')
         return
       }
 
       // 3. CALL_PHONE
       if (actionType === 'CALL_PHONE') {
         const phone = config.buttonLink
-        if (!phone) { emitToast('⚠️ 전화번호가 설정되지 않았습니다.', 'warning'); return }
+        if (!phone) {
+          if (isPreview) emitToast('⚠️ 전화번호가 설정되지 않았습니다.', 'warning')
+          return
+        }
         if (isPreview) emitToast(`📞 [테스트] "${phone}" 으로 전화 연결됩니다.`, 'info')
-        else window.location.href = `tel:${phone.replace(/[^0-9+]/g, '')}`
+        else if (!onNavigatePage) window.location.href = `tel:${phone.replace(/[^0-9+]/g, '')}`
         return
       }
 
       // 4. OPEN_KAKAO
       if (actionType === 'OPEN_KAKAO') {
         const kakaoUrl = config.buttonLink
-        if (!kakaoUrl) { emitToast('⚠️ 카카오 링크가 설정되지 않았습니다.', 'warning'); return }
+        if (!kakaoUrl) {
+          if (isPreview) emitToast('⚠️ 카카오 링크가 설정되지 않았습니다.', 'warning')
+          return
+        }
         if (isPreview) emitToast('💬 [테스트] 카카오 오픈채팅으로 연결됩니다.', 'info')
-        else window.open(kakaoUrl, '_blank', 'noopener,noreferrer')
+        else if (!onNavigatePage) window.open(kakaoUrl, '_blank', 'noopener,noreferrer')
         return
       }
 

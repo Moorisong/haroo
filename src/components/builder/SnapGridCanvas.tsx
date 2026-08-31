@@ -138,7 +138,9 @@ interface DraggableBlockProps {
 }
 
 function DraggableBlock({ block, canvasRef, onDragStart, onDragMove, onDragEnd, onAction }: DraggableBlockProps) {
-  const { selectBlock, selectedInstanceId, isPreviewMode, updateBlockInputData } = useBuilderStore()
+  const { selectBlock, selectedInstanceId, isPreviewMode, projectType, deviceViewport, updateBlockInputData } = useBuilderStore()
+  const isWebPreview = projectType === 'WEB' && deviceViewport !== 'desktop'
+  const isReadOnly = isPreviewMode || isWebPreview
   const isSelected = selectedInstanceId === block.instanceId
   const config = block.inputConfig || {}
   const containerWidth = (config.containerWidth as ContainerWidth) || 'wide'
@@ -211,7 +213,7 @@ function DraggableBlock({ block, canvasRef, onDragStart, onDragMove, onDragEnd, 
     ? 'fixed bottom-6 right-6 lg:right-[344px] z-50 w-auto pointer-events-none' 
     : ''
 
-  if (isPreviewMode) {
+  if (isReadOnly) {
     return (
       <div
         style={wrapperStyle as React.CSSProperties}
@@ -285,6 +287,14 @@ function DesktopCanvas() {
     pages,
     onNavigatePage,
   })
+
+  const handleBlockAction = useCallback(
+    (config: BlockInputConfig, formData?: Record<string, string>) => {
+      if (!isPreviewMode) return
+      handleAction(config, formData)
+    },
+    [isPreviewMode, handleAction]
+  )
 
   const canvasHeight = Math.max(
     1200,
@@ -398,7 +408,7 @@ function DesktopCanvas() {
                 onDragStart={handleDragStart}
                 onDragMove={handleDragMove}
                 onDragEnd={handleDragEnd}
-                onAction={handleAction}
+                onAction={handleBlockAction}
               />
             ))}
 
@@ -439,6 +449,14 @@ function ResponsiveViewCanvas({ viewport }: { viewport: DeviceViewport }) {
     pages,
     onNavigatePage,
   })
+
+  const handleBlockAction = useCallback(
+    (config: BlockInputConfig, formData?: Record<string, string>) => {
+      if (!isReadOnly) return
+      handleAction(config, formData)
+    },
+    [isReadOnly, handleAction]
+  )
 
   // 모바일 뷰에서는 블록들을 posY 기준으로 정렬하여 차례대로 표시
   const sortedBlocks = useMemo(() => {
@@ -498,7 +516,7 @@ function ResponsiveViewCanvas({ viewport }: { viewport: DeviceViewport }) {
                     selectBlock(block.instanceId, 'background')
                   }}
                 >
-                  <BlockRenderer block={block} isPreviewMode={isReadOnly} onAction={handleAction} />
+                  <BlockRenderer block={block} isPreviewMode={isReadOnly} onAction={handleBlockAction} />
                   {!isReadOnly && isSelected && (
                     <FloatingQuickToolbar 
                       instanceId={block.instanceId} 

@@ -145,7 +145,7 @@ export default function BuilderPage() {
           
           loadDraft({
             id: restoreDraftId,
-            name: pending.draftName || '나만의 프로젝트',
+            name: pending.draftName || '',
             selectedBlocks: restoreData,
             versionClock: 1,
             updatedAt: new Date().toISOString(),
@@ -157,7 +157,7 @@ export default function BuilderPage() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
               draftId: restoreDraftId,
-              name: pending.draftName || '나만의 프로젝트',
+              name: pending.draftName || '',
               selectedBlocks: restoreData,
               versionClock: 1,
             }),

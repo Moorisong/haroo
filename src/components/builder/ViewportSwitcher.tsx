@@ -67,12 +67,12 @@ export default function ViewportSwitcher() {
           {isPreviewMode ? (
             <>
               <Pencil className="w-3.5 h-3.5" />
-              <span>화면 편집하기</span>
+              <span>편집하기</span>
             </>
           ) : (
             <>
               <Play className="w-3.5 h-3.5 fill-white" />
-              <span>동작 테스트</span>
+              <span>동작 테스트 하기</span>
             </>
           )}
         </button>

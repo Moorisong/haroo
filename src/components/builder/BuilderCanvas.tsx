@@ -125,7 +125,9 @@ function BlockRenderer({
 }
 
 function DraggableCanvasBlock({ block }: { block: CanvasBlock }) {
-  const { selectBlock, selectedInstanceId, isPreviewMode, pages, setActivePage } = useBuilderStore()
+  const { selectBlock, selectedInstanceId, isPreviewMode, projectType, deviceViewport, pages, setActivePage } = useBuilderStore()
+  const isWebPreview = projectType === 'WEB' && deviceViewport !== 'desktop'
+  const isReadOnly = isPreviewMode || isWebPreview
   const isSelected = selectedInstanceId === block.instanceId
   const config = block.inputConfig || {}
 
@@ -148,6 +150,14 @@ function DraggableCanvasBlock({ block }: { block: CanvasBlock }) {
     pages,
     onNavigatePage,
   })
+
+  const handleBlockAction = useCallback(
+    (config: BlockInputConfig, formData?: Record<string, string>) => {
+      if (!isPreviewMode) return
+      handleAction(config, formData)
+    },
+    [isPreviewMode, handleAction]
+  )
   const containerWidth = (config.containerWidth as ContainerWidth) || 'wide'
   const customWidthPx = config.customWidthPx as number | undefined
 
@@ -188,7 +198,7 @@ function DraggableCanvasBlock({ block }: { block: CanvasBlock }) {
 
   const floatingClass = isFloating ? 'fixed bottom-6 right-6 lg:right-[344px] z-50 w-auto pointer-events-none' : ''
 
-  if (isPreviewMode) {
+  if (isReadOnly) {
     return (
       <div id={`block-${block.instanceId}`} style={isFloating ? undefined : { position: 'absolute', left: `${posX}px`, top: `${posY}px`, width: `${currentMaxPx}px`, maxWidth: '100%' }} className={floatingClass}>
         <BlockRenderer block={block} isPreviewMode={true} onAction={handleAction} />
@@ -235,7 +245,7 @@ function DraggableCanvasBlock({ block }: { block: CanvasBlock }) {
         customWidthPx={customWidthPx}
         customPaddingYPx={config.customPaddingYPx as number | undefined}
       >
-        <BlockRenderer block={block} isPreviewMode={false} onAction={handleAction} />
+        <BlockRenderer block={block} isPreviewMode={false} onAction={handleBlockAction} />
       </BlockResizeHandles>
     </div>
   )
@@ -272,7 +282,7 @@ export default function BuilderCanvas() {
             </p>
             <p className="text-xs text-slate-500">
               {isPreviewMode
-                ? '상단 [✏️ 다시 화면 편집하기] 버튼을 눌러 이 화면에 블록을 조립해 보세요.'
+                ? '상단 [✏️ 다시 편집하기] 버튼을 눌러 이 화면에 블록을 조립해 보세요.'
                 : '좌측 팔레트에서 블록을 추가하여 캔버스를 구성해 보세요.'}
             </p>
           </div>
