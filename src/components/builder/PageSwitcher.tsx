@@ -6,7 +6,7 @@ import { TIER_PAGE_LIMITS } from '@/types'
 import { ChevronDown, Plus, FileText, Home, Trash2 } from 'lucide-react'
 
 export default function PageSwitcher() {
-  const { pages, activePageId, setActivePage, addPage, removePage, siteTemplateSelected, userTier } = useBuilderStore()
+  const { pages, activePageId, setActivePage, addPage, removePage, siteTemplateSelected, userTier, isPageSwitcherHighlighted, highlightPageSwitcher } = useBuilderStore()
   const [isOpen, setIsOpen] = useState(false)
   const [isAdding, setIsAdding] = useState(false)
   const [newTitle, setNewTitle] = useState('')
@@ -15,6 +15,7 @@ export default function PageSwitcher() {
   const menuRef = useRef<HTMLDivElement>(null)
 
   const activePage = pages.find((p) => p.id === activePageId) || pages[0]
+  const isHighlighted = showDimGuide || isPageSwitcherHighlighted
 
   useEffect(() => {
     if (siteTemplateSelected) {
@@ -30,16 +31,22 @@ export default function PageSwitcher() {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
         setIsOpen(false)
         setIsAdding(false)
+        if (isPageSwitcherHighlighted) {
+          highlightPageSwitcher(false)
+        }
       }
     }
     document.addEventListener('mousedown', handleClickOutside)
     return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [])
+  }, [isPageSwitcherHighlighted, highlightPageSwitcher])
 
   const handleButtonClick = () => {
     if (showDimGuide) {
       setShowDimGuide(false)
       localStorage.setItem('haroo_page_switcher_guide_seen', 'true')
+    }
+    if (isPageSwitcherHighlighted) {
+      highlightPageSwitcher(false)
     }
     setIsOpen(!isOpen)
   }
@@ -60,13 +67,20 @@ export default function PageSwitcher() {
 
   return (
     <>
-      {/* 화면 전체 딤(Dimmed) 배경 및 스포트라이트 안내 */}
-      {showDimGuide && (
+      {/* 스포트라이트 배경 오버레이 (블러 제거) */}
+      {isHighlighted && (
         <div
-          className="fixed inset-0 z-40 bg-black/50 backdrop-blur-[1px] animate-in fade-in duration-300"
+          className="fixed inset-0 z-40"
           onClick={() => {
-            setShowDimGuide(false)
-            localStorage.setItem('haroo_page_switcher_guide_seen', 'true')
+            if (showDimGuide) {
+              setShowDimGuide(false)
+              localStorage.setItem('haroo_page_switcher_guide_seen', 'true')
+            }
+            if (isPageSwitcherHighlighted) {
+              highlightPageSwitcher(false)
+            }
+            setIsOpen(true)
+            setIsAdding(true)
           }}
         />
       )}
@@ -74,21 +88,21 @@ export default function PageSwitcher() {
       <div
         ref={menuRef}
         className={`relative inline-block text-left ${
-          showDimGuide
-            ? 'z-50 ring-4 ring-blue-500/80 ring-offset-2 rounded-xl bg-white dark:bg-gray-900 shadow-2xl animate-pulse'
+          isHighlighted
+            ? 'z-50 ring-4 ring-indigo-500 ring-offset-2 rounded-xl bg-white dark:bg-gray-900 shadow-2xl animate-pulse'
             : ''
         }`}
       >
-        {/* 온보딩 툴팁 */}
-        {showDimGuide && (
-          <div className="absolute top-11 left-0 z-50 w-64 p-3 bg-blue-600 text-white rounded-xl shadow-2xl text-xs animate-bounce">
-            <div className="font-bold flex items-center gap-1.5 text-sm mb-1">
-              <span>화면 추가 & 이동 안내</span>
+        {/* 온보딩/화면 추가 툴팁 */}
+        {isHighlighted && (
+          <div className="absolute top-11 left-0 z-50 w-64 p-3 bg-indigo-600 text-white rounded-xl shadow-xl text-xs">
+            <div className="font-bold flex items-center gap-1.5 text-xs mb-1">
+              <span>💡 화면 추가 안내</span>
             </div>
-            <p className="text-[11px] text-blue-100 leading-relaxed">
-              클릭하시면 <strong className="underline decoration-blue-300">소개, 오시는길 등 새로운 화면</strong>을 만들고 오갈 수 있어요!
+            <p className="text-[11px] text-indigo-100 leading-relaxed">
+              이곳을 클릭하여 새로운 화면을 추가해 보세요.
             </p>
-            <div className="absolute -top-1.5 left-6 w-3 h-3 bg-blue-600 rotate-45" />
+            <div className="absolute -top-1.5 left-6 w-3 h-3 bg-indigo-600 rotate-45" />
           </div>
         )}
 

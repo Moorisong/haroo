@@ -45,6 +45,7 @@ interface BuilderState {
 
   deviceViewport: DeviceViewport
   isPreviewMode: boolean
+  isPageSwitcherHighlighted: boolean
 
   // 저장된 드래프트 목록
   drafts: Draft[]
@@ -56,6 +57,7 @@ interface BuilderState {
   removePage: (pageId: string) => void
   updatePageTitle: (pageId: string, title: string) => void
   confirmSiteTemplate: (template: SiteTemplateCategory) => void
+  highlightPageSwitcher: (highlight?: boolean) => void
 
   // Block Actions
   addBlock: (def: BlockDefinition) => void
@@ -96,6 +98,7 @@ const initialState = {
   siteTemplateSelected: false,
   deviceViewport: 'desktop' as DeviceViewport,
   isPreviewMode: false,
+  isPageSwitcherHighlighted: false,
   drafts: [] as Draft[],
 }
 
@@ -105,6 +108,10 @@ const initialState = {
  */
 export const useBuilderStore = create<BuilderState>((set, get) => ({
   ...initialState,
+
+  highlightPageSwitcher: (highlight = true) => {
+    set({ isPageSwitcherHighlighted: highlight })
+  },
 
   setUserTier: (tier) => {
     set({ userTier: tier })

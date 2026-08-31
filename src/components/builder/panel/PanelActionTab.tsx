@@ -1,15 +1,17 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useBuilderStore } from '@/stores/useBuilderStore'
 import { ACTION_OPTIONS, CUSTOM_EFFECT_OPTIONS, PANEL_LABELS } from './constants'
+import type { BlockInputConfig } from '@/types'
+import type { BlockCapability } from '../SidePropertyPanel'
 
 interface PanelActionTabProps {
-  cap: any
-  config: any
+  cap: BlockCapability
+  config: BlockInputConfig & Record<string, any>
   handleChange: (field: string, value: any) => void
 }
 
 export default function PanelActionTab({ cap, config, handleChange }: PanelActionTabProps) {
-  const { pages, addPage } = useBuilderStore()
+  const { pages, highlightPageSwitcher } = useBuilderStore()
   const [selectedBtnIndex, setSelectedBtnIndex] = useState<number>(0)
 
   const isActionAllowed = (action: string) => {
@@ -35,6 +37,12 @@ export default function PanelActionTab({ cap, config, handleChange }: PanelActio
   ]
 
   const currentBtn = buttons[selectedBtnIndex] || buttons[0]
+
+  useEffect(() => {
+    if (currentBtn?.actionType === 'NAVIGATE_PAGE' && pages.length <= 1) {
+      highlightPageSwitcher(true)
+    }
+  }, [currentBtn?.actionType, pages.length, highlightPageSwitcher])
 
   const handleUpdateButton = (field: string, value: any) => {
     const updatedButtons = [...buttons]
@@ -134,34 +142,31 @@ export default function PanelActionTab({ cap, config, handleChange }: PanelActio
 
             {/* Conditional Action Details for Current Button */}
             {currentBtn.actionType === 'NAVIGATE_PAGE' && (
-              <div className="space-y-1.5 pt-1">
+              <div className="space-y-2 pt-1">
                 <label className="text-xs font-semibold text-slate-600">이동할 내 사이트 화면</label>
-                <select
-                  value={currentBtn.buttonLink || ''}
-                  onChange={(e) => {
-                    const val = e.target.value
-                    if (val === '__CREATE_NEW__') {
-                      const title = prompt('새 화면의 이름(한글 가능)을 입력해 주세요:')
-                      if (title && title.trim()) {
-                        const rawSlug = prompt('주소에 사용될 영문 주소(소문자/하이픈)를 입력해 주세요 (예: contact, about):')
-                        if (rawSlug && rawSlug.trim()) {
-                          const newId = addPage(title.trim(), rawSlug.trim())
-                          if (newId) {
-                            const createdPage = useBuilderStore.getState().pages.find((p) => p.id === newId)
-                            if (createdPage) handleUpdateButton('buttonLink', createdPage.slug)
-                          }
-                        }
-                      }
-                    } else {
-                      handleUpdateButton('buttonLink', val)
-                    }
-                  }}
-                  className="w-full px-2 py-1.5 border border-slate-300 rounded text-xs bg-white focus:outline-none focus:border-sky-500"
-                >
-                  <option value="">-- 화면 선택 --</option>
-                  {pages.map((p) => <option key={p.id} value={p.slug}>{p.title} ({p.slug})</option>)}
-                  <option value="__CREATE_NEW__">+ 새 화면 만들고 바로 연결</option>
-                </select>
+
+                {pages.length <= 1 ? (
+                  <div className="p-3.5 bg-indigo-50/80 border border-indigo-100 rounded-xl flex flex-col gap-1.5 text-indigo-900">
+                    <div className="flex items-center gap-1.5 font-bold text-xs text-indigo-900">
+                      <span className="text-sm leading-none">💡</span>
+                      <span>연결 가능한 다른 화면이 없습니다</span>
+                    </div>
+                    <p className="text-[11px] text-indigo-600/90 leading-relaxed">
+                      현재 추가로 연결할 수 있는 화면이 없어요.
+                      <br />
+                      새로운 화면을 추가해주세요.
+                    </p>
+                  </div>
+                ) : (
+                  <select
+                    value={currentBtn.buttonLink || ''}
+                    onChange={(e) => handleUpdateButton('buttonLink', e.target.value)}
+                    className="w-full px-2 py-1.5 border border-slate-300 rounded text-xs bg-white focus:outline-none focus:border-sky-500"
+                  >
+                    <option value="">-- 화면 선택 --</option>
+                    {pages.map((p) => <option key={p.id} value={p.slug}>{p.title} ({p.slug})</option>)}
+                  </select>
+                )}
               </div>
             )}
 
