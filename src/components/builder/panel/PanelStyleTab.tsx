@@ -39,36 +39,36 @@ export default function PanelStyleTab({ config, handleChange }: PanelStyleTabPro
         
         <div className="space-y-1.5">
           <label className="text-sm font-medium text-slate-700">{PANEL_LABELS.BACKGROUND_COLOR}</label>
-          <div className="flex space-x-2">
+          <div className="flex items-center space-x-2 min-w-0">
             <input 
               type="color" 
               value={config.backgroundColor || '#ffffff'} 
               onChange={(e) => handleChange('backgroundColor', e.target.value)}
-              className="w-10 h-10 rounded border border-slate-300 cursor-pointer p-1"
+              className="w-9 h-9 rounded border border-slate-300 cursor-pointer p-0.5 shrink-0 bg-transparent"
             />
             <input 
               type="text" 
               value={config.backgroundColor || '#ffffff'} 
               onChange={(e) => handleChange('backgroundColor', e.target.value)}
-              className="flex-1 px-3 py-2 border border-slate-300 rounded-md text-sm uppercase"
+              className="w-full min-w-0 px-3 py-2 border border-slate-300 rounded-md text-sm uppercase font-mono"
             />
           </div>
         </div>
 
         <div className="space-y-1.5">
           <label className="text-sm font-medium text-slate-700">{PANEL_LABELS.TEXT_COLOR}</label>
-          <div className="flex space-x-2">
+          <div className="flex items-center space-x-2 min-w-0">
             <input 
               type="color" 
               value={config.textColor || '#0f172a'} 
               onChange={(e) => handleChange('textColor', e.target.value)}
-              className="w-10 h-10 rounded border border-slate-300 cursor-pointer p-1"
+              className="w-9 h-9 rounded border border-slate-300 cursor-pointer p-0.5 shrink-0 bg-transparent"
             />
             <input 
               type="text" 
               value={config.textColor || '#0f172a'} 
               onChange={(e) => handleChange('textColor', e.target.value)}
-              className="flex-1 px-3 py-2 border border-slate-300 rounded-md text-sm uppercase"
+              className="w-full min-w-0 px-3 py-2 border border-slate-300 rounded-md text-sm uppercase font-mono"
             />
           </div>
         </div>

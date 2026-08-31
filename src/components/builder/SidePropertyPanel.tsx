@@ -7,6 +7,7 @@ import RevisionMeter from './RevisionMeter'
 import TextPropertyPanel from './panel/TextPropertyPanel'
 import ButtonPropertyPanel from './panel/ButtonPropertyPanel'
 import BackgroundPropertyPanel from './panel/BackgroundPropertyPanel'
+import BadgePropertyPanel from './panel/BadgePropertyPanel'
 
 export interface BlockCapability {
   hasTitle?: boolean
@@ -78,6 +79,9 @@ export default function SidePropertyPanel() {
   }
 
   const renderPanel = () => {
+    if (selectedElementKey === 'badge' || selectedElementKey === 'badgeText') {
+      return <BadgePropertyPanel config={config} handleChange={handleChange} />
+    }
     if (selectedElementKey === 'title' || selectedElementKey === 'subtitle') {
       return <TextPropertyPanel elementKey={selectedElementKey} config={config} handleChange={handleChange} />
     }
@@ -97,6 +101,7 @@ export default function SidePropertyPanel() {
   }
 
   const getPanelTitle = () => {
+    if (selectedElementKey === 'badge' || selectedElementKey === 'badgeText') return '알약 뱃지 설정'
     if (selectedElementKey === 'title') return '제목 설정'
     if (selectedElementKey === 'subtitle') return '부제목 설정'
     if (selectedElementKey === 'button' || selectedElementKey === 'button-1') return '버튼 설정'

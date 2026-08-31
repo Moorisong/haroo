@@ -1,23 +1,23 @@
 export const ACTION_OPTIONS = {
-  NAVIGATE_PAGE: '📄 내 사이트 다른 화면으로 이동',
-  OPEN_URL: '🔗 외부 링크 열기 (새창)',
-  SCROLL_TO_BLOCK: '⬇️ 특정 화면 영역으로 스크롤',
-  CALL_PHONE: '📞 전화 걸기',
-  OPEN_KAKAO: '💬 카카오톡 오픈채팅/채널 연결',
-  SHOW_MODAL: '🔔 안내 모달(팝업) 띄우기',
-  SUBMIT_FORM: '📩 신청/문의 폼 제출 및 카톡 알림',
-  PG_CHECKOUT: '💳 신용카드/카카오페이 결제창 열기',
-  DOWNLOAD_FILE: '💾 파일 다운로드 (안내장 등)',
-  COPY_TO_CLIPBOARD: '📋 주소나 텍스트 복사하기',
-  CUSTOM_INTERACTION: '✨ 커스텀 효과 / 대상 인터랙션 적용',
+  NAVIGATE_PAGE: '내 사이트 다른 화면으로 이동',
+  OPEN_URL: '외부 링크 열기',
+  SCROLL_TO_BLOCK: '특정 화면 영역으로 스크롤',
+  CALL_PHONE: '전화 걸기',
+  OPEN_KAKAO: '카카오톡 오픈채팅/채널 연결',
+  SHOW_MODAL: '안내 모달 띄우기',
+  SUBMIT_FORM: '신청/문의 폼 제출 및 카톡 알림',
+  PG_CHECKOUT: '신용카드/카카오페이 결제창 열기',
+  DOWNLOAD_FILE: '파일 다운로드',
+  COPY_TO_CLIPBOARD: '주소나 텍스트 복사하기',
+  CUSTOM_INTERACTION: '커스텀 효과 / 대상 인터랙션 적용',
 };
 
 export const CUSTOM_EFFECT_OPTIONS = {
-  TOGGLE_VISIBILITY: '👁️ 숨기기 / 보여주기 토글',
-  COLOR_PRIMARY: '🎨 브랜드 색상으로 칠하기',
-  COLOR_DANGER: '🔴 붉은색(경고)으로 칠하기',
-  FADE_IN: '✨ 서서히 나타나기 (Fade In)',
-  SHAKE: '👋 흔들림 (Shake)',
+  TOGGLE_VISIBILITY: '숨기기 / 보여주기 토글',
+  COLOR_PRIMARY: '브랜드 색상으로 칠하기',
+  COLOR_DANGER: '붉은색으로 칠하기',
+  FADE_IN: '서서히 나타나기',
+  SHAKE: '흔들림',
 };
 
 export const THEME_PRESETS = [
@@ -30,15 +30,15 @@ export const THEME_PRESETS = [
 ];
 
 export const BOARD_VIEW_OPTIONS = {
-  table: '테이블형 (목록)',
-  gallery: '갤러리형 (썸네일 위주)',
-  list: '리스트형 (블로그 스타일)',
+  table: '테이블형',
+  gallery: '갤러리형',
+  list: '리스트형',
 };
 
 export const CHART_TYPE_OPTIONS = {
-  bar: '막대(Bar) 차트',
-  dot: '점(Dot) 차트',
-  line: '라인(Line) 차트',
+  bar: '막대 차트',
+  dot: '점 차트',
+  line: '라인 차트',
 };
 
 // Panel Labels Dictionary to avoid hardcoded strings

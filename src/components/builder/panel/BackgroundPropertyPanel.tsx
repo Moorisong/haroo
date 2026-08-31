@@ -5,10 +5,10 @@ import type { BlockInputConfig } from '@/types'
 import { PADDING_Y_OPTIONS } from '@/types'
 
 const PADDING_Y_LABELS: Record<string, string> = {
-  compact: '좁게 (Compact)',
-  normal: '보통 (Normal)',
-  spacious: '넓게 (Spacious)',
-  extraSpacious: '아주 넓게 (Extra Spacious)',
+  compact: '좁게',
+  normal: '보통',
+  spacious: '넓게',
+  extraSpacious: '아주 넓게',
 }
 
 interface Props {
@@ -54,7 +54,7 @@ export default function BackgroundPropertyPanel({ config, handleChange }: Props)
             }`}
             onClick={() => updateStyle({ bgType: 'color' })}
           >
-            🎨 단색 색상
+            단색 색상
           </button>
           <button
             type="button"
@@ -65,7 +65,7 @@ export default function BackgroundPropertyPanel({ config, handleChange }: Props)
             }`}
             onClick={() => updateStyle({ bgType: 'image' })}
           >
-            🖼️ 배경 사진
+            배경 사진
           </button>
         </div>
       </div>
@@ -74,18 +74,18 @@ export default function BackgroundPropertyPanel({ config, handleChange }: Props)
       {bgType === 'color' && (
         <div className="flex flex-col gap-2 animate-in fade-in duration-200">
           <label className="text-xs font-semibold text-slate-700">배경 색상</label>
-          <div className="flex gap-2 items-center">
+          <div className="flex gap-2 items-center min-w-0">
             <input
               type="color"
               value={styleData.backgroundColor || '#ffffff'}
               onChange={(e) => updateStyle({ backgroundColor: e.target.value })}
-              className="w-8 h-8 rounded border-none cursor-pointer p-0"
+              className="w-8 h-8 rounded border border-slate-200 cursor-pointer p-0 shrink-0 bg-transparent"
             />
             <input
               type="text"
               value={styleData.backgroundColor || ''}
               onChange={(e) => updateStyle({ backgroundColor: e.target.value })}
-              className="flex-1 text-sm border border-slate-300 rounded-md p-2 uppercase"
+              className="w-full min-w-0 text-sm border border-slate-300 rounded-md p-2 uppercase font-mono"
               placeholder="#ffffff"
             />
           </div>
@@ -96,14 +96,6 @@ export default function BackgroundPropertyPanel({ config, handleChange }: Props)
       {bgType === 'image' && (
         <div className="flex flex-col gap-3 animate-in fade-in duration-200">
           <div className="flex flex-col gap-2">
-            <label className="text-xs font-semibold text-slate-700">배경 이미지 업로드/경로</label>
-            <input
-              type="text"
-              value={styleData.backgroundImage || ''}
-              onChange={(e) => updateStyle({ backgroundImage: e.target.value })}
-              className="w-full text-sm border border-slate-300 rounded-md p-2"
-              placeholder="https:// 이미지 URL"
-            />
             <input
               type="file"
               ref={fileInputRef}
@@ -113,10 +105,10 @@ export default function BackgroundPropertyPanel({ config, handleChange }: Props)
             />
             <button
               type="button"
-              className="w-full py-2 bg-slate-800 text-white text-xs font-medium rounded-md hover:bg-slate-700 transition-colors flex items-center justify-center gap-1.5"
+              className="w-full py-2.5 bg-slate-900 text-white text-xs font-bold rounded-lg hover:bg-slate-800 transition-colors flex items-center justify-center gap-1.5 shadow-sm"
               onClick={() => fileInputRef.current?.click()}
             >
-              <span>📁</span> 내 컴퓨터에서 이미지 선택
+              내 컴퓨터에서 이미지 선택
             </button>
           </div>
 
@@ -135,52 +127,6 @@ export default function BackgroundPropertyPanel({ config, handleChange }: Props)
               <span className="text-xs text-slate-500 w-8 text-right">
                 {Math.round((styleData.opacity ?? 1) * 100)}%
               </span>
-            </div>
-          </div>
-
-          {/* X / Y 위치 정밀 조절 슬라이더 */}
-          <div className="flex flex-col gap-2 border-t border-slate-100 pt-2.5">
-            <div className="flex items-center justify-between">
-              <label className="text-xs font-semibold text-slate-700">사진 정밀 위치 (X / Y %)</label>
-              <button
-                type="button"
-                className="text-[11px] bg-slate-100 hover:bg-slate-200 text-slate-700 px-2 py-0.5 rounded transition-colors"
-                onClick={() => updateStyle({ imagePosition: { x: 50, y: 50 } })}
-              >
-                🎯 중앙 정렬
-              </button>
-            </div>
-
-            <div className="flex flex-col gap-1.5 bg-slate-50 p-2 rounded-md">
-              <div className="flex items-center gap-2">
-                <span className="text-[11px] font-medium text-slate-500 w-10">가로 X:</span>
-                <input
-                  type="range"
-                  min="0"
-                  max="100"
-                  value={styleData.imagePosition?.x ?? 50}
-                  onChange={(e) => updateStyle({ imagePosition: { x: parseInt(e.target.value), y: styleData.imagePosition?.y ?? 50 } })}
-                  className="flex-1 h-1.5"
-                />
-                <span className="text-[11px] font-medium text-slate-600 w-7 text-right">
-                  {styleData.imagePosition?.x ?? 50}%
-                </span>
-              </div>
-
-              <div className="flex items-center gap-2">
-                <span className="text-[11px] font-medium text-slate-500 w-10">세로 Y:</span>
-                <input
-                  type="range"
-                  min="0"
-                  max="100"
-                  value={styleData.imagePosition?.y ?? 50}
-                  onChange={(e) => updateStyle({ imagePosition: { x: styleData.imagePosition?.x ?? 50, y: parseInt(e.target.value) } })}
-                  className="flex-1 h-1.5"
-                />
-                <span className="text-[11px] font-medium text-slate-600 w-7 text-right">
-                  {styleData.imagePosition?.y ?? 50}%
-                </span>
-              </div>
             </div>
           </div>
         </div>
