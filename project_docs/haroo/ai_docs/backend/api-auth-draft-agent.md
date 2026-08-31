@@ -2,10 +2,12 @@
 
 ## 📝 1. 연동 기획 명세 (`haroo-backend-api.md`, `haroo-database.md`)
 - `POST /api/auth/callback/[provider]`
-- `POST /api/drafts/save` (500ms debounce 연동, 10개 한도)
+- `POST /api/drafts/save` (500ms debounce 연동, 10개 한도, 동일 이름 중복시 (n) 순차 생성)
 - `GET /api/drafts/list`
+- `DELETE /api/drafts/[id]` (특정 드래프트 항목 삭제)
 - `GET /api/domains/check?name=`
 - `POST /api/domains/custom-connect` (CNAME 비동기 조회 & SSL 발급)
+
 
 ## 🤖 2. AI 개발 지침 및 설계 구조
 ### 🎯 목적

@@ -58,5 +58,10 @@ function calculateRefundAmount(totalPaidAmount, totalMonths, elapsedDays) {
   * 유저가 추가한 모든 하위 화면 경로(예: `/about`, `/contact`)가 Caddy에서 해당 컨테이너 포트로 전량 투명 릴레이되도록 `/*` 와일드카드 매칭 적용.
   * 컨테이너 내부(Next.js Standalone / Nginx)에 `try_files $uri $uri/ /index.html` (또는 Next.js `[...slug]` Catch-All) 라우팅을 보장하여 유저가 하위 페이지 URL로 직접 진입하거나 새로고침하더라도 404 에러 없이 정적/동적 라우트가 100% 렌더링되도록 보장.
 
-### 무전단 롤링 업데이트 (Rolling Update)
+### 무전단 롤링 업데이트 (Rolling Update) & 스마트 배포 스크립트 (`scripts/`)
 * 어드민 [전체 컨테이너 Rolling Update 트리거] 버튼 ➔ SSH 접속 후 순차적 `docker pull` ➔ `docker stop` ➔ `docker run` ➔ Healthcheck 후 다음 교체 진행 (무중단 롤링).
+* **스마트 자동 원격/로컬 배포 스크립트 (`scripts/deploy-test.sh`, `scripts/deploy-prod.sh`)**:
+  * **환경 감지**: 홈서버(`ubuntu-home-ksh`) 내부 direct 빌드/PM2 실행 및 로컬(맥북) 실행 시 내부망(`192.168.0.6:22`)/외부망(`125.190.25.48:8193`) 접속 자동 감지 SSH/rsync 동기화 배포 지원.
+  * **테스트 배포 (`deploy-test.sh`)**: `test-web.haroo.site` (Port 3010, PM2 app: `haroo-test`).
+  * **프로덕션 배포 (`deploy-prod.sh`)**: `haroo.site` (Port 3000, PM2 app: `haroo-prod`).
+
