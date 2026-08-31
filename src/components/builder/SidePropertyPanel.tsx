@@ -21,15 +21,13 @@ export interface BlockCapability {
 }
 
 const BLOCK_CAPABILITIES: Record<string, BlockCapability> = {
-  blk_hero_01: { hasTitle: true, hasSubtitle: true, hasButton: true, hasButtonAction: true, hasImage: true, hasVideo: true, allowedActions: ['NAVIGATE_PAGE', 'OPEN_URL', 'CALL_PHONE', 'OPEN_KAKAO', 'SCROLL_TO_BLOCK', 'SHOW_MODAL', 'CUSTOM_INTERACTION'] },
-  // ... 생략 (기존 BLOCK_CAPABILITIES 유지하되 간소화하거나 필요시 복구 가능)
-  // 버튼 액션을 위해 블록의 cap을 넘겨야 하므로 전체 목록은 유지하는 것이 좋지만, 
-  // 여기서는 button 패널에 공통 액션을 허용하도록 하거나 전체를 복구할 수 있음.
+  blk_hero_01: { hasTitle: true, hasSubtitle: true, hasButton: true, hasButtonAction: true, hasImage: true, hasVideo: true, allowedActions: ['NAVIGATE_PAGE', 'OPEN_URL', 'SCROLL_TO_BLOCK', 'CALL_PHONE', 'OPEN_KAKAO', 'COPY_TO_CLIPBOARD', 'DOWNLOAD_FILE', 'SHOW_MODAL', 'SHARE_PAGE'] },
+  // 필요 시 다른 블록들의 능력치도 추가
 }
 
-// 모든 액션 허용 (단순화)
+// 기본적으로 모든 버튼은 9가지 최적화 액션을 모두 지원함
 const DEFAULT_CAP: BlockCapability = {
-  allowedActions: ['NAVIGATE_PAGE', 'OPEN_URL', 'CALL_PHONE', 'OPEN_KAKAO', 'SUBMIT_FORM', 'PG_CHECKOUT', 'SHOW_MODAL', 'SCROLL_TO_BLOCK', 'DOWNLOAD_FILE', 'COPY_TO_CLIPBOARD', 'CUSTOM_INTERACTION']
+  allowedActions: ['NAVIGATE_PAGE', 'OPEN_URL', 'SCROLL_TO_BLOCK', 'CALL_PHONE', 'OPEN_KAKAO', 'COPY_TO_CLIPBOARD', 'DOWNLOAD_FILE', 'SHOW_MODAL', 'SHARE_PAGE']
 }
 
 export default function SidePropertyPanel() {

@@ -1,15 +1,13 @@
 export const ACTION_OPTIONS = {
   NAVIGATE_PAGE: '내 사이트 다른 화면으로 이동',
   OPEN_URL: '외부 링크 열기',
-  SCROLL_TO_BLOCK: '특정 화면 영역으로 스크롤',
+  SCROLL_TO_BLOCK: '특정 화면 영역으로 스크롤 이동',
   CALL_PHONE: '전화 걸기',
-  OPEN_KAKAO: '카카오톡 오픈채팅/채널 연결',
-  SHOW_MODAL: '안내 모달 띄우기',
-  SUBMIT_FORM: '신청/문의 폼 제출 및 카톡 알림',
-  PG_CHECKOUT: '신용카드/카카오페이 결제창 열기',
-  DOWNLOAD_FILE: '파일 다운로드',
-  COPY_TO_CLIPBOARD: '주소나 텍스트 복사하기',
-  CUSTOM_INTERACTION: '커스텀 효과 / 대상 인터랙션 적용',
+  OPEN_KAKAO: '카카오톡 상담 / 오픈채팅 연결',
+  COPY_TO_CLIPBOARD: '주소 / 계좌번호 복사하기',
+  DOWNLOAD_FILE: '파일 / 소개서 다운로드',
+  SHOW_MODAL: '안내 팝업(모달) 띄우기',
+  SHARE_PAGE: '이 페이지 공유하기',
 };
 
 export const CUSTOM_EFFECT_OPTIONS = {
