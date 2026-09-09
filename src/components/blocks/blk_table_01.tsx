@@ -3,12 +3,16 @@ import AtomText01 from '../atoms/atom_text_01'
 import AtomCard01 from '../atoms/atom_card_01'
 import { getBlockLayout } from '@/lib/blockLayout'
 import type { BlockInputConfig, ContainerWidth, PaddingYOption } from '@/types'
+import BlockBackground from "@/components/common/BlockBackground"
 
 interface Props {
   config: BlockInputConfig
+
+  isPreview?: boolean
+  onAction?: (config: any, formData?: any) => void
 }
 
-export default function BlkTable01({ config }: Props) {
+export default function BlkTable01({ config, isPreview  }: Props) {
   const { 
     title = '데이터 보드', 
     subtitle = '상세 내역을 확인해보세요', 
@@ -30,7 +34,7 @@ export default function BlkTable01({ config }: Props) {
   const layout = getBlockLayout(containerWidth as ContainerWidth, paddingY as PaddingYOption)
 
   return (
-    <AtomCard01 noPadding className="w-full border-none rounded-none" style={{ backgroundColor, color: textColor }}>
+    <BlockBackground config={config} isPreview={isPreview}>
       <div className={`${layout.wrapperClass} ${layout.paddingXClass} ${layout.paddingClass}`}>
         <div className={`${layout.innerClass} flex flex-col gap-6`}>
           
@@ -72,6 +76,6 @@ export default function BlkTable01({ config }: Props) {
 
         </div>
       </div>
-    </AtomCard01>
+    </BlockBackground>
   )
 }

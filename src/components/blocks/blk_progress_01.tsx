@@ -5,10 +5,12 @@ import AtomText01 from '../atoms/atom_text_01'
 import AtomBadge01 from '../atoms/atom_badge_01'
 import { getBlockLayout } from '@/lib/blockLayout'
 import type { BlockInputConfig, ContainerWidth, PaddingYOption } from '@/types'
+import BlockBackground from "@/components/common/BlockBackground"
 
-interface Props { config: BlockInputConfig; isPreview?: boolean; onAction?: (config: BlockInputConfig, formData?: Record<string, string>) => void }
+interface Props { config: BlockInputConfig; isPreview?: boolean; onAction?: (config: BlockInputConfig, formData?: Record<string, string>) => void 
+}
 
-export default function BlkProgress01({ config }: Props) {
+export default function BlkProgress01({ config, isPreview  }: Props) {
   const {
     title = '목표 달성 현황',
     subtitle = '현재 목표까지 얼마나 남았는지 확인해보세요.',
@@ -28,7 +30,7 @@ export default function BlkProgress01({ config }: Props) {
   const percentage = Math.min(100, Math.max(0, (progressValue / progressTarget) * 100))
 
   return (
-    <AtomCard01 noPadding className="w-full border-none rounded-none" style={{ backgroundColor, color: textColor }}>
+    <BlockBackground config={config} isPreview={isPreview}>
       <div className={`${layout.wrapperClass} ${layout.paddingXClass} ${layout.paddingClass}`}>
         <div className={`${layout.innerClass}`}>
           {(title || subtitle) && (
@@ -61,6 +63,6 @@ export default function BlkProgress01({ config }: Props) {
           </div>
         </div>
       </div>
-    </AtomCard01>
+    </BlockBackground>
   )
 }

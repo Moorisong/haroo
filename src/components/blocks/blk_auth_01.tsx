@@ -7,11 +7,13 @@ import AtomBadge01 from '../atoms/atom_badge_01'
 import AtomDivider01 from '../atoms/atom_divider_01'
 import { getBlockLayout } from '@/lib/blockLayout'
 import type { BlockInputConfig, ContainerWidth, PaddingYOption } from '@/types'
+import BlockBackground from "@/components/common/BlockBackground"
 
 interface Props {
   config: BlockInputConfig
   isPreview?: boolean
   onAction?: (config: BlockInputConfig, formData?: Record<string, string>) => void
+
 }
 
 const LOGIN_PROVIDERS = [
@@ -19,7 +21,7 @@ const LOGIN_PROVIDERS = [
   { key: 'google', label: 'Google로 시작하기', emoji: '🔵', bg: '#4285F4', color: '#ffffff' },
 ]
 
-export default function BlkAuth01({ config, isPreview, onAction }: Props) {
+export default function BlkAuth01({ config, isPreview, onAction  }: Props) {
   const {
     title = '로그인하고 혜택을 받으세요',
     subtitle = '간편하게 로그인하여 예약, 스탬프, 쿠폰을 관리하세요.',
@@ -32,7 +34,7 @@ export default function BlkAuth01({ config, isPreview, onAction }: Props) {
   const layout = getBlockLayout(containerWidth as ContainerWidth, paddingY as PaddingYOption)
 
   return (
-    <AtomCard01 noPadding className="w-full border-none rounded-none" style={{ backgroundColor, color: textColor }}>
+    <BlockBackground config={config} isPreview={isPreview}>
       <div className={`${layout.wrapperClass} ${layout.paddingXClass} ${layout.paddingClass}`}>
         <div className={`${layout.innerClass} text-center`}>
           <AtomBadge01 variant="default" className="mb-4 mx-auto">🔑 소셜 로그인</AtomBadge01>
@@ -59,6 +61,6 @@ export default function BlkAuth01({ config, isPreview, onAction }: Props) {
           </AtomText01>
         </div>
       </div>
-    </AtomCard01>
+    </BlockBackground>
   )
 }

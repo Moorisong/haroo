@@ -7,6 +7,7 @@ import AtomProgress01 from '../atoms/atom_progress_01'
 import AtomDivider01 from '../atoms/atom_divider_01'
 import { getBlockLayout } from '@/lib/blockLayout'
 import type { BlockInputConfig, ContainerWidth, PaddingYOption } from '@/types'
+import BlockBackground from "@/components/common/BlockBackground"
 
 interface CurriculumUnit {
   title: string
@@ -22,9 +23,12 @@ const DEFAULT_UNITS: CurriculumUnit[] = [
   { title: '최종 평가 & 수료증', duration: '30분', completed: false },
 ]
 
-interface Props { config: BlockInputConfig }
+interface Props { config: BlockInputConfig 
+  isPreview?: boolean
+  onAction?: (config: any, formData?: any) => void
+}
 
-export default function BlkCurriculum01({ config }: Props) {
+export default function BlkCurriculum01({ config, isPreview  }: Props) {
   const {
     title = '단계별 프로세스 리스트',
     subtitle = '체계적인 단계 구성에 따라 순서대로 확인해 보세요.',
@@ -41,7 +45,7 @@ export default function BlkCurriculum01({ config }: Props) {
   const layout = getBlockLayout(containerWidth as ContainerWidth, paddingY as PaddingYOption)
 
   return (
-    <AtomCard01 noPadding className="w-full border-none rounded-none" style={{ backgroundColor, color: textColor }}>
+    <BlockBackground config={config} isPreview={isPreview}>
       <div className={`${layout.wrapperClass} ${layout.paddingXClass} ${layout.paddingClass}`}>
         <div className={`${layout.innerClass}`}>
           <div className="text-center mb-8">
@@ -70,6 +74,6 @@ export default function BlkCurriculum01({ config }: Props) {
           </AtomCard01>
         </div>
       </div>
-    </AtomCard01>
+    </BlockBackground>
   )
 }

@@ -11,16 +11,18 @@ import AtomBadge01 from '@/components/atoms/atom_badge_01'
 import AtomIcon01 from '@/components/atoms/atom_icon_01'
 import type { ContainerWidth, PaddingYOption } from '@/types'
 import { Sparkles, RotateCw, Plus, Trash2 } from 'lucide-react'
+import BlockBackground from "@/components/common/BlockBackground"
 
 interface Props {
   config: BlockInputConfig
   isPreview?: boolean
   onAction?: (config: BlockInputConfig, formData?: Record<string, string>) => void
+
 }
 
 const DEFAULT_ITEMS = ['치킨', '피자', '파스타', '족발', '삼겹살', '초밥']
 
-export default function BlkRoulette01({ config, onAction }: Props) {
+export default function BlkRoulette01({ config, isPreview, onAction  }: Props) {
   const layout = getBlockLayout(config?.containerWidth as ContainerWidth, config?.paddingY as PaddingYOption)
   const title = config?.title || '오늘의 선택 룰렛'
   const subtitle = config?.subtitle || '버튼을 눌러 룰렛을 돌려보세요!'
@@ -72,7 +74,8 @@ export default function BlkRoulette01({ config, onAction }: Props) {
   const colors = ['#3B82F6', '#EF4444', '#10B981', '#F59E0B', '#8B5CF6', '#EC4899', '#06B6D4', '#84CC16']
 
   return (
-    <div className={`w-full ${layout.wrapperClass} ${layout.paddingClass}`}>
+    <BlockBackground config={config} isPreview={isPreview}>
+      <div className={`w-full ${layout.wrapperClass} ${layout.paddingClass}`}>
       <div className={layout.innerClass}>
       <AtomCard01 className="p-6 md:p-8 flex flex-col items-center bg-white shadow-xl rounded-3xl border border-slate-100">
         {/* Title Header */}
@@ -193,5 +196,6 @@ export default function BlkRoulette01({ config, onAction }: Props) {
       </AtomCard01>
       </div>
     </div>
+    </BlockBackground>
   )
 }

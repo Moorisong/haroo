@@ -6,14 +6,16 @@ import AtomCard01 from '../atoms/atom_card_01'
 import { getBlockLayout } from '@/lib/blockLayout'
 import type { BlockInputConfig, ContainerWidth, PaddingYOption } from '@/types'
 import { Trophy, Medal, User } from 'lucide-react'
+import BlockBackground from "@/components/common/BlockBackground"
 
 interface Props {
   config: BlockInputConfig
   isPreview?: boolean
   onAction?: (config: BlockInputConfig, formData?: Record<string, string>) => void
+
 }
 
-export default function BlkRanking01({ config, isPreview, onAction }: Props) {
+export default function BlkRanking01({ config, isPreview, onAction  }: Props) {
   const { 
     title = '주간 명예의 전당', 
     subtitle = '가장 많은 인기를 얻은 TOP 5', 
@@ -33,7 +35,7 @@ export default function BlkRanking01({ config, isPreview, onAction }: Props) {
   const layout = getBlockLayout(containerWidth as ContainerWidth, paddingY as PaddingYOption)
 
   return (
-    <AtomCard01 noPadding className="w-full border-none rounded-none" style={{ backgroundColor, color: textColor }}>
+    <BlockBackground config={config} isPreview={isPreview}>
       <div className={`${layout.wrapperClass} ${layout.paddingXClass} ${layout.paddingClass}`}>
         <div className={`${layout.innerClass} max-w-2xl mx-auto flex flex-col gap-6`}>
           
@@ -100,6 +102,6 @@ export default function BlkRanking01({ config, isPreview, onAction }: Props) {
 
         </div>
       </div>
-    </AtomCard01>
+    </BlockBackground>
   )
 }

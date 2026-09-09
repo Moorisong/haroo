@@ -7,14 +7,16 @@ import AtomBadge01 from '../atoms/atom_badge_01'
 import AtomDivider01 from '../atoms/atom_divider_01'
 import { getBlockLayout } from '@/lib/blockLayout'
 import type { BlockInputConfig, ContainerWidth, PaddingYOption } from '@/types'
+import BlockBackground from "@/components/common/BlockBackground"
 
 interface Props {
   config: BlockInputConfig
   isPreview?: boolean
   onAction?: (config: BlockInputConfig, formData?: Record<string, string>) => void
+
 }
 
-export default function BlkTalk01({ config, isPreview, onAction }: Props) {
+export default function BlkTalk01({ config, isPreview, onAction  }: Props) {
   const {
     title = '자동 메시지 및 알림 안내',
     subtitle = '중요 안내, 확인 연락, 주요 소식을 수신자에게 자동으로 전송해 드립니다.',
@@ -34,7 +36,7 @@ export default function BlkTalk01({ config, isPreview, onAction }: Props) {
   const layout = getBlockLayout(containerWidth as ContainerWidth, paddingY as PaddingYOption)
 
   return (
-    <AtomCard01 noPadding className="w-full border-none rounded-none" style={{ backgroundColor, color: textColor }}>
+    <BlockBackground config={config} isPreview={isPreview}>
       <div className={`${layout.wrapperClass} ${layout.paddingXClass} ${layout.paddingClass}`}>
         <div className={`${layout.innerClass}`}>
           <AtomBadge01 className="mb-4 bg-black/10 text-black border-black/20">자동 메시지 알림</AtomBadge01>
@@ -61,6 +63,6 @@ export default function BlkTalk01({ config, isPreview, onAction }: Props) {
           </AtomBtn01>
         </div>
       </div>
-    </AtomCard01>
+    </BlockBackground>
   )
 }

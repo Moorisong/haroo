@@ -7,16 +7,18 @@ import AtomBadge01 from '../atoms/atom_badge_01'
 import AtomDivider01 from '../atoms/atom_divider_01'
 import { getBlockLayout } from '@/lib/blockLayout'
 import type { BlockInputConfig, ContainerWidth, PaddingYOption } from '@/types'
+import BlockBackground from "@/components/common/BlockBackground"
 
 interface Props {
   config: BlockInputConfig
   isPreview?: boolean
   onAction?: (config: BlockInputConfig, formData?: Record<string, string>) => void
+
 }
 
 const PAYMENT_METHODS = ['💳 신용카드', '📱 카카오페이', '🍎 애플페이', '🏦 실시간 계좌이체']
 
-export default function BlkPay01({ config, isPreview, onAction }: Props) {
+export default function BlkPay01({ config, isPreview, onAction  }: Props) {
   const {
     title = '안전하게 결제하세요',
     subtitle = '다양한 결제 수단을 지원합니다.',
@@ -32,7 +34,7 @@ export default function BlkPay01({ config, isPreview, onAction }: Props) {
   const layout = getBlockLayout(containerWidth as ContainerWidth, paddingY as PaddingYOption)
 
   return (
-    <AtomCard01 noPadding className="w-full border-none rounded-none" style={{ backgroundColor, color: textColor }}>
+    <BlockBackground config={config} isPreview={isPreview}>
       <div className={`${layout.wrapperClass} ${layout.paddingXClass} ${layout.paddingClass}`}>
         <div className={`${layout.innerClass}`}>
           <div className="text-center mb-8">
@@ -65,7 +67,7 @@ export default function BlkPay01({ config, isPreview, onAction }: Props) {
           <AtomDivider01 className="mb-6" />
           <AtomBtn01
             className="w-full py-4 text-base font-bold"
-            onClick={() => onAction?.({ ...config, actionType: config.actionType || 'PG_CHECKOUT' })}
+            onClick={() => onAction?.({ ...config, actionType: (config.actionType as any) || 'PG_CHECKOUT' } as any)}
           >
             {buttonText} · {price}원
           </AtomBtn01>
@@ -74,6 +76,6 @@ export default function BlkPay01({ config, isPreview, onAction }: Props) {
           </AtomText01>
         </div>
       </div>
-    </AtomCard01>
+    </BlockBackground>
   )
 }

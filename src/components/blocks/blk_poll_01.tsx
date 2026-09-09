@@ -5,14 +5,16 @@ import AtomProgress01 from '../atoms/atom_progress_01'
 import { getBlockLayout } from '@/lib/blockLayout'
 import type { BlockInputConfig, ContainerWidth, PaddingYOption } from '@/types'
 import { CheckCircle2 } from 'lucide-react'
+import BlockBackground from "@/components/common/BlockBackground"
 
 interface Props {
   config: BlockInputConfig
   isPreview?: boolean
   onAction?: (config: BlockInputConfig, formData?: Record<string, string>) => void
+
 }
 
-export default function BlkPoll01({ config, isPreview, onAction }: Props) {
+export default function BlkPoll01({ config, isPreview, onAction  }: Props) {
   const { 
     title = '오늘 점심 뭐 먹을까?', 
     subtitle = '가장 끌리는 메뉴를 선택해주세요', 
@@ -37,7 +39,7 @@ export default function BlkPoll01({ config, isPreview, onAction }: Props) {
   }
 
   return (
-    <AtomCard01 noPadding className="w-full border-none rounded-none" style={{ backgroundColor, color: textColor }}>
+    <BlockBackground config={config} isPreview={isPreview}>
       <div className={`${layout.wrapperClass} ${layout.paddingXClass} ${layout.paddingClass}`}>
         <div className={`${layout.innerClass} max-w-2xl mx-auto flex flex-col gap-6`}>
           
@@ -76,6 +78,6 @@ export default function BlkPoll01({ config, isPreview, onAction }: Props) {
 
         </div>
       </div>
-    </AtomCard01>
+    </BlockBackground>
   )
 }

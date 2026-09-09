@@ -7,6 +7,7 @@ import AtomProgress01 from '../atoms/atom_progress_01'
 import AtomDivider01 from '../atoms/atom_divider_01'
 import { getBlockLayout } from '@/lib/blockLayout'
 import type { BlockInputConfig, ContainerWidth, PaddingYOption } from '@/types'
+import BlockBackground from "@/components/common/BlockBackground"
 
 interface StatItem { label: string; value: string; change: string; positive: boolean }
 
@@ -17,9 +18,12 @@ const DEFAULT_STATS: StatItem[] = [
   { label: '전환율', value: '15.4%', change: '+3.1%', positive: true },
 ]
 
-interface Props { config: BlockInputConfig }
+interface Props { config: BlockInputConfig 
+  isPreview?: boolean
+  onAction?: (config: any, formData?: any) => void
+}
 
-export default function BlkStats01({ config }: Props) {
+export default function BlkStats01({ config, isPreview  }: Props) {
   const {
     title = '방문자 통계',
     subtitle = '실시간으로 방문자 현황을 확인하세요.',
@@ -32,7 +36,7 @@ export default function BlkStats01({ config }: Props) {
   const layout = getBlockLayout(containerWidth as ContainerWidth, paddingY as PaddingYOption)
 
   return (
-    <AtomCard01 noPadding className="w-full border-none rounded-none" style={{ backgroundColor, color: textColor }}>
+    <BlockBackground config={config} isPreview={isPreview}>
       <div className={`${layout.wrapperClass} ${layout.paddingXClass} ${layout.paddingClass}`}>
         <div className={`${layout.innerClass}`}>
           <div className="flex items-center justify-between mb-8">
@@ -74,6 +78,6 @@ export default function BlkStats01({ config }: Props) {
           </AtomCard01>
         </div>
       </div>
-    </AtomCard01>
+    </BlockBackground>
   )
 }

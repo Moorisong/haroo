@@ -10,18 +10,20 @@ import AtomLabel01 from '../atoms/atom_label_01'
 import AtomDivider01 from '../atoms/atom_divider_01'
 import { getBlockLayout } from '@/lib/blockLayout'
 import type { BlockInputConfig, ContainerWidth, PaddingYOption } from '@/types'
+import BlockBackground from "@/components/common/BlockBackground"
 
 interface Props {
   config: BlockInputConfig
   isPreview?: boolean
   onAction?: (config: BlockInputConfig, formData?: Record<string, string>) => void
+
 }
 
 function generateCode() {
   return 'HAROO-' + Math.random().toString(36).toUpperCase().slice(2, 8)
 }
 
-export default function BlkCoupon01({ config, isPreview, onAction }: Props) {
+export default function BlkCoupon01({ config, isPreview, onAction  }: Props) {
   const [issued, setIssued] = useState(false)
   const [code, setCode] = useState('')
 
@@ -46,7 +48,7 @@ export default function BlkCoupon01({ config, isPreview, onAction }: Props) {
   const layout = getBlockLayout(containerWidth as ContainerWidth, paddingY as PaddingYOption)
 
   return (
-    <AtomCard01 noPadding className="w-full border-none rounded-none" style={{ backgroundColor, color: textColor }}>
+    <BlockBackground config={config} isPreview={isPreview}>
       <div className={`${layout.wrapperClass} ${layout.paddingXClass} ${layout.paddingClass}`}>
         <div className={`${layout.innerClass} text-center`}>
           <AtomBadge01 variant="success" className="mb-4 mx-auto">🎫 쿠폰</AtomBadge01>
@@ -79,6 +81,6 @@ export default function BlkCoupon01({ config, isPreview, onAction }: Props) {
           </AtomBtn01>
         </div>
       </div>
-    </AtomCard01>
+    </BlockBackground>
   )
 }

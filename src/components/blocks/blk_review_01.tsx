@@ -6,14 +6,16 @@ import AtomCard01 from '../atoms/atom_card_01'
 import { getBlockLayout } from '@/lib/blockLayout'
 import type { BlockInputConfig, ContainerWidth, PaddingYOption } from '@/types'
 import { Star, User } from 'lucide-react'
+import BlockBackground from "@/components/common/BlockBackground"
 
 interface Props {
   config: BlockInputConfig
   isPreview?: boolean
   onAction?: (config: BlockInputConfig, formData?: Record<string, string>) => void
+
 }
 
-export default function BlkReview01({ config, isPreview, onAction }: Props) {
+export default function BlkReview01({ config, isPreview, onAction  }: Props) {
   const { 
     title = '수강생 생생 후기', 
     subtitle = '먼저 경험하신 분들의 이야기입니다', 
@@ -31,7 +33,7 @@ export default function BlkReview01({ config, isPreview, onAction }: Props) {
   const layout = getBlockLayout(containerWidth as ContainerWidth, paddingY as PaddingYOption)
 
   return (
-    <AtomCard01 noPadding className="w-full border-none rounded-none" style={{ backgroundColor, color: textColor }}>
+    <BlockBackground config={config} isPreview={isPreview}>
       <div className={`${layout.wrapperClass} ${layout.paddingXClass} ${layout.paddingClass}`}>
         <div className={`${layout.innerClass} max-w-4xl mx-auto flex flex-col gap-8`}>
           
@@ -83,6 +85,6 @@ export default function BlkReview01({ config, isPreview, onAction }: Props) {
 
         </div>
       </div>
-    </AtomCard01>
+    </BlockBackground>
   )
 }

@@ -7,14 +7,16 @@ import { useElementSelector } from '@/contexts/BlockContext'
 import type { BlockInputConfig, ContainerWidth, PaddingYOption } from '@/types'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import BlockBackground from "@/components/common/BlockBackground"
 
 interface Props {
   config: BlockInputConfig
   isPreview?: boolean
   onAction?: (config: BlockInputConfig, formData?: Record<string, string>) => void
+
 }
 
-export default function BlkCalendar01({ config, isPreview, onAction }: Props) {
+export default function BlkCalendar01({ config, isPreview, onAction  }: Props) {
   const { 
     title = '우리의 일정', 
     subtitle = '중요한 이벤트를 놓치지 마세요', 
@@ -79,19 +81,7 @@ export default function BlkCalendar01({ config, isPreview, onAction }: Props) {
   const daysOfWeek = ['일', '월', '화', '수', '목', '금', '토']
 
   return (
-    <AtomCard01 
-      noPadding 
-      className="w-full border-none rounded-none" 
-      style={{ 
-        backgroundColor: backgroundStyle?.backgroundColor || backgroundColor, 
-        color: textColor,
-        opacity: backgroundStyle?.opacity,
-        backgroundImage: backgroundStyle?.backgroundImage ? `url(${backgroundStyle.backgroundImage})` : undefined,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center'
-      }}
-      onClick={(e) => selectElement('background', e)}
-    >
+    <BlockBackground config={config} isPreview={isPreview}>
       <div className={`${layout.wrapperClass} ${layout.paddingXClass} ${layout.paddingClass}`}>
         <div className={`${layout.innerClass} max-w-4xl mx-auto flex flex-col gap-8`}>
           
@@ -226,6 +216,6 @@ export default function BlkCalendar01({ config, isPreview, onAction }: Props) {
 
         </div>
       </div>
-    </AtomCard01>
+    </BlockBackground>
   )
 }

@@ -5,13 +5,16 @@ import AtomBtn01 from '../atoms/atom_btn_01'
 import { getBlockLayout } from '@/lib/blockLayout'
 import type { BlockInputConfig, ContainerWidth, PaddingYOption } from '@/types'
 import { Download, FileIcon } from 'lucide-react'
+import BlockBackground from "@/components/common/BlockBackground"
 
 interface Props {
   config: BlockInputConfig
   onAction?: (config: BlockInputConfig, formData?: Record<string, string>) => void
+
+  isPreview?: boolean
 }
 
-export default function BlkFileDownload01({ config, onAction }: Props) {
+export default function BlkFileDownload01({ config, isPreview, onAction  }: Props) {
   const { 
     title = '자료실 / 다운로드', 
     subtitle = '필요한 문서를 다운로드 받으세요', 
@@ -28,7 +31,7 @@ export default function BlkFileDownload01({ config, onAction }: Props) {
   const layout = getBlockLayout(containerWidth as ContainerWidth, paddingY as PaddingYOption)
 
   return (
-    <AtomCard01 noPadding className="w-full border-none rounded-none" style={{ backgroundColor, color: textColor }}>
+    <BlockBackground config={config} isPreview={isPreview}>
       <div className={`${layout.wrapperClass} ${layout.paddingXClass} ${layout.paddingClass}`}>
         <div className={`${layout.innerClass} max-w-3xl mx-auto flex flex-col gap-6`}>
           
@@ -75,6 +78,6 @@ export default function BlkFileDownload01({ config, onAction }: Props) {
 
         </div>
       </div>
-    </AtomCard01>
+    </BlockBackground>
   )
 }

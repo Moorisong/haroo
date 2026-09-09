@@ -29,10 +29,10 @@ interface Props {
 export default function BlkHero01({ config, isPreview, onAction }: Props) {
   const safeConfig = config ?? {}
   const {
-    title = '세상에서 가장 쉬운 매장 웹사이트',
-    subtitle = '5분 만에 만들고 오늘부터 고객을 받아보세요.',
+    title = '제목을 입력하세요',
+    subtitle = '부제목 또는 내용을 입력하세요.',
     imageUrl = 'https://images.unsplash.com/photo-1556740738-b6a63e27c4df?q=80&w=1200&auto=format&fit=crop',
-    buttonText = '지금 바로 예약하기',
+    buttonText = '버튼 텍스트',
     paddingY = 'normal',
     titleStyle,
     subtitleStyle,

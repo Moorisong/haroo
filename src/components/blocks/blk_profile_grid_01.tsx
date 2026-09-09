@@ -7,12 +7,16 @@ import AtomCard01 from '@/components/atoms/atom_card_01'
 import AtomImage01 from '@/components/atoms/atom_image_01'
 import { getBlockLayout, getResponsiveGridCols } from '@/lib/blockLayout'
 import type { ContainerWidth, PaddingYOption } from '@/types'
+import BlockBackground from "@/components/common/BlockBackground"
 
 interface Props {
   config: BlockInputConfig
+
+  isPreview?: boolean
+  onAction?: (config: any, formData?: any) => void
 }
 
-export default function BlkProfileGrid01({ config }: Props) {
+export default function BlkProfileGrid01({ config, isPreview  }: Props) {
   const {
     title = '전문가 소개',
     subtitle = '함께하는 구성원을 소개합니다.',
@@ -31,7 +35,8 @@ export default function BlkProfileGrid01({ config }: Props) {
   const gridCols = getResponsiveGridCols(containerWidth as ContainerWidth)
 
   return (
-    <div style={{ backgroundColor, color: textColor }} className={`${layout.wrapperClass} ${layout.paddingXClass} ${layout.paddingClass}`}>
+    <BlockBackground config={config} isPreview={isPreview}>
+      <div className={`${layout.wrapperClass} ${layout.paddingXClass} ${layout.paddingClass}`}>
       <div className={layout.innerClass}>
         {/* 헤더 영역 */}
         <div className="text-center mb-16">
@@ -56,5 +61,6 @@ export default function BlkProfileGrid01({ config }: Props) {
         </div>
       </div>
     </div>
+    </BlockBackground>
   )
 }

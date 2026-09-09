@@ -7,6 +7,7 @@ import AtomBadge01 from '../atoms/atom_badge_01'
 import AtomDivider01 from '../atoms/atom_divider_01'
 import { getBlockLayout } from '@/lib/blockLayout'
 import type { BlockInputConfig, ContainerWidth, PaddingYOption } from '@/types'
+import BlockBackground from "@/components/common/BlockBackground"
 
 interface PricingPlan {
   name: string
@@ -21,6 +22,7 @@ interface Props {
   config: BlockInputConfig
   isPreview?: boolean
   onAction?: (config: BlockInputConfig, formData?: Record<string, string>) => void
+
 }
 
 const DEFAULT_PLANS: PricingPlan[] = [
@@ -50,7 +52,7 @@ const DEFAULT_PLANS: PricingPlan[] = [
   },
 ]
 
-export default function BlkPricing01({ config, isPreview, onAction }: Props) {
+export default function BlkPricing01({ config, isPreview, onAction  }: Props) {
   const {
     title = '요금제를 선택하세요',
     subtitle = '당신의 비즈니스에 꼭 맞는 플랜을 골라보세요.',
@@ -63,7 +65,7 @@ export default function BlkPricing01({ config, isPreview, onAction }: Props) {
   const layout = getBlockLayout(containerWidth as ContainerWidth, paddingY as PaddingYOption)
 
   return (
-    <AtomCard01 noPadding className="w-full border-none rounded-none" style={{ backgroundColor, color: textColor }}>
+    <BlockBackground config={config} isPreview={isPreview}>
       <div className={`${layout.wrapperClass} ${layout.paddingXClass} ${layout.paddingClass}`}>
         <div className={`${layout.innerClass}`}>
           <div className="text-center mb-12">
@@ -108,6 +110,6 @@ export default function BlkPricing01({ config, isPreview, onAction }: Props) {
           </div>
         </div>
       </div>
-    </AtomCard01>
+    </BlockBackground>
   )
 }

@@ -7,6 +7,7 @@ import AtomImage01 from '../atoms/atom_image_01'
 import AtomBadge01 from '../atoms/atom_badge_01'
 import { getBlockLayout } from '@/lib/blockLayout'
 import type { BlockInputConfig, ContainerWidth, PaddingYOption } from '@/types'
+import BlockBackground from "@/components/common/BlockBackground"
 
 const DEFAULT_IMAGES = [
   'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400&h=400&fit=crop',
@@ -17,9 +18,12 @@ const DEFAULT_IMAGES = [
   'https://images.unsplash.com/photo-1556909172-54557c7e4fb7?w=400&h=400&fit=crop',
 ]
 
-interface Props { config: BlockInputConfig }
+interface Props { config: BlockInputConfig 
+  isPreview?: boolean
+  onAction?: (config: any, formData?: any) => void
+}
 
-export default function BlkAlbum01({ config }: Props) {
+export default function BlkAlbum01({ config, isPreview  }: Props) {
   const [selected, setSelected] = useState<string | null>(null)
   const {
     title = '갤러리 앨범',
@@ -34,7 +38,7 @@ export default function BlkAlbum01({ config }: Props) {
   const layout = getBlockLayout(containerWidth as ContainerWidth, paddingY as PaddingYOption)
 
   return (
-    <AtomCard01 noPadding className="w-full border-none rounded-none" style={{ backgroundColor, color: textColor }}>
+    <BlockBackground config={config} isPreview={isPreview}>
       <div className={`${layout.wrapperClass} ${layout.paddingXClass} ${layout.paddingClass}`}>
         <div className={`${layout.innerClass}`}>
           <div className="text-center mb-8">
@@ -76,6 +80,6 @@ export default function BlkAlbum01({ config }: Props) {
           )}
         </div>
       </div>
-    </AtomCard01>
+    </BlockBackground>
   )
 }

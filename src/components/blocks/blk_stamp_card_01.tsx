@@ -8,16 +8,18 @@ import AtomBadge01 from '../atoms/atom_badge_01'
 import AtomProgress01 from '../atoms/atom_progress_01'
 import { getBlockLayout } from '@/lib/blockLayout'
 import type { BlockInputConfig, ContainerWidth, PaddingYOption } from '@/types'
+import BlockBackground from "@/components/common/BlockBackground"
 
 interface Props {
   config: BlockInputConfig
   isPreview?: boolean
   onAction?: (config: BlockInputConfig, formData?: Record<string, string>) => void
+
 }
 
 const TOTAL_STAMPS = 10
 
-export default function BlkStampCard01({ config, isPreview, onAction }: Props) {
+export default function BlkStampCard01({ config, isPreview, onAction  }: Props) {
   const [stamps, setStamps] = useState(3) // 미리보기용 기본값
   const {
     title = '스탬프 카드',
@@ -38,7 +40,7 @@ export default function BlkStampCard01({ config, isPreview, onAction }: Props) {
   const layout = getBlockLayout(containerWidth as ContainerWidth, paddingY as PaddingYOption)
 
   return (
-    <AtomCard01 noPadding className="w-full border-none rounded-none" style={{ backgroundColor, color: textColor }}>
+    <BlockBackground config={config} isPreview={isPreview}>
       <div className={`${layout.wrapperClass} ${layout.paddingXClass} ${layout.paddingClass}`}>
         <div className={`${layout.innerClass}`}>
           <div className="text-center mb-8">
@@ -80,6 +82,6 @@ export default function BlkStampCard01({ config, isPreview, onAction }: Props) {
           </AtomBtn01>
         </div>
       </div>
-    </AtomCard01>
+    </BlockBackground>
   )
 }

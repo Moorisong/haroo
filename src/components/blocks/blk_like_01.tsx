@@ -7,10 +7,14 @@ import AtomBtn01 from '../atoms/atom_btn_01'
 import AtomBadge01 from '../atoms/atom_badge_01'
 import { getBlockLayout } from '@/lib/blockLayout'
 import type { BlockInputConfig, ContainerWidth, PaddingYOption } from '@/types'
+import BlockBackground from "@/components/common/BlockBackground"
 
-interface Props { config: BlockInputConfig }
+interface Props { config: BlockInputConfig 
+  isPreview?: boolean
+  onAction?: (config: any, formData?: any) => void
+}
 
-export default function BlkLike01({ config }: Props) {
+export default function BlkLike01({ config, isPreview  }: Props) {
   const [liked, setLiked] = useState(false)
   const [scraped, setScraped] = useState(false)
   const [count, setCount] = useState(128)
@@ -32,7 +36,7 @@ export default function BlkLike01({ config }: Props) {
   const layout = getBlockLayout(containerWidth as ContainerWidth, paddingY as PaddingYOption)
 
   return (
-    <AtomCard01 noPadding className="w-full border-none rounded-none" style={{ backgroundColor, color: textColor }}>
+    <BlockBackground config={config} isPreview={isPreview}>
       <div className={`${layout.wrapperClass} ${layout.paddingXClass} ${layout.paddingClass}`}>
         <div className={`${layout.innerClass} text-center`}>
           <AtomText01 as="h2" className="text-xl font-bold mb-2">{title}</AtomText01>
@@ -71,6 +75,6 @@ export default function BlkLike01({ config }: Props) {
           )}
         </div>
       </div>
-    </AtomCard01>
+    </BlockBackground>
   )
 }

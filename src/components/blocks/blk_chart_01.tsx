@@ -4,6 +4,7 @@ import AtomCard01 from '../atoms/atom_card_01'
 import AtomText01 from '../atoms/atom_text_01'
 import { getBlockLayout } from '@/lib/blockLayout'
 import type { BlockInputConfig, ContainerWidth, PaddingYOption } from '@/types'
+import BlockBackground from "@/components/common/BlockBackground"
 
 interface ChartData {
   label: string
@@ -20,9 +21,10 @@ const DEFAULT_CHART_DATA: ChartData[] = [
   { label: '일', value: 100 },
 ]
 
-interface Props { config: BlockInputConfig; isPreview?: boolean; onAction?: (config: BlockInputConfig, formData?: Record<string, string>) => void }
+interface Props { config: BlockInputConfig; isPreview?: boolean; onAction?: (config: BlockInputConfig, formData?: Record<string, string>) => void 
+}
 
-export default function BlkChart01({ config }: Props) {
+export default function BlkChart01({ config, isPreview  }: Props) {
   const {
     title = '통계 차트',
     subtitle = '변화 추이를 확인하세요.',
@@ -42,7 +44,7 @@ export default function BlkChart01({ config }: Props) {
   const maxValue = Math.max(...chartData.map((d: ChartData) => d.value), 1)
 
   return (
-    <AtomCard01 noPadding className="w-full border-none rounded-none" style={{ backgroundColor, color: textColor }}>
+    <BlockBackground config={config} isPreview={isPreview}>
       <div className={`${layout.wrapperClass} ${layout.paddingXClass} ${layout.paddingClass}`}>
         <div className={`${layout.innerClass}`}>
           <div className="flex items-center justify-between mb-8">
@@ -106,6 +108,6 @@ export default function BlkChart01({ config }: Props) {
           </div>
         </div>
       </div>
-    </AtomCard01>
+    </BlockBackground>
   )
 }

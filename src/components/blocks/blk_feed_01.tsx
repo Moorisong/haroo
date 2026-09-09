@@ -5,6 +5,7 @@ import AtomText01 from '../atoms/atom_text_01'
 import AtomBtn01 from '../atoms/atom_btn_01'
 import { getBlockLayout } from '@/lib/blockLayout'
 import type { BlockInputConfig, ContainerWidth, PaddingYOption } from '@/types'
+import BlockBackground from "@/components/common/BlockBackground"
 
 interface FeedItem {
   id: string
@@ -19,9 +20,10 @@ const DEFAULT_FEED: FeedItem[] = [
   { id: '3', name: '사용자 C', content: '점심에 피자를 먹어버렸습니다 ㅠㅠ 저녁은 굶어야겠어요.', date: '4시간 전' },
 ]
 
-interface Props { config: BlockInputConfig; isPreview?: boolean; onAction?: (config: BlockInputConfig, formData?: Record<string, string>) => void }
+interface Props { config: BlockInputConfig; isPreview?: boolean; onAction?: (config: BlockInputConfig, formData?: Record<string, string>) => void 
+}
 
-export default function BlkFeed01({ config, onAction }: Props) {
+export default function BlkFeed01({ config, isPreview, onAction  }: Props) {
   const {
     title = '기록 / 코멘터리',
     subtitle = '매일의 기록을 남겨보세요.',
@@ -36,7 +38,7 @@ export default function BlkFeed01({ config, onAction }: Props) {
   const items = config.items || DEFAULT_FEED
 
   return (
-    <AtomCard01 noPadding className="w-full border-none rounded-none" style={{ backgroundColor, color: textColor }}>
+    <BlockBackground config={config} isPreview={isPreview}>
       <div className={`${layout.wrapperClass} ${layout.paddingXClass} ${layout.paddingClass}`}>
         <div className={`${layout.innerClass}`}>
           {(title || subtitle) && (
@@ -73,6 +75,6 @@ export default function BlkFeed01({ config, onAction }: Props) {
           )}
         </div>
       </div>
-    </AtomCard01>
+    </BlockBackground>
   )
 }

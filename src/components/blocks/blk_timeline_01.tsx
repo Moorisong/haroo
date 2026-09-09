@@ -4,12 +4,16 @@ import AtomCard01 from '../atoms/atom_card_01'
 import { getBlockLayout } from '@/lib/blockLayout'
 import type { BlockInputConfig, ContainerWidth, PaddingYOption } from '@/types'
 import { CheckCircle2, Circle } from 'lucide-react'
+import BlockBackground from "@/components/common/BlockBackground"
 
 interface Props {
   config: BlockInputConfig
+
+  isPreview?: boolean
+  onAction?: (config: any, formData?: any) => void
 }
 
-export default function BlkTimeline01({ config }: Props) {
+export default function BlkTimeline01({ config, isPreview  }: Props) {
   const { 
     title = '진행 상황', 
     subtitle = '어디까지 왔는지 확인하세요', 
@@ -27,7 +31,7 @@ export default function BlkTimeline01({ config }: Props) {
   const layout = getBlockLayout(containerWidth as ContainerWidth, paddingY as PaddingYOption)
 
   return (
-    <AtomCard01 noPadding className="w-full border-none rounded-none" style={{ backgroundColor, color: textColor }}>
+    <BlockBackground config={config} isPreview={isPreview}>
       <div className={`${layout.wrapperClass} ${layout.paddingXClass} ${layout.paddingClass}`}>
         <div className={`${layout.innerClass} max-w-3xl mx-auto flex flex-col gap-8`}>
           
@@ -77,6 +81,6 @@ export default function BlkTimeline01({ config }: Props) {
 
         </div>
       </div>
-    </AtomCard01>
+    </BlockBackground>
   )
 }

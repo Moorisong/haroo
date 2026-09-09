@@ -11,11 +11,13 @@ import BoardDetailView from './board/BoardDetailView'
 import BoardWriteView from './board/BoardWriteView'
 import { getBlockLayout } from '@/lib/blockLayout'
 import type { BlockInputConfig, ContainerWidth, PaddingYOption } from '@/types'
+import BlockBackground from "@/components/common/BlockBackground"
 
 interface Props {
   config?: BlockInputConfig
   isPreview?: boolean
   onAction?: (config: BlockInputConfig, formData?: Record<string, string>) => void
+
 }
 
 const MOCK_POSTS = [
@@ -65,7 +67,7 @@ const MOCK_COMMENTS = [
   { id: 2, content: '수고 많으셨습니다.', author: { name: '홍길동', avatar: '' }, createdAt: '2026-08-12 15:45', isMine: true },
 ]
 
-export default function BlkBoardList01({ config, isPreview }: Props) {
+export default function BlkBoardList01({ config, isPreview  }: Props) {
   const [view, setView] = useState<'list' | 'detail' | 'write'>('list')
   const [selectedPostId, setSelectedPostId] = useState<number | null>(null)
 
@@ -221,7 +223,8 @@ export default function BlkBoardList01({ config, isPreview }: Props) {
   const currentPost = MOCK_POSTS.find((p) => p.id === selectedPostId) || MOCK_POSTS[0]
 
   return (
-    <div style={{ backgroundColor }} className={`${layout.paddingClass} ${layout.wrapperClass}`}>
+    <BlockBackground config={config} isPreview={isPreview}>
+      <div className={`${layout.paddingClass} ${layout.wrapperClass}`}>
       <div className={`mx-auto ${layout.innerClass} ${layout.paddingXClass}`}>
         {view === 'list' && (
           <>
@@ -266,5 +269,6 @@ export default function BlkBoardList01({ config, isPreview }: Props) {
         )}
       </div>
     </div>
+    </BlockBackground>
   )
 }

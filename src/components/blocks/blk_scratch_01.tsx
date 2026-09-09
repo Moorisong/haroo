@@ -10,14 +10,16 @@ import AtomBadge01 from '@/components/atoms/atom_badge_01'
 import AtomIcon01 from '@/components/atoms/atom_icon_01'
 import type { ContainerWidth, PaddingYOption } from '@/types'
 import { Gift, Sparkles, RefreshCw } from 'lucide-react'
+import BlockBackground from "@/components/common/BlockBackground"
 
 interface Props {
   config: BlockInputConfig
   isPreview?: boolean
   onAction?: (config: BlockInputConfig, formData?: Record<string, string>) => void
+
 }
 
-export default function BlkScratch01({ config, onAction }: Props) {
+export default function BlkScratch01({ config, isPreview, onAction  }: Props) {
   const layout = getBlockLayout(config?.containerWidth as ContainerWidth, config?.paddingY as PaddingYOption)
   const title = config?.title || '스크래치 숨은 쿠폰 뽑기'
   const subtitle = config?.subtitle || '손가락이나 마우스로 회색 영역을 문질러보세요!'
@@ -120,7 +122,8 @@ export default function BlkScratch01({ config, onAction }: Props) {
   }
 
   return (
-    <div className={`w-full ${layout.wrapperClass} ${layout.paddingClass}`}>
+    <BlockBackground config={config} isPreview={isPreview}>
+      <div className={`w-full ${layout.wrapperClass} ${layout.paddingClass}`}>
       <div className={layout.innerClass}>
         <AtomCard01 className="p-6 md:p-8 flex flex-col items-center bg-white shadow-xl rounded-3xl border border-slate-100">
         {/* Title */}
@@ -176,5 +179,6 @@ export default function BlkScratch01({ config, onAction }: Props) {
       </AtomCard01>
       </div>
     </div>
+    </BlockBackground>
   )
 }

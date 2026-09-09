@@ -6,10 +6,14 @@ import AtomBadge01 from '../atoms/atom_badge_01'
 import AtomDivider01 from '../atoms/atom_divider_01'
 import { getBlockLayout } from '@/lib/blockLayout'
 import type { BlockInputConfig, ContainerWidth, PaddingYOption } from '@/types'
+import BlockBackground from "@/components/common/BlockBackground"
 
-interface Props { config: BlockInputConfig }
+interface Props { config: BlockInputConfig 
+  isPreview?: boolean
+  onAction?: (config: any, formData?: any) => void
+}
 
-export default function BlkMap01({ config }: Props) {
+export default function BlkMap01({ config, isPreview  }: Props) {
   const {
     title = '지도 / 위치 안내',
     subtitle = '상세 주소 및 위치 정보를 안내해 드립니다.',
@@ -33,7 +37,7 @@ export default function BlkMap01({ config }: Props) {
   const layout = getBlockLayout(containerWidth as ContainerWidth, paddingY as PaddingYOption)
 
   return (
-    <AtomCard01 noPadding className="w-full border-none rounded-none" style={{ backgroundColor, color: textColor }}>
+    <BlockBackground config={config} isPreview={isPreview}>
       <div className={`${layout.wrapperClass} ${layout.paddingXClass} ${layout.paddingClass}`}>
         <div className={`${layout.innerClass}`}>
           <div className="mb-8 text-center">
@@ -95,6 +99,6 @@ export default function BlkMap01({ config }: Props) {
 
         </div>
       </div>
-    </AtomCard01>
+    </BlockBackground>
   )
 }

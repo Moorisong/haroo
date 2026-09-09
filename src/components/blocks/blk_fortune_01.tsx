@@ -10,11 +10,13 @@ import AtomBadge01 from '@/components/atoms/atom_badge_01'
 import AtomIcon01 from '@/components/atoms/atom_icon_01'
 import type { ContainerWidth, PaddingYOption } from '@/types'
 import { Sparkles, Cookie, Share2, Check } from 'lucide-react'
+import BlockBackground from "@/components/common/BlockBackground"
 
 interface Props {
   config: BlockInputConfig
   isPreview?: boolean
   onAction?: (config: BlockInputConfig, formData?: Record<string, string>) => void
+
 }
 
 const DEFAULT_FORTUNES = [
@@ -25,7 +27,7 @@ const DEFAULT_FORTUNES = [
   '잠시 여유를 가지고 아메리카노 한 잔의 행복을 누려보세요.'
 ]
 
-export default function BlkFortune01({ config, onAction }: Props) {
+export default function BlkFortune01({ config, isPreview, onAction  }: Props) {
   const layout = getBlockLayout(config?.containerWidth as ContainerWidth, config?.paddingY as PaddingYOption)
   const cardTitle = config?.cardTitle || config?.title || '매일매일 행운의 포춘쿠키'
   const subtitle = config?.subtitle || '버튼을 눌러 오늘의 행운 메시지를 확인해보세요!'
@@ -62,7 +64,8 @@ export default function BlkFortune01({ config, onAction }: Props) {
   }
 
   return (
-    <div className={`w-full ${layout.wrapperClass} ${layout.paddingClass}`}>
+    <BlockBackground config={config} isPreview={isPreview}>
+      <div className={`w-full ${layout.wrapperClass} ${layout.paddingClass}`}>
       <div className={layout.innerClass}>
         <AtomCard01 className="p-6 md:p-8 flex flex-col items-center bg-gradient-to-br from-amber-50/50 via-white to-orange-50/50 shadow-xl rounded-3xl border border-amber-100/60">
         {/* Header */}
@@ -122,5 +125,6 @@ export default function BlkFortune01({ config, onAction }: Props) {
       </AtomCard01>
       </div>
     </div>
+    </BlockBackground>
   )
 }

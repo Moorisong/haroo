@@ -9,6 +9,7 @@ import AtomLabel01 from '../atoms/atom_label_01'
 import AtomInput01 from '../atoms/atom_input_01'
 import { getBlockLayout } from '@/lib/blockLayout'
 import type { BlockInputConfig, ContainerWidth, PaddingYOption } from '@/types'
+import BlockBackground from "@/components/common/BlockBackground"
 
 interface TimeSlot { time: string; available: boolean }
 
@@ -25,9 +26,10 @@ interface Props {
   config: BlockInputConfig
   isPreview?: boolean
   onAction?: (config: BlockInputConfig, formData?: Record<string, string>) => void
+
 }
 
-export default function BlkConsultingSlot01({ config, isPreview, onAction }: Props) {
+export default function BlkConsultingSlot01({ config, isPreview, onAction  }: Props) {
   const [selectedTime, setSelectedTime] = useState<string | null>(null)
   const [booked, setBooked] = useState(false)
   const [name, setName] = useState('')
@@ -49,7 +51,7 @@ export default function BlkConsultingSlot01({ config, isPreview, onAction }: Pro
 
   if (booked) {
     return (
-      <AtomCard01 noPadding className="w-full border-none rounded-none" style={{ backgroundColor, color: textColor }}>
+      <BlockBackground config={config} isPreview={isPreview}>
         <div className={`${layout.wrapperClass} ${layout.paddingXClass} ${layout.paddingClass}`}>
           <div className={`${layout.innerClass} text-center`}>
             <div className="text-6xl mb-4">🎉</div>
@@ -59,12 +61,12 @@ export default function BlkConsultingSlot01({ config, isPreview, onAction }: Pro
             <AtomText01 as="p" className="text-xs text-slate-400 mt-2">확인 안내가 {phone}으로 발송됩니다.</AtomText01>
           </div>
         </div>
-      </AtomCard01>
+      </BlockBackground>
     )
   }
 
   return (
-    <AtomCard01 noPadding className="w-full border-none rounded-none" style={{ backgroundColor, color: textColor }}>
+    <BlockBackground config={config} isPreview={isPreview}>
       <div className={`${layout.wrapperClass} ${layout.paddingXClass} ${layout.paddingClass}`}>
         <div className={`${layout.innerClass}`}>
           <div className="text-center mb-8">
@@ -119,6 +121,6 @@ export default function BlkConsultingSlot01({ config, isPreview, onAction }: Pro
           </AtomBtn01>
         </div>
       </div>
-    </AtomCard01>
+    </BlockBackground>
   )
 }

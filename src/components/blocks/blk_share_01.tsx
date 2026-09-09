@@ -6,11 +6,13 @@ import AtomBtn01 from '../atoms/atom_btn_01'
 import AtomBadge01 from '../atoms/atom_badge_01'
 import { getBlockLayout } from '@/lib/blockLayout'
 import type { BlockInputConfig, ContainerWidth, PaddingYOption } from '@/types'
+import BlockBackground from "@/components/common/BlockBackground"
 
 interface Props {
   config: BlockInputConfig
   isPreview?: boolean
   onAction?: (config: BlockInputConfig, formData?: Record<string, string>) => void
+
 }
 
 const SHARE_CHANNELS = [
@@ -19,7 +21,7 @@ const SHARE_CHANNELS = [
   { key: 'twitter', label: 'X (트위터)', icon: '✕', color: '#1D9BF0', textColor: '#ffffff' },
 ]
 
-export default function BlkShare01({ config, isPreview, onAction }: Props) {
+export default function BlkShare01({ config, isPreview, onAction  }: Props) {
   const {
     title = '이 페이지를 공유해 보세요',
     subtitle = '친구에게 소식을 알려보세요!',
@@ -32,7 +34,7 @@ export default function BlkShare01({ config, isPreview, onAction }: Props) {
   const layout = getBlockLayout(containerWidth as ContainerWidth, paddingY as PaddingYOption)
 
   return (
-    <AtomCard01 noPadding className="w-full border-none rounded-none overflow-hidden" style={{ backgroundColor, color: textColor }}>
+    <BlockBackground config={config} isPreview={isPreview}>
       <div className={`${layout.wrapperClass} ${layout.paddingXClass} ${layout.paddingClass}`}>
         <div className={`${layout.innerClass} text-center w-full max-w-full overflow-hidden`}>
           <AtomBadge01 variant="info" className="mb-2 mx-auto text-[10px] sm:text-xs px-2 py-0.5 font-bold">공유하기</AtomBadge01>
@@ -59,6 +61,6 @@ export default function BlkShare01({ config, isPreview, onAction }: Props) {
           </AtomCard01>
         </div>
       </div>
-    </AtomCard01>
+    </BlockBackground>
   )
 }

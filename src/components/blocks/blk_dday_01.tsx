@@ -6,8 +6,12 @@ import AtomText01 from '../atoms/atom_text_01'
 import AtomBadge01 from '../atoms/atom_badge_01'
 import { getBlockLayout } from '@/lib/blockLayout'
 import type { BlockInputConfig, ContainerWidth, PaddingYOption } from '@/types'
+import BlockBackground from "@/components/common/BlockBackground"
 
-interface Props { config: BlockInputConfig }
+interface Props { config: BlockInputConfig 
+  isPreview?: boolean
+  onAction?: (config: any, formData?: any) => void
+}
 
 interface TimeLeft { days: number; hours: number; minutes: number; seconds: number }
 
@@ -22,7 +26,7 @@ function calcTimeLeft(targetDate: string): TimeLeft {
   }
 }
 
-export default function BlkDday01({ config }: Props) {
+export default function BlkDday01({ config, isPreview  }: Props) {
   const {
     title = 'D-Day 카운트다운',
     subtitle = '특별한 날까지 얼마나 남았을까요?',
@@ -50,7 +54,7 @@ export default function BlkDday01({ config }: Props) {
   const layout = getBlockLayout(containerWidth as ContainerWidth, paddingY as PaddingYOption)
 
   return (
-    <AtomCard01 noPadding className="w-full border-none rounded-none" style={{ backgroundColor, color: textColor }}>
+    <BlockBackground config={config} isPreview={isPreview}>
       <div className={`${layout.wrapperClass} ${layout.paddingXClass} ${layout.paddingClass}`}>
         <div className={`${layout.innerClass} text-center`}>
           <AtomBadge01 className="mb-4 mx-auto bg-white/20 text-white border-white/30">⏰ D-Day</AtomBadge01>
@@ -71,6 +75,6 @@ export default function BlkDday01({ config }: Props) {
           </div>
         </div>
       </div>
-    </AtomCard01>
+    </BlockBackground>
   )
 }

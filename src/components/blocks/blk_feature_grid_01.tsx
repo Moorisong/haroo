@@ -8,12 +8,16 @@ import { CheckCircle } from 'lucide-react'
 import AtomIcon01 from '@/components/atoms/atom_icon_01'
 import { getBlockLayout, getResponsiveGridCols } from '@/lib/blockLayout'
 import type { ContainerWidth, PaddingYOption } from '@/types'
+import BlockBackground from "@/components/common/BlockBackground"
 
 interface Props {
   config: BlockInputConfig
+
+  isPreview?: boolean
+  onAction?: (config: any, formData?: any) => void
 }
 
-export default function BlkFeatureGrid01({ config }: Props) {
+export default function BlkFeatureGrid01({ config, isPreview  }: Props) {
   const {
     title = '핵심 특징',
     subtitle = '저희 서비스만의 특별한 장점을 소개합니다.',
@@ -33,7 +37,8 @@ export default function BlkFeatureGrid01({ config }: Props) {
   const gridCols = getResponsiveGridCols(containerWidth as ContainerWidth)
 
   return (
-    <div style={{ backgroundColor, color: textColor }} className={`${layout.wrapperClass} ${layout.paddingXClass} ${layout.paddingClass}`}>
+    <BlockBackground config={config} isPreview={isPreview}>
+      <div className={`${layout.wrapperClass} ${layout.paddingXClass} ${layout.paddingClass}`}>
       <div className={layout.innerClass}>
         {/* 헤더 영역 */}
         <div className="text-center mb-16">
@@ -55,5 +60,6 @@ export default function BlkFeatureGrid01({ config }: Props) {
         </div>
       </div>
     </div>
+    </BlockBackground>
   )
 }
