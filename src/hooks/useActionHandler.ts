@@ -79,12 +79,25 @@ export function useActionHandler({ isPreview, onNavigatePage }: UseActionHandler
 
       // 4. CALL_PHONE (전화 걸기)
       if (actionType === 'CALL_PHONE') {
-        const phone = config.buttonLink
+        const phone = config.buttonLink?.trim()
         if (!phone) {
           if (isPreview) emitToast('⚠️ 전화번호가 설정되지 않았습니다.', 'warning')
           return
         }
-        window.location.href = `tel:${phone.replace(/[^0-9+]/g, '')}`
+
+        const cleanPhone = phone.replace(/[^0-9+]/g, '')
+        const isMobile = typeof window !== 'undefined' && /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+
+        if (isMobile) {
+          window.location.href = `tel:${cleanPhone}`
+        } else {
+          // PC 환경: 전화번호 클립보드 복사 + 안내 알림
+          navigator.clipboard.writeText(phone).then(() => {
+            emitToast(`📞 전화번호(${phone})가 복사되었습니다. 모바일 기기에서 연결해 주세요!`, 'success')
+          }).catch(() => {
+            window.location.href = `tel:${cleanPhone}`
+          })
+        }
         return
       }
 
