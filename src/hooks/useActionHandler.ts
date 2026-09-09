@@ -132,10 +132,14 @@ export function useActionHandler({ isPreview, onNavigatePage }: UseActionHandler
       if (actionType === 'DOWNLOAD_FILE') {
         const fileUrl = config.downloadFileUrl || config.buttonLink
         if (!fileUrl) { 
-          if (isPreview) emitToast('⚠️ 다운로드 파일 주소가 설정되지 않았습니다.', 'warning')
+          if (isPreview) emitToast('⚠️ 다운로드 파일이 설정되지 않았습니다.', 'warning')
           return 
         }
-        const a = document.createElement('a'); a.href = fileUrl; a.download = ''; a.click()
+        const a = document.createElement('a')
+        a.href = fileUrl
+        a.download = config.downloadFileName || ''
+        a.target = '_blank'
+        a.click()
         return
       }
 
