@@ -31,13 +31,19 @@ export default function ButtonPropertyPanel({ cap, config, handleChange }: Props
   return (
     <div className="flex flex-col gap-5">
       <div className="flex flex-col gap-2">
-        <label className="text-xs font-semibold text-slate-700">버튼 문구</label>
+        <div className="flex items-center justify-between">
+          <label className="text-xs font-semibold text-slate-700">버튼 문구</label>
+          <span className={`text-[11px] font-medium ${(config.buttonText || '').length >= 25 ? 'text-rose-500 font-bold' : 'text-slate-400'}`}>
+            ({(config.buttonText || '').length}/25자)
+          </span>
+        </div>
         <input
           type="text"
+          maxLength={25}
           value={config.buttonText || ''}
           onChange={(e) => handleChange('buttonText', e.target.value)}
           className="w-full text-sm border border-slate-300 rounded-md p-2"
-          placeholder="예: 신청하기, 더 알아보기"
+          placeholder="예: 신청하기, 더 알아보기 (최대 25자)"
         />
       </div>
 

@@ -74,10 +74,23 @@ export default function PanelRepeaterField({ customFieldType, config, handleChan
       if (key === 'id') return null
       
       const val = item[key] !== undefined ? item[key] : defaultNewItem[key]
+      const strVal = String(val ?? '')
+      
+      // 항목 종류별 제한 글자수 계산
+      let itemMaxLen = 50
+      if (['content', 'description', 'hiddenContent'].includes(key)) itemMaxLen = 150
+      if (['author', 'name', 'title', 'label'].includes(key)) itemMaxLen = 30
       
       return (
         <div key={key} className="flex flex-col gap-1 w-full mt-2">
-          <label className="text-[10px] text-slate-500 uppercase">{key}</label>
+          <div className="flex items-center justify-between">
+            <label className="text-[10px] text-slate-500 uppercase">{key}</label>
+            {typeof val !== 'number' && (
+              <span className={`text-[9px] ${strVal.length >= itemMaxLen ? 'text-rose-500 font-bold' : 'text-slate-400'}`}>
+                ({strVal.length}/{itemMaxLen}자)
+              </span>
+            )}
+          </div>
           {typeof val === 'number' ? (
             <input 
               type="number" 
@@ -88,6 +101,7 @@ export default function PanelRepeaterField({ customFieldType, config, handleChan
           ) : (
             <input 
               type="text" 
+              maxLength={itemMaxLen}
               value={val} 
               onChange={(e) => handleUpdateItem(index, key, e.target.value)}
               className="px-2 py-1 border border-slate-300 rounded text-xs focus:outline-none focus:border-sky-500"

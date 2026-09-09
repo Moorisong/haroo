@@ -38,15 +38,24 @@ export default function TextPropertyPanel({ elementKey, config, handleChange }: 
     handleChange(styleKey, { ...styleData, [key]: val })
   }
 
+  const maxLen = isTitle ? 50 : 120
+  const currentText = config[contentKey] || ''
+
   return (
     <div className="flex flex-col gap-5">
 
       <div className="flex flex-col gap-2">
-        <label className="text-xs font-semibold text-slate-700">{isTitle ? '제목 내용' : '부제목 내용'}</label>
+        <div className="flex items-center justify-between">
+          <label className="text-xs font-semibold text-slate-700">{isTitle ? '제목 내용' : '부제목 내용'}</label>
+          <span className={`text-[11px] font-medium ${currentText.length >= maxLen ? 'text-rose-500 font-bold' : 'text-slate-400'}`}>
+            ({currentText.length}/{maxLen}자)
+          </span>
+        </div>
         <textarea
-          value={config[contentKey] || ''}
+          value={currentText}
+          maxLength={maxLen}
           onChange={(e) => handleChange(contentKey, e.target.value)}
-          className="w-full text-sm border border-slate-300 rounded-md p-2 min-h-[80px]"
+          className="w-full text-sm border border-slate-300 rounded-md p-2 min-h-[80px] focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500"
           placeholder="텍스트를 입력하세요"
         />
       </div>

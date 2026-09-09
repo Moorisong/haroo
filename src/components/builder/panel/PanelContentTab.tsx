@@ -42,25 +42,37 @@ export default function PanelContentTab({ cap, config, handleChange }: PanelCont
           
           {cap.hasTitle && (
             <div className="space-y-1.5">
-              <label className="text-sm font-medium text-slate-700">{PANEL_LABELS.TITLE}</label>
+              <div className="flex items-center justify-between">
+                <label className="text-sm font-medium text-slate-700">{PANEL_LABELS.TITLE}</label>
+                <span className={`text-[11px] font-medium ${(config.title || '').length >= 50 ? 'text-rose-500 font-bold' : 'text-slate-400'}`}>
+                  ({(config.title || '').length}/50자)
+                </span>
+              </div>
               <input 
                 type="text" 
+                maxLength={50}
                 value={config.title || ''} 
                 onChange={(e) => handleChange('title', e.target.value)}
                 className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500"
-                placeholder="타이틀 입력"
+                placeholder="타이틀 입력 (최대 50자)"
               />
             </div>
           )}
           
           {cap.hasSubtitle && (
             <div className="space-y-1.5">
-              <label className="text-sm font-medium text-slate-700">{PANEL_LABELS.SUBTITLE}</label>
+              <div className="flex items-center justify-between">
+                <label className="text-sm font-medium text-slate-700">{PANEL_LABELS.SUBTITLE}</label>
+                <span className={`text-[11px] font-medium ${(config.subtitle || '').length >= 120 ? 'text-rose-500 font-bold' : 'text-slate-400'}`}>
+                  ({(config.subtitle || '').length}/120자)
+                </span>
+              </div>
               <textarea 
+                maxLength={120}
                 value={config.subtitle || ''} 
                 onChange={(e) => handleChange('subtitle', e.target.value)}
                 className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm min-h-[80px] focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500"
-                placeholder="서브카피 입력"
+                placeholder="서브카피 입력 (최대 120자)"
               />
             </div>
           )}
