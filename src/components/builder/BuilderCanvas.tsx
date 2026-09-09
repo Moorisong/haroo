@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react'
+import React, { useCallback } from 'react'
 import { CSS } from '@dnd-kit/utilities'
 import { DragOverlay, useDndContext, useDraggable } from '@dnd-kit/core'
 import { useBuilderStore } from '@/stores/useBuilderStore'

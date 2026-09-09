@@ -2,7 +2,7 @@
 
 import React, { useRef, useCallback, useState, useEffect, useMemo } from 'react'
 import { useBuilderStore } from '@/stores/useBuilderStore'
-import type { CanvasBlock, ContainerWidth, PaddingYOption, DeviceViewport } from '@/types'
+import type { CanvasBlock, ContainerWidth, PaddingYOption, DeviceViewport, BlockInputConfig } from '@/types'
 import BlockResizeHandles from '@/components/builder/BlockResizeHandles'
 import FloatingQuickToolbar from '@/components/builder/FloatingQuickToolbar'
 import SmartGuideLayer from '@/components/builder/SmartGuide'
@@ -185,7 +185,7 @@ function DraggableBlock({ block, canvasRef, onDragStart, onDragMove, onDragEnd, 
       const rawX = startPosX + (moveEv.clientX - startClientX) / scale
       const rawY = startPosY + (moveEv.clientY - startClientY) / scale
       const snappedX = Math.max(0, Math.min(CANVAS_WIDTH - blockWidth, snapToGrid(rawX)))
-      const snappedY = Math.max(8, snapToGrid(rawY))
+      const snappedY = Math.max(0, snapToGrid(rawY))
       onDragMove(block.instanceId, snappedX, snappedY)
     }
 
@@ -193,7 +193,7 @@ function DraggableBlock({ block, canvasRef, onDragStart, onDragMove, onDragEnd, 
       const rawX = startPosX + (upEv.clientX - startClientX) / scale
       const rawY = startPosY + (upEv.clientY - startClientY) / scale
       const snappedX = Math.max(0, Math.min(CANVAS_WIDTH - blockWidth, snapToGrid(rawX)))
-      const snappedY = Math.max(8, snapToGrid(rawY))
+      const snappedY = Math.max(0, snapToGrid(rawY))
       updateBlockInputData(block.instanceId, { posX: snappedX, posY: snappedY })
       onDragEnd()
       window.removeEventListener('pointermove', onMove)

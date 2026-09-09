@@ -30,14 +30,14 @@ export function snapToGrid(value: number, gridSize = GRID_SIZE): number {
  * 새 블록 추가 시 현재 블록들 중 최하단 y 좌표 계산
  */
 export function getNextBlockY(blocks: CanvasBlock[]): number {
-  if (blocks.length === 0) return 16
+  if (blocks.length === 0) return 0
   let maxY = 0
   for (const b of blocks) {
     const bY = (b.inputConfig?.posY || 0) + (b.inputConfig?.blockHeight || 200)
     if (bY > maxY) maxY = bY
   }
-  // 8px 그리드로 스냅 후 16px 여백
-  return snapToGrid(maxY) + 16
+  // 그리드 반올림 오차 없이 이전 블록 실제 하단에 0px로 정확히 맞닿도록 반환
+  return maxY
 }
 
 /**

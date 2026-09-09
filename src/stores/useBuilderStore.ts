@@ -273,7 +273,7 @@ export const useBuilderStore = create<BuilderState>((set, get) => ({
     const [moved] = blocks.splice(fromIndex, 1)
     blocks.splice(toIndex, 0, moved)
 
-    let currentY = 16
+    let currentY = 0
     const updatedBlocks = blocks.map((b) => {
       const h = b.inputConfig?.blockHeight || 200
       const updated = {
@@ -283,7 +283,7 @@ export const useBuilderStore = create<BuilderState>((set, get) => ({
           posY: snapToGrid(currentY),
         },
       }
-      currentY += h + 16
+      currentY += h
       return updated
     })
 
