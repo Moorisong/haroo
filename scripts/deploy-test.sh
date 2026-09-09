@@ -73,7 +73,13 @@ else
     # --------------------------------------------------------------------------
     echo "🔍 맥북에서 실행되었습니다. 홈서버 네트워크 연결 상태를 자동 확인합니다..."
 
-    if nc -z -w 2 $INTERNAL_IP $INTERNAL_PORT 2>/dev/null; then
+    if [ "$(uname)" = "Darwin" ]; then
+        NC_CMD="nc -z -G 2 $INTERNAL_IP $INTERNAL_PORT"
+    else
+        NC_CMD="nc -z -w 2 $INTERNAL_IP $INTERNAL_PORT"
+    fi
+
+    if $NC_CMD 2>/dev/null; then
         echo "🏠 [내부망 연결] 집 안 네트워크($INTERNAL_IP)로 홈서버에 접속합니다."
         TARGET_HOST=$INTERNAL_IP
         TARGET_PORT=$INTERNAL_PORT
