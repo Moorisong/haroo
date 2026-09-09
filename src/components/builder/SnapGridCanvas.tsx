@@ -484,11 +484,11 @@ function ResponsiveViewCanvas({ viewport }: { viewport: DeviceViewport }) {
             {isPwa ? '📱 PWA 모바일 앱' : viewport === 'mobile' ? '📱 모바일 화면' : '💻 태블릿 화면'}
           </span>
           <span className="text-[10px] text-amber-400 font-bold">
-            모바일 미리보기 모드
+            {isPwa ? '앱 미리보기 모드' : viewport === 'mobile' ? '모바일 미리보기 모드' : '태블릿 미리보기 모드'}
           </span>
         </div>
 
-        <div className="flex-1 flex flex-col w-full relative overflow-y-auto min-h-0 pt-3 pb-16">
+        <div className="flex-1 flex flex-col w-full relative overflow-y-auto min-h-0 pb-16">
           {sortedBlocks.length === 0 ? (
             <div className="flex-1 flex flex-col items-center justify-center text-slate-400 p-8 min-h-[300px]">
               <p className="text-xs font-semibold text-center text-slate-500">
