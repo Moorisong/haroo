@@ -6,6 +6,7 @@ import type { BlockCapability } from '../SidePropertyPanel'
 import { ACTION_OPTIONS } from './constants'
 import { useBuilderStore } from '@/stores/useBuilderStore'
 import ButtonStyleSection from './ButtonStyleSection'
+import FileUploadField from './FileUploadField'
 
 const ACTION_TYPE_OPTIONS = Object.entries(ACTION_OPTIONS).map(([value, label]) => ({ value, label }))
 
@@ -60,11 +61,23 @@ export default function ButtonPropertyPanel({ cap, config, handleChange }: Props
                 buttonLink: '',
                 customTargetId: '',
                 thankYouMessage: '',
+                downloadFileUrl: '',
+                downloadFileName: '',
+                downloadFileSize: '',
               }
               if (Array.isArray(config.buttons) && config.buttons.length > 0) {
                 updates.buttons = config.buttons.map((btn: any, idx: number) =>
                   idx === 0
-                    ? { ...btn, actionType: nextAction, buttonLink: '', customTargetId: '', thankYouMessage: '' }
+                    ? {
+                        ...btn,
+                        actionType: nextAction,
+                        buttonLink: '',
+                        customTargetId: '',
+                        thankYouMessage: '',
+                        downloadFileUrl: '',
+                        downloadFileName: '',
+                        downloadFileSize: '',
+                      }
                     : btn
                 )
               }
@@ -172,29 +185,43 @@ export default function ButtonPropertyPanel({ cap, config, handleChange }: Props
       {/* 6. COPY_TO_CLIPBOARD */}
       {config.actionType === 'COPY_TO_CLIPBOARD' && (
         <div className="flex flex-col gap-2 animate-in fade-in duration-200">
-          <label className="text-xs font-semibold text-slate-700">복사될 주소 / 텍스트</label>
+          <label className="text-xs font-semibold text-slate-700">복사할 텍스트</label>
           <input
             type="text"
             value={config.buttonLink || ''}
             onChange={(e) => handleChange('buttonLink', e.target.value)}
             className="w-full text-sm border border-slate-300 rounded-md p-2"
-            placeholder="예: 국민 123456-04-123456"
+            placeholder="예: 국민 123-45-67890 또는 매장 주소"
           />
+          <p className="text-[11px] text-slate-500 leading-relaxed">
+            💡 계좌번호, 매장 주소, 안내 문구 등 버튼을 눌렀을 때 클립보드에 바로 복사되길 원하는 텍스트를 입력하세요.
+          </p>
         </div>
       )}
 
       {/* 7. DOWNLOAD_FILE */}
       {config.actionType === 'DOWNLOAD_FILE' && (
-        <div className="flex flex-col gap-2 animate-in fade-in duration-200">
-          <label className="text-xs font-semibold text-slate-700">다운로드 파일 URL</label>
-          <input
-            type="text"
-            value={config.buttonLink || ''}
-            onChange={(e) => handleChange('buttonLink', e.target.value)}
-            className="w-full text-sm border border-slate-300 rounded-md p-2"
-            placeholder="https://..."
-          />
-        </div>
+        <FileUploadField
+          fileUrl={config.downloadFileUrl || config.buttonLink}
+          fileName={config.downloadFileName}
+          fileSize={config.downloadFileSize}
+          onChange={({ fileUrl, fileName, fileSize }) => {
+            handleChange({
+              buttonLink: fileUrl,
+              downloadFileUrl: fileUrl,
+              downloadFileName: fileName,
+              downloadFileSize: fileSize,
+            })
+          }}
+          onClear={() => {
+            handleChange({
+              buttonLink: '',
+              downloadFileUrl: '',
+              downloadFileName: '',
+              downloadFileSize: '',
+            })
+          }}
+        />
       )}
 
       {/* 8. SHOW_MODAL */}
