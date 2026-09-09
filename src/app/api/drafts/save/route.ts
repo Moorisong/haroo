@@ -52,6 +52,7 @@ export async function POST(req: NextRequest) {
   try {
     const serverStore = getServerStore()
     const tempRes = new NextResponse()
+    const supabase = createSupabaseServerClient(req, tempRes)
     const userId = await getAuthenticatedUserId(req, tempRes)
     const body = await req.json()
     const { draftId, name, selectedBlocks, versionClock } = body
