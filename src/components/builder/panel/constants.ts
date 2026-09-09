@@ -1,9 +1,8 @@
 export const ACTION_OPTIONS = {
   NAVIGATE_PAGE: '내 사이트 다른 화면으로 이동',
-  OPEN_URL: '외부 링크 열기',
+  OPEN_URL: '외부 링크 열기 (웹사이트, 카카오 오픈채팅 등)',
   SCROLL_TO_BLOCK: '특정 화면 영역으로 스크롤 이동',
   CALL_PHONE: '전화 걸기',
-  OPEN_KAKAO: '카카오톡 상담 / 오픈채팅 연결',
   COPY_TO_CLIPBOARD: '주소 / 계좌번호 복사하기',
   DOWNLOAD_FILE: '파일 / 소개서 다운로드',
   SHOW_MODAL: '안내 팝업(모달) 띄우기',

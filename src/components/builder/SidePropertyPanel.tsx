@@ -21,13 +21,13 @@ export interface BlockCapability {
 }
 
 const BLOCK_CAPABILITIES: Record<string, BlockCapability> = {
-  blk_hero_01: { hasTitle: true, hasSubtitle: true, hasButton: true, hasButtonAction: true, hasImage: true, hasVideo: true, allowedActions: ['NAVIGATE_PAGE', 'OPEN_URL', 'SCROLL_TO_BLOCK', 'CALL_PHONE', 'OPEN_KAKAO', 'COPY_TO_CLIPBOARD', 'DOWNLOAD_FILE', 'SHOW_MODAL', 'SHARE_PAGE'] },
+  blk_hero_01: { hasTitle: true, hasSubtitle: true, hasButton: true, hasButtonAction: true, hasImage: true, hasVideo: true, allowedActions: ['NAVIGATE_PAGE', 'OPEN_URL', 'SCROLL_TO_BLOCK', 'CALL_PHONE', 'COPY_TO_CLIPBOARD', 'DOWNLOAD_FILE', 'SHOW_MODAL', 'SHARE_PAGE'] },
   // 필요 시 다른 블록들의 능력치도 추가
 }
 
-// 기본적으로 모든 버튼은 9가지 최적화 액션을 모두 지원함
+// 기본적으로 모든 버튼은 8가지 최적화 액션을 모두 지원함
 const DEFAULT_CAP: BlockCapability = {
-  allowedActions: ['NAVIGATE_PAGE', 'OPEN_URL', 'SCROLL_TO_BLOCK', 'CALL_PHONE', 'OPEN_KAKAO', 'COPY_TO_CLIPBOARD', 'DOWNLOAD_FILE', 'SHOW_MODAL', 'SHARE_PAGE']
+  allowedActions: ['NAVIGATE_PAGE', 'OPEN_URL', 'SCROLL_TO_BLOCK', 'CALL_PHONE', 'COPY_TO_CLIPBOARD', 'DOWNLOAD_FILE', 'SHOW_MODAL', 'SHARE_PAGE']
 }
 
 export default function SidePropertyPanel() {
