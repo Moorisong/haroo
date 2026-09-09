@@ -7,7 +7,7 @@ import type { BlockCapability } from '../SidePropertyPanel'
 interface PanelActionTabProps {
   cap: BlockCapability
   config: BlockInputConfig & Record<string, any>
-  handleChange: (field: string, value: any) => void
+  handleChange: (fieldOrData: string | Record<string, any>, value?: any) => void
 }
 
 export default function PanelActionTab({ cap, config, handleChange }: PanelActionTabProps) {
@@ -55,6 +55,31 @@ export default function PanelActionTab({ cap, config, handleChange }: PanelActio
     // Legacy sync for single button compatibility
     if (selectedBtnIndex === 0) {
       handleChange(field, value)
+    }
+  }
+
+  const handleActionTypeChange = (newAction: string) => {
+    if (newAction === currentBtn.actionType) return
+
+    const updatedButtons = [...buttons]
+    updatedButtons[selectedBtnIndex] = {
+      ...updatedButtons[selectedBtnIndex],
+      actionType: newAction,
+      buttonLink: '',
+      customTargetId: '',
+      thankYouMessage: '',
+    }
+
+    if (selectedBtnIndex === 0) {
+      handleChange({
+        buttons: updatedButtons,
+        actionType: newAction,
+        buttonLink: '',
+        customTargetId: '',
+        thankYouMessage: '',
+      })
+    } else {
+      handleChange('buttons', updatedButtons)
     }
   }
 
@@ -129,7 +154,7 @@ export default function PanelActionTab({ cap, config, handleChange }: PanelActio
                 <label className="text-sm font-medium text-slate-700">{PANEL_LABELS.ACTION_TYPE}</label>
                 <select
                   value={currentBtn.actionType || ''}
-                  onChange={(e) => handleUpdateButton('actionType', e.target.value)}
+                  onChange={(e) => handleActionTypeChange(e.target.value)}
                   className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm bg-white focus:outline-none focus:border-sky-500"
                 >
                   <option value="">-- 동작 선택 --</option>

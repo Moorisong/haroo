@@ -72,8 +72,12 @@ export default function SidePropertyPanel() {
   const config = (block.inputConfig || {}) as BlockInputConfig & Record<string, any>
   const cap: BlockCapability = BLOCK_CAPABILITIES[block.blockId] || DEFAULT_CAP
 
-  const handleChange = (field: string, value: any) => {
-    updateBlockInputData(selectedInstanceId, { [field]: value })
+  const handleChange = (fieldOrData: string | Record<string, any>, value?: any) => {
+    if (typeof fieldOrData === 'string') {
+      updateBlockInputData(selectedInstanceId, { [fieldOrData]: value })
+    } else if (typeof fieldOrData === 'object' && fieldOrData !== null) {
+      updateBlockInputData(selectedInstanceId, fieldOrData)
+    }
   }
 
   const renderPanel = () => {
