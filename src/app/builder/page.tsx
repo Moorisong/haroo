@@ -22,6 +22,7 @@ import SiteTemplateSelectionModal from '@/components/builder/SiteTemplateSelecti
 import PageSwitcher from '@/components/builder/PageSwitcher'
 import ProjectSwitcher from '@/components/builder/ProjectSwitcher'
 import ActionToast from '@/components/builder/ActionToast'
+import ActionModal from '@/components/builder/ActionModal'
 import MobileBlockerScreen from '@/components/builder/MobileBlockerScreen'
 
 type FilterTab = 'ALL' | BlockTier
@@ -587,8 +588,9 @@ export default function BuilderPage() {
         </div>
       </div>
 
-      {/* 액션 Toast 알림 - 미리보기/실제 공통 */}
+      {/* 액션 Toast & 모달 알림 - 미리보기/실제 공통 */}
       <ActionToast />
+      <ActionModal />
 
       {/* 저장되지 않은 변경사항 이탈 방지 커스텀 모달 */}
       <UnsavedLeaveWarningModal

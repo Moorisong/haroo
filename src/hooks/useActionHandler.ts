@@ -143,9 +143,16 @@ export function useActionHandler({ isPreview, onNavigatePage }: UseActionHandler
         return
       }
 
-      // 8. SHOW_MODAL (안내 모달/팝업 띄우기)
+      // 8. SHOW_MODAL (팝업 모달 띄우기)
       if (actionType === 'SHOW_MODAL') {
-        window.dispatchEvent(new CustomEvent('haroo:show-modal', { detail: { message: config.thankYouMessage || '안내 메시지입니다.' } }))
+        window.dispatchEvent(
+          new CustomEvent('haroo:show-modal', {
+            detail: {
+              message: config.thankYouMessage || '',
+              icon: config.modalIcon || 'none',
+            },
+          })
+        )
         return
       }
       

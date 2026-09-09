@@ -4,6 +4,7 @@ import React, { useEffect } from 'react'
 import type { BlockInputConfig } from '@/types'
 import type { BlockCapability } from '../SidePropertyPanel'
 import { ACTION_OPTIONS } from './constants'
+import ModalIconSelector from './ModalIconSelector'
 import { useBuilderStore } from '@/stores/useBuilderStore'
 import ButtonStyleSection from './ButtonStyleSection'
 import FileUploadField from './FileUploadField'
@@ -226,15 +227,31 @@ export default function ButtonPropertyPanel({ cap, config, handleChange }: Props
 
       {/* 8. SHOW_MODAL */}
       {config.actionType === 'SHOW_MODAL' && (
-        <div className="flex flex-col gap-2 animate-in fade-in duration-200">
-          <label className="text-xs font-semibold text-slate-700">팝업 안내 문구</label>
-          <textarea
-            rows={2}
-            value={config.thankYouMessage || ''}
-            onChange={(e) => handleChange('thankYouMessage', e.target.value)}
-            className="w-full text-sm border border-slate-300 rounded-md p-2 resize-none"
-            placeholder="예: 신청이 완료되었습니다. 담당자가 곧 연락드릴 예정입니다."
+        <div className="flex flex-col gap-2.5 animate-in fade-in duration-200">
+          <ModalIconSelector
+            selectedId={config.modalIcon}
+            onChange={(id) => handleChange('modalIcon', id)}
           />
+
+          <div className="flex flex-col gap-1.5">
+            <div className="flex items-center justify-between">
+              <label className="text-xs font-semibold text-slate-700">팝업 내용</label>
+              <span className={`text-[11px] font-mono ${(config.thankYouMessage || '').length >= 500 ? 'text-rose-500 font-bold' : 'text-slate-400'}`}>
+                {(config.thankYouMessage || '').length}/500자
+              </span>
+            </div>
+            <textarea
+              rows={3}
+              maxLength={500}
+              value={config.thankYouMessage || ''}
+              onChange={(e) => handleChange('thankYouMessage', e.target.value)}
+              className="w-full text-sm border border-slate-300 rounded-md p-2.5 resize-none leading-relaxed focus:outline-none focus:border-sky-500"
+              placeholder="예: [주차 안내] 건물 뒤편 지하 주차장을 2시간 무료로 이용하실 수 있습니다. 또는 공지사항, 혜택, 이벤트 내용을 자유롭게 입력하세요."
+            />
+            <p className="text-[11px] text-slate-500 leading-relaxed">
+              💡 안내, 공지, 쿠폰, 이벤트 혜택 등 방문자가 화면 이동 없이 즉시 확인할 수 있는 모달 팝업이 뜹니다.
+            </p>
+          </div>
         </div>
       )}
 

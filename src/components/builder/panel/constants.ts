@@ -5,9 +5,20 @@ export const ACTION_OPTIONS = {
   CALL_PHONE: '전화 걸기',
   COPY_TO_CLIPBOARD: '텍스트 복사하기',
   DOWNLOAD_FILE: '파일 / 소개서 다운로드',
-  SHOW_MODAL: '안내 팝업(모달) 띄우기',
+  SHOW_MODAL: '팝업(모달) 띄우기',
   SHARE_PAGE: '이 페이지 공유하기',
 };
+
+export const MODAL_ICON_OPTIONS = [
+  { id: 'none', label: '없음', emoji: '✕' },
+  { id: 'info', label: '안내', emoji: 'ℹ️' },
+  { id: 'bell', label: '공지', emoji: '🔔' },
+  { id: 'check', label: '완료/성공', emoji: '✅' },
+  { id: 'sparkles', label: '이벤트/혜택', emoji: '✨' },
+  { id: 'gift', label: '쿠폰/선물', emoji: '🎁' },
+  { id: 'alert', label: '주의/규칙', emoji: '⚠️' },
+  { id: 'help', label: '도움말/FAQ', emoji: '❓' },
+] as const;
 
 export const CUSTOM_EFFECT_OPTIONS = {
   TOGGLE_VISIBILITY: '숨기기 / 보여주기 토글',

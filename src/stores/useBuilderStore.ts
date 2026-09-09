@@ -32,6 +32,8 @@ interface BuilderState {
   canvasBlocks: CanvasBlock[]
   selectedInstanceId: string | null
   selectedElementKey: string | null
+  previousSelectedInstanceId: string | null
+  previousSelectedElementKey: string | null
   draftName: string
   draftId: string | null
   versionClock: number
@@ -88,6 +90,8 @@ const initialState = {
   canvasBlocks: [] as CanvasBlock[],
   selectedInstanceId: null,
   selectedElementKey: null,
+  previousSelectedInstanceId: null,
+  previousSelectedElementKey: null,
   draftName: '',
   draftId: null,
   versionClock: 0,
@@ -348,7 +352,29 @@ export const useBuilderStore = create<BuilderState>((set, get) => ({
   },
 
   togglePreviewMode: () => {
-    set((state) => ({ isPreviewMode: !state.isPreviewMode, selectedInstanceId: null, selectedElementKey: null }))
+    set((state) => {
+      const nextPreview = !state.isPreviewMode
+      if (nextPreview) {
+        // 동작 테스트 하기(미리보기)로 전환 시: 현재 선택된 블록/요소를 기억하고 선택 해제
+        return {
+          isPreviewMode: true,
+          previousSelectedInstanceId: state.selectedInstanceId,
+          previousSelectedElementKey: state.selectedElementKey,
+          selectedInstanceId: null,
+          selectedElementKey: null,
+        }
+      } else {
+        // 편집하기로 복귀 시: 직전 선택했던 블록이 현재 캔버스에 여전히 존재하는지 확인 후 복원
+        const canRestore = state.previousSelectedInstanceId &&
+          state.canvasBlocks.some((b) => b.instanceId === state.previousSelectedInstanceId)
+
+        return {
+          isPreviewMode: false,
+          selectedInstanceId: canRestore ? state.previousSelectedInstanceId : (state.canvasBlocks[0]?.instanceId || null),
+          selectedElementKey: canRestore ? state.previousSelectedElementKey : null,
+        }
+      }
+    })
   },
 
   setDraftName: (name) => {

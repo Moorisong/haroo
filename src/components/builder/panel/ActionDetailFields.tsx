@@ -2,12 +2,14 @@
 
 import React from 'react'
 import type { Page } from '@/stores/useBuilderStore'
+import ModalIconSelector from './ModalIconSelector'
 
 interface Props {
   actionType: string
   buttonLink?: string
   customTargetId?: string
   thankYouMessage?: string
+  modalIcon?: string
   downloadFileName?: string
   downloadFileSize?: string
   pages: Page[]
@@ -21,6 +23,7 @@ export default function ActionDetailFields({
   buttonLink,
   customTargetId,
   thankYouMessage,
+  modalIcon = 'none',
   pages,
   canvasBlocks,
   onUpdate,
@@ -133,15 +136,31 @@ export default function ActionDetailFields({
 
       {/* 8. SHOW_MODAL */}
       {actionType === 'SHOW_MODAL' && (
-        <div className="space-y-1.5 pt-1 animate-in fade-in duration-200">
-          <label className="text-xs font-semibold text-slate-600">팝업 안내 문구</label>
-          <textarea
-            rows={2}
-            value={thankYouMessage || ''}
-            onChange={(e) => onUpdate('thankYouMessage', e.target.value)}
-            placeholder="예: 신청이 완료되었습니다."
-            className="w-full px-2 py-1.5 border border-slate-300 rounded text-xs resize-none"
+        <div className="space-y-2.5 pt-1 animate-in fade-in duration-200">
+          <ModalIconSelector
+            selectedId={modalIcon}
+            onChange={(id) => onUpdate('modalIcon', id)}
           />
+
+          <div className="space-y-1">
+            <div className="flex items-center justify-between">
+              <label className="text-xs font-semibold text-slate-700">팝업 내용</label>
+              <span className={`text-[11px] font-mono ${(thankYouMessage || '').length >= 500 ? 'text-rose-500 font-bold' : 'text-slate-400'}`}>
+                {(thankYouMessage || '').length}/500자
+              </span>
+            </div>
+            <textarea
+              rows={3}
+              maxLength={500}
+              value={thankYouMessage || ''}
+              onChange={(e) => onUpdate('thankYouMessage', e.target.value)}
+              placeholder="예: [주차 안내] 건물 뒤편 지하 주차장을 2시간 무료로 이용하실 수 있습니다. 또는 공지사항, 혜택, 이벤트 내용을 자유롭게 입력하세요."
+              className="w-full px-2.5 py-2 border border-slate-300 rounded text-xs resize-none focus:outline-none focus:border-sky-500 leading-relaxed"
+            />
+            <p className="text-[11px] text-slate-500 leading-relaxed">
+              💡 안내, 공지, 쿠폰, 이벤트 혜택 등 방문자가 화면 이동 없이 즉시 확인할 수 있는 모달 팝업이 뜹니다.
+            </p>
+          </div>
         </div>
       )}
 

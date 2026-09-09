@@ -32,6 +32,7 @@ export default function PanelActionTab({ cap, config, handleChange }: PanelActio
       buttonLink: config.buttonLink || '',
       notifyKakao: config.notifyKakao,
       thankYouMessage: config.thankYouMessage,
+      modalIcon: config.modalIcon,
       paymentAmount: config.paymentAmount,
       paymentSuccessUrl: config.paymentSuccessUrl,
       customTargetId: config.customTargetId,
@@ -161,6 +162,7 @@ export default function PanelActionTab({ cap, config, handleChange }: PanelActio
               buttonLink={currentBtn.buttonLink}
               customTargetId={currentBtn.customTargetId}
               thankYouMessage={currentBtn.thankYouMessage}
+              modalIcon={currentBtn.modalIcon}
               pages={pages}
               canvasBlocks={canvasBlocks}
               onUpdate={handleUpdateButton}

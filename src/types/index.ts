@@ -40,6 +40,7 @@ export const BlockInputConfigSchema = z.object({
     buttonLink: z.string().optional(),
     notifyKakao: z.boolean().optional(),
     thankYouMessage: z.string().optional(),
+    modalIcon: z.string().optional(),
     paymentAmount: z.number().optional(),
     paymentSuccessUrl: z.string().optional(),
     customTargetId: z.string().optional(),
@@ -61,6 +62,7 @@ export const BlockInputConfigSchema = z.object({
   // 액션 타입별 하위 상세 옵션 (Progressive Disclosure)
   notifyKakao: z.boolean().optional(),
   thankYouMessage: z.string().optional(),
+  modalIcon: z.string().optional(),
   paymentAmount: z.number().optional(),
   paymentSuccessUrl: z.string().optional(),
   downloadFileUrl: z.string().optional(),
