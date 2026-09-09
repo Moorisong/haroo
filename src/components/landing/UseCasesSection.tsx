@@ -97,7 +97,7 @@ export default function UseCasesSection() {
             href="/builder"
             className="inline-flex items-center gap-2 px-6 py-3 bg-slate-900 text-white text-xs sm:text-sm font-bold rounded-xl hover:bg-slate-800 transition-colors shadow-sm"
           >
-            지금 무료로 내 템플릿 조립하기
+            지금 내 템플릿 조립하기
             <ArrowUpRight size={15} />
           </Link>
         </div>

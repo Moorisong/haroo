@@ -40,7 +40,7 @@ export default function HeroSection() {
             href="/builder"
             className="inline-flex items-center gap-2 px-6 py-3.5 bg-slate-900 text-white text-xs sm:text-sm font-bold rounded-xl hover:bg-slate-800 transition-all hover:shadow-lg"
           >
-            무료로 조립 시작하기
+            지금 조립 시작하기
             <ArrowRight size={16} />
           </Link>
           <button

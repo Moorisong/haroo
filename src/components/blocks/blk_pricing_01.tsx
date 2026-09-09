@@ -29,7 +29,7 @@ const DEFAULT_PLANS: PricingPlan[] = [
     price: '무료',
     period: '',
     features: ['기본 블록 6종', '하루 서브도메인', '월 1,000 PV'],
-    cta: '무료로 시작',
+    cta: '체험해보기',
     highlight: false,
   },
   {

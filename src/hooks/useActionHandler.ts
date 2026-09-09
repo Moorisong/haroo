@@ -53,10 +53,13 @@ export function useActionHandler({ isPreview, onNavigatePage }: UseActionHandler
 
       // 2. OPEN_URL (외부 링크 열기)
       if (actionType === 'OPEN_URL') {
-        const url = config.buttonLink
+        let url = config.buttonLink?.trim()
         if (!url) {
           if (isPreview) emitToast('⚠️ 연결할 URL이 설정되지 않았습니다.', 'warning')
           return
+        }
+        if (!/^https?:\/\//i.test(url) && !url.startsWith('//')) {
+          url = `https://${url}`
         }
         window.open(url, '_blank', 'noopener,noreferrer')
         return
@@ -87,10 +90,13 @@ export function useActionHandler({ isPreview, onNavigatePage }: UseActionHandler
 
       // 5. OPEN_KAKAO (카카오톡 오픈채팅/상담 연결)
       if (actionType === 'OPEN_KAKAO') {
-        const kakaoUrl = config.buttonLink
+        let kakaoUrl = config.buttonLink?.trim()
         if (!kakaoUrl) {
           if (isPreview) emitToast('⚠️ 카카오 링크가 설정되지 않았습니다.', 'warning')
           return
+        }
+        if (!/^https?:\/\//i.test(kakaoUrl) && !kakaoUrl.startsWith('//')) {
+          kakaoUrl = `https://${kakaoUrl}`
         }
         window.open(kakaoUrl, '_blank', 'noopener,noreferrer')
         return

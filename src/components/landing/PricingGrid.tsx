@@ -78,7 +78,7 @@ export default function PricingGrid() {
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-slate-900 text-balance">
             명확하고 투명한 가격
           </h2>
-          <p className="text-slate-500 text-sm mt-2">무료로 먼저 조립해보시고 결정하세요.</p>
+          <p className="text-slate-500 text-sm mt-2">먼저 조립해보시고 결정하세요.</p>
         </div>
 
         {/* 탭 */}
@@ -143,7 +143,7 @@ export default function PricingGrid() {
                   </div>
                   <div className="p-5 pt-0 mt-auto">
                     <Link href="/builder" className={`block w-full py-2.5 text-center text-xs sm:text-sm font-bold rounded-xl transition-colors ${tier.btnColor}`}>
-                      무료로 조립 시작
+                      지금 조립 시작
                     </Link>
                   </div>
                 </div>
