@@ -13,16 +13,22 @@ const PADDING_Y_LABELS: Record<string, string> = {
 
 interface Props {
   config: BlockInputConfig & Record<string, any>
-  handleChange: (field: string, value: any) => void
+  handleChange: (field: string | Record<string, any>, value?: any) => void
 }
 
 export default function BackgroundPropertyPanel({ config, handleChange }: Props) {
   const styleData = config.backgroundStyle || {}
   const fileInputRef = useRef<HTMLInputElement>(null)
   const bgType = styleData.bgType || (styleData.backgroundImage ? 'image' : 'color')
+  const currentBgColor = styleData.backgroundColor || config.backgroundColor || '#ffffff'
 
   const updateStyle = (updates: Record<string, any>) => {
-    handleChange('backgroundStyle', { ...styleData, ...updates })
+    const nextStyle = { ...styleData, ...updates }
+    const patch: Record<string, any> = { backgroundStyle: nextStyle }
+    if (updates.backgroundColor !== undefined) {
+      patch.backgroundColor = updates.backgroundColor
+    }
+    handleChange(patch)
   }
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -52,7 +58,7 @@ export default function BackgroundPropertyPanel({ config, handleChange }: Props)
                 ? 'bg-white text-slate-900 shadow-sm'
                 : 'text-slate-500 hover:text-slate-900'
             }`}
-            onClick={() => updateStyle({ bgType: 'color' })}
+            onClick={() => updateStyle({ bgType: 'color', backgroundColor: currentBgColor })}
           >
             단색 색상
           </button>
@@ -77,13 +83,13 @@ export default function BackgroundPropertyPanel({ config, handleChange }: Props)
           <div className="flex gap-2 items-center min-w-0">
             <input
               type="color"
-              value={styleData.backgroundColor || '#ffffff'}
+              value={currentBgColor}
               onChange={(e) => updateStyle({ backgroundColor: e.target.value })}
               className="w-8 h-8 rounded border border-slate-200 cursor-pointer p-0 shrink-0 bg-transparent"
             />
             <input
               type="text"
-              value={styleData.backgroundColor || ''}
+              value={currentBgColor}
               onChange={(e) => updateStyle({ backgroundColor: e.target.value })}
               className="w-full min-w-0 text-sm border border-slate-300 rounded-md p-2 uppercase font-mono"
               placeholder="#ffffff"
