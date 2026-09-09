@@ -198,7 +198,16 @@ export default function PanelActionTab({ cap, config, handleChange }: PanelActio
             {currentBtn.actionType === 'OPEN_URL' && (
               <div className="space-y-1.5 pt-1 animate-in fade-in duration-200">
                 <label className="text-xs font-semibold text-slate-600">연결할 링크 (URL)</label>
-                <input type="text" value={currentBtn.buttonLink || ''} onChange={(e) => handleUpdateButton('buttonLink', e.target.value)} placeholder="https://..." className="w-full px-2 py-1.5 border border-slate-300 rounded text-xs" />
+                <input
+                  type="text"
+                  value={currentBtn.buttonLink || ''}
+                  onChange={(e) => handleUpdateButton('buttonLink', e.target.value)}
+                  placeholder="https://"
+                  className="w-full px-2 py-1.5 border border-slate-300 rounded text-xs"
+                />
+                <p className="text-[11px] text-slate-500 leading-relaxed">
+                  💡 홈페이지 웹주소 외에도 카카오톡 오픈채팅, 네이버 예약, SNS 등 원하는 외부 링크를 입력할 수 있습니다.
+                </p>
               </div>
             )}
 
@@ -230,14 +239,6 @@ export default function PanelActionTab({ cap, config, handleChange }: PanelActio
               <div className="space-y-1.5 pt-1 animate-in fade-in duration-200">
                 <label className="text-xs font-semibold text-slate-600">연결할 전화번호</label>
                 <input type="tel" value={currentBtn.buttonLink || ''} onChange={(e) => handleUpdateButton('buttonLink', e.target.value)} placeholder="예: 010-0000-0000" className="w-full px-2 py-1.5 border border-slate-300 rounded text-xs" />
-              </div>
-            )}
-
-            {/* 5. OPEN_KAKAO */}
-            {currentBtn.actionType === 'OPEN_KAKAO' && (
-              <div className="space-y-1.5 pt-1 animate-in fade-in duration-200">
-                <label className="text-xs font-semibold text-slate-600">카카오 오픈채팅 / 채널 링크</label>
-                <input type="text" value={currentBtn.buttonLink || ''} onChange={(e) => handleUpdateButton('buttonLink', e.target.value)} placeholder="예: https://open.kakao.com/..." className="w-full px-2 py-1.5 border border-slate-300 rounded text-xs" />
               </div>
             )}
 

@@ -126,6 +126,9 @@ export default function ButtonPropertyPanel({ cap, config, handleChange }: Props
             className="w-full text-sm border border-slate-300 rounded-md p-2"
             placeholder="https://"
           />
+          <p className="text-[11px] text-slate-500 leading-relaxed">
+            💡 홈페이지 웹주소 외에도 카카오톡 오픈채팅, 네이버 예약, SNS 등 원하는 외부 링크를 자유롭게 입력할 수 있습니다.
+          </p>
         </div>
       )}
 
@@ -162,20 +165,6 @@ export default function ButtonPropertyPanel({ cap, config, handleChange }: Props
             onChange={(e) => handleChange('buttonLink', e.target.value)}
             className="w-full text-sm border border-slate-300 rounded-md p-2"
             placeholder="예: 010-0000-0000"
-          />
-        </div>
-      )}
-
-      {/* 5. OPEN_KAKAO */}
-      {config.actionType === 'OPEN_KAKAO' && (
-        <div className="flex flex-col gap-2 animate-in fade-in duration-200">
-          <label className="text-xs font-semibold text-slate-700">카카오 오픈채팅 / 채널 링크</label>
-          <input
-            type="text"
-            value={config.buttonLink || ''}
-            onChange={(e) => handleChange('buttonLink', e.target.value)}
-            className="w-full text-sm border border-slate-300 rounded-md p-2"
-            placeholder="예: https://open.kakao.com/..."
           />
         </div>
       )}
