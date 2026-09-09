@@ -183,7 +183,7 @@ export default function BlkHero01({ config, isPreview, onAction }: Props) {
           <AtomText01
             as="h1"
             className={cn(
-              'mb-3 md:mb-4 leading-tight tracking-tight break-keep p-1 rounded pointer-events-auto',
+              'mb-3 md:mb-4 leading-tight tracking-tight text-center break-words break-all max-w-full p-1 rounded pointer-events-auto',
               !isPreview && 'cursor-pointer hover:ring-1 hover:ring-white/50'
             )}
             style={{
@@ -204,7 +204,7 @@ export default function BlkHero01({ config, isPreview, onAction }: Props) {
           <AtomText01
             as="p"
             className={cn(
-              'mb-6 md:mb-8 max-w-2xl font-normal leading-relaxed break-keep p-1 rounded pointer-events-auto',
+              'mb-6 md:mb-8 max-w-3xl text-center font-normal leading-relaxed break-words break-all w-full p-1 rounded pointer-events-auto',
               !isPreview && 'cursor-pointer hover:ring-1 hover:ring-white/50'
             )}
             style={{

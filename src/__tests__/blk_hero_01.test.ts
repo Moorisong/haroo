@@ -1,6 +1,6 @@
 import test from 'node:test'
 import assert from 'node:assert'
-import { BlockInputConfigSchema } from '../types'
+import { BlockInputConfigSchema } from '../types/index.ts'
 
 /**
  * 히어로 마스터 블록 (blk_hero_01) 고도화 단위 테스트
