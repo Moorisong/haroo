@@ -54,29 +54,31 @@ export default function ViewportSwitcher() {
         )}
       </div>
 
-      {/* 미리보기 / 편집모드 전환 버튼 */}
-      <div className="flex items-center gap-2">
-        <button
-          onClick={togglePreviewMode}
-          className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-bold rounded-lg transition-all shadow-xs ${
-            isPreviewMode
-              ? 'bg-emerald-600 hover:bg-emerald-700 text-white'
-              : 'bg-slate-900 hover:bg-slate-800 text-white'
-          }`}
-        >
-          {isPreviewMode ? (
-            <>
-              <Pencil className="w-3.5 h-3.5" />
-              <span>편집하기</span>
-            </>
-          ) : (
-            <>
-              <Play className="w-3.5 h-3.5 fill-white" />
-              <span>동작 테스트 하기</span>
-            </>
-          )}
-        </button>
-      </div>
+      {/* 미리보기 / 편집모드 전환 버튼: 웹사이트 제작 시 태블릿/모바일 뷰포트에서는 숨김 */}
+      {!(projectType === 'WEB' && deviceViewport !== 'desktop') && (
+        <div className="flex items-center gap-2">
+          <button
+            onClick={togglePreviewMode}
+            className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-bold rounded-lg transition-all shadow-xs ${
+              isPreviewMode
+                ? 'bg-emerald-600 hover:bg-emerald-700 text-white'
+                : 'bg-slate-900 hover:bg-slate-800 text-white'
+            }`}
+          >
+            {isPreviewMode ? (
+              <>
+                <Pencil className="w-3.5 h-3.5" />
+                <span>편집하기</span>
+              </>
+            ) : (
+              <>
+                <Play className="w-3.5 h-3.5 fill-white" />
+                <span>동작 테스트 하기</span>
+              </>
+            )}
+          </button>
+        </div>
+      )}
     </div>
   )
 }
