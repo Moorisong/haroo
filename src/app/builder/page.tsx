@@ -86,6 +86,7 @@ import UnsavedLeaveWarningModal from '@/components/builder/UnsavedLeaveWarningMo
 export default function BuilderPage() {
   const [activeTab, setActiveTab] = useState<FilterTab>('ALL')
   const [isSaving, setIsSaving] = useState(false)
+  const [isLeavingWithSave, setIsLeavingWithSave] = useState(false)
   const [saveToast, setSaveToast] = useState(false)
   const [nameError, setNameError] = useState(false)
   const [nameToast, setNameToast] = useState(false)
@@ -605,7 +606,9 @@ export default function BuilderPage() {
       {/* 저장되지 않은 변경사항 이탈 방지 커스텀 모달 */}
       <UnsavedLeaveWarningModal
         isOpen={leaveModalOpen}
+        isSubmitting={isLeavingWithSave}
         onClose={() => {
+          if (isLeavingWithSave) return
           setLeaveModalOpen(false)
           setPendingTargetId(null)
         }}
@@ -618,11 +621,17 @@ export default function BuilderPage() {
         }}
         onSaveAndLeave={async () => {
           const target = pendingTargetId
-          const isSuccess = await handleManualSave(true)
-          setLeaveModalOpen(false)
-          setPendingTargetId(null)
-          if (isSuccess && target) {
-            executeTargetSwitch(target)
+          if (!target || isLeavingWithSave) return
+          setIsLeavingWithSave(true)
+          try {
+            const isSuccess = await handleManualSave(true)
+            if (isSuccess) {
+              setLeaveModalOpen(false)
+              setPendingTargetId(null)
+              executeTargetSwitch(target)
+            }
+          } finally {
+            setIsLeavingWithSave(false)
           }
         }}
       />

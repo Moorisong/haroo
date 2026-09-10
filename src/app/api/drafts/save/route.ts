@@ -69,10 +69,14 @@ export async function POST(req: NextRequest) {
     const existingMemDrafts = serverStore.get(userId) || []
     let existingDbDrafts: any[] = []
     try {
-      const { data } = await supabase
+      const dbCheckPromise = supabase
         .from('UserProjectDraft')
-        .select('*')
-        .or(`userId.eq.${userId},user_id.eq.${userId}`)
+        .select('id, name')
+        .eq('userId', userId)
+      const timeoutPromise = new Promise<{ data: any[] }>((resolve) =>
+        setTimeout(() => resolve({ data: [] }), 1200)
+      )
+      const { data } = await Promise.race([dbCheckPromise, timeoutPromise])
       if (data) existingDbDrafts = data
     } catch (e) {
       // ignore
