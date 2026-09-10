@@ -33,12 +33,12 @@ export async function GET(req: NextRequest) {
       userId = await getAuthenticatedUserId(req, tempRes)
     }
 
-    // 1. Supabase DB 조회 시도
+    // 1. Supabase DB 조회 시도 (무거운 block_config_json 제외하여 속도 개선)
     let dbData: any[] = []
     try {
       const { data, error } = await supabase
         .from('UserProjectDraft')
-        .select('*')
+        .select('id, name, draft_id, draft_name, userId, user_id, updatedAt, updated_at, versionClock, version_clock, selectedBlocks')
         .or(`userId.eq.${userId},user_id.eq.${userId}`)
         .order('updatedAt', { ascending: false })
         .limit(10)
@@ -48,7 +48,7 @@ export async function GET(req: NextRequest) {
       } else {
         const res2 = await supabase
           .from('user_project_drafts')
-          .select('*')
+          .select('id, name, draft_id, draft_name, updatedAt, updated_at, versionClock, version_clock, block_config_json')
           .limit(10)
         if (res2.data) dbData = res2.data
       }

@@ -65,25 +65,9 @@ export async function POST(req: NextRequest) {
     const targetDraftId = draftId || `draft_${uuidv4().slice(0, 12)}`
     const nowIso = new Date().toISOString()
 
-    // 1. 기존 유저 드래프트 목록 가져오기 (중복 이름 체크용)
+    // 1. 서버 캐시(in-memory)로만 중복 이름 체크 (DB 쿼리 제거 → 속도 개선)
     const existingMemDrafts = serverStore.get(userId) || []
-    let existingDbDrafts: any[] = []
-    try {
-      const dbCheckPromise = supabase
-        .from('UserProjectDraft')
-        .select('id, name')
-        .eq('userId', userId)
-      const timeoutPromise = new Promise<{ data: any[] }>((resolve) =>
-        setTimeout(() => resolve({ data: [] }), 1200)
-      )
-      const { data } = await Promise.race([dbCheckPromise, timeoutPromise])
-      if (data) existingDbDrafts = data
-    } catch (e) {
-      // ignore
-    }
-
-    const allExisting = [...existingMemDrafts, ...existingDbDrafts]
-    const finalUniqueName = resolveUniqueDraftName(name, targetDraftId, allExisting)
+    const finalUniqueName = resolveUniqueDraftName(name, targetDraftId, existingMemDrafts)
 
     const draftData = {
       id: targetDraftId,
