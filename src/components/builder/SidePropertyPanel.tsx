@@ -12,6 +12,7 @@ import KakaoSharePropertyPanel from './panel/KakaoSharePropertyPanel'
 import VideoPropertyPanel from './panel/VideoPropertyPanel'
 import DdayPropertyPanel from './panel/DdayPropertyPanel'
 import PricingPropertyPanel from './panel/PricingPropertyPanel'
+import FormPropertyPanel from './panel/FormPropertyPanel'
 
 export interface BlockCapability {
   hasTitle?: boolean
@@ -30,6 +31,7 @@ const BLOCK_CAPABILITIES: Record<string, BlockCapability> = {
   blk_video_01: { hasTitle: true, hasSubtitle: true, hasVideo: true },
   blk_dday_01: { hasTitle: true, hasSubtitle: true },
   blk_pricing_01: { hasTitle: true, hasSubtitle: true, hasButton: true, hasButtonAction: true },
+  blk_form_01: { hasTitle: true, hasSubtitle: true, hasButton: true, hasButtonAction: true, allowedActions: ['NAVIGATE_PAGE', 'OPEN_URL', 'SCROLL_TO_BLOCK', 'CALL_PHONE', 'COPY_TO_CLIPBOARD', 'DOWNLOAD_FILE', 'SHOW_MODAL', 'SHARE_PAGE'] },
   // 필요 시 다른 블록들의 능력치도 추가
 }
 
@@ -116,6 +118,9 @@ export default function SidePropertyPanel() {
     if (selectedElementKey === 'video' || selectedElementKey === 'videoUrl') {
       return <VideoPropertyPanel config={config} handleChange={handleChange} />
     }
+    if (selectedElementKey === 'formFields') {
+      return <FormPropertyPanel config={config} handleChange={handleChange} />
+    }
     if (selectedElementKey === 'targetDate' || selectedElementKey === 'dday') {
       return <DdayPropertyPanel config={config} handleChange={handleChange} />
     }
@@ -177,6 +182,7 @@ export default function SidePropertyPanel() {
     if (selectedElementKey === 'background') return '배경 설정'
     if (selectedElementKey === 'kakaoShare') return '카카오톡 공유 카드 설정'
     if (selectedElementKey === 'video' || selectedElementKey === 'videoUrl') return '영상 링크 설정'
+    if (selectedElementKey === 'formFields') return '입력 폼 설정'
     if (selectedElementKey === 'targetDate' || selectedElementKey === 'dday') return '디데이 목표 일시 설정'
     if (
       selectedElementKey === 'plans' ||
