@@ -9,6 +9,7 @@ import ButtonPropertyPanel from './panel/ButtonPropertyPanel'
 import BackgroundPropertyPanel from './panel/BackgroundPropertyPanel'
 import BadgePropertyPanel from './panel/BadgePropertyPanel'
 import KakaoSharePropertyPanel from './panel/KakaoSharePropertyPanel'
+import VideoPropertyPanel from './panel/VideoPropertyPanel'
 
 export interface BlockCapability {
   hasTitle?: boolean
@@ -24,6 +25,7 @@ export interface BlockCapability {
 const BLOCK_CAPABILITIES: Record<string, BlockCapability> = {
   blk_hero_01: { hasTitle: true, hasSubtitle: true, hasButton: true, hasButtonAction: true, hasImage: true, hasVideo: true, allowedActions: ['NAVIGATE_PAGE', 'OPEN_URL', 'SCROLL_TO_BLOCK', 'CALL_PHONE', 'COPY_TO_CLIPBOARD', 'DOWNLOAD_FILE', 'SHOW_MODAL', 'SHARE_PAGE'] },
   blk_share_01: { hasTitle: true, hasSubtitle: true },
+  blk_video_01: { hasTitle: true, hasSubtitle: true, hasVideo: true },
   // 필요 시 다른 블록들의 능력치도 추가
 }
 
@@ -98,6 +100,9 @@ export default function SidePropertyPanel() {
     if (selectedElementKey === 'kakaoShare') {
       return <KakaoSharePropertyPanel config={config} handleChange={handleChange} />
     }
+    if (selectedElementKey === 'video' || selectedElementKey === 'videoUrl') {
+      return <VideoPropertyPanel config={config} handleChange={handleChange} />
+    }
     if (selectedElementKey === 'shareUrl') {
       return (
         <div className="flex flex-col gap-2 animate-in fade-in duration-200">
@@ -131,6 +136,7 @@ export default function SidePropertyPanel() {
     if (selectedElementKey === 'button' || selectedElementKey === 'button-1') return '버튼 설정'
     if (selectedElementKey === 'background') return '배경 설정'
     if (selectedElementKey === 'kakaoShare') return '카카오톡 공유 카드 설정'
+    if (selectedElementKey === 'video' || selectedElementKey === 'videoUrl') return '영상 링크 설정'
     if (selectedElementKey === 'shareUrl') return '공유 링크 설정'
     return '블록 설정'
   }
