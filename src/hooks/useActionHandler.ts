@@ -8,6 +8,7 @@
 
 import { useCallback } from 'react'
 import type { BlockInputConfig } from '@/types'
+import { getRandomDefaultKakaoImage } from '@/constants/kakaoShare'
 
 // ─── Toast 이벤트 발행 ────────────────────────────────────
 export type ToastLevel = 'success' | 'info' | 'warning' | 'error'
@@ -171,6 +172,70 @@ export function useActionHandler({ isPreview, onNavigatePage }: UseActionHandler
             emitToast('🔗 현재 페이지 주소가 복사되었습니다.', 'success')
           }).catch(() => emitToast('⚠️ 공유하기 기능을 사용할 수 없습니다.', 'error'))
         }
+        return
+      }
+
+      // 10. SHARE_KAKAO (카카오톡 공유 - sendDefault 방식)
+      if (actionType === 'SHARE_KAKAO') {
+        const urlToShare = config.buttonLink || window.location.href
+        
+        const checkKakaoAndShare = async () => {
+          let attempts = 0
+          // ts-ignore 로 전역 Kakao 객체 접근 (또는 declare global 사용)
+          // @ts-ignore
+          while ((!window.Kakao || !window.Kakao.isInitialized()) && attempts < 10) {
+            await new Promise((resolve) => setTimeout(resolve, 150))
+            attempts++
+          }
+
+          // @ts-ignore
+          if (!window.Kakao || !window.Kakao.isInitialized()) {
+            emitToast('⚠️ 카카오 공유 기능을 불러올 수 없어 주소를 복사합니다.', 'warning')
+            navigator.clipboard.writeText(urlToShare).then(() => {
+              emitToast('🔗 링크가 클립보드에 복사되었습니다.', 'success')
+            }).catch(() => emitToast('⚠️ 공유하기 기능을 사용할 수 없습니다.', 'error'))
+            return
+          }
+
+          // 플랫폼 도메인 기반 리다이렉터 URL 생성
+          // 카카오 디벨로퍼스에 등록된 도메인(현재 origin) + /r?to={urlToShare}
+          const redirectUrl = `${window.location.origin}/r?to=${encodeURIComponent(urlToShare)}`
+
+          const anyConfig = config as any
+          const shareTitle = anyConfig.kakaoShareTitle || config.title || document.title || '새로운 소식이 도착했습니다!'
+          const shareDesc = anyConfig.kakaoShareDescription || config.subtitle || ''
+          
+          // 유저가 업로드/지정한 이미지가 있으면 우선 사용, 없으면 A/B/C안 중 랜덤 추출
+          const resolvedImageUrl = anyConfig.kakaoImageUrl || anyConfig.imageUrl || getRandomDefaultKakaoImage()
+
+
+          const kakaoPayload = {
+            objectType: 'feed',
+            content: {
+              title: shareTitle,
+              description: shareDesc,
+              imageUrl: resolvedImageUrl,
+              link: {
+                mobileWebUrl: redirectUrl,
+                webUrl: redirectUrl,
+              },
+            },
+            buttons: [
+              {
+                title: '자세히 보기',
+                link: {
+                  mobileWebUrl: redirectUrl,
+                  webUrl: redirectUrl,
+                },
+              },
+            ],
+          }
+
+          // @ts-ignore
+          window.Kakao.Share.sendDefault(kakaoPayload)
+        }
+
+        checkKakaoAndShare()
         return
       }
     },

@@ -68,6 +68,7 @@ export const BlockInputConfigSchema = z.object({
   downloadFileUrl: z.string().optional(),
   downloadFileName: z.string().optional(),
   downloadFileSize: z.string().optional(),
+  shareUrl: z.string().optional(),
   copyTextPayload: z.string().optional(),
   customTargetId: z.string().optional(),
   customEffect: z.enum([

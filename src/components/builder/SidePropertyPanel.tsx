@@ -8,6 +8,7 @@ import TextPropertyPanel from './panel/TextPropertyPanel'
 import ButtonPropertyPanel from './panel/ButtonPropertyPanel'
 import BackgroundPropertyPanel from './panel/BackgroundPropertyPanel'
 import BadgePropertyPanel from './panel/BadgePropertyPanel'
+import KakaoSharePropertyPanel from './panel/KakaoSharePropertyPanel'
 
 export interface BlockCapability {
   hasTitle?: boolean
@@ -22,6 +23,7 @@ export interface BlockCapability {
 
 const BLOCK_CAPABILITIES: Record<string, BlockCapability> = {
   blk_hero_01: { hasTitle: true, hasSubtitle: true, hasButton: true, hasButtonAction: true, hasImage: true, hasVideo: true, allowedActions: ['NAVIGATE_PAGE', 'OPEN_URL', 'SCROLL_TO_BLOCK', 'CALL_PHONE', 'COPY_TO_CLIPBOARD', 'DOWNLOAD_FILE', 'SHOW_MODAL', 'SHARE_PAGE'] },
+  blk_share_01: { hasTitle: true, hasSubtitle: true },
   // 필요 시 다른 블록들의 능력치도 추가
 }
 
@@ -93,6 +95,26 @@ export default function SidePropertyPanel() {
     if (selectedElementKey === 'background') {
       return <BackgroundPropertyPanel config={config} handleChange={handleChange} />
     }
+    if (selectedElementKey === 'kakaoShare') {
+      return <KakaoSharePropertyPanel config={config} handleChange={handleChange} />
+    }
+    if (selectedElementKey === 'shareUrl') {
+      return (
+        <div className="flex flex-col gap-2 animate-in fade-in duration-200">
+          <label className="text-xs font-semibold text-slate-700">복사할 링크 (URL)</label>
+          <input
+            type="text"
+            value={config.shareUrl || ''}
+            onChange={(e) => handleChange('shareUrl', e.target.value)}
+            className="w-full text-sm border border-slate-300 rounded-md p-2"
+            placeholder="예: https://... (비워두면 현재 주소 복사)"
+          />
+          <p className="text-[11px] text-slate-500 leading-relaxed pt-1">
+            💡 URL 복사 버튼을 눌렀을 때 복사될 주소를 직접 지정할 수 있습니다. 비워둘 경우, 사이트를 보고 있는 현재 페이지 주소가 자동으로 복사됩니다.
+          </p>
+        </div>
+      )
+    }
     
     return (
       <div className="flex flex-col items-center justify-center h-full text-slate-400 text-sm text-center bg-slate-50 border-2 border-dashed border-slate-200 rounded-lg p-6">
@@ -108,6 +130,8 @@ export default function SidePropertyPanel() {
     if (selectedElementKey === 'subtitle') return '부제목 설정'
     if (selectedElementKey === 'button' || selectedElementKey === 'button-1') return '버튼 설정'
     if (selectedElementKey === 'background') return '배경 설정'
+    if (selectedElementKey === 'kakaoShare') return '카카오톡 공유 카드 설정'
+    if (selectedElementKey === 'shareUrl') return '공유 링크 설정'
     return '블록 설정'
   }
 
