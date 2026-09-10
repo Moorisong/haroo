@@ -10,6 +10,8 @@ import BackgroundPropertyPanel from './panel/BackgroundPropertyPanel'
 import BadgePropertyPanel from './panel/BadgePropertyPanel'
 import KakaoSharePropertyPanel from './panel/KakaoSharePropertyPanel'
 import VideoPropertyPanel from './panel/VideoPropertyPanel'
+import DdayPropertyPanel from './panel/DdayPropertyPanel'
+import PricingPropertyPanel from './panel/PricingPropertyPanel'
 
 export interface BlockCapability {
   hasTitle?: boolean
@@ -26,6 +28,8 @@ const BLOCK_CAPABILITIES: Record<string, BlockCapability> = {
   blk_hero_01: { hasTitle: true, hasSubtitle: true, hasButton: true, hasButtonAction: true, hasImage: true, hasVideo: true, allowedActions: ['NAVIGATE_PAGE', 'OPEN_URL', 'SCROLL_TO_BLOCK', 'CALL_PHONE', 'COPY_TO_CLIPBOARD', 'DOWNLOAD_FILE', 'SHOW_MODAL', 'SHARE_PAGE'] },
   blk_share_01: { hasTitle: true, hasSubtitle: true },
   blk_video_01: { hasTitle: true, hasSubtitle: true, hasVideo: true },
+  blk_dday_01: { hasTitle: true, hasSubtitle: true },
+  blk_pricing_01: { hasTitle: true, hasSubtitle: true, hasButton: true, hasButtonAction: true },
   // 필요 시 다른 블록들의 능력치도 추가
 }
 
@@ -35,7 +39,16 @@ const DEFAULT_CAP: BlockCapability = {
 }
 
 export default function SidePropertyPanel() {
-  const { selectedInstanceId, selectedElementKey, canvasBlocks, updateBlockInputData, projectType, deviceViewport, isPreviewMode } = useBuilderStore()
+  const {
+    selectedInstanceId,
+    selectedElementKey,
+    canvasBlocks,
+    updateBlockInputData,
+    selectBlock,
+    projectType,
+    deviceViewport,
+    isPreviewMode,
+  } = useBuilderStore()
   
   const isWebPreview = projectType === 'WEB' && deviceViewport !== 'desktop'
   const isReadOnly = isWebPreview || isPreviewMode
@@ -103,6 +116,33 @@ export default function SidePropertyPanel() {
     if (selectedElementKey === 'video' || selectedElementKey === 'videoUrl') {
       return <VideoPropertyPanel config={config} handleChange={handleChange} />
     }
+    if (selectedElementKey === 'targetDate' || selectedElementKey === 'dday') {
+      return <DdayPropertyPanel config={config} handleChange={handleChange} />
+    }
+    if (
+      selectedElementKey === 'plans' ||
+      selectedElementKey === 'plan' ||
+      selectedElementKey?.startsWith('plan-') ||
+      selectedElementKey === 'pricing'
+    ) {
+      const selectedIndex = selectedElementKey?.startsWith('plan-')
+        ? parseInt(selectedElementKey.replace('plan-', ''), 10)
+        : null
+      return (
+        <PricingPropertyPanel
+          config={config}
+          handleChange={handleChange}
+          selectedIndex={isNaN(selectedIndex as number) ? null : selectedIndex}
+          onSelectIndex={(idx) => {
+            if (idx === null) {
+              selectBlock(selectedInstanceId, 'plans')
+            } else {
+              selectBlock(selectedInstanceId, `plan-${idx}`)
+            }
+          }}
+        />
+      )
+    }
     if (selectedElementKey === 'shareUrl') {
       return (
         <div className="flex flex-col gap-2 animate-in fade-in duration-200">
@@ -137,6 +177,15 @@ export default function SidePropertyPanel() {
     if (selectedElementKey === 'background') return '배경 설정'
     if (selectedElementKey === 'kakaoShare') return '카카오톡 공유 카드 설정'
     if (selectedElementKey === 'video' || selectedElementKey === 'videoUrl') return '영상 링크 설정'
+    if (selectedElementKey === 'targetDate' || selectedElementKey === 'dday') return '디데이 목표 일시 설정'
+    if (
+      selectedElementKey === 'plans' ||
+      selectedElementKey === 'plan' ||
+      selectedElementKey?.startsWith('plan-') ||
+      selectedElementKey === 'pricing'
+    ) {
+      return '요금제 플랜 카드 설정'
+    }
     if (selectedElementKey === 'shareUrl') return '공유 링크 설정'
     return '블록 설정'
   }
