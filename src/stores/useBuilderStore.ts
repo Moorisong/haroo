@@ -314,10 +314,10 @@ export const useBuilderStore = create<BuilderState>((set, get) => ({
         
         const parsed = BlockInputConfigSchema.safeParse(newConfig)
         if (parsed.success) {
-          blocks[index].inputConfig = parsed.data
+          blocks[index] = { ...blocks[index], inputConfig: parsed.data }
         } else {
           console.warn('Block input validation failed', parsed.error)
-          blocks[index].inputConfig = newConfig
+          blocks[index] = { ...blocks[index], inputConfig: newConfig }
         }
       }
       const updatedPages = pages.map((p) => (p.id === activePageId ? { ...p, blocks } : p))

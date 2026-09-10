@@ -135,6 +135,12 @@ export default function BackgroundPropertyPanel({ config, handleChange }: Props)
               </span>
             </div>
           </div>
+
+          <div className="flex flex-col gap-2 pt-1">
+            <p className="text-[11px] text-slate-500 bg-slate-50 p-2.5 rounded border border-slate-200 leading-normal">
+              💡 캔버스에서 배경 사진을 마우스로 직접 드래그하여 원하는 위치로 조절할 수 있습니다.
+            </p>
+          </div>
         </div>
       )}
 

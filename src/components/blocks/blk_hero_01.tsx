@@ -7,7 +7,7 @@ import AtomBtn01 from '../atoms/atom_btn_01'
 import AtomImage01 from '../atoms/atom_image_01'
 import AtomBadge01 from '../atoms/atom_badge_01'
 import { getBlockLayout } from '@/lib/blockLayout'
-import { useElementSelector } from '@/contexts/BlockContext'
+import { useElementSelector, useBlockContext } from '@/contexts/BlockContext'
 import { useBuilderStore } from '@/stores/useBuilderStore'
 import type { BlockInputConfig, PaddingYOption } from '@/types'
 import { cn } from '@/lib/utils'
@@ -41,7 +41,8 @@ export default function BlkHero01({ config, isPreview, onAction }: Props) {
   } = safeConfig as BlockInputConfig
 
   const selectElement = useElementSelector()
-  const selectedInstanceId = useBuilderStore((state) => state.selectedInstanceId)
+  const blockContext = useBlockContext()
+  const instanceId = blockContext?.instanceId
   const updateBlockInputData = useBuilderStore((state) => state.updateBlockInputData)
 
   // 배경 설정 데이터 파싱
@@ -97,7 +98,7 @@ export default function BlkHero01({ config, isPreview, onAction }: Props) {
   }
 
   const handleMouseMove = (e: React.MouseEvent) => {
-    if (!isDragging || !dragStartRef.current || !selectedInstanceId) return
+    if (!isDragging || !dragStartRef.current || !instanceId) return
 
     const deltaX = e.clientX - dragStartRef.current.startX
     const deltaY = e.clientY - dragStartRef.current.startY
@@ -111,7 +112,7 @@ export default function BlkHero01({ config, isPreview, onAction }: Props) {
     const newX = Math.min(100, Math.max(0, dragStartRef.current.startPosX - deltaX * 0.15))
     const newY = Math.min(100, Math.max(0, dragStartRef.current.startPosY - deltaY * 0.15))
 
-    updateBlockInputData(selectedInstanceId, {
+    updateBlockInputData(instanceId, {
       backgroundStyle: {
         ...backgroundStyle,
         imagePosition: { x: Math.round(newX), y: Math.round(newY) },

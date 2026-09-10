@@ -134,6 +134,27 @@ export function runBuilderSaveTests() {
     throw new Error('❌ [FAIL] 8-2. skipDirty 전달 시 isDirty 차단 실패')
   }
 
+  // 9. updateBlockInputData 실행 시 상태 격리 및 얕은 복사/깊은 복사 불변성 검증 (State Pollution 방어)
+  useBuilderStore.getState().reset()
+  useBuilderStore.getState().addBlock({ ...mockBlockDef, id: 'block_a' } as any)
+  useBuilderStore.getState().addBlock({ ...mockBlockDef, id: 'block_b' } as any)
+  const blockA_Id = useBuilderStore.getState().canvasBlocks[0].instanceId
+  const blockB_Id = useBuilderStore.getState().canvasBlocks[1].instanceId
+
+  useBuilderStore.getState().updateBlockInputData(blockA_Id, { 
+    backgroundStyle: { bgType: 'image', imagePosition: { x: 10, y: 10 } } 
+  }, false)
+
+  state = useBuilderStore.getState()
+  const blockA = state.canvasBlocks[0]
+  const blockB = state.canvasBlocks[1]
+
+  if (blockA.inputConfig?.backgroundStyle?.bgType === 'image' && !blockB.inputConfig?.backgroundStyle) {
+    console.log('✅ [PASS] 9. updateBlockInputData 실행 시 블록 인스턴스 간 상태 격리(State Isolation) 불변성 유지 성공')
+  } else {
+    throw new Error('❌ [FAIL] 9. 상태 격리 불변성 훼손 (데이터 오염 발생)')
+  }
+
   console.log('--- 🏁 빌더 저장 및 서비스 모드 복원 테스트 완료 ---')
 }
 
