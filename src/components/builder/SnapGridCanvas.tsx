@@ -153,8 +153,8 @@ function DraggableBlock({ block, canvasRef, onDragStart, onDragMove, onDragEnd, 
   useEffect(() => {
     if (!blockRef.current) return
     const observer = new ResizeObserver((entries) => {
-      const h = Math.round(entries[0].contentRect.height)
-      if (h > 0 && h !== config.blockHeight) {
+      const h = entries[0].contentRect.height
+      if (h > 0 && Math.abs(h - (config.blockHeight || 0)) > 0.1) {
         updateBlockInputData(block.instanceId, { blockHeight: h }, true) // skipDirty = true
       }
     })

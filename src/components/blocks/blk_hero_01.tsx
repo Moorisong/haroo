@@ -126,7 +126,11 @@ export default function BlkHero01({ config, isPreview, onAction }: Props) {
   }
 
   return (
-    <AtomCard01 noPadding className="border-none rounded-none w-full overflow-hidden">
+    <AtomCard01 
+      noPadding 
+      className="border-none rounded-none w-full overflow-hidden bg-transparent"
+      style={{ backgroundColor: bgColor }}
+    >
       <div
         className={cn(
           `relative ${layout.paddingClass} w-full transition-colors select-none`,

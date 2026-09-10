@@ -49,7 +49,11 @@ export default function BlockBackground({
   }
 
   return (
-    <AtomCard01 noPadding className="border-none rounded-none w-full overflow-hidden relative">
+    <AtomCard01 
+      noPadding 
+      className="border-none rounded-none w-full overflow-hidden relative bg-transparent"
+      style={{ backgroundColor: bgColor, color: textColor }}
+    >
       <div
         className={cn(
           'relative w-full transition-colors select-none',

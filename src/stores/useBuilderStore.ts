@@ -233,7 +233,7 @@ export const useBuilderStore = create<BuilderState>((set, get) => ({
       icon: def.icon,
       inputConfig: {
         posX: 0,
-        posY: snapToGrid(nextY),
+        posY: nextY,
         customWidthPx: CANVAS_WIDTH,
       },
     }
@@ -280,7 +280,7 @@ export const useBuilderStore = create<BuilderState>((set, get) => ({
         ...b,
         inputConfig: {
           ...b.inputConfig,
-          posY: snapToGrid(currentY),
+          posY: currentY,
         },
       }
       currentY += h
