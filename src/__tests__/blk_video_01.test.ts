@@ -1,6 +1,7 @@
 import test from 'node:test'
 import assert from 'node:assert'
-import { BlockInputConfigSchema } from '../types/index.ts'
+import { BlockInputConfigSchema, type CanvasBlock } from '../types/index.ts'
+import { checkBlocksOverlap, resolveBlockCollisions, getBlockBounds } from '../lib/snapGrid.ts'
 
 /**
  * 동영상 임베드 블록 (blk_video_01) 단위 테스트
@@ -81,4 +82,41 @@ test('blk_video_01 (동영상 임베드 블록) 고도화 검증 테스트', asy
       assert.strictEqual(parsed.data.backgroundStyle?.backgroundColor, '#f8fafc')
     }
   })
+
+  /**
+   * [시나리오 4]: 타 블록 확장 또는 캔버스 배치 시 상하 블록 영역 겹침 방지 검증
+   */
+  await t.test('4. 비디오 블록이 상단 블록의 크기 변화에도 절대 영역이 겹치지 않아야 한다.', () => {
+    const heroBlock: CanvasBlock = {
+      instanceId: 'hero-block-1',
+      blockId: 'blk_hero_01',
+      name: '히어로',
+      tier: 'STARTER',
+      inputConfig: { posX: 0, posY: 0, customWidthPx: 1200, blockHeight: 500 },
+    }
+
+    const videoBlock: CanvasBlock = {
+      instanceId: 'video-block-1',
+      blockId: 'blk_video_01',
+      name: '비디오',
+      tier: 'STARTER',
+      inputConfig: { posX: 0, posY: 300, customWidthPx: 1200, blockHeight: 450 }, // 겹침 발생 위치
+    }
+
+    // 1) 겹침 발생 확인
+    const isOverlapped = checkBlocksOverlap(getBlockBounds(heroBlock), getBlockBounds(videoBlock))
+    assert.strictEqual(isOverlapped, true, '초기에는 영역이 겹쳐 있어야 함')
+
+    // 2) 충돌 해소 적용
+    const resolved = resolveBlockCollisions([heroBlock, videoBlock])
+    const resolvedVideo = resolved.find((b) => b.instanceId === 'video-block-1')
+
+    assert.ok(resolvedVideo)
+    assert.ok((resolvedVideo.inputConfig?.posY ?? 0) >= 500, '비디오 블록의 posY가 상위 블록 하단(500) 밑으로 밀려나야 함')
+
+    // 3) 겹침 0% 검증
+    const overlapAfter = checkBlocksOverlap(getBlockBounds(resolved[0]), getBlockBounds(resolved[1]))
+    assert.strictEqual(overlapAfter, false, '충돌 해결 후에는 어떤 블록과도 겹치지 않아야 함')
+  })
 })
+

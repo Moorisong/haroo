@@ -1,6 +1,7 @@
 import test from 'node:test'
 import assert from 'node:assert'
-import { BlockInputConfigSchema } from '../types/index.ts'
+import { BlockInputConfigSchema, type CanvasBlock } from '../types/index.ts'
+import { checkBlocksOverlap, resolveBlockCollisions, getBlockBounds } from '../lib/snapGrid.ts'
 
 /**
  * 히어로 마스터 블록 (blk_hero_01) 고도화 단위 테스트
@@ -91,4 +92,48 @@ test('blk_hero_01 (히어로 섹션) 고도화 검증 테스트', async (t) => {
       assert.strictEqual(parsed.data.badgeTextColor, '#ffffff')
     }
   })
+
+  /**
+   * [시나리오 6]: 히어로 섹션과 하단 블록 간 영역 겹침 방지 및 밀림 처리 검증
+   */
+  await t.test('6. 히어로 블록과 하단 블록이 겹치지 않고 온전히 배치되어야 한다.', () => {
+    const heroBlock: CanvasBlock = {
+      instanceId: 'hero-1',
+      blockId: 'blk_hero_01',
+      name: '히어로',
+      tier: 'STARTER',
+      inputConfig: { posX: 0, posY: 0, customWidthPx: 1200, blockHeight: 650 },
+    }
+
+    const nextBlock: CanvasBlock = {
+      instanceId: 'next-1',
+      blockId: 'blk_pricing_01',
+      name: '요금제',
+      tier: 'STARTER',
+      inputConfig: { posX: 0, posY: 400, customWidthPx: 1200, blockHeight: 500 }, // 겹침 발생 위치
+    }
+
+    // 겹침 여부 확인
+    assert.strictEqual(
+      checkBlocksOverlap(getBlockBounds(heroBlock), getBlockBounds(nextBlock)),
+      true,
+      '충돌 해결 전에는 두 블록이 겹쳐 있어야 함'
+    )
+
+    // 충돌 해결 후 검증
+    const resolved = resolveBlockCollisions([heroBlock, nextBlock])
+    const resolvedNext = resolved.find((b) => b.instanceId === 'next-1')
+
+    assert.ok(resolvedNext)
+    assert.ok(
+      (resolvedNext.inputConfig?.posY ?? 0) >= 650,
+      '하단 블록의 posY는 상단 히어로 블록의 높이(650) 이상으로 밀려나야 함'
+    )
+    assert.strictEqual(
+      checkBlocksOverlap(getBlockBounds(resolved[0]), getBlockBounds(resolved[1])),
+      false,
+      '해결 후에는 두 블록이 절대 겹치지 않아야 함'
+    )
+  })
 })
+

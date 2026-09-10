@@ -2,7 +2,7 @@ import { create } from 'zustand'
 import { v4 as uuidv4 } from 'uuid'
 import type { CanvasBlock, Draft, BlockTier, DeviceViewport, BlockInputConfig, ProjectType, PageItem, SiteTemplateCategory } from '@/types'
 import { BlockInputConfigSchema, TIER_PAGE_LIMITS } from '@/types'
-import { getNextBlockY, CANVAS_WIDTH, snapToGrid } from '@/lib/snapGrid'
+import { getNextBlockY, CANVAS_WIDTH, snapToGrid, resolveBlockCollisions } from '@/lib/snapGrid'
 import { emitToast } from '@/hooks/useActionHandler'
 
 interface BlockDefinition {
@@ -237,7 +237,7 @@ export const useBuilderStore = create<BuilderState>((set, get) => ({
         customWidthPx: CANVAS_WIDTH,
       },
     }
-    const updatedBlocks = [...currentBlocks, newBlock]
+    const updatedBlocks = resolveBlockCollisions([...currentBlocks, newBlock])
     const { pages, activePageId } = get()
     const updatedPages = pages.map((p) => (p.id === activePageId ? { ...p, blocks: updatedBlocks } : p))
 
@@ -310,6 +310,7 @@ export const useBuilderStore = create<BuilderState>((set, get) => ({
       const index = blocks.findIndex((b) => b.instanceId === instanceId)
       if (index > -1) {
         const currentConfig = blocks[index].inputConfig || {}
+        const oldHeight = currentConfig.blockHeight
         const newConfig = { ...currentConfig, ...data }
         
         const parsed = BlockInputConfigSchema.safeParse(newConfig)
@@ -319,12 +320,46 @@ export const useBuilderStore = create<BuilderState>((set, get) => ({
           console.warn('Block input validation failed', parsed.error)
           blocks[index] = { ...blocks[index], inputConfig: newConfig }
         }
+
+        // 블록의 높이(blockHeight)가 변했을 경우, 하단에 위치한 블록들의 posY를 자동 조정하여 블록 겹침 방지
+        const newHeight = blocks[index].inputConfig?.blockHeight
+        if (
+          typeof oldHeight === 'number' &&
+          typeof newHeight === 'number' &&
+          oldHeight > 0 &&
+          newHeight > 0
+        ) {
+          const deltaHeight = newHeight - oldHeight
+          if (Math.abs(deltaHeight) > 1) {
+            const currentY = blocks[index].inputConfig?.posY ?? 0
+            const oldBottom = currentY + oldHeight
+            for (let i = 0; i < blocks.length; i++) {
+              if (i !== index) {
+                const bY = blocks[i].inputConfig?.posY ?? 0
+                // 해당 블록의 기존 하단 기준점 이하에 위치한 블록들을 delta 만큼 이동
+                if (bY >= oldBottom - 20) {
+                  const shiftedY = Math.max(0, snapToGrid(bY + deltaHeight))
+                  blocks[i] = {
+                    ...blocks[i],
+                    inputConfig: {
+                      ...blocks[i].inputConfig,
+                      posY: shiftedY,
+                    },
+                  }
+                }
+              }
+            }
+          }
+        }
       }
-      const updatedPages = pages.map((p) => (p.id === activePageId ? { ...p, blocks } : p))
+
+      // 영역 겹침 방지: 모든 일반 블록 간 AABB 충돌을 검사하여 겹치지 않도록 자동 밀림 처리
+      const resolvedBlocks = resolveBlockCollisions(blocks, instanceId)
+      const updatedPages = pages.map((p) => (p.id === activePageId ? { ...p, blocks: resolvedBlocks } : p))
 
       return { 
         pages: updatedPages, 
-        canvasBlocks: blocks, 
+        canvasBlocks: resolvedBlocks, 
         versionClock: state.versionClock + (skipDirty ? 0 : 1), 
         isDirty: skipDirty ? state.isDirty : true 
       }
