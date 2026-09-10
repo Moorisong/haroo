@@ -1,5 +1,9 @@
 import { supabase } from './supabaseClient'
 
+// 인증 유저 캐시 (5분 TTL) - 매번 Supabase 네트워크 호출 방지
+let _cachedUser: { user: import('./auth').UserProfile | null; expiresAt: number } | null = null
+const USER_CACHE_TTL_MS = 5 * 60 * 1000
+
 export interface UserProfile {
   id: string
   email: string
@@ -48,40 +52,54 @@ export async function signInWithProvider(provider: 'kakao' | 'google', redirectT
  * 로그아웃
  */
 export async function signOut() {
+  clearUserCache()
   await supabase.auth.signOut()
 }
 
 /**
- * 현재 로그인 유저 정보 조회
+ * 현재 로그인 유저 정보 조회 (5분 캐시로 불필요한 네트워크 호출 방지)
  */
 export async function getCurrentUser(): Promise<UserProfile | null> {
+  // 캐시 유효한 경우 바로 반환
+  if (_cachedUser && Date.now() < _cachedUser.expiresAt) {
+    return _cachedUser.user
+  }
+
   try {
     const { data: { user } } = await supabase.auth.getUser()
     if (user) {
-      return {
+      const profile: UserProfile = {
         id: user.id,
         email: user.email || '',
         name: user.user_metadata?.full_name || user.user_metadata?.name || user.email?.split('@')[0] || '사용자',
         avatarUrl: user.user_metadata?.avatar_url,
         provider: user.app_metadata?.provider || 'social',
       }
+      _cachedUser = { user: profile, expiresAt: Date.now() + USER_CACHE_TTL_MS }
+      return profile
     }
 
-    // 서버 세션 확인 (클라이언트 쿠키 기반 유저 확인)
-    const res = await fetch('/api/drafts/list')
-    if (res.ok) {
-      const data = await res.json()
+    // 클라이언트 세션에 없는 경우: 서버 쿠키 기반 userId만 확인 (lightweight)
+    const res = await fetch('/api/auth/me', { credentials: 'include' }).catch(() => null)
+    if (res?.ok) {
+      const data = await res.json().catch(() => ({}))
       if (data.userId && !data.userId.startsWith('anon_')) {
-        return {
-          id: data.userId,
-          email: '',
-          name: '사용자',
-        }
+        const profile: UserProfile = { id: data.userId, email: '', name: '사용자' }
+        _cachedUser = { user: profile, expiresAt: Date.now() + USER_CACHE_TTL_MS }
+        return profile
       }
     }
   } catch (err) {
     // ignore
   }
 
+  _cachedUser = { user: null, expiresAt: Date.now() + 30_000 } // null도 30초 캐시
   return null
+}
+
+/**
+ * 캐시 무효화 (로그아웃 시 호출)
+ */
+export function clearUserCache() {
+  _cachedUser = null
 }
