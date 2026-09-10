@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from 'next'
+import KakaoScript from '@/components/common/KakaoScript'
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -31,6 +32,7 @@ export default function RootLayout({
     <html lang="ko" className="bg-white">
       <body className="font-pretendard antialiased bg-white text-slate-900">
         {children}
+        <KakaoScript />
       </body>
     </html>
   )
