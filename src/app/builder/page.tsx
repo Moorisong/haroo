@@ -300,14 +300,21 @@ export default function BuilderPage() {
   }, [isDirty])
 
   // 수동 DB 저장 핸들러
-  const handleManualSave = async () => {
-    // 1. 프로젝트 이름 미입력 시 이름 입력 예외 토스트 노출 및 포커스
-    if (!draftName || !draftName.trim()) {
-      setNameError(true)
-      setNameToast(true)
-      nameInputRef.current?.focus()
-      setTimeout(() => setNameToast(false), 3000)
-      return
+  const handleManualSave = async (fallbackDefaultName?: boolean): Promise<boolean> => {
+    let effectiveName = draftName ? draftName.trim() : ''
+
+    // 모달에서 '저장하고 이동하기'를 누른 경우, 이름이 비어있으면 기본 이름 부여하여 진행
+    if (!effectiveName) {
+      if (fallbackDefaultName) {
+        effectiveName = '내 첫 프로젝트'
+        setDraftName(effectiveName)
+      } else {
+        setNameError(true)
+        setNameToast(true)
+        nameInputRef.current?.focus()
+        setTimeout(() => setNameToast(false), 3000)
+        return false
+      }
     }
 
     const user = await getCurrentUser()
@@ -317,7 +324,7 @@ export default function BuilderPage() {
       sessionStorage.setItem(
         'pending_builder_draft',
         JSON.stringify({
-          draftName: draftName.trim(),
+          draftName: effectiveName,
           pages,
           siteTemplate,
           canvasBlocks,
@@ -325,7 +332,7 @@ export default function BuilderPage() {
         })
       )
       router.push('/login?next=/builder')
-      return
+      return false
     }
 
     // 로그인 된 상태: 세션스토리지 임시 데이터 삭제 후 수동 DB 저장
@@ -338,7 +345,7 @@ export default function BuilderPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           draftId,
-          name: draftName,
+          name: effectiveName,
           selectedBlocks: { pages, template: siteTemplate, canvasBlocks, projectType },
           versionClock,
         }),
@@ -346,18 +353,21 @@ export default function BuilderPage() {
       if (res.ok) {
         const data = await res.json()
         markSaved(data.draftId)
-        if (data.name && data.name !== draftName) {
+        if (data.name && data.name !== effectiveName) {
           setDraftName(data.name)
         }
         setSaveToast(true)
         fetchDraftList()
         setTimeout(() => setSaveToast(false), 2500)
+        return true
       } else {
         const errData = await res.json()
         alert(errData.error || '저장에 실패했습니다.')
+        return false
       }
     } catch (err) {
       console.error('[Manual Save Error]', err)
+      return false
     } finally {
       setIsSaving(false)
     }
@@ -607,19 +617,12 @@ export default function BuilderPage() {
           }
         }}
         onSaveAndLeave={async () => {
-          if (!draftName || !draftName.trim()) {
-            setLeaveModalOpen(false)
-            setNameError(true)
-            setNameToast(true)
-            nameInputRef.current?.focus()
-            setTimeout(() => setNameToast(false), 3000)
-            return
-          }
-          await handleManualSave()
+          const target = pendingTargetId
+          const isSuccess = await handleManualSave(true)
           setLeaveModalOpen(false)
-          if (pendingTargetId) {
-            executeTargetSwitch(pendingTargetId)
-            setPendingTargetId(null)
+          setPendingTargetId(null)
+          if (isSuccess && target) {
+            executeTargetSwitch(target)
           }
         }}
       />
