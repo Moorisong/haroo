@@ -9,7 +9,7 @@ import PendingAuthRedirectHandler from '@/components/common/PendingAuthRedirectH
 
 export default function Page() {
   return (
-    <main className="min-h-screen bg-[#FBFBF9]">
+    <main className="min-h-screen bg-background">
       <PendingAuthRedirectHandler />
       <HeaderNav />
       <HeroSection />
