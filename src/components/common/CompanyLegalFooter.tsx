@@ -28,7 +28,7 @@ const LEGAL_LINKS = [
 
 /**
  * 법적 푸터 - PG 심사 통과를 위한 필수 사업자 정보 표시
- * 하단 [Admin] 클릭 시 어드민 인증 모달 연동
+ * 하단 [관리자] 클릭 시 어드민 인증 모달 연동
  */
 export default function CompanyLegalFooter() {
   const [adminModalOpen, setAdminModalOpen] = useState(false)
@@ -40,7 +40,7 @@ export default function CompanyLegalFooter() {
 
   return (
     <>
-      <footer className="bg-white border-t border-slate-200">
+      <footer className="border-t border-[#E8E5DD] bg-[#F3E9D2]/35">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12">
           {/* 상단 */}
           <div className="flex flex-col sm:flex-row justify-between gap-8 pb-8 border-b border-slate-100">
@@ -57,7 +57,7 @@ export default function CompanyLegalFooter() {
             </div>
             <div className="flex flex-col sm:flex-row gap-8">
               <div>
-                <div className="text-xs font-bold text-slate-900 mb-3 uppercase tracking-wider">서비스</div>
+                <div className="text-xs font-bold text-[#242825] mb-3 tracking-wider">서비스</div>
                 <div className="space-y-2">
                   {SERVICE_LINKS.map((link) => (
                     <a key={link.href} href={link.href} className="block text-sm text-slate-500 hover:text-slate-900 transition-colors">
@@ -70,7 +70,7 @@ export default function CompanyLegalFooter() {
                 </div>
               </div>
               <div>
-                <div className="text-xs font-bold text-slate-900 mb-3 uppercase tracking-wider">법적 고지</div>
+                <div className="text-xs font-bold text-[#242825] mb-3 tracking-wider">법적 고지</div>
                 <div className="space-y-2">
                   {LEGAL_LINKS.map((link) => (
                     <Link key={link.href} href={link.href} className="block text-sm text-slate-500 hover:text-slate-900 transition-colors">
@@ -96,13 +96,13 @@ export default function CompanyLegalFooter() {
           {/* 하단 카피라이트 */}
           <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-3">
             <p className="text-xs text-slate-400">
-              &copy; {new Date().getFullYear()} 하루(Haroo). All rights reserved.
+              &copy; {new Date().getFullYear()} 하루. 모든 권리 보유.
             </p>
             <button
               onClick={() => setAdminModalOpen(true)}
               className="text-xs text-slate-300 hover:text-slate-500 transition-colors"
             >
-              Admin
+              관리자
             </button>
           </div>
         </div>
