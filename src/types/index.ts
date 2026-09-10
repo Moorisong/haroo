@@ -81,7 +81,8 @@ export const BlockInputConfigSchema = z.object({
     id: z.string(),
     label: z.string(),
     type: z.enum(['text', 'textarea', 'checkbox', 'image']),
-    required: z.boolean()
+    required: z.boolean(),
+    maxLength: z.number().int().positive().optional()
   })).optional(),
 
   // [NEW] 범용 데이터 스키마
