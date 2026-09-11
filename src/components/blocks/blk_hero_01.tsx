@@ -48,7 +48,7 @@ export default function BlkHero01({ config, isPreview, onAction }: Props) {
   // 배경 설정 데이터 파싱
   const bgType = backgroundStyle?.bgType || (backgroundStyle?.backgroundImage ? 'image' : 'color')
   const bgImage = backgroundStyle?.backgroundImage || imageUrl
-  const bgColor = backgroundStyle?.backgroundColor || '#0f172a'
+  const bgColor = backgroundStyle?.backgroundColor || 'var(--green)'
   const bgOpacity = backgroundStyle?.opacity ?? 1
   const imagePos = backgroundStyle?.imagePosition || { x: 50, y: 50 }
   const btnSize = buttonStyle?.size || 'lg'

@@ -42,7 +42,7 @@ export default function BlockBackground({
 
   const bgType = backgroundStyle?.bgType || (backgroundStyle?.backgroundImage ? 'image' : 'color')
   const bgImage = backgroundStyle?.backgroundImage
-  const bgColor = backgroundStyle?.backgroundColor || backgroundColor || '#ffffff'
+  const bgColor = backgroundStyle?.backgroundColor || backgroundColor || 'var(--surface)'
   const bgOpacity = backgroundStyle?.opacity ?? 1
   const imagePos = backgroundStyle?.imagePosition || { x: 50, y: 50 }
 
@@ -111,7 +111,7 @@ export default function BlockBackground({
     >
       <div
         className={cn(
-          'relative w-full transition-colors select-none',
+          'haroo-block-theme relative w-full transition-colors select-none',
           bgType === 'image' && !isPreview && 'cursor-grab active:cursor-grabbing',
           className
         )}

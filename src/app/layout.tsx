@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next'
 import KakaoScript from '@/components/common/KakaoScript'
+import BrandLogo from '@/components/common/BrandLogo'
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -10,5 +11,5 @@ export const metadata: Metadata = {
 }
 export const viewport: Viewport = { colorScheme: 'light', themeColor: '#f5f5f0', width: 'device-width', initialScale: 1, maximumScale: 1 }
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="ko" className="bg-background"><body className="font-pretendard antialiased bg-background text-foreground">{children}<KakaoScript /></body></html>
+  return <html lang="ko" className="bg-background"><body className="font-pretendard antialiased bg-background text-foreground"><div className="global-brand"><BrandLogo /></div>{children}<KakaoScript /></body></html>
 }
