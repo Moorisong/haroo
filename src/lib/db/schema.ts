@@ -54,11 +54,15 @@ export interface Tables {
       paidAt: string
     }
   }
-  // 대기자 명단
-  Waitlist: {
+  // 알림 신청 대기자 (APPLY_NOTIFICATION 블록 액션)
+  WaitlistSignup: {
     Row: {
       id: string
-      phone: string // 단방향 해시 또는 양방향 암호화
+      projectId: string            // 사이트 제작자 프로젝트 ID
+      phoneMasked: string          // 화면 표시용 마스킹 번호 (예: 010-****-5678)
+      phoneRaw: string | null      // 발송용 원본 번호 (service_role 전용)
+      status: 'PENDING' | 'NOTIFIED'
+      notifiedAt: string | null    // 알림톡 발송 완료 시각
       createdAt: string
     }
   }
