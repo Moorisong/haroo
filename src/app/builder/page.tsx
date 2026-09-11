@@ -78,7 +78,7 @@ const FILTER_TABS: { label: string; value: FilterTab }[] = [
 const TIER_BADGE: Record<string, string> = {
   STARTER: 'bg-slate-100 text-slate-600 border-slate-200',
   STANDARD: 'bg-sky-50 text-sky-600 border-sky-200',
-  PROFESSIONAL: 'bg-slate-900 text-white border-slate-900',
+  PROFESSIONAL: 'bg-slate-900 text-white border-transparent',
 }
 
 import UnsavedLeaveWarningModal from '@/components/builder/UnsavedLeaveWarningModal'
@@ -452,7 +452,7 @@ export default function BuilderPage() {
           <div className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border transition-all ${
             nameError
               ? 'bg-rose-50 border-rose-500 ring-2 ring-rose-200'
-              : 'bg-slate-100/80 border-slate-200 focus-within:border-slate-400 focus-within:bg-white'
+              : 'bg-slate-100/80 border-transparent focus-within:border-emerald-500/30 focus-within:ring-2 focus-within:ring-emerald-500/20 focus-within:bg-white shadow-sm'
           }`}>
             <Edit3 size={13} className={nameError ? 'text-rose-500' : 'text-slate-400'} />
             <input
@@ -473,7 +473,7 @@ export default function BuilderPage() {
             <button
               onClick={handleManualSave}
               disabled={isSaving}
-              className="flex items-center gap-1.5 px-3.5 py-1.5 bg-slate-900 text-white hover:bg-slate-800 text-xs font-bold rounded-lg transition-colors border border-slate-900 shadow-sm"
+              className="flex items-center gap-1.5 px-3.5 py-1.5 bg-slate-900 text-white hover:bg-slate-800 text-xs font-bold rounded-lg transition-colors border border-transparent shadow-sm"
             >
               {isSaving ? <Loader2 size={13} className="animate-spin" /> : saveToast ? <Check size={13} className="text-emerald-400" /> : <Save size={13} />}
               <span>{saveToast ? '저장됨' : '저장'}</span>

@@ -48,7 +48,7 @@ export default function BlkHero01({ config, isPreview, onAction }: Props) {
   // 배경 설정 데이터 파싱
   const bgType = backgroundStyle?.bgType || (backgroundStyle?.backgroundImage ? 'image' : 'color')
   const bgImage = backgroundStyle?.backgroundImage || imageUrl
-  const bgColor = backgroundStyle?.backgroundColor || 'var(--green)'
+  const bgColor = backgroundStyle?.backgroundColor || safeConfig.backgroundColor || 'var(--surface)'
   const bgOpacity = backgroundStyle?.opacity ?? 1
   const imagePos = backgroundStyle?.imagePosition || { x: 50, y: 50 }
   const btnSize = buttonStyle?.size || 'lg'
@@ -189,10 +189,10 @@ export default function BlkHero01({ config, isPreview, onAction }: Props) {
             as="h1"
             className={cn(
               'mb-3 md:mb-4 leading-tight tracking-tight text-center break-words break-all max-w-full p-1 rounded pointer-events-auto',
-              !isPreview && 'cursor-pointer hover:ring-1 hover:ring-white/50'
+              !isPreview && 'cursor-pointer hover:ring-1 hover:ring-slate-400/50'
             )}
             style={{
-              color: titleStyle?.color || (bgType === 'image' ? 'white' : '#ffffff'),
+              color: titleStyle?.color || (bgType === 'image' ? 'white' : '#1c241e'),
               fontFamily: titleStyle?.fontFamily,
               fontWeight: titleStyle?.fontWeight || '900',
               fontSize: titleStyle?.fontSize || '3rem',
@@ -210,10 +210,10 @@ export default function BlkHero01({ config, isPreview, onAction }: Props) {
             as="p"
             className={cn(
               'mb-6 md:mb-8 max-w-3xl text-center font-normal leading-relaxed break-words break-all w-full p-1 rounded pointer-events-auto',
-              !isPreview && 'cursor-pointer hover:ring-1 hover:ring-white/50'
+              !isPreview && 'cursor-pointer hover:ring-1 hover:ring-slate-400/50'
             )}
             style={{
-              color: subtitleStyle?.color || (bgType === 'image' ? '#e2e8f0' : '#94a3b8'),
+              color: subtitleStyle?.color || (bgType === 'image' ? '#e2e8f0' : '#71766d'),
               fontFamily: subtitleStyle?.fontFamily,
               fontWeight: subtitleStyle?.fontWeight || '400',
               fontSize: subtitleStyle?.fontSize || '1.125rem',
@@ -236,8 +236,8 @@ export default function BlkHero01({ config, isPreview, onAction }: Props) {
               btnSize === 'xl' && 'px-10 py-5'
             )}
             style={{
-              backgroundColor: buttonStyle?.backgroundColor || '#ffffff',
-              color: buttonStyle?.textColor || '#0f172a',
+              backgroundColor: buttonStyle?.backgroundColor || (bgType === 'image' ? '#ffffff' : 'var(--green)'),
+              color: buttonStyle?.textColor || (bgType === 'image' ? '#0f172a' : '#ffffff'),
               borderRadius: buttonStyle?.borderRadius || '0.75rem',
               fontWeight: buttonStyle?.fontWeight || 'bold',
               fontSize: buttonStyle?.fontSize || (

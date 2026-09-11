@@ -32,7 +32,7 @@ const BLOCKS = [
 const TIER_CONFIG: Record<BlockTier, { label: string; color: string }> = {
   STARTER: { label: 'STARTER', color: 'bg-slate-100 text-slate-700 border-slate-200' },
   STANDARD: { label: 'STANDARD', color: 'bg-sky-50 text-sky-700 border-sky-200' },
-  PROFESSIONAL: { label: 'PRO', color: 'bg-slate-900 text-white border-slate-900' },
+  PROFESSIONAL: { label: 'PRO', color: 'bg-slate-900 text-white border-transparent' },
 }
 
 const TABS: { label: string; value: FilterTab }[] = [
