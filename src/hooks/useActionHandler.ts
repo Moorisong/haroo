@@ -175,6 +175,25 @@ export function useActionHandler({ isPreview, onNavigatePage }: UseActionHandler
         return
       }
 
+      // 10. APPLY_NOTIFICATION (알림 신청 - 카카오 사전예약 / 오픈 알림)
+      if (actionType === 'APPLY_NOTIFICATION') {
+        // projectId: URL 쿼리스트링 draft 값 또는 향후 배포 페이지의 전역 변수에서 추출
+        const projectId =
+          typeof window !== 'undefined'
+            ? new URLSearchParams(window.location.search).get('draft') || ''
+            : ''
+        window.dispatchEvent(
+          new CustomEvent('haroo:open-waitlist', {
+            detail: {
+              title: config.title || '알림 신청',
+              subtitle: config.subtitle || '오픈 및 주요 소식을 카카오톡으로 알려드립니다.',
+              projectId,
+            },
+          })
+        )
+        return
+      }
+
       // 10. SHARE_KAKAO (카카오톡 공유 - sendDefault 방식)
       if (actionType === 'SHARE_KAKAO') {
         const urlToShare = config.buttonLink || window.location.href

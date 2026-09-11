@@ -268,6 +268,19 @@ export default function ButtonPropertyPanel({ cap, config, handleChange }: Props
         </div>
       )}
 
+      {/* 10. APPLY_NOTIFICATION (카카오 사전예약 / 오픈 알림 신청) */}
+      {config.actionType === 'APPLY_NOTIFICATION' && (
+        <div className="p-3.5 bg-amber-50/80 border border-amber-200 rounded-xl flex flex-col gap-2 text-amber-900 animate-in fade-in duration-200">
+          <div className="flex items-center gap-1.5 font-bold text-xs text-amber-900">
+            <span className="text-sm leading-none">🔔</span>
+            <span>알림 신청 팝업 연동</span>
+          </div>
+          <p className="text-[11px] text-amber-700 leading-relaxed">
+            방문자가 버튼을 클릭하면 전화번호를 입력하여 사전예약 및 오픈 소식을 카카오톡 알림으로 수신 신청할 수 있는 팝업 창이 자동으로 열립니다.
+          </p>
+        </div>
+      )}
+
       <ButtonStyleSection styleData={styleData} updateStyle={updateStyle} />
     </div>
   )

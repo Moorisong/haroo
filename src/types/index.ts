@@ -46,7 +46,7 @@ export const BlockInputConfigSchema = z.object({
     customTargetId: z.string().optional(),
     customEffect: z.string().optional()
   })).optional(),
-  // 버튼 액션 9종 (PWA & Web 타겟 최적화)
+  // 버튼 액션 10종 (PWA & Web 타겟 최적화)
   actionType: z.enum([
     'NAVIGATE_PAGE',       // 내 사이트 화면 이동
     'OPEN_URL',            // 외부 링크 열기
@@ -56,8 +56,15 @@ export const BlockInputConfigSchema = z.object({
     'COPY_TO_CLIPBOARD',   // 주소나 텍스트 복사하기
     'DOWNLOAD_FILE',       // 안내장/카탈로그 파일 다운로드
     'SHOW_MODAL',          // 안내 팝업 띄우기
-    'SHARE_PAGE'           // 모바일/PWA 기본 공유하기
+    'SHARE_PAGE',          // 모바일/PWA 기본 공유하기
+    'APPLY_NOTIFICATION'   // 알림 신청 (카카오 사전예약 / 오픈 알림)
   ]).optional(),
+  
+  // blk_talk_01 등 안내/공지 카드 목록
+  noticeFeatures: z.array(z.object({
+    icon: z.string().optional(),
+    text: z.string(),
+  })).optional(),
   
   // 액션 타입별 하위 상세 옵션 (Progressive Disclosure)
   notifyKakao: z.boolean().optional(),

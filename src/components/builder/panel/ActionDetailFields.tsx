@@ -176,6 +176,19 @@ export default function ActionDetailFields({
           </p>
         </div>
       )}
+
+      {/* 10. APPLY_NOTIFICATION */}
+      {actionType === 'APPLY_NOTIFICATION' && (
+        <div className="p-3 bg-amber-50/80 border border-amber-200 rounded-xl flex flex-col gap-1.5 text-amber-900 animate-in fade-in duration-200 mt-2">
+          <div className="flex items-center gap-1.5 font-bold text-xs text-amber-900">
+            <span className="text-sm leading-none">🔔</span>
+            <span>알림 신청 팝업 연동</span>
+          </div>
+          <p className="text-[11px] text-amber-700 leading-relaxed">
+            방문자가 버튼 클릭 시 전화번호를 입력하여 카카오톡 알림을 신청할 수 있는 팝업이 연결됩니다.
+          </p>
+        </div>
+      )}
     </>
   )
 }

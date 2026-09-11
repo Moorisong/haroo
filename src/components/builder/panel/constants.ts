@@ -7,6 +7,7 @@ export const ACTION_OPTIONS = {
   DOWNLOAD_FILE: '파일 / 소개서 다운로드',
   SHOW_MODAL: '팝업(모달) 띄우기',
   SHARE_PAGE: '이 페이지 공유하기',
+  APPLY_NOTIFICATION: '알림 신청 (카카오 사전예약 / 오픈 알림)',
 };
 
 export const MODAL_ICON_OPTIONS = [
