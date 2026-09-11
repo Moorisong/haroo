@@ -18,7 +18,7 @@ export default function BadgePropertyPanel({ config, handleChange }: Props) {
         <div className="flex flex-col gap-1.5">
           <label className="text-xs font-semibold text-slate-700">상단 알약 뱃지 예시 선택</label>
           <select
-            value={isNone ? 'none' : ['NEW', 'HOT', 'EVENT'].includes(badgeText) ? badgeText : 'custom'}
+            value={isNone ? 'none' : ['NEW', 'HOT', 'EVENT', '공지'].includes(badgeText) ? badgeText : 'custom'}
             onChange={(e) => {
               if (e.target.value === 'custom') return
               handleChange('badgeText', e.target.value)
@@ -26,10 +26,11 @@ export default function BadgePropertyPanel({ config, handleChange }: Props) {
             className="w-full text-sm border border-slate-300 rounded-md p-2 bg-white font-medium"
           >
             <option value="none">없음</option>
+            <option value="공지">공지</option>
             <option value="NEW">NEW</option>
             <option value="HOT">HOT</option>
             <option value="EVENT">EVENT</option>
-            {!isNone && !['NEW', 'HOT', 'EVENT'].includes(badgeText) && (
+            {!isNone && !['NEW', 'HOT', 'EVENT', '공지'].includes(badgeText) && (
               <option value="custom">직접 입력 중...</option>
             )}
           </select>

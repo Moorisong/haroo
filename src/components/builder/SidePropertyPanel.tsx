@@ -13,6 +13,7 @@ import VideoPropertyPanel from './panel/VideoPropertyPanel'
 import DdayPropertyPanel from './panel/DdayPropertyPanel'
 import PricingPropertyPanel from './panel/PricingPropertyPanel'
 import FormPropertyPanel from './panel/FormPropertyPanel'
+import NoticePropertyPanel from './panel/NoticePropertyPanel'
 
 export interface BlockCapability {
   hasTitle?: boolean
@@ -25,19 +26,32 @@ export interface BlockCapability {
   customFieldType?: string
 }
 
+const ALL_STANDARD_ACTIONS = [
+  'NAVIGATE_PAGE',
+  'OPEN_URL',
+  'SCROLL_TO_BLOCK',
+  'CALL_PHONE',
+  'COPY_TO_CLIPBOARD',
+  'DOWNLOAD_FILE',
+  'SHOW_MODAL',
+  'SHARE_PAGE',
+  'APPLY_NOTIFICATION',
+]
+
 const BLOCK_CAPABILITIES: Record<string, BlockCapability> = {
-  blk_hero_01: { hasTitle: true, hasSubtitle: true, hasButton: true, hasButtonAction: true, hasImage: true, hasVideo: true, allowedActions: ['NAVIGATE_PAGE', 'OPEN_URL', 'SCROLL_TO_BLOCK', 'CALL_PHONE', 'COPY_TO_CLIPBOARD', 'DOWNLOAD_FILE', 'SHOW_MODAL', 'SHARE_PAGE'] },
+  blk_hero_01: { hasTitle: true, hasSubtitle: true, hasButton: true, hasButtonAction: true, hasImage: true, hasVideo: true, allowedActions: ALL_STANDARD_ACTIONS },
   blk_share_01: { hasTitle: true, hasSubtitle: true },
   blk_video_01: { hasTitle: true, hasSubtitle: true, hasVideo: true },
   blk_dday_01: { hasTitle: true, hasSubtitle: true },
-  blk_pricing_01: { hasTitle: true, hasSubtitle: true, hasButton: true, hasButtonAction: true },
-  blk_form_01: { hasTitle: true, hasSubtitle: true, hasButton: true, hasButtonAction: true, allowedActions: ['NAVIGATE_PAGE', 'OPEN_URL', 'SCROLL_TO_BLOCK', 'CALL_PHONE', 'COPY_TO_CLIPBOARD', 'DOWNLOAD_FILE', 'SHOW_MODAL', 'SHARE_PAGE'] },
+  blk_pricing_01: { hasTitle: true, hasSubtitle: true, hasButton: true, hasButtonAction: true, allowedActions: ALL_STANDARD_ACTIONS },
+  blk_form_01: { hasTitle: true, hasSubtitle: true, hasButton: true, hasButtonAction: true, allowedActions: ALL_STANDARD_ACTIONS },
+  blk_talk_01: { hasTitle: true, hasSubtitle: true, hasButton: true, hasButtonAction: true, allowedActions: ALL_STANDARD_ACTIONS },
   // 필요 시 다른 블록들의 능력치도 추가
 }
 
-// 기본적으로 모든 버튼은 8가지 최적화 액션을 모두 지원함
+// 기본적으로 모든 버튼은 표준 액션을 모두 지원함
 const DEFAULT_CAP: BlockCapability = {
-  allowedActions: ['NAVIGATE_PAGE', 'OPEN_URL', 'SCROLL_TO_BLOCK', 'CALL_PHONE', 'COPY_TO_CLIPBOARD', 'DOWNLOAD_FILE', 'SHOW_MODAL', 'SHARE_PAGE']
+  allowedActions: ALL_STANDARD_ACTIONS
 }
 
 export default function SidePropertyPanel() {
@@ -100,6 +114,9 @@ export default function SidePropertyPanel() {
   }
 
   const renderPanel = () => {
+    if (selectedElementKey === 'features' || selectedElementKey === 'noticeFeatures') {
+      return <NoticePropertyPanel config={config} handleChange={handleChange} />
+    }
     if (selectedElementKey === 'badge' || selectedElementKey === 'badgeText') {
       return <BadgePropertyPanel config={config} handleChange={handleChange} />
     }
@@ -175,6 +192,7 @@ export default function SidePropertyPanel() {
   }
 
   const getPanelTitle = () => {
+    if (selectedElementKey === 'features' || selectedElementKey === 'noticeFeatures') return '안내 항목 설정'
     if (selectedElementKey === 'badge' || selectedElementKey === 'badgeText') return '알약 뱃지 설정'
     if (selectedElementKey === 'title') return '제목 설정'
     if (selectedElementKey === 'subtitle') return '부제목 설정'
