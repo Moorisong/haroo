@@ -32,7 +32,7 @@ interface DraftItem {
 const QUICK_ACTIONS = [
   { icon: Edit3, label: '사이트 수정', href: '/builder', color: 'text-slate-700' },
   { icon: BarChart2, label: '문의 데이터', href: '/dashboard/forms', color: 'text-sky-600' },
-  { icon: Bell, label: '알림톡 발송', href: '/dashboard/notifications', color: 'text-amber-600' },
+  { icon: Bell, label: '알림 신청 관리', href: '/dashboard/notifications', color: 'text-amber-600' },
   { icon: Smartphone, label: '바탕화면 앱', href: '#', color: 'text-slate-700' },
 ]
 
