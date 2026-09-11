@@ -31,13 +31,11 @@ export default function CheckoutPage() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      <header className="bg-white border-b border-slate-200 px-4 sm:px-6 h-14 flex items-center justify-between">
+    <div className="min-h-screen bg-slate-50 atelier-enter">
+      <header className="bg-white/80 backdrop-blur border-b border-slate-200 px-4 sm:px-6 h-16 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2">
-          <div className="w-7 h-7 bg-slate-900 rounded-md flex items-center justify-center">
-            <span className="text-white text-xs font-black">H</span>
-          </div>
-          <span className="text-slate-900 font-bold text-base">하루</span>
+          <div className="brand-mark" aria-hidden="true">ㅎ</div>
+          <span className="brand-name">하루</span>
         </Link>
         <div className="flex items-center gap-1.5 text-xs text-slate-500">
           <Lock size={12} />
@@ -46,7 +44,7 @@ export default function CheckoutPage() {
       </header>
 
       <main className="max-w-3xl mx-auto px-4 sm:px-6 py-8">
-        <h1 className="text-xl sm:text-2xl font-black text-slate-900 mb-6">결제 주문서</h1>
+        <div className="mb-6"><p className="eyebrow mb-2">Your atelier, ready to open</p><h1 className="text-2xl sm:text-3xl font-black text-slate-900">결제 주문서</h1><p className="text-sm text-slate-500 mt-2">필요한 것만 고르고, 나머지는 하루가 준비할게요.</p></div>
 
         <div className="grid md:grid-cols-5 gap-5">
           {/* 왼쪽: 선택 폼 */}
@@ -125,8 +123,8 @@ export default function CheckoutPage() {
           </div>
 
           {/* 오른쪽: 주문 요약 */}
-          <div className="md:col-span-2">
-            <div className="sticky top-6 bg-white rounded-2xl border border-slate-200 overflow-hidden">
+          <div className="md:col-span-2 atelier-delay-2">
+            <div className="sticky top-6 bg-white rounded-2xl border border-slate-200 overflow-hidden atelier-focus">
               <div className="px-5 py-4 border-b border-slate-100">
                 <h2 className="text-sm font-bold text-slate-900">주문 요약</h2>
               </div>

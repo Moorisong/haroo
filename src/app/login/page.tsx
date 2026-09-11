@@ -41,14 +41,12 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 flex items-center justify-center px-4 py-8">
-      <div className="w-full max-w-sm">
+    <div className="min-h-screen bg-slate-50 flex items-center justify-center px-4 py-8 atelier-enter">
+      <div className="w-full max-w-sm bg-white/80 backdrop-blur rounded-[2rem] border border-slate-200 p-7 sm:p-9 shadow-lg">
         {/* 로고 */}
         <div className="text-center mb-8">
           <Link href="/" className="inline-flex items-center gap-2 mb-4">
-            <div className="w-9 h-9 bg-slate-900 rounded-xl flex items-center justify-center">
-              <span className="text-white text-sm font-black">H</span>
-            </div>
+            <div className="brand-mark" aria-hidden="true">ㅎ</div>
           </Link>
           <h1 className="text-xl font-black text-slate-900">하루(Haroo) 시작하기</h1>
           <p className="text-xs text-slate-500 mt-1">소셜 계정으로 5분 만에 사이트를 만드세요.</p>

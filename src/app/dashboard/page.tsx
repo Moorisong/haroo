@@ -150,13 +150,11 @@ export default function DashboardPage() {
     : 0
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      <header className="bg-white border-b border-slate-200 px-4 sm:px-6 h-14 flex items-center justify-between">
+    <div className="min-h-screen bg-slate-50 atelier-enter">
+      <header className="bg-white/80 backdrop-blur border-b border-slate-200 px-4 sm:px-6 h-16 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2">
-          <div className="w-7 h-7 bg-slate-900 rounded-md flex items-center justify-center">
-            <span className="text-white text-xs font-black">H</span>
-          </div>
-          <span className="text-slate-900 font-bold text-base">하루</span>
+          <div className="brand-mark" aria-hidden="true">ㅎ</div>
+          <span className="brand-name">하루</span>
         </Link>
         <Link href="/builder" className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-900 text-white text-xs font-semibold rounded-lg hover:bg-slate-800 transition-colors">
           <Plus size={12} />
