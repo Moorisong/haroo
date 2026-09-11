@@ -182,6 +182,7 @@ export default function BuilderPage() {
     // 2. URL ?draft=ID 지원
     const params = new URLSearchParams(window.location.search)
     const queryDraftId = params.get('draft')
+    const queryTemplate = params.get('template')
 
     if (queryDraftId) {
       if (queryDraftId !== draftId) {
@@ -199,6 +200,14 @@ export default function BuilderPage() {
             }
           })
           .catch((err) => console.error('[Draft load error]', err))
+      }
+    } else if (queryTemplate) {
+      // 랜딩 페이지 등에서 ?template= 쿼리로 진입한 경우: 즉시 WEB 모드 및 해당 템플릿으로 초기화
+      const validTemplates = ['COMPANY', 'COMMERCE', 'EVENT', 'PORTFOLIO', 'BLANK']
+      if (validTemplates.includes(queryTemplate)) {
+        reset()
+        confirmProjectType('WEB')
+        confirmSiteTemplate(queryTemplate as any)
       }
     } else {
       // 일반 /builder 진입 시 디폴트로 새 프로젝트 초기화 (단, 이미 스토어가 복원되어 사용중이라면 리셋 방지 - StrictMode 대응)
