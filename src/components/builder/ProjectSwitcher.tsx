@@ -52,7 +52,7 @@ export default function ProjectSwitcher({ savedDraftList, onSelectProject }: Pro
         className="inline-flex items-center gap-2 px-3.5 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700 rounded-lg transition-colors border border-gray-200 dark:border-gray-700 max-w-[160px] sm:max-w-[200px]"
         title="프로젝트 목록 보기"
       >
-        <Folder className="w-3.5 h-3.5 text-blue-500 shrink-0" />
+        <Folder className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
         <span className="truncate">{displayName}</span>
         <ChevronDown className="w-3.5 h-3.5 text-gray-400 shrink-0" />
       </button>
@@ -96,7 +96,7 @@ export default function ProjectSwitcher({ savedDraftList, onSelectProject }: Pro
                       key={draft.id}
                       className={`group flex items-center justify-between px-2.5 py-2 text-xs rounded-lg cursor-pointer transition-colors ${
                         isActive
-                          ? 'bg-blue-50 text-blue-700 font-bold dark:bg-blue-950 dark:text-blue-300'
+                          ? 'bg-gray-100 text-gray-900 font-bold dark:bg-gray-800 dark:text-gray-100'
                           : 'text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-800'
                       }`}
                       onClick={() => {
@@ -105,7 +105,7 @@ export default function ProjectSwitcher({ savedDraftList, onSelectProject }: Pro
                       }}
                     >
                       <div className="flex items-center gap-2 truncate">
-                        <Folder className={`w-3.5 h-3.5 shrink-0 ${isActive ? 'text-blue-500' : 'text-gray-400'}`} />
+                        <Folder className={`w-3.5 h-3.5 shrink-0 ${isActive ? 'text-emerald-500' : 'text-gray-400'}`} />
                         <span className="truncate">{draft.name}</span>
                       </div>
                     </div>
@@ -126,9 +126,9 @@ export default function ProjectSwitcher({ savedDraftList, onSelectProject }: Pro
                     onSelectProject('new')
                     setIsOpen(false)
                   }}
-                  className="w-full flex items-center justify-center gap-1.5 py-1.5 text-xs font-semibold text-blue-600 bg-blue-50 hover:bg-blue-100 dark:bg-blue-950 dark:text-blue-300 dark:hover:bg-blue-900 rounded-lg transition-colors"
+                  className="w-full flex items-center justify-center gap-1.5 py-2 text-xs font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 border border-gray-200 dark:bg-gray-800 dark:text-gray-200 dark:border-gray-700 dark:hover:bg-gray-700 rounded-lg transition-colors"
                 >
-                  <Plus className="w-3.5 h-3.5" />
+                  <Plus className="w-3.5 h-3.5 text-gray-600 dark:text-gray-300" />
                   <span>새 프로젝트 만들기</span>
                 </button>
               </div>

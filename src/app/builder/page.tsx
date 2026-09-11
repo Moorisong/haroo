@@ -79,7 +79,7 @@ const FILTER_TABS: { label: string; value: FilterTab }[] = [
 const TIER_BADGE: Record<string, string> = {
   STARTER: 'bg-slate-100 text-slate-600 border-slate-200',
   STANDARD: 'bg-sky-50 text-sky-600 border-sky-200',
-  PROFESSIONAL: 'bg-slate-900 text-white border-slate-900',
+  PROFESSIONAL: 'bg-slate-900 text-white border-transparent',
 }
 
 import UnsavedLeaveWarningModal from '@/components/builder/UnsavedLeaveWarningModal'
@@ -422,7 +422,7 @@ export default function BuilderPage() {
   const filtered = activeTab === 'ALL' ? ALL_BLOCKS : ALL_BLOCKS.filter((b) => b.tier === activeTab)
 
   return (
-    <div className="h-screen flex flex-col bg-white overflow-hidden relative">
+    <div className="h-screen flex flex-col bg-slate-50 overflow-hidden relative atelier-enter">
       {/* 신규 프로젝트 생성 시에만 1, 2단계 선택 모달 노출 (isMounted 시점 보장, 백업 복원 중엔 미노출) */}
       {isMounted && !draftId && !hasPendingDraft && <ProjectTypeSelectionModal />}
       {isMounted && !draftId && !hasPendingDraft && <SiteTemplateSelectionModal />}
@@ -444,9 +444,7 @@ export default function BuilderPage() {
             }}
             className="flex items-center gap-2 mr-2"
           >
-            <div className="w-7 h-7 bg-slate-900 rounded-md flex items-center justify-center">
-              <span className="text-white text-xs font-black">H</span>
-            </div>
+<div className="brand-mark" aria-hidden="true">ㅎ</div>
           </a>
           <span className="hidden sm:block text-xs text-slate-400">|</span>
 
@@ -466,7 +464,7 @@ export default function BuilderPage() {
           <div className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border transition-all ${
             nameError
               ? 'bg-rose-50 border-rose-500 ring-2 ring-rose-200'
-              : 'bg-slate-100/80 border-slate-200 focus-within:border-slate-400 focus-within:bg-white'
+              : 'bg-slate-100/80 border-transparent focus-within:border-emerald-500/30 focus-within:ring-2 focus-within:ring-emerald-500/20 focus-within:bg-white shadow-sm'
           }`}>
             <Edit3 size={13} className={nameError ? 'text-rose-500' : 'text-slate-400'} />
             <input
@@ -487,7 +485,7 @@ export default function BuilderPage() {
             <button
               onClick={handleManualSave}
               disabled={isSaving}
-              className="flex items-center gap-1.5 px-3.5 py-1.5 bg-slate-900 text-white hover:bg-slate-800 text-xs font-bold rounded-lg transition-colors border border-slate-900 shadow-sm"
+              className="flex items-center gap-1.5 px-3.5 py-1.5 bg-slate-900 text-white hover:bg-slate-800 text-xs font-bold rounded-lg transition-colors border border-transparent shadow-sm"
             >
               {isSaving ? <Loader2 size={13} className="animate-spin" /> : saveToast ? <Check size={13} className="text-emerald-400" /> : <Save size={13} />}
               <span>{saveToast ? '저장됨' : '저장'}</span>
@@ -519,7 +517,7 @@ export default function BuilderPage() {
 
       <div className="flex-1 flex overflow-hidden">
         {/* 왼쪽: 블록 팔레트 */}
-        <aside className="hidden md:flex w-64 sm:w-72 flex-shrink-0 border-r border-slate-200 bg-slate-50 flex-col overflow-hidden relative">
+        <aside className="hidden md:flex w-64 sm:w-72 flex-shrink-0 border-r border-slate-200 bg-white/70 backdrop-blur flex-col overflow-hidden relative">
           {isReadOnlyPreview && (
             <div className="absolute inset-0 bg-white/50 backdrop-blur-[2px] z-10" />
           )}
@@ -566,7 +564,7 @@ export default function BuilderPage() {
 
         {/* 중앙: 캔버스 */}
         {/* 중앙: 캔버스 영역 */}
-        <main className="flex-1 flex flex-col overflow-hidden bg-slate-100 relative">
+        <main className="flex-1 flex flex-col overflow-hidden bg-slate-50 relative">
           <ViewportSwitcher />
           
           <SnapGridCanvas />

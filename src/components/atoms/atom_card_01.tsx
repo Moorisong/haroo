@@ -14,7 +14,7 @@ export default function AtomCard01({ children, className, noPadding = false, ...
   return (
     <div
       className={cn(
-        'bg-white rounded-2xl border border-slate-200 overflow-hidden',
+        'bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm',
         !noPadding && 'p-5',
         className
       )}

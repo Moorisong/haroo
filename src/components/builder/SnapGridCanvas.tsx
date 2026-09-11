@@ -370,7 +370,7 @@ function DesktopCanvas() {
             }}
           >
             {/* 데스크톱 프레임 상단 헤더 */}
-            <div className="bg-slate-900 text-slate-300 text-xs py-1.5 flex items-center justify-between px-4 font-medium shrink-0 border-b border-slate-800 relative z-20">
+            <div className="bg-slate-900 text-slate-300 text-xs py-1.5 flex items-center justify-between px-4 font-medium shrink-0 relative z-20">
               <span className="flex items-center gap-1.5">
                 <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                 Desktop Canvas (1200px)
@@ -478,7 +478,7 @@ function ResponsiveViewCanvas({ viewport }: { viewport: DeviceViewport }) {
         )}
       >
         {/* 상단 얇은 프리뷰 상태 안내 바 */}
-        <div className="bg-slate-900 text-slate-300 text-[11px] py-1.5 flex items-center justify-between px-4 font-medium shrink-0 border-b border-slate-800">
+        <div className="bg-slate-900 text-slate-300 text-[11px] py-1.5 flex items-center justify-between px-4 font-medium shrink-0">
           <span className="flex items-center gap-1.5">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
             {isPwa ? '📱 PWA 모바일 앱' : viewport === 'mobile' ? '📱 모바일 화면' : '💻 태블릿 화면'}

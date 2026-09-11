@@ -112,7 +112,7 @@ export default function PageSwitcher() {
           onClick={handleButtonClick}
           className="inline-flex items-center gap-2 px-3.5 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700 rounded-lg transition-colors border border-gray-200 dark:border-gray-700"
         >
-          {activePage.isHome ? <Home className="w-3.5 h-3.5 text-blue-500" /> : <FileText className="w-3.5 h-3.5 text-emerald-500" />}
+          {activePage.isHome ? <Home className="w-3.5 h-3.5 text-emerald-500" /> : <FileText className="w-3.5 h-3.5 text-emerald-500" />}
           <span>{activePage.title}</span>
           <ChevronDown className="w-3.5 h-3.5 text-gray-400" />
         </button>
@@ -132,7 +132,7 @@ export default function PageSwitcher() {
                     key={page.id}
                     className={`group flex items-center justify-between px-2.5 py-2 text-xs rounded-lg cursor-pointer transition-colors ${
                       isActive
-                        ? 'bg-blue-50 text-blue-700 font-bold dark:bg-blue-950 dark:text-blue-300'
+                        ? 'bg-gray-100 text-gray-900 font-bold dark:bg-gray-800 dark:text-gray-100'
                         : 'text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-800'
                     }`}
                     onClick={() => {
@@ -141,7 +141,7 @@ export default function PageSwitcher() {
                     }}
                   >
                     <div className="flex items-center gap-2 truncate">
-                      {page.isHome ? <Home className="w-3.5 h-3.5 text-blue-500 shrink-0" /> : <FileText className="w-3.5 h-3.5 text-gray-400 shrink-0" />}
+                      {page.isHome ? <Home className="w-3.5 h-3.5 text-emerald-500 shrink-0" /> : <FileText className="w-3.5 h-3.5 text-gray-400 shrink-0" />}
                       <span className="truncate">{page.title}</span>
                     </div>
 
@@ -176,7 +176,7 @@ export default function PageSwitcher() {
                       placeholder="예: 회사 소개, 문의하기"
                       value={newTitle}
                       onChange={(e) => setNewTitle(e.target.value)}
-                      className="w-full px-2 py-1 text-xs border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
+                      className="w-full px-2 py-1 text-xs border rounded-md focus:outline-none focus:ring-1 focus:ring-emerald-500 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
                     />
                   </div>
 
@@ -189,7 +189,7 @@ export default function PageSwitcher() {
                         placeholder="예: about, contact"
                         value={newSlug}
                         onChange={(e) => setNewSlug(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ''))}
-                        className="flex-1 px-2 py-1 text-xs font-mono border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
+                        className="flex-1 px-2 py-1 text-xs font-mono border rounded-md focus:outline-none focus:ring-1 focus:ring-emerald-500 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
                       />
                     </div>
                   </div>
@@ -204,7 +204,7 @@ export default function PageSwitcher() {
                     </button>
                     <button
                       type="submit"
-                      className="px-3 py-1 text-xs bg-blue-600 text-white font-bold rounded-md hover:bg-blue-700"
+                      className="px-3 py-1 text-xs bg-emerald-600 text-white font-bold rounded-md hover:bg-emerald-700"
                     >
                       생성
                     </button>
@@ -221,9 +221,9 @@ export default function PageSwitcher() {
                     }
                     setIsAdding(true)
                   }}
-                  className="w-full flex items-center justify-center gap-1.5 py-1.5 text-xs font-semibold text-blue-600 bg-blue-50 hover:bg-blue-100 dark:bg-blue-950 dark:text-blue-300 dark:hover:bg-blue-900 rounded-lg transition-colors"
+                  className="w-full flex items-center justify-center gap-1.5 py-2 text-xs font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 border border-gray-200 dark:bg-gray-800 dark:text-gray-200 dark:border-gray-700 dark:hover:bg-gray-700 rounded-lg transition-colors"
                 >
-                  <Plus className="w-3.5 h-3.5" />
+                  <Plus className="w-3.5 h-3.5 text-gray-600 dark:text-gray-300" />
                   <span>새 화면 만들기</span>
                 </button>
               )}
