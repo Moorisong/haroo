@@ -102,7 +102,7 @@ export default function UseCasesSection() {
           .case-arrow{width:54px;flex:0 0 54px;font-size:20px}
         }
         @media(max-width:640px){
-          .case-preview-rich{grid-template-columns:1fr;padding:16px;gap:12px;min-height:auto}
+          .case-preview-rich{grid-template-columns:1fr;padding:16px;gap:12px;height:236px}
           .case-preview-copy>div:first-of-type{align-items:center}
           .case-preview-rich h3{font-size:20px;margin-top:4px}
           .case-preview-copy>div>div>p{font-size:12px;margin-top:2px}
@@ -110,7 +110,7 @@ export default function UseCasesSection() {
           .case-preview-list{display:none} /* Mobile: Hide verbose bullet list for extreme compactness */
           .mini-blocks{margin-top:10px;gap:5px}
           .mini-blocks span{padding:4px 8px;font-size:10px}
-          .case-art-layout{min-height:85px;max-width:160px;width:100%;justify-self:end;margin-top:-30px;opacity:.9}
+          .case-art-layout{height:85px;min-height:85px;max-width:160px;width:100%;justify-self:end;margin-top:-30px;opacity:.9}
           .case-scribble{font-size:24px;top:12px;left:14px}
           .case-sticker{display:none}
           .case-art-card{top:38px;left:18px;right:14px;padding:8px}
