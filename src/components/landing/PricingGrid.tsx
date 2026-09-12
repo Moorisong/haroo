@@ -79,24 +79,24 @@ export default function PricingGrid() {
             ))}
           </div>
         ) : (
-          <div className="subscription-card mt-8 sm:mt-12 rounded-2xl p-6 sm:p-10">
+          <div className="subscription-card mt-8 sm:mt-12 rounded-2xl">
             <p className="eyebrow">매달 결제</p>
-            <h3 className="text-xl sm:text-3xl md:text-4xl font-black leading-snug tracking-tight">
+            <h3>
               서버와 페이지를<br />
-              <span className="text-primary whitespace-nowrap">안심하고 유지하세요</span>
+              <span>안심하고 유지하세요</span>
             </h3>
             <p className="text-xs sm:text-sm text-muted-foreground break-keep">
               도메인 연결부터 서버 관리까지 하루가 모두 챙겨드립니다.
             </p>
-            <strong className="text-2xl sm:text-3xl font-black text-foreground">월 9,900원부터</strong>
+            <strong>월 9,900원부터</strong>
             <Link href="/builder" className="action-button mt-1">
               내 페이지 만들기 <span aria-hidden="true">→</span>
             </Link>
           </div>
         )}
 
-        <p className="mt-6 sm:mt-8 text-xs text-muted-foreground">
-          모든 플랜은 직접 수정할 수 있습니다. 먼저 둘러보고 결정하세요.
+        <p className="mt-6 sm:mt-8 text-xs sm:text-sm text-muted-foreground break-keep">
+          결제 전까지 자유롭게 둘러보고 무료로 제작해볼 수 있어요.
         </p>
       </div>
     </section>
