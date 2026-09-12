@@ -9,7 +9,7 @@ export default function HeroSection() {
   const [active, setActive] = useState(1)
   return <section className="hero-shell">
     <div className="hero-grid" aria-hidden="true" />
-    <div className="mx-auto flex flex-col gap-10 px-5 pb-20 pt-32 sm:px-8 sm:pb-28 sm:pt-40 lg:grid lg:grid-cols-[1fr_430px] lg:items-center lg:gap-12">
+    <div className="mx-auto flex max-w-6xl flex-col gap-10 px-5 pb-20 pt-32 sm:px-8 sm:pb-28 sm:pt-40 lg:grid lg:grid-cols-[1fr_420px] lg:items-center lg:gap-8">
       <div className="reveal-up flex flex-col">
         <p className="eyebrow">웹사이트 · 모임 · 가게 · 커플/우정앱 · 행사</p>
         <h1 className="mt-5 max-w-2xl text-5xl font-black leading-[1.08] tracking-[-0.055em] text-foreground sm:text-7xl">외주 맡기지 말고<br /><span className="text-primary">직접 쉽게 만들어요.</span></h1>
