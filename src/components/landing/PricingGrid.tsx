@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 
 type Tab = 'creation' | 'subscription'
@@ -13,6 +13,40 @@ const PLANS = [
 
 export default function PricingGrid() {
   const [tab, setTab] = useState<Tab>('creation')
+  const [activeIndex, setActiveIndex] = useState(1) // 기본 추천 플랜(index 1) 포커스
+  const carouselRef = useRef<HTMLDivElement>(null)
+
+  // 모바일 진입 시 추천 플랜(index 1)이 화면 중앙에 오도록 스크롤 정렬
+  useEffect(() => {
+    if (tab !== 'creation') return
+    const el = carouselRef.current
+    if (!el) return
+    const featuredCard = el.children[1] as HTMLElement | undefined
+    if (featuredCard) {
+      const scrollPos = featuredCard.offsetLeft - (el.clientWidth - featuredCard.offsetWidth) / 2
+      el.scrollTo({ left: Math.max(0, scrollPos), behavior: 'instant' })
+    }
+  }, [tab])
+
+  const handleScroll = () => {
+    const el = carouselRef.current
+    if (!el) return
+    const children = Array.from(el.children) as HTMLElement[]
+    if (!children.length) return
+    const containerCenter = el.scrollLeft + el.clientWidth / 2
+
+    let closestIdx = 0
+    let minDiff = Infinity
+    children.forEach((child, idx) => {
+      const childCenter = child.offsetLeft + child.offsetWidth / 2
+      const diff = Math.abs(containerCenter - childCenter)
+      if (diff < minDiff) {
+        minDiff = diff
+        closestIdx = idx
+      }
+    })
+    setActiveIndex(closestIdx)
+  }
 
   return (
     <section id="pricing" className="section-paper border-t border-border">
@@ -43,13 +77,17 @@ export default function PricingGrid() {
 
         {tab === 'creation' ? (
           /* Mobile: Compact Horizontal Snap Carousel / Desktop: 3-column Grid */
-          <div className="mt-8 sm:mt-12 flex md:grid md:grid-cols-3 gap-3.5 overflow-x-auto pb-4 md:pb-0 md:overflow-visible snap-x snap-mandatory scrollbar-none -mx-5 px-5 sm:mx-0 sm:px-0">
+          <div
+            ref={carouselRef}
+            onScroll={handleScroll}
+            className="mt-8 sm:mt-12 flex md:grid md:grid-cols-3 gap-3.5 overflow-x-auto py-3.5 md:py-0 md:overflow-visible snap-x snap-mandatory scrollbar-none -mx-5 px-5 sm:mx-0 sm:px-0"
+          >
             {PLANS.map(([name, price, features, forWho], i) => (
               <article
                 key={name}
                 className={`price-card min-w-[260px] flex-1 snap-center flex flex-col justify-between rounded-xl ${
                   i === 1 ? 'is-featured' : ''
-                }`}
+                } ${activeIndex === i ? 'is-active' : ''}`}
               >
                 <div>
                   <div className="flex items-center justify-between">
