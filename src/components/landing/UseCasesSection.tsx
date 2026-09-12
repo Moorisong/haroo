@@ -23,10 +23,33 @@ export default function UseCasesSection() {
   const [selected, setSelected] = useState(0)
   const [layouts, setLayouts] = useState([0, 0, 0, 0])
   const carouselRef = useRef<HTMLDivElement>(null)
+  const touchStartX = useRef<number | null>(null)
+  const touchStartY = useRef<number | null>(null)
+
+  const isProgrammaticScroll = useRef(false)
+  const scrollTimeout = useRef<NodeJS.Timeout | null>(null)
 
   useEffect(() => { setLayouts(CASES.map(() => Math.floor(Math.random() * 3))) }, [])
 
+  // 탭이 변경될 때 모바일 하단 캐러셀의 해당 탭이 화면 중앙으로 오도록 스크롤 동기화
+  const scrollToTab = (index: number) => {
+    setSelected(index)
+    const el = carouselRef.current
+    if (!el) return
+    const targetChild = el.children[index] as HTMLElement | undefined
+    if (targetChild) {
+      isProgrammaticScroll.current = true
+      if (scrollTimeout.current) clearTimeout(scrollTimeout.current)
+      scrollTimeout.current = setTimeout(() => {
+        isProgrammaticScroll.current = false
+      }, 400)
+      const scrollPos = targetChild.offsetLeft - (el.clientWidth - targetChild.offsetWidth) / 2
+      el.scrollTo({ left: Math.max(0, scrollPos), behavior: 'smooth' })
+    }
+  }
+
   const handleScroll = () => {
+    if (isProgrammaticScroll.current) return
     const el = carouselRef.current
     if (!el) return
     const children = Array.from(el.children) as HTMLElement[]
@@ -44,6 +67,30 @@ export default function UseCasesSection() {
       }
     })
     setSelected(closestIdx)
+  }
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX
+    touchStartY.current = e.touches[0].clientY
+  }
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX.current === null || touchStartY.current === null) return
+    const diffX = touchStartX.current - e.changedTouches[0].clientX
+    const diffY = touchStartY.current - e.changedTouches[0].clientY
+    touchStartX.current = null
+    touchStartY.current = null
+
+    // 수평 스와이프가 수직 스크롤보다 크고 최소 40px 이상 이동했을 때만 전환
+    if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 40) {
+      if (diffX > 0 && selected < CASES.length - 1) {
+        // 왼쪽으로 스와이프 -> 다음 카드
+        scrollToTab(selected + 1)
+      } else if (diffX < 0 && selected > 0) {
+        // 오른쪽으로 스와이프 -> 이전 카드
+        scrollToTab(selected - 1)
+      }
+    }
   }
 
   const item = CASES[selected]
@@ -135,7 +182,12 @@ export default function UseCasesSection() {
                 가장 가까운 목적을 고르면<br className="hidden sm:inline" />필요한 구성부터 보여드릴게요.
               </p>
             </div>
-            <div className={`case-preview case-preview-rich ${item.theme}`} key={`${item.appName}-${layout}`}>
+            <div
+              className={`case-preview case-preview-rich ${item.theme} touch-pan-y`}
+              key={`${item.appName}-${layout}`}
+              onTouchStart={handleTouchStart}
+              onTouchEnd={handleTouchEnd}
+            >
               <div className="case-preview-copy">
                 <p className="eyebrow">선택한 페이지</p>
                 <div className="flex items-start justify-between gap-3">
@@ -177,7 +229,7 @@ export default function UseCasesSection() {
               >
                 <button
                   type="button"
-                  onClick={() => setSelected(i)}
+                  onClick={() => scrollToTab(i)}
                   aria-pressed={selected === i}
                   className="case-choice-main"
                 >
