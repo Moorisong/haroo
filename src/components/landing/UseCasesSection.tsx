@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 type CaseItem = { title: string; appName: string; desc: string; icon: string; tag: string; theme: string; template: string; items: string[] }
 
@@ -22,7 +22,30 @@ function PreviewArt({ item, layout }: { item: CaseItem; layout: number }) {
 export default function UseCasesSection() {
   const [selected, setSelected] = useState(0)
   const [layouts, setLayouts] = useState([0, 0, 0, 0])
+  const carouselRef = useRef<HTMLDivElement>(null)
+
   useEffect(() => { setLayouts(CASES.map(() => Math.floor(Math.random() * 3))) }, [])
+
+  const handleScroll = () => {
+    const el = carouselRef.current
+    if (!el) return
+    const children = Array.from(el.children) as HTMLElement[]
+    if (!children.length) return
+    const containerCenter = el.scrollLeft + el.clientWidth / 2
+
+    let closestIdx = 0
+    let minDiff = Infinity
+    children.forEach((child, idx) => {
+      const childCenter = child.offsetLeft + child.offsetWidth / 2
+      const diff = Math.abs(containerCenter - childCenter)
+      if (diff < minDiff) {
+        minDiff = diff
+        closestIdx = idx
+      }
+    })
+    setSelected(closestIdx)
+  }
+
   const item = CASES[selected]
   const layout = layouts[selected]
 
@@ -140,7 +163,11 @@ export default function UseCasesSection() {
           </div>
 
           {/* Mobile: 1-Row Horizontal Scroll Snap / Desktop: 4-Column Grid */}
-          <div className="mt-8 sm:mt-12 flex lg:grid lg:grid-cols-4 gap-3.5 overflow-x-auto py-3.5 lg:py-1 lg:overflow-visible snap-x snap-mandatory scrollbar-none -mx-5 px-5 sm:mx-0 sm:px-0">
+          <div
+            ref={carouselRef}
+            onScroll={handleScroll}
+            className="mt-8 sm:mt-12 flex lg:grid lg:grid-cols-4 gap-3.5 overflow-x-auto py-3.5 lg:py-1 lg:overflow-visible snap-x snap-mandatory scrollbar-none -mx-5 px-5 sm:mx-0 sm:px-0"
+          >
             {CASES.map((caseItem, i) => (
               <div
                 key={caseItem.title}
